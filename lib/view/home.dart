@@ -14,14 +14,13 @@ class Home extends StatelessWidget {
           scaffoldBackgroundColor: Color(0xFFF7F7F7)),
       home: Scaffold(
         key: _scaffoldKey,
-        // appBar: SearchBar(),
         body: SafeArea(
           child: CustomScrollView(
             slivers: <Widget>[
               SliverAppBar(
                 floating: true,
                 snap: true,
-                toolbarHeight: 80,
+                toolbarHeight: 88,
                 expandedHeight: 0,
                 backgroundColor: Colors.transparent,
                 elevation: 0,
@@ -29,11 +28,7 @@ class Home extends StatelessWidget {
                 flexibleSpace: searchBar(_scaffoldKey),
               ),
               SliverList(
-                delegate: SliverChildBuilderDelegate(
-                    (BuildContext context, int index) {
-                  return Container(
-                      padding: EdgeInsets.all(16.0), child: Text('Row_$index'));
-                }),
+                delegate: SliverChildListDelegate([cardPageView(_scaffoldKey)]),
               )
             ],
           ),
@@ -61,18 +56,15 @@ class Home extends StatelessWidget {
   Widget cardPageView(scaffoldKey) {
     const itemList = ['one', 'two', 'three', 'for'];
     return Container(
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            searchBar(scaffoldKey),
-            for (var item in itemList)
-              Container(
-                height: 320,
-                margin: EdgeInsets.fromLTRB(16, 0, 16, 24),
-                child: CustomCard(item),
-              )
-          ],
-        ),
+      child: Column(
+        children: <Widget>[
+          for (var item in itemList)
+            Container(
+              height: 320,
+              margin: EdgeInsets.fromLTRB(16, 0, 16, 24),
+              child: CustomCard(item),
+            )
+        ],
       ),
     );
   }
