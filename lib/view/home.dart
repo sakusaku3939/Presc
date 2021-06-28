@@ -6,6 +6,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+    ScrollController _scrollController = ScrollController();
 
     return MaterialApp(
       theme: ThemeData(
@@ -15,22 +16,28 @@ class Home extends StatelessWidget {
       home: Scaffold(
         key: _scaffoldKey,
         body: SafeArea(
-          child: CustomScrollView(
-            slivers: <Widget>[
-              SliverAppBar(
-                floating: true,
-                snap: true,
-                toolbarHeight: 88,
-                expandedHeight: 0,
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                leading: Container(),
-                flexibleSpace: searchBar(_scaffoldKey),
+          child: PrimaryScrollController(
+            controller: _scrollController,
+            child: Scrollbar(
+              child: CustomScrollView(
+                slivers: <Widget>[
+                  SliverAppBar(
+                    floating: true,
+                    snap: true,
+                    toolbarHeight: 88,
+                    expandedHeight: 0,
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    leading: Container(),
+                    flexibleSpace: searchBar(_scaffoldKey),
+                  ),
+                  SliverList(
+                    delegate:
+                        SliverChildListDelegate([cardPageView(_scaffoldKey)]),
+                  )
+                ],
               ),
-              SliverList(
-                delegate: SliverChildListDelegate([cardPageView(_scaffoldKey)]),
-              )
-            ],
+            ),
           ),
         ),
         // body: Center(
