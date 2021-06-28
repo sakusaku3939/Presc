@@ -14,21 +14,29 @@ class Home extends StatelessWidget {
           scaffoldBackgroundColor: Color(0xFFF7F7F7)),
       home: Scaffold(
         key: _scaffoldKey,
-        appBar: SearchBar(),
-        body: CustomScrollView(
-          slivers: <Widget>[
-            // SliverAppBar(
-            //   pinned: true,
-            //   expandedHeight: 0,
-            //   backgroundColor: Colors.transparent,
-            //   flexibleSpace: SearchBar(),
-            // ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-                return Container(padding: EdgeInsets.all(16.0), child: Text('Row_$index'));
-              }),
-            )
-          ],
+        // appBar: SearchBar(),
+        body: SafeArea(
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverAppBar(
+                floating: true,
+                snap: true,
+                toolbarHeight: 80,
+                expandedHeight: 0,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                leading: Container(),
+                flexibleSpace: searchBar(_scaffoldKey),
+              ),
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                    (BuildContext context, int index) {
+                  return Container(
+                      padding: EdgeInsets.all(16.0), child: Text('Row_$index'));
+                }),
+              )
+            ],
+          ),
         ),
         // body: Center(
         //   child: cardPageView(_scaffoldKey),
@@ -72,6 +80,7 @@ class Home extends StatelessWidget {
   Widget searchBar(scaffoldKey) {
     return SafeArea(
       child: Container(
+        margin: const EdgeInsets.all(16),
         decoration: cardShadow(8),
         child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(8)),
@@ -111,71 +120,61 @@ class Home extends StatelessWidget {
   }
 }
 
-class SearchBar extends StatelessWidget with PreferredSizeWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        Positioned(
-          top: 16,
-          left: 16,
-          right: 16,
-          child: SafeArea(
-            child: Container(
-              decoration: cardShadow(8),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                child: Container(
-                  margin: const EdgeInsets.only(left: 4),
-                  child: Row(
-                    children: <Widget>[
-                      ClipOval(
-                        child: Material(
-                          type: MaterialType.transparency,
-                          child: IconButton(
-                            splashColor: Colors.grey[50],
-                            icon: Icon(Icons.menu),
-                            onPressed: () {
-                              Scaffold.of(context).openDrawer();
-                            },
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.only(left: 24),
-                          child: Text(
-                            "原稿を検索",
-                            style: TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        // TextField(
-                        //   cursorColor: Colors.black,
-                        //   keyboardType: TextInputType.text,
-                        //   textInputAction: TextInputAction.go,
-                        //   decoration: InputDecoration(
-                        //       border: InputBorder.none,
-                        //       contentPadding:
-                        //           EdgeInsets.symmetric(horizontal: 16),
-                        //       hintText: "原稿を検索"),
-                        // ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => Size.fromHeight(88);
-}
+// class SearchBar extends StatelessWidget with PreferredSizeWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return SafeArea(
+//       child: Stack(
+//         children: <Widget>[
+//           Positioned(
+//             top: 0,
+//             left: 16,
+//             right: 16,
+//             child: Container(
+//               decoration: cardShadow(8),
+//               child: ClipRRect(
+//                 borderRadius: const BorderRadius.all(Radius.circular(8)),
+//                 child: Container(
+//                   margin: const EdgeInsets.only(left: 4),
+//                   child: Row(
+//                     children: <Widget>[
+//                       ClipOval(
+//                         child: Material(
+//                           type: MaterialType.transparency,
+//                           child: IconButton(
+//                             splashColor: Colors.grey[50],
+//                             icon: Icon(Icons.menu),
+//                             onPressed: () {
+//                               Scaffold.of(context).openDrawer();
+//                             },
+//                           ),
+//                         ),
+//                       ),
+//                       Expanded(
+//                         child: Container(
+//                           padding: const EdgeInsets.only(left: 24),
+//                           child: Text(
+//                             "原稿を検索",
+//                             style: TextStyle(
+//                               color: Colors.black,
+//                             ),
+//                           ),
+//                         ),
+//                       ),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+//
+//   @override
+//   Size get preferredSize => Size.fromHeight(88);
+// }
 
 // class ScriptCard extends StatefulWidget {
 //   ScriptCard(this.heroTag);
