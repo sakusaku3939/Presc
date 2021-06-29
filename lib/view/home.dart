@@ -7,10 +7,7 @@ class Home extends StatelessWidget {
     ScrollController _scrollController = ScrollController();
 
     return MaterialApp(
-      theme: ThemeData(
-          primaryColor: Colors.deepOrange[400],
-          accentColor: Colors.deepOrange[400],
-          scaffoldBackgroundColor: Color(0xFFF7F7F7)),
+      theme: ThemeData(scaffoldBackgroundColor: Color(0xFFF7F7F7)),
       home: Scaffold(
         key: _scaffoldKey,
         body: SafeArea(
