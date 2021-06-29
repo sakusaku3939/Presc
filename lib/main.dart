@@ -7,7 +7,6 @@ import 'package:presc/provider/bottom_navigation_bar_provider.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 縦向き固定
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     runApp(
