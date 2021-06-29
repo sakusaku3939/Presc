@@ -3,7 +3,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:presc/provider/bottom_navigation_bar_provider.dart';
 
-import 'package:presc/view/ui/h_screen.dart';
+import 'package:presc/view/screens/manuscript.dart';
+import 'package:presc/view/screens/library.dart';
 
 class AppScreen extends StatefulWidget {
   static const String routeName = '/app';
@@ -14,8 +15,8 @@ class AppScreen extends StatefulWidget {
 
 class _AppScreenState extends State<AppScreen> {
   var currentTab = [
-    HScreen(title: '1番目'),
-    HScreen(title: '2番目'),
+    ManuscriptScreen(title: '原稿一覧'),
+    LibraryScreen(title: 'ライブラリ'),
   ];
 
   @override
@@ -24,9 +25,6 @@ class _AppScreenState extends State<AppScreen> {
         Provider.of<BottomNavigationBarProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("provider"),
-      ),
       body: currentTab[bottomNavigationBar.currentIndex],
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
@@ -43,22 +41,12 @@ class _AppScreenState extends State<AppScreen> {
         child: FloatingActionButton(
           elevation: 0,
           child: SvgPicture.asset(
-              'assets/images/pencil.svg',
-              color: Colors.white,
-            ),
+            'assets/images/pencil.svg',
+            color: Colors.white,
+          ),
           onPressed: () {},
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   elevation: 0,
-      //   child: Container(
-      //     child: SvgPicture.asset(
-      //       'assets/images/pencil.svg',
-      //       color: Colors.white,
-      //     ),
-      //   ),
-      //   onPressed: () {},
-      // ),
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: false,
         showUnselectedLabels: false,
@@ -98,9 +86,9 @@ class _AppScreenState extends State<AppScreen> {
 
   Widget navigationIcon(String asset, {bool isActive}) {
     return SvgPicture.asset(
-        asset,
-        height: 26,
-        color: isActive ? Theme.of(context).primaryColor : Colors.grey,
+      asset,
+      height: 26,
+      color: isActive ? Theme.of(context).primaryColor : Colors.grey,
     );
   }
 }
