@@ -16,6 +16,7 @@ class _ManuscriptScreenState extends State<ManuscriptScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: SafeArea(
         child: PrimaryScrollController(
           controller: _scrollController,
@@ -25,12 +26,12 @@ class _ManuscriptScreenState extends State<ManuscriptScreen> {
                 SliverAppBar(
                   floating: true,
                   snap: true,
-                  toolbarHeight: 64,
+                  toolbarHeight: 80,
                   expandedHeight: 0,
-                  backgroundColor: Color(0xFFF7F7F7),
-                  elevation: 1,
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
                   leading: Container(),
-                  flexibleSpace: appBar(),
+                  flexibleSpace: searchBar(_scaffoldKey),
                 ),
                 SliverList(
                   delegate:
@@ -41,9 +42,6 @@ class _ManuscriptScreenState extends State<ManuscriptScreen> {
           ),
         ),
       ),
-      // body: Center(
-      //   child: cardPageView(_scaffoldKey),
-      // ),
       drawer: Drawer(
         child: SafeArea(
           right: false,
@@ -51,6 +49,10 @@ class _ManuscriptScreenState extends State<ManuscriptScreen> {
             child: Text('Drawer content'),
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(Icons.add),
       ),
     );
   }
@@ -78,6 +80,48 @@ class _ManuscriptScreenState extends State<ManuscriptScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget searchBar(scaffoldKey) {
+    return SafeArea(
+      child: Container(
+        margin: const EdgeInsets.all(16),
+        decoration: cardShadow(8),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          child: Container(
+            margin: const EdgeInsets.only(left: 4),
+            child: Row(
+              children: <Widget>[
+                ClipOval(
+                  child: Material(
+                    type: MaterialType.transparency,
+                    child: IconButton(
+                      splashColor: Colors.grey[50],
+                      icon: Icon(Icons.menu),
+                      onPressed: () {
+                        scaffoldKey.currentState.openDrawer();
+                      },
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 24),
+                    child: Text(
+                      "原稿を検索",
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
