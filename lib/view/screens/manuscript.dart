@@ -113,7 +113,7 @@ class _ManuscriptScreenState extends State<ManuscriptScreen> {
                     child: Text(
                       "原稿を検索",
                       style: TextStyle(
-                        color: Colors.black,
+                        color: Colors.grey,
                       ),
                     ),
                   ),

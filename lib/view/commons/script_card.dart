@@ -111,7 +111,10 @@ class _ScriptCardState extends State<ScriptCard> {
                 alignment: Alignment.topRight,
                 child: Text(
                   "2021/05/21 16:32",
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
                 ),
               ),
             ),
