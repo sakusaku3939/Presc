@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:presc/provider/bottom_navigation_bar_provider.dart';
 
 import 'package:presc/view/screens/manuscript.dart';
-import 'package:presc/view/screens/library.dart';
 
 class AppScreen extends StatefulWidget {
   static const String routeName = '/app';
@@ -15,7 +14,6 @@ class AppScreen extends StatefulWidget {
 class _AppScreenState extends State<AppScreen> {
   var currentTab = [
     ManuscriptScreen(title: '原稿一覧'),
-    LibraryScreen(title: 'ライブラリ'),
   ];
 
   @override

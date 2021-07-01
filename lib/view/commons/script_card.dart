@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_scale_tap/flutter_scale_tap.dart';
-import 'package:presc/view/screens/script_edit_page.dart';
+import 'package:presc/view/screens/manuscript_edit.dart';
 
 Widget cardPageView(scaffoldKey) {
   const itemList = ['one', 'two', 'three', 'for'];
