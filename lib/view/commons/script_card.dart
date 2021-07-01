@@ -47,7 +47,6 @@ class _ScriptCardState extends State<ScriptCard> {
   _ScriptCardState(this.heroTag);
 
   String heroTag;
-  var _hasPadding = false;
 
   @override
   Widget build(BuildContext context) {
@@ -76,13 +75,13 @@ class _ScriptCardState extends State<ScriptCard> {
       },
       child: Container(
         constraints: BoxConstraints.expand(),
-        padding: const EdgeInsets.only(left: 12, right: 12),
+        padding: const EdgeInsets.only(left: 16, right: 16),
         decoration: cardShadow(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              margin: const EdgeInsets.only(left: 12),
+              margin: const EdgeInsets.only(left: 16),
               child: Align(
                 alignment: Alignment.topLeft,
                 child: Text(
@@ -171,28 +170,24 @@ class ScriptEditPage extends StatelessWidget {
                 Container(
                   margin: EdgeInsets.only(top: statusBarHeight),
                   child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(),
-                        Container(
-                          child: RaisedButton(
-                            child: Icon(
-                              Icons.close,
-                              color: Colors.white,
-                            ),
-                            color: Colors.blue,
-                            shape: CircleBorder(),
-                            onPressed: () {
-                              Navigator.pop(
-                                context,
-                                // MaterialPageRoute(builder: (context) {
-                                //   return Home();
-                                // }),
-                              );
-                            },
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(),
+                      Container(
+                        child: RaisedButton(
+                          child: Icon(
+                            Icons.close,
+                            color: Colors.white,
                           ),
-                        )
-                      ]),
+                          color: Colors.blue,
+                          shape: CircleBorder(),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      )
+                    ],
+                  ),
                 )
               ],
             )
