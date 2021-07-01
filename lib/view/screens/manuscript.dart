@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presc/view/commons/ripple_button.dart';
 import 'package:presc/view/commons/script_card.dart';
 
 class ManuscriptScreen extends StatefulWidget {
@@ -50,9 +51,10 @@ class _ManuscriptScreenState extends State<ManuscriptScreen> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: SafeArea(child: FloatingActionButton(
         onPressed: () {},
         child: Icon(Icons.add),
+      ),
       ),
     );
   }
@@ -68,14 +70,11 @@ class _ManuscriptScreenState extends State<ManuscriptScreen> {
           ),
           Container(
             margin: const EdgeInsets.only(right: 8),
-            child: ClipOval(
-              child: Material(
-                type: MaterialType.transparency,
-                child: IconButton(
-                  splashColor: Colors.grey[50],
-                  icon: Icon(Icons.search),
-                  onPressed: () {},
-                ),
+            child: RippleIconButton(
+              child: IconButton(
+                splashColor: Colors.grey[50],
+                icon: Icon(Icons.search),
+                onPressed: () {},
               ),
             ),
           ),
@@ -95,16 +94,13 @@ class _ManuscriptScreenState extends State<ManuscriptScreen> {
             margin: const EdgeInsets.only(left: 4),
             child: Row(
               children: <Widget>[
-                ClipOval(
-                  child: Material(
-                    type: MaterialType.transparency,
-                    child: IconButton(
-                      splashColor: Colors.grey[50],
-                      icon: Icon(Icons.menu),
-                      onPressed: () {
-                        scaffoldKey.currentState.openDrawer();
-                      },
-                    ),
+                RippleIconButton(
+                  child: IconButton(
+                    splashColor: Colors.grey[50],
+                    icon: Icon(Icons.menu),
+                    onPressed: () {
+                      scaffoldKey.currentState.openDrawer();
+                    },
                   ),
                 ),
                 Expanded(

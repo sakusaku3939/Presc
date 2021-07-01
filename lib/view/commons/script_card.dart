@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_scale_tap/flutter_scale_tap.dart';
+import 'package:presc/view/commons/ripple_button.dart';
 
 Widget cardPageView(scaffoldKey) {
   const itemList = ['one', 'two', 'three', 'for'];
@@ -54,12 +55,12 @@ class _ScriptCardState extends State<ScriptCard> {
       tag: heroTag,
       child: Material(
         type: MaterialType.transparency,
-        child: content(),
+        child: card(),
       ),
     );
   }
 
-  Widget content() {
+  Widget card() {
     return ScaleTap(
       scaleMinValue: 0.96,
       onPressed: () {
@@ -124,8 +125,17 @@ class _ScriptCardState extends State<ScriptCard> {
   }
 }
 
-class ScriptEditPage extends StatelessWidget {
+class ScriptEditPage extends StatefulWidget {
   ScriptEditPage(this.heroTag);
+
+  final String heroTag;
+
+  @override
+  _ScriptEditPageState createState() => _ScriptEditPageState(heroTag);
+}
+
+class _ScriptEditPageState extends State<ScriptEditPage> {
+  _ScriptEditPageState(this.heroTag);
 
   final String heroTag;
 
@@ -139,16 +149,24 @@ class ScriptEditPage extends StatelessWidget {
           type: MaterialType.transparency,
           child: Container(
             color: Colors.white,
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Container(
-                  child: imageContents(context),
-                ),
-                Container(
-                  child: Text('content'),
-                )
-              ],
+            child: Scrollbar(
+              child: CustomScrollView(
+                slivers: <Widget>[
+                  SliverAppBar(
+                      floating: true,
+                      snap: true,
+                      toolbarHeight: 80,
+                      expandedHeight: 80,
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      leading: Container(),
+                      flexibleSpace: menuBar()),
+                  SliverList(
+                    delegate: SliverChildListDelegate([content()]),
+                  )
+                ],
+                // ),
+              ),
             ),
           ),
         ),
@@ -156,44 +174,63 @@ class ScriptEditPage extends StatelessWidget {
     );
   }
 
-  Widget imageContents(BuildContext context) {
-    double statusBarHeight = MediaQuery.of(context).padding.top;
-    return Container(
-      height: 220,
+  Widget menuBar() {
+    return SafeArea(
+        child: Container(
+      margin: EdgeInsets.symmetric(horizontal: 4),
       color: Colors.white,
-      child: Container(
-        child: Stack(
-          children: <Widget>[
-            Column(
-              verticalDirection: VerticalDirection.down,
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(top: statusBarHeight),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Container(),
-                      Container(
-                        child: RaisedButton(
-                          child: Icon(
-                            Icons.close,
-                            color: Colors.white,
-                          ),
-                          color: Colors.blue,
-                          shape: CircleBorder(),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            )
-          ],
-        ),
+      height: 56,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          RippleIconButton(
+            child: IconButton(
+              icon: Icon(
+                Icons.navigate_before,
+                color: Colors.grey[700],
+                size: 32,
+              ),
+              onPressed: () => {Navigator.pop(context)},
+            ),
+          ),
+          Row(children: [
+            RippleIconButton(
+              child: IconButton(
+                icon: Icon(
+                  Icons.share,
+                  color: Colors.grey[700],
+                ),
+                onPressed: () => {},
+              ),
+            ),
+            RippleIconButton(
+              child: IconButton(
+                icon: Icon(
+                  Icons.delete_outline,
+                  color: Colors.grey[700],
+                ),
+                onPressed: () => {},
+              ),
+            ),
+            RippleIconButton(
+              child: IconButton(
+                icon: Icon(
+                  Icons.info_outline,
+                  color: Colors.grey[700],
+                ),
+                onPressed: () => {},
+              ),
+            ),
+          ])
+        ],
       ),
+    ));
+  }
+
+  Widget content() {
+    return Container(
+      child: Text("test"),
     );
   }
 }
