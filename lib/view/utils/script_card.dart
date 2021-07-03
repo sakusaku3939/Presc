@@ -11,7 +11,7 @@ Widget cardPageView() {
         for (var item in _itemList)
           Container(
             height: 280,
-            margin: EdgeInsets.fromLTRB(16, 4, 16, 16),
+            margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
             child: ScriptCard(item),
           )
       ],
@@ -60,9 +60,6 @@ class ScriptCard extends StatelessWidget {
             pageBuilder: (_, __, ___) => ManuscriptEditScreen(heroTag),
           ),
         );
-      },
-      onLongPress: () {
-        //Long press
       },
       child: Container(
         constraints: const BoxConstraints.expand(),

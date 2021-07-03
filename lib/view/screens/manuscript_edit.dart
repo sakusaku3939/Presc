@@ -44,7 +44,7 @@ class ManuscriptEditScreen extends StatelessWidget {
   Widget menuBar(BuildContext context) {
     return SafeArea(
       child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 4),
+        margin: const EdgeInsets.symmetric(horizontal: 4),
         color: Colors.white,
         height: 56,
         child: Row(
