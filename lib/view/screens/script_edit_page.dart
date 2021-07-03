@@ -1,17 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:presc/view/commons/ripple_button.dart';
 
-class ScriptEditPage extends StatefulWidget {
+class ScriptEditPage extends StatelessWidget {
   ScriptEditPage(this.heroTag);
-
-  final String heroTag;
-
-  @override
-  _ScriptEditPageState createState() => _ScriptEditPageState(heroTag);
-}
-
-class _ScriptEditPageState extends State<ScriptEditPage> {
-  _ScriptEditPageState(this.heroTag);
 
   final String heroTag;
 
@@ -36,7 +27,7 @@ class _ScriptEditPageState extends State<ScriptEditPage> {
                       backgroundColor: Colors.transparent,
                       elevation: 0,
                       leading: Container(),
-                      flexibleSpace: menuBar()),
+                      flexibleSpace: menuBar(context)),
                   SliverList(
                     delegate: SliverChildListDelegate([content()]),
                   )
@@ -50,7 +41,7 @@ class _ScriptEditPageState extends State<ScriptEditPage> {
     );
   }
 
-  Widget menuBar() {
+  Widget menuBar(BuildContext context) {
     return SafeArea(
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 4),

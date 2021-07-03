@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_scale_tap/flutter_scale_tap.dart';
-import 'package:presc/view/screens/manuscript_edit.dart';
+import 'package:presc/view/screens/script_edit_page.dart';
 
-Widget cardPageView(scaffoldKey) {
+Widget cardPageView() {
   const itemList = ['one', 'two', 'three', 'for'];
   return Container(
     child: Column(
@@ -33,21 +33,10 @@ BoxDecoration cardShadow(double radius) {
   );
 }
 
-class ScriptCard extends StatefulWidget {
+class ScriptCard extends StatelessWidget {
   ScriptCard(this.heroTag);
 
   final String heroTag;
-
-  @override
-  State<StatefulWidget> createState() {
-    return _ScriptCardState(heroTag);
-  }
-}
-
-class _ScriptCardState extends State<ScriptCard> {
-  _ScriptCardState(this.heroTag);
-
-  String heroTag;
 
   @override
   Widget build(BuildContext context) {
@@ -55,12 +44,12 @@ class _ScriptCardState extends State<ScriptCard> {
       tag: heroTag,
       child: Material(
         type: MaterialType.transparency,
-        child: card(),
+        child: card(context),
       ),
     );
   }
 
-  Widget card() {
+  Widget card(BuildContext context) {
     return ScaleTap(
       scaleMinValue: 0.96,
       onPressed: () {

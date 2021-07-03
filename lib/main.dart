@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:presc/view/app_screen.dart';
+import 'package:presc/view/screens/manuscript.dart';
 import 'package:provider/provider.dart';
 import 'package:presc/provider/bottom_navigation_bar_provider.dart';
 
@@ -30,6 +30,6 @@ class MyApp extends StatelessWidget {
           primaryColor: Colors.deepOrange[400],
           accentColor: Colors.deepOrange[400],
         ),
-        home: AppScreen());
+        home: ManuscriptScreen());
   }
 }
