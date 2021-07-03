@@ -4,11 +4,11 @@ import 'package:flutter_scale_tap/flutter_scale_tap.dart';
 import 'package:presc/view/screens/manuscript_edit.dart';
 
 Widget cardPageView() {
-  const itemList = ['one', 'two', 'three', 'for'];
+  final _itemList = ['one', 'two', 'three', 'for'];
   return Container(
     child: Column(
       children: <Widget>[
-        for (var item in itemList)
+        for (var item in _itemList)
           Container(
             height: 280,
             margin: EdgeInsets.fromLTRB(16, 4, 16, 16),
@@ -65,7 +65,7 @@ class ScriptCard extends StatelessWidget {
         //Long press
       },
       child: Container(
-        constraints: BoxConstraints.expand(),
+        constraints: const BoxConstraints.expand(),
         padding: const EdgeInsets.only(left: 16, right: 16),
         decoration: cardShadow(16),
         child: Column(
