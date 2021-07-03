@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:presc/view/commons/ripple_button.dart';
+import 'package:presc/view/utils/ripple_button.dart';
 
-class ScriptEditPage extends StatelessWidget {
-  ScriptEditPage(this.heroTag);
+class ManuscriptEditScreen extends StatelessWidget {
+  ManuscriptEditScreen(this.heroTag);
 
   final String heroTag;
 

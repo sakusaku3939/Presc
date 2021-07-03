@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:presc/view/screens/manuscript.dart';
 import 'package:provider/provider.dart';
-import 'package:presc/provider/bottom_navigation_bar_provider.dart';
+import 'package:presc/viewModel/bottom_navigation_bar_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

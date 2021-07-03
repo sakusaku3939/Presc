@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_scale_tap/flutter_scale_tap.dart';
-import 'package:presc/view/screens/script_edit_page.dart';
+import 'package:presc/view/screens/manuscript_edit.dart';
 
 Widget cardPageView() {
   const itemList = ['one', 'two', 'three', 'for'];
@@ -57,7 +57,7 @@ class ScriptCard extends StatelessWidget {
           context,
           PageRouteBuilder(
             transitionDuration: Duration(milliseconds: 500),
-            pageBuilder: (_, __, ___) => ScriptEditPage(heroTag),
+            pageBuilder: (_, __, ___) => ManuscriptEditScreen(heroTag),
           ),
         );
       },

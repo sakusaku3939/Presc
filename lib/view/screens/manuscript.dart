@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:presc/view/commons/ripple_button.dart';
-import 'package:presc/view/commons/script_card.dart';
+import 'package:presc/view/utils/ripple_button.dart';
+import 'package:presc/view/utils/script_card.dart';
 
 class ManuscriptScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
