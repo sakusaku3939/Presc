@@ -7,7 +7,7 @@ Widget cardPageView() {
   final _itemList = ['one', 'two', 'three', 'for'];
   return Container(
     child: Column(
-      children: <Widget>[
+      children: [
         for (var item in _itemList)
           Container(
             height: 280,
