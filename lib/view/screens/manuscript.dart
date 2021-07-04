@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presc/view/utils/drawer_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script_card.dart';
 
@@ -27,26 +28,27 @@ class ManuscriptScreen extends StatelessWidget {
                   flexibleSpace: searchBar(_scaffoldKey),
                 ),
                 SliverList(
-                  delegate:
-                      SliverChildListDelegate([cardPageView()]),
+                  delegate: SliverChildListDelegate([cardPageView()]),
                 )
               ],
             ),
           ),
         ),
       ),
-      drawer: Drawer(
-        child: SafeArea(
-          right: false,
-          child: Center(
-            child: Text('Drawer content'),
-          ),
+      drawer: GestureDetector(
+        onTap: () {
+          final FocusScopeNode currentScope = FocusScope.of(context);
+          if (!currentScope.hasPrimaryFocus && currentScope.hasFocus) {
+            FocusManager.instance.primaryFocus.unfocus();
+          }
+        },
+        child: DrawerMenu(),
+      ),
+      floatingActionButton: SafeArea(
+        child: FloatingActionButton(
+          onPressed: () {},
+          child: Icon(Icons.add),
         ),
-      ),
-      floatingActionButton: SafeArea(child: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
-      ),
       ),
     );
   }
@@ -61,7 +63,7 @@ class ManuscriptScreen extends StatelessWidget {
           child: Container(
             margin: const EdgeInsets.only(left: 4),
             child: Row(
-              children: <Widget>[
+              children: [
                 RippleIconButton(
                   child: IconButton(
                     splashColor: Colors.grey[50],
