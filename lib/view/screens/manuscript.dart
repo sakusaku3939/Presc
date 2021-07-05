@@ -25,7 +25,7 @@ class ManuscriptScreen extends StatelessWidget {
                   backgroundColor: Colors.transparent,
                   elevation: 0,
                   leading: Container(),
-                  flexibleSpace: searchBar(_scaffoldKey),
+                  flexibleSpace: _searchBar(_scaffoldKey),
                 ),
                 SliverList(
                   delegate: SliverChildListDelegate([cardPageView()]),
@@ -53,7 +53,7 @@ class ManuscriptScreen extends StatelessWidget {
     );
   }
 
-  Widget searchBar(scaffoldKey) {
+  Widget _searchBar(scaffoldKey) {
     return SafeArea(
       child: Container(
         margin: const EdgeInsets.all(16),

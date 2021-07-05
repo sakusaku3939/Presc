@@ -27,7 +27,7 @@ class DrawerMenu extends StatelessWidget {
                 ),
               ),
             ),
-            tagList(context),
+            _tagList(context),
             Divider(color: Colors.grey[300], height: 24),
             ListTile(
               leading: Icon(Icons.delete_outline),
@@ -47,7 +47,7 @@ class DrawerMenu extends StatelessWidget {
     );
   }
 
-  Widget tagList(BuildContext context) {
+  Widget _tagList(BuildContext context) {
     final _itemList = ['宮沢賢治', '練習用'];
 
     return Column(

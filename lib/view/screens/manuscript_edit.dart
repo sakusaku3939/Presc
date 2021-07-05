@@ -27,9 +27,9 @@ class ManuscriptEditScreen extends StatelessWidget {
                       backgroundColor: Colors.transparent,
                       elevation: 0,
                       leading: Container(),
-                      flexibleSpace: menuBar(context)),
+                      flexibleSpace: _menuBar(context)),
                   SliverList(
-                    delegate: SliverChildListDelegate([content()]),
+                    delegate: SliverChildListDelegate([_content()]),
                   )
                 ],
                 // ),
@@ -41,7 +41,7 @@ class ManuscriptEditScreen extends StatelessWidget {
     );
   }
 
-  Widget menuBar(BuildContext context) {
+  Widget _menuBar(BuildContext context) {
     return SafeArea(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -98,7 +98,7 @@ class ManuscriptEditScreen extends StatelessWidget {
     );
   }
 
-  Widget content() {
+  Widget _content() {
     return Container(
       child: Text("test"),
     );
