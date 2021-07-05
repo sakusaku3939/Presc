@@ -15,7 +15,7 @@ class DrawerMenu extends StatelessWidget {
                   border: Border(
                     bottom: Divider.createBorderSide(
                       context,
-                      color: Colors.grey,
+                      color: Colors.grey[300],
                     ),
                   ),
                 ),
@@ -28,7 +28,7 @@ class DrawerMenu extends StatelessWidget {
               ),
             ),
             tagList(context),
-            Divider(color: Colors.grey, height: 24),
+            Divider(color: Colors.grey[300], height: 24),
             ListTile(
               leading: Icon(Icons.delete_outline),
               title: Text('ごみ箱', style: TextStyle(fontSize: 14)),
