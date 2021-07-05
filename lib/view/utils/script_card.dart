@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_scale_tap/flutter_scale_tap.dart';
 import 'package:presc/view/screens/manuscript_edit.dart';
 import 'package:presc/view/utils/ripple_button.dart';
+import 'package:presc/view/utils/script_modal_bottom_sheet.dart';
 
 Widget cardPageView() {
   final _itemList = ['one', 'two', 'three', 'for'];
@@ -85,7 +86,9 @@ class ScriptCard extends StatelessWidget {
                   RippleIconButton(
                     child: IconButton(
                       icon: Icon(Icons.more_vert),
-                      onPressed: () {},
+                      onPressed: () {
+                        ScriptModalBottomSheet().show(context);
+                      },
                     ),
                   ),
                 ],
