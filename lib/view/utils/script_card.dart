@@ -97,16 +97,17 @@ class ScriptCard extends StatelessWidget {
             DefaultTextStyle(
               style: TextStyle(color: Colors.black),
               overflow: TextOverflow.ellipsis,
-              maxLines: 7,
+              maxLines: 6,
               child: Padding(
                 child: Text(
                   "吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。吾輩はここで始めて人間というものを見た。しかもあとで聞くとそれは書生という人間中で一番獰悪な種族であったそうだ。この書生というのは時々我々を捕えて煮て食うという話である。しかしその当時は何という考もなかったから別段恐しいとも思わなかった。ただ彼の掌に載せられてスーと持ち上げられた時何だかフワフワした感じがあったばかりである。",
                   style: TextStyle(
                     color: Colors.grey[800],
+                    height: 1.8,
                     fontSize: 14,
                   ),
                 ),
-                padding: const EdgeInsets.fromLTRB(12, 16, 4, 0),
+                padding: const EdgeInsets.fromLTRB(12, 8, 4, 0),
               ),
             ),
             Container(
