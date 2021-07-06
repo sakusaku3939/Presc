@@ -16,7 +16,7 @@ class ScriptModalBottomSheet {
 
   Widget _sheet(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 12),
+      margin: EdgeInsets.only(bottom: 8),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
