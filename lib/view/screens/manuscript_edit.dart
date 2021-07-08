@@ -46,43 +46,23 @@ class ManuscriptEditScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             RippleIconButton(
-              child: IconButton(
-                icon: Icon(
-                  Icons.navigate_before,
-                  color: Colors.grey[700],
-                  size: 32,
-                ),
-                onPressed: () => {Navigator.pop(context)},
-              ),
+              Icons.navigate_before,
+              size: 32,
+              onPressed: () => {Navigator.pop(context)},
             ),
             Row(
               children: [
                 RippleIconButton(
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.share,
-                      color: Colors.grey[700],
-                    ),
-                    onPressed: () => {},
-                  ),
+                  Icons.share,
+                  onPressed: () => {},
                 ),
                 RippleIconButton(
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.delete_outline,
-                      color: Colors.grey[700],
-                    ),
-                    onPressed: () => {},
-                  ),
+                  Icons.delete_outline,
+                  onPressed: () => {},
                 ),
                 RippleIconButton(
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.info_outline,
-                      color: Colors.grey[700],
-                    ),
-                    onPressed: () => {},
-                  ),
+                  Icons.info_outline,
+                  onPressed: () => {},
                 ),
               ],
             )
@@ -129,13 +109,8 @@ class ManuscriptEditScreen extends StatelessWidget {
       child: Row(
         children: [
           RippleIconButton(
-            child: IconButton(
-              icon: Icon(
-                Icons.playlist_add,
-                color: Colors.grey[700],
-              ),
-              onPressed: () {},
-            ),
+            Icons.playlist_add,
+            onPressed: () {},
           )
         ],
       ),

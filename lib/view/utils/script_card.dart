@@ -84,12 +84,10 @@ class ScriptCard extends StatelessWidget {
                     ),
                   ),
                   RippleIconButton(
-                    child: IconButton(
-                      icon: Icon(Icons.more_vert),
-                      onPressed: () {
-                        ScriptModalBottomSheet().show(context);
-                      },
-                    ),
+                    Icons.more_vert,
+                    onPressed: () {
+                      ScriptModalBottomSheet().show(context);
+                    },
                   ),
                 ],
               ),

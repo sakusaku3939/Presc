@@ -65,13 +65,10 @@ class ManuscriptScreen extends StatelessWidget {
             child: Row(
               children: [
                 RippleIconButton(
-                  child: IconButton(
-                    splashColor: Colors.grey[50],
-                    icon: Icon(Icons.menu),
-                    onPressed: () {
-                      scaffoldKey.currentState.openDrawer();
-                    },
-                  ),
+                  Icons.menu,
+                  onPressed: () {
+                    scaffoldKey.currentState.openDrawer();
+                  },
                 ),
                 Expanded(
                   child: Container(
