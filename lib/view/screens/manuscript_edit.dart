@@ -16,27 +16,20 @@ class ManuscriptEditScreen extends StatelessWidget {
           type: MaterialType.transparency,
           child: Container(
             color: Colors.white,
-            child: Scrollbar(
-              child: CustomScrollView(
-                slivers: <Widget>[
-                  SliverAppBar(
-                    floating: true,
-                    snap: true,
-                    pinned: true,
-                    toolbarHeight: 56,
-                    expandedHeight: 56,
-                    backgroundColor: Colors.white,
-                    elevation: 1,
-                    leading: Container(),
-                    flexibleSpace: _menuBar(context),
-                  ),
-                  SliverList(
-                    delegate: SliverChildListDelegate([_content()]),
-                  ),
-                ],
-              ),
+            child: Column(
+              children: [
+                Container(child: _menuBar(context)),
+                Expanded(child: SingleChildScrollView(child: _content())),
+                Container(child: _footer()),
+              ],
             ),
           ),
+        ),
+      ),
+      floatingActionButton: SafeArea(
+        child: FloatingActionButton(
+          onPressed: () {},
+          child: Icon(Icons.play_arrow),
         ),
       ),
     );
@@ -124,6 +117,26 @@ class ManuscriptEditScreen extends StatelessWidget {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _footer() {
+    return Container(
+      height: 48,
+      padding: EdgeInsets.only(left: 16, right: 88),
+      child: Row(
+        children: [
+          RippleIconButton(
+            child: IconButton(
+              icon: Icon(
+                Icons.playlist_add,
+                color: Colors.grey[700],
+              ),
+              onPressed: () {},
+            ),
+          )
         ],
       ),
     );
