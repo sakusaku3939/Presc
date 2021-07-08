@@ -84,7 +84,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             style: TextStyle(fontSize: 24),
           ),
           Container(
-            margin: EdgeInsets.only(top: 16, bottom: 40),
+            margin: EdgeInsets.only(top: 16, bottom: 32),
             child: Text(
               "吾輩は猫である。名前はまだ無い。\n"
               "どこで生れたかとんと見当がつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。吾輩はここで始めて人間というものを見た。しかもあとで聞くとそれは書生という人間中で一番獰悪な種族であったそうだ。この書生というのは時々我々を捕えて煮て食うという話である。しかしその当時は何という考もなかったから別段恐しいとも思わなかった。ただ彼の掌に載せられてスーと持ち上げられた時何だかフワフワした感じがあったばかりである。\n"
@@ -103,6 +103,7 @@ class ManuscriptEditScreen extends StatelessWidget {
   }
 
   Widget _footer() {
+    final _chipList = ["夏目漱石", "練習用"];
     return Container(
       height: 48,
       padding: EdgeInsets.only(left: 16, right: 88),
@@ -111,7 +112,38 @@ class ManuscriptEditScreen extends StatelessWidget {
           RippleIconButton(
             Icons.playlist_add,
             onPressed: () {},
-          )
+          ),
+          Expanded(
+            child: ScrollConfiguration(
+              behavior: ScrollBehavior(),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    for (var i = 0; i < _chipList.length; i++)
+                      Padding(
+                        padding: EdgeInsets.only(left: 8),
+                        child: Chip(
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(color: Colors.grey[300], width: 1),
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          deleteIcon: Icon(
+                            Icons.cancel,
+                            color: Colors.grey[700],
+                            size: 18,
+                          ),
+                          backgroundColor: Colors.transparent,
+                          key: Key(i.toString()),
+                          label: Text(_chipList[i]),
+                          onDeleted: () => {},
+                        ),
+                      )
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
