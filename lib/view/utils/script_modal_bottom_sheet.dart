@@ -5,7 +5,10 @@ class ScriptModalBottomSheet {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(12),
+          topRight: Radius.circular(12),
+        ),
       ),
       backgroundColor: Colors.white,
       builder: (ctx) {
