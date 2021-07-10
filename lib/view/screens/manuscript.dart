@@ -5,33 +5,29 @@ import 'package:presc/view/utils/script_card.dart';
 
 class ManuscriptScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       body: SafeArea(
-        child: PrimaryScrollController(
-          controller: _scrollController,
-          child: Scrollbar(
-            child: CustomScrollView(
-              slivers: <Widget>[
-                SliverAppBar(
-                  floating: true,
-                  snap: true,
-                  toolbarHeight: 80,
-                  expandedHeight: 0,
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                  leading: Container(),
-                  flexibleSpace: _searchBar(_scaffoldKey),
-                ),
-                SliverList(
-                  delegate: SliverChildListDelegate([cardPageView()]),
-                )
-              ],
-            ),
+        child: Scrollbar(
+          child: CustomScrollView(
+            slivers: [
+              SliverAppBar(
+                floating: true,
+                snap: true,
+                toolbarHeight: 80,
+                expandedHeight: 0,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                leading: Container(),
+                flexibleSpace: _searchBar(),
+              ),
+              SliverList(
+                delegate: SliverChildListDelegate([cardPageView()]),
+              )
+            ],
           ),
         ),
       ),
@@ -53,7 +49,7 @@ class ManuscriptScreen extends StatelessWidget {
     );
   }
 
-  Widget _searchBar(scaffoldKey) {
+  Widget _searchBar() {
     return SafeArea(
       child: Container(
         margin: const EdgeInsets.all(16),
@@ -67,7 +63,7 @@ class ManuscriptScreen extends StatelessWidget {
                 RippleIconButton(
                   Icons.menu,
                   onPressed: () {
-                    scaffoldKey.currentState.openDrawer();
+                    _scaffoldKey.currentState.openDrawer();
                   },
                 ),
                 Expanded(

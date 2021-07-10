@@ -6,15 +6,15 @@ import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script_modal_bottom_sheet.dart';
 
 Widget cardPageView() {
-  final _itemList = ['one', 'two', 'three', 'for'];
+  final _keyList = ['one', 'two', 'three', 'for'];
   return Container(
     child: Column(
       children: [
-        for (var item in _itemList)
+        for (var key in _keyList)
           Container(
             height: 280,
             margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-            child: ScriptCard(item),
+            child: ScriptCard(key),
           )
       ],
     ),

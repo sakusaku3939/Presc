@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:presc/view/screens/filter_tag.dart';
 
 class DrawerMenu extends StatelessWidget {
   @override
@@ -48,7 +48,7 @@ class DrawerMenu extends StatelessWidget {
   }
 
   Widget _tagList(BuildContext context) {
-    final _itemList = ['宮沢賢治', '練習用'];
+    final _tagList = ['宮沢賢治', '練習用'];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,12 +88,19 @@ class DrawerMenu extends StatelessWidget {
             ],
           ),
         ),
-        for (var item in _itemList)
+        for (var tag in _tagList)
           ListTile(
             leading: Icon(Icons.tag),
-            title: Text(item, style: TextStyle(fontSize: 14)),
+            title: Text(tag, style: TextStyle(fontSize: 14)),
             dense: true,
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => FilterTagScreen(tag),
+                ),
+              );
+            },
           ),
         Container(
           margin: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
