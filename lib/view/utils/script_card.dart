@@ -72,24 +72,11 @@ class ScriptCard extends StatelessWidget {
           children: [
             Container(
               margin: const EdgeInsets.only(left: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Text(
-                      "原稿1",
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 24),
-                    ),
-                  ),
-                  // RippleIconButton(
-                  //   Icons.more_vert,
-                  //   onPressed: () {
-                  //     ScriptModalBottomSheet().show(context);
-                  //   },
-                  // ),
-                ],
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "原稿1",
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 24),
               ),
             ),
             DefaultTextStyle(

@@ -133,26 +133,5 @@ class ManuscriptScreen extends StatelessWidget {
         ],
       ),
     );
-    // return AppBar(
-    //   elevation: 0,
-    //   title: Text(
-    //     model.currentTag,
-    //     style: TextStyle(fontSize: 20),
-    //   ),
-    //   leading: IconButton(
-    //     icon: Icon(Icons.navigate_before),
-    //     iconSize: 32,
-    //     onPressed: () {
-    //       model.itemList = '';
-    //       model.isVisibleSearchbar = true;
-    //     },
-    //   ),
-    //   actions: <Widget>[
-    //     IconButton(
-    //       icon: Icon(Icons.tune),
-    //       onPressed: () => {},
-    //     ),
-    //   ],
-    // );
   }
 }
