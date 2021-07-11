@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:presc/view/utils/drawer_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script_card.dart';
+import 'package:presc/viewModel/manuscript_provider.dart';
+import 'package:provider/provider.dart';
 
 class ManuscriptScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -14,15 +17,21 @@ class ManuscriptScreen extends StatelessWidget {
         child: Scrollbar(
           child: CustomScrollView(
             slivers: [
-              SliverAppBar(
-                floating: true,
-                snap: true,
-                toolbarHeight: 80,
-                expandedHeight: 0,
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                leading: Container(),
-                flexibleSpace: _searchBar(),
+              Consumer<ManuscriptProvider>(
+                builder: (context, model, child) {
+                  return SliverAppBar(
+                    floating: true,
+                    snap: true,
+                    toolbarHeight: 80,
+                    expandedHeight: 0,
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    leading: Container(),
+                    flexibleSpace: model.isVisibleSearchbar
+                        ? _searchbar()
+                        : _appbar(model),
+                  );
+                },
               ),
               SliverList(
                 delegate: SliverChildListDelegate([cardPageView()]),
@@ -38,7 +47,7 @@ class ManuscriptScreen extends StatelessWidget {
             FocusManager.instance.primaryFocus.unfocus();
           }
         },
-        child: DrawerMenu(),
+        child: DrawerMenu(_scaffoldKey),
       ),
       floatingActionButton: SafeArea(
         child: FloatingActionButton(
@@ -49,7 +58,7 @@ class ManuscriptScreen extends StatelessWidget {
     );
   }
 
-  Widget _searchBar() {
+  Widget _searchbar() {
     return SafeArea(
       child: Container(
         margin: const EdgeInsets.all(16),
@@ -83,5 +92,67 @@ class ManuscriptScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _appbar(ManuscriptProvider model) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      color: Colors.white,
+      height: 56,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              RippleIconButton(
+                Icons.navigate_before,
+                size: 32,
+                onPressed: () {
+                  model.itemList = '';
+                  model.isVisibleSearchbar = true;
+                },
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 24),
+                child: Text(
+                  model.currentTag,
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              RippleIconButton(
+                Icons.tune,
+                onPressed: () => {},
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+    // return AppBar(
+    //   elevation: 0,
+    //   title: Text(
+    //     model.currentTag,
+    //     style: TextStyle(fontSize: 20),
+    //   ),
+    //   leading: IconButton(
+    //     icon: Icon(Icons.navigate_before),
+    //     iconSize: 32,
+    //     onPressed: () {
+    //       model.itemList = '';
+    //       model.isVisibleSearchbar = true;
+    //     },
+    //   ),
+    //   actions: <Widget>[
+    //     IconButton(
+    //       icon: Icon(Icons.tune),
+    //       onPressed: () => {},
+    //     ),
+    //   ],
+    // );
   }
 }

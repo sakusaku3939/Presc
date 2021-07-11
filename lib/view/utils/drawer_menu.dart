@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:presc/view/screens/filter_tag.dart';
+import 'package:presc/viewModel/manuscript_provider.dart';
+import 'package:provider/provider.dart';
 
 class DrawerMenu extends StatelessWidget {
+  DrawerMenu(this._scaffoldKey);
+
+  final GlobalKey<ScaffoldState> _scaffoldKey;
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -89,16 +94,17 @@ class DrawerMenu extends StatelessWidget {
           ),
         ),
         for (var tag in _tagList)
-          ListTile(
-            leading: Icon(Icons.tag),
-            title: Text(tag, style: TextStyle(fontSize: 14)),
-            dense: true,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (BuildContext context) => FilterTagScreen(tag),
-                ),
+          Consumer<ManuscriptProvider>(
+            builder: (context, model, child) {
+              return ListTile(
+                leading: Icon(Icons.tag),
+                title: Text(tag, style: TextStyle(fontSize: 14)),
+                dense: true,
+                onTap: () {
+                  model.itemList = tag;
+                  model.isVisibleSearchbar = false;
+                  _scaffoldKey.currentState.openEndDrawer();
+                },
               );
             },
           ),

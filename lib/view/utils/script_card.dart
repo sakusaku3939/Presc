@@ -4,21 +4,16 @@ import 'package:flutter_scale_tap/flutter_scale_tap.dart';
 import 'package:presc/view/screens/manuscript_edit.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script_modal_bottom_sheet.dart';
+import 'package:presc/viewModel/manuscript_provider.dart';
+import 'package:provider/provider.dart';
 
 Widget cardPageView({String key = "", double marginTop = 0}) {
-  List<Widget> _itemList = List.generate(
-    4,
-    (i) => Container(
-      height: 280,
-      margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-      child: ScriptCard("$key$i"),
-    ),
-  );
-
   return Container(
     margin: EdgeInsets.only(top: marginTop),
-    child: Column(
-      children: _itemList
+    child: Consumer<ManuscriptProvider>(
+      builder: (context, model, child) {
+        return Column(children: model.itemList);
+      },
     ),
   );
 }
