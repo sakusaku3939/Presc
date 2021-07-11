@@ -72,21 +72,24 @@ class DrawerMenu extends StatelessWidget {
                   fontSize: 12,
                 ),
               ),
-              TextButton(
-                style: ButtonStyle(
-                  overlayColor: MaterialStateProperty.all(Colors.black12),
-                  padding: MaterialStateProperty.all(
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              Padding(
+                padding: EdgeInsets.only(right: 12),
+                child: TextButton(
+                  style: ButtonStyle(
+                    overlayColor: MaterialStateProperty.all(Colors.black12),
+                    padding: MaterialStateProperty.all(
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    ),
+                    minimumSize: MaterialStateProperty.all(Size.zero),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
-                  minimumSize: MaterialStateProperty.all(Size.zero),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-                onPressed: () {},
-                child: Text(
-                  "編集",
-                  style: TextStyle(
-                    color: Colors.grey[700],
-                    fontSize: 12,
+                  onPressed: () {},
+                  child: Text(
+                    "編集",
+                    style: TextStyle(
+                      color: Colors.grey[700],
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ),
@@ -115,7 +118,7 @@ class DrawerMenu extends StatelessWidget {
               Icon(Icons.add, color: Colors.black45),
               Expanded(
                 child: Container(
-                  margin: EdgeInsets.only(left: 32),
+                  margin: EdgeInsets.only(left: 32, right: 16),
                   child: TextField(
                     cursorColor: Colors.black45,
                     keyboardType: TextInputType.text,
