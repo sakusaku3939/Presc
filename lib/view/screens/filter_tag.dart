@@ -9,12 +9,33 @@ class FilterTagScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: appBar(context, tag),
       body: Scrollbar(
         child: SingleChildScrollView(
-          child: cardPageView(key: tag, marginTop: 20)
+          child: cardPageView(key: tag, marginTop: 16),
         ),
       ),
+    );
+  }
+
+  Widget appBar(BuildContext context, String tag) {
+    return AppBar(
+      elevation: 0,
+      title: Text(
+        tag,
+        style: TextStyle(fontSize: 20),
+      ),
+      leading: IconButton(
+        icon: Icon(Icons.navigate_before),
+        iconSize: 32,
+        onPressed: () => {Navigator.pop(context)},
+      ),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.tune),
+          onPressed: () => {},
+        ),
+      ],
     );
   }
 }

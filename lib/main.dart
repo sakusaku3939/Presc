@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'Presc',
         theme: ThemeData(
-          primaryColor: Colors.deepOrange[400],
+          primaryColor: Colors.white,
           accentColor: Colors.deepOrange[400],
         ),
         localizationsDelegates: [
