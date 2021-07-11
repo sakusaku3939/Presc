@@ -124,9 +124,23 @@ class ManuscriptScreen extends StatelessWidget {
           ),
           Row(
             children: [
-              RippleIconButton(
-                Icons.more_vert,
-                onPressed: () => {},
+              ClipOval(
+                child: Material(
+                  type: MaterialType.transparency,
+                  child: PopupMenuButton<String>(
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        child: Text("タグ名を変更"),
+                        value: "タグ名を変更",
+                      ),
+                      PopupMenuItem(
+                        child: Text("タグを削除"),
+                        value: "タグを削除",
+                      ),
+                    ],
+                    onSelected: (value) {},
+                  ),
+                ),
               ),
             ],
           )
