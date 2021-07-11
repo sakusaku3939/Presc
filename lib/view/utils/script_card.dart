@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_scale_tap/flutter_scale_tap.dart';
 import 'package:presc/view/screens/manuscript_edit.dart';
-import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script_modal_bottom_sheet.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:provider/provider.dart';
