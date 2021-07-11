@@ -60,6 +60,9 @@ class ScriptCard extends StatelessWidget {
           ),
         );
       },
+      onLongPress: () {
+        ScriptModalBottomSheet().show(context);
+      },
       child: Container(
         constraints: const BoxConstraints.expand(),
         padding: const EdgeInsets.only(left: 16, right: 16),
@@ -80,12 +83,12 @@ class ScriptCard extends StatelessWidget {
                       style: TextStyle(fontSize: 24),
                     ),
                   ),
-                  RippleIconButton(
-                    Icons.more_vert,
-                    onPressed: () {
-                      ScriptModalBottomSheet().show(context);
-                    },
-                  ),
+                  // RippleIconButton(
+                  //   Icons.more_vert,
+                  //   onPressed: () {
+                  //     ScriptModalBottomSheet().show(context);
+                  //   },
+                  // ),
                 ],
               ),
             ),

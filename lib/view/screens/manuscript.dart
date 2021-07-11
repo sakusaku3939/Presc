@@ -125,7 +125,7 @@ class ManuscriptScreen extends StatelessWidget {
           Row(
             children: [
               RippleIconButton(
-                Icons.tune,
+                Icons.more_vert,
                 onPressed: () => {},
               ),
             ],
