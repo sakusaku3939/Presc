@@ -3,7 +3,6 @@ import 'package:presc/view/utils/script_card.dart';
 
 class ManuscriptProvider with ChangeNotifier {
   String currentTag = '';
-  List<Widget> _itemList;
 
   bool _isVisibleSearchbar = true;
 
@@ -14,6 +13,7 @@ class ManuscriptProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  List<Widget> _itemList;
   final List<Widget> _defaultItemList = List.generate(
     4,
     (i) => Container(
