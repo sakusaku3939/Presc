@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presc/view/screens/tag_edit.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -83,7 +84,12 @@ class DrawerMenu extends StatelessWidget {
                     minimumSize: MaterialStateProperty.all(Size.zero),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => TagEditScreen()),
+                    );
+                  },
                   child: Text(
                     "編集",
                     style: TextStyle(
