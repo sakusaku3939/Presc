@@ -9,16 +9,19 @@ class RippleIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipOval(
-      child: Material(
-        type: MaterialType.transparency,
-        child: IconButton(
-          icon: Icon(
-            icon,
-            color: Colors.grey[700],
-            size: size,
+    return AspectRatio(
+      aspectRatio: 1,
+      child: ClipOval(
+        child: Material(
+          type: MaterialType.transparency,
+          child: IconButton(
+            icon: Icon(
+              icon,
+              color: Colors.grey[700],
+              size: size,
+            ),
+            onPressed: onPressed,
           ),
-          onPressed: onPressed,
         ),
       ),
     );
