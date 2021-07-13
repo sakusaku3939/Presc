@@ -77,35 +77,8 @@ class TagEditScreen extends StatelessWidget {
   }
 }
 
-class _TagEditScreenAppbar extends StatefulWidget
+class _TagEditScreenAppbar extends StatelessWidget
     implements PreferredSizeWidget {
-  @override
-  State<StatefulWidget> createState() => _TagEditScreenAppbarState();
-
-  @override
-  Size get preferredSize => Size.fromHeight(AppBar().preferredSize.height);
-}
-
-class _TagEditScreenAppbarState extends State<_TagEditScreenAppbar>
-    with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-  Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    _animation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.fastOutSlowIn,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<EditableTagItemProvider>(
@@ -168,8 +141,5 @@ class _TagEditScreenAppbarState extends State<_TagEditScreenAppbar>
   }
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  Size get preferredSize => Size.fromHeight(AppBar().preferredSize.height);
 }
