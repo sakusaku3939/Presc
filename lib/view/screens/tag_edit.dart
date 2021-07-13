@@ -112,9 +112,7 @@ class _TagEditScreenAppbar extends StatelessWidget
             elevation: 0,
             leading: RippleIconButton(
               Icons.clear,
-              onPressed: () {
-                model.isDeleteSelectionMode = false;
-              },
+              onPressed: () => model.isDeleteSelectionMode = false,
             ),
             title: Text(
               "タグを削除",
