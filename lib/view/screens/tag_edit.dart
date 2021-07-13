@@ -16,109 +16,63 @@ class TagEditScreen extends StatelessWidget {
           FocusManager.instance.primaryFocus.unfocus();
         }
       },
-      child: Consumer<EditableTagItemProvider>(
-        builder: (context, model, child) {
-          return Scaffold(
-            appBar: _TagEditScreenAppbar(),
-            backgroundColor: Colors.white,
-            body: SafeArea(
-              child: Scrollbar(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      for (var i = 0; i < _tagList.length; i++)
-                        EditableTagItem(i, _tagList[i]),
-                      Container(
-                        margin:
-                            EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                        child: Row(
-                          children: [
-                            Icon(Icons.add, color: Colors.black45),
-                            Expanded(
-                              child: Container(
-                                margin: EdgeInsets.only(left: 32, right: 16),
-                                child: TextField(
-                                  cursorColor: Colors.black45,
-                                  keyboardType: TextInputType.text,
-                                  textInputAction: TextInputAction.go,
-                                  decoration: InputDecoration(
-                                    isDense: true,
-                                    border: InputBorder.none,
-                                    contentPadding: EdgeInsets.all(0),
-                                    hintStyle: TextStyle(fontSize: 16),
-                                    hintText: '新しいタグを追加',
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+      child: Scaffold(
+        appBar: _TagEditScreenAppbar(),
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Scrollbar(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  for (var i = 0; i < _tagList.length; i++)
+                    EditableTagItem(i, _tagList[i]),
+                  _addNewTag(),
+                ],
               ),
             ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _appbar(BuildContext context, EditableTagItemProvider model) {
-    return AppBar(
-      elevation: 0,
-      leading: RippleIconButton(
-        Icons.navigate_before,
-        size: 32,
-        onPressed: () {
-          model.isDeleteSelectionMode = false;
-          Navigator.pop(context);
-        },
-      ),
-      title: Text(
-        "タグの編集",
-        style: TextStyle(fontSize: 20),
-      ),
-      actions: [
-        Consumer<EditableTagItemProvider>(
-          builder: (context, model, child) {
-            return Container(
-              margin: EdgeInsets.only(right: 4),
-              child: RippleIconButton(
-                Icons.delete_sweep_outlined,
-                onPressed: () => model.isDeleteSelectionMode = true,
-              ),
-            );
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _deleteSelectionAppbar(EditableTagItemProvider model) {
-    return AppBar(
-      elevation: 0,
-      leading: RippleIconButton(
-        Icons.clear,
-        // size: 32,
-        onPressed: () {
-          model.isDeleteSelectionMode = false;
-        },
-      ),
-      title: Text(
-        "ごみ箱に移動",
-        style: TextStyle(fontSize: 20),
-      ),
-      actions: [
-        Container(
-          margin: EdgeInsets.only(right: 4),
-          child: RippleIconButton(
-            Icons.delete_outlined,
-            onPressed: () => {},
           ),
         ),
-      ],
+      ),
+    );
+  }
+
+  Widget _addNewTag() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+      child: Row(
+        children: [
+          Icon(Icons.add, color: Colors.black45),
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.only(left: 32, right: 16),
+              child: Consumer<EditableTagItemProvider>(
+                builder: (context, model, child) {
+                  return model.isDeleteSelectionMode
+                      ? Text(
+                          '新しいタグを追加',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black.withOpacity(0.6),
+                          ),
+                        )
+                      : TextField(
+                          cursorColor: Colors.black45,
+                          keyboardType: TextInputType.text,
+                          textInputAction: TextInputAction.go,
+                          decoration: InputDecoration(
+                            isDense: true,
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.all(0),
+                            hintStyle: TextStyle(fontSize: 16),
+                            hintText: '新しいタグを追加',
+                          ),
+                        );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
