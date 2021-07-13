@@ -50,15 +50,13 @@ class ScriptCard extends StatelessWidget {
   Widget card(BuildContext context) {
     return ScaleTap(
       scaleMinValue: 0.96,
-      onPressed: () {
-        Navigator.push(
-          context,
-          PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 500),
-            pageBuilder: (_, __, ___) => ManuscriptEditScreen(heroTag),
-          ),
-        );
-      },
+      onPressed: () => Navigator.push(
+        context,
+        PageRouteBuilder(
+          transitionDuration: Duration(milliseconds: 500),
+          pageBuilder: (_, __, ___) => ManuscriptEditScreen(heroTag),
+        ),
+      ),
       onLongPress: () {
         ScriptModalBottomSheet().show(context);
       },

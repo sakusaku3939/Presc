@@ -84,12 +84,10 @@ class DrawerMenu extends StatelessWidget {
                     minimumSize: MaterialStateProperty.all(Size.zero),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TagEditScreen()),
-                    );
-                  },
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => TagEditScreen()),
+                  ),
                   child: Text(
                     "編集",
                     style: TextStyle(
