@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:presc/view/screens/manuscript.dart';
+import 'package:presc/viewModel/editable_tag_item_provider.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:presc/viewModel/bottom_navigation_bar_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,6 +16,8 @@ void main() async {
         providers: [
           ChangeNotifierProvider(
               create: (context) => ManuscriptProvider()),
+          ChangeNotifierProvider(
+              create: (context) => EditableTagItemProvider()),
         ],
         child: MyApp(),
       ),
