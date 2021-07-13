@@ -112,7 +112,6 @@ class _TagEditScreenAppbar extends StatelessWidget
             elevation: 0,
             leading: RippleIconButton(
               Icons.clear,
-              // size: 32,
               onPressed: () {
                 model.isDeleteSelectionMode = false;
               },
