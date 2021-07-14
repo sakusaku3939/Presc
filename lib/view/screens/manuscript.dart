@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:presc/view/screens/manuscript_search.dart';
 import 'package:presc/view/utils/drawer_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script_card.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:animations/animations.dart';
 
 class ManuscriptScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -39,15 +41,7 @@ class ManuscriptScreen extends StatelessWidget {
           ),
         ),
       ),
-      drawer: GestureDetector(
-        onTap: () {
-          final FocusScopeNode currentScope = FocusScope.of(context);
-          if (!currentScope.hasPrimaryFocus && currentScope.hasFocus) {
-            FocusManager.instance.primaryFocus.unfocus();
-          }
-        },
-        child: DrawerMenu(_scaffoldKey),
-      ),
+      drawer: DrawerMenu(_scaffoldKey),
       floatingActionButton: SafeArea(
         child: FloatingActionButton(
           onPressed: () {},
@@ -64,28 +58,35 @@ class ManuscriptScreen extends StatelessWidget {
         decoration: cardShadow(8),
         child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(8)),
-          child: Container(
-            margin: const EdgeInsets.only(left: 4),
-            child: Row(
-              children: [
-                RippleIconButton(
-                  Icons.menu,
-                  onPressed: () {
-                    _scaffoldKey.currentState.openDrawer();
-                  },
-                ),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.only(left: 24),
-                    child: Text(
-                      "原稿を検索",
-                      style: TextStyle(
-                        color: Colors.grey,
+          child: OpenContainer(
+            openBuilder: (_, closeContainer) => ManuscriptSearchScreen(),
+            onClosed: (res) => {},
+            tappable: true,
+            closedElevation: 0,
+            closedBuilder: (_, openContainer) => GestureDetector(
+              onTap: openContainer,
+              child: Container(
+                margin: const EdgeInsets.only(left: 4),
+                child: Row(
+                  children: [
+                    RippleIconButton(
+                      Icons.menu,
+                      onPressed: () => _scaffoldKey.currentState.openDrawer(),
+                    ),
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 24),
+                        child: Text(
+                          "原稿を検索",
+                          style: TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
