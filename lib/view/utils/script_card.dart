@@ -6,9 +6,9 @@ import 'package:presc/view/utils/script_modal_bottom_sheet.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:provider/provider.dart';
 
-Widget cardPageView({String key = "", double marginTop = 0}) {
+Widget cardPageView() {
   return Container(
-    margin: EdgeInsets.only(top: marginTop),
+    margin: EdgeInsets.only(top: 16),
     child: Consumer<ManuscriptProvider>(
       builder: (context, model, child) {
         return Column(children: model.itemList);

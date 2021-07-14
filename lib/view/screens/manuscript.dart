@@ -12,49 +12,47 @@ class ManuscriptScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      body: SafeArea(
-        child: Scrollbar(
-          child: CustomScrollView(
-            slivers: [
-              Consumer<ManuscriptProvider>(
-                builder: (context, model, child) {
-                  return SliverAppBar(
+    return Consumer<ManuscriptProvider>(builder: (context, model, child) {
+      return Scaffold(
+        key: _scaffoldKey,
+        appBar: !model.isVisibleSearchbar ? _appbar(model) : null,
+        body: SafeArea(
+          child: Scrollbar(
+            child: CustomScrollView(
+              slivers: [
+                if (model.isVisibleSearchbar)
+                  SliverAppBar(
                     floating: true,
                     snap: true,
-                    toolbarHeight: 80,
+                    toolbarHeight: 64,
                     expandedHeight: 0,
                     backgroundColor: Colors.transparent,
                     elevation: 0,
                     leading: Container(),
-                    flexibleSpace: model.isVisibleSearchbar
-                        ? _searchbar()
-                        : _appbar(model),
-                  );
-                },
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate([cardPageView()]),
-              )
-            ],
+                    flexibleSpace: _searchbar(),
+                  ),
+                SliverList(
+                  delegate: SliverChildListDelegate([cardPageView()]),
+                )
+              ],
+            ),
           ),
         ),
-      ),
-      drawer: DrawerMenu(_scaffoldKey),
-      floatingActionButton: SafeArea(
-        child: FloatingActionButton(
-          onPressed: () {},
-          child: Icon(Icons.add),
+        drawer: DrawerMenu(_scaffoldKey),
+        floatingActionButton: SafeArea(
+          child: FloatingActionButton(
+            onPressed: () {},
+            child: Icon(Icons.add),
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _searchbar() {
     return SafeArea(
       child: Container(
-        margin: const EdgeInsets.all(16),
+        margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
         decoration: cardShadow(8),
         child: ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(8)),
@@ -95,57 +93,43 @@ class ManuscriptScreen extends StatelessWidget {
   }
 
   Widget _appbar(ManuscriptProvider model) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      color: Colors.white,
-      height: 56,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            children: [
-              RippleIconButton(
-                Icons.navigate_before,
-                size: 32,
-                onPressed: () {
-                  model.itemList = '';
-                  model.isVisibleSearchbar = true;
-                },
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 24),
-                child: Text(
-                  model.currentTag,
-                  style: TextStyle(fontSize: 20),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              ClipOval(
-                child: Material(
-                  type: MaterialType.transparency,
-                  child: PopupMenuButton<String>(
-                    itemBuilder: (context) => [
-                      PopupMenuItem(
-                        child: Text("タグ名を変更"),
-                        value: "タグ名を変更",
-                      ),
-                      PopupMenuItem(
-                        child: Text("タグを削除"),
-                        value: "タグを削除",
-                      ),
-                    ],
-                    onSelected: (value) {},
-                  ),
-                ),
-              ),
-            ],
-          )
-        ],
+    return AppBar(
+      elevation: 1,
+      leading: RippleIconButton(
+        Icons.navigate_before,
+        size: 32,
+        onPressed: () {
+          model.itemList = '';
+          model.isVisibleSearchbar = true;
+        },
       ),
+      title: Text(
+        model.currentTag,
+        style: TextStyle(fontSize: 20),
+      ),
+      actions: [
+        AspectRatio(
+          aspectRatio: 1,
+          child: ClipOval(
+            child: Material(
+              type: MaterialType.transparency,
+              child: PopupMenuButton<String>(
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    child: Text("タグ名を変更"),
+                    value: "タグ名を変更",
+                  ),
+                  PopupMenuItem(
+                    child: Text("タグを削除"),
+                    value: "タグを削除",
+                  ),
+                ],
+                onSelected: (value) {},
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
