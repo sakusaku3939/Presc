@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:presc/view/screens/tag_edit.dart';
+import 'package:presc/view/utils/unfocus_textfield.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -10,44 +11,46 @@ class DrawerMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      child: SafeArea(
-        child: ListView(
-          children: <Widget>[
-            Container(
-              height: 80,
-              child: DrawerHeader(
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: Divider.createBorderSide(
-                      context,
-                      color: Colors.grey[300],
+    return UnfocusTextField(
+      child: Drawer(
+        child: SafeArea(
+          child: ListView(
+            children: <Widget>[
+              Container(
+                height: 80,
+                child: DrawerHeader(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: Divider.createBorderSide(
+                        context,
+                        color: Colors.grey[300],
+                      ),
                     ),
                   ),
-                ),
-                margin: const EdgeInsets.only(bottom: 0),
-                padding: const EdgeInsets.fromLTRB(16, 28, 16, 30),
-                child: Image.asset(
-                  'assets/images/logo.png',
-                  alignment: Alignment.centerLeft,
+                  margin: const EdgeInsets.only(bottom: 0),
+                  padding: const EdgeInsets.fromLTRB(16, 28, 16, 30),
+                  child: Image.asset(
+                    'assets/images/logo.png',
+                    alignment: Alignment.centerLeft,
+                  ),
                 ),
               ),
-            ),
-            _tagList(context),
-            Divider(color: Colors.grey[300], height: 24),
-            ListTile(
-              leading: Icon(Icons.delete_outline),
-              title: Text('ごみ箱', style: TextStyle(fontSize: 14)),
-              dense: true,
-              onTap: () {},
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('設定', style: TextStyle(fontSize: 14)),
-              dense: true,
-              onTap: () {},
-            ),
-          ],
+              _tagList(context),
+              Divider(color: Colors.grey[300], height: 24),
+              ListTile(
+                leading: Icon(Icons.delete_outline),
+                title: Text('ごみ箱', style: TextStyle(fontSize: 14)),
+                dense: true,
+                onTap: () {},
+              ),
+              ListTile(
+                leading: Icon(Icons.settings),
+                title: Text('設定', style: TextStyle(fontSize: 14)),
+                dense: true,
+                onTap: () {},
+              ),
+            ],
+          ),
         ),
       ),
     );

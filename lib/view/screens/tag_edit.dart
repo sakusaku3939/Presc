@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presc/view/utils/editable_tag_item.dart';
 import 'package:presc/view/utils/ripple_button.dart';
+import 'package:presc/view/utils/unfocus_textfield.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -9,13 +10,7 @@ class TagEditScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final _tagList = ['宮沢賢治', '練習用'];
 
-    return GestureDetector(
-      onTap: () {
-        final FocusScopeNode currentScope = FocusScope.of(context);
-        if (!currentScope.hasPrimaryFocus && currentScope.hasFocus) {
-          FocusManager.instance.primaryFocus.unfocus();
-        }
-      },
+    return UnfocusTextField(
       child: Scaffold(
         appBar: _TagEditScreenAppbar(),
         backgroundColor: Colors.white,
