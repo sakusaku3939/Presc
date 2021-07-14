@@ -94,7 +94,7 @@ class ManuscriptScreen extends StatelessWidget {
 
   Widget _appbar(ManuscriptProvider model) {
     return AppBar(
-      elevation: 1,
+      elevation: 0,
       leading: RippleIconButton(
         Icons.navigate_before,
         size: 32,
