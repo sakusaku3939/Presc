@@ -27,7 +27,7 @@ jobs:
       - name: install flutter
         uses: subosito/flutter-action@v1
         with:
-          flutter-version: '1.20.2'
+          flutter-version: '2.2.3'
           channel: 'stable'
       
       - name: flutter dependencies install
