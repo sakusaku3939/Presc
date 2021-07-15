@@ -1,0 +1,48 @@
+name: Android CI/CD
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: install java 12.x
+        uses: actions/setup-java@v1
+        with:
+          java-version: '12.x'
+
+      - name: setup cache
+        uses: actions/cache@v1
+        with:
+          path: /Users/runner/hostedtoolcache/flutter
+          key: ${{ runner.OS }}-flutter-install-cache
+      
+      - name: install flutter
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '1.20.2'
+          channel: 'stable'
+      
+      - name: flutter dependencies install
+        run: flutter pub get
+      
+      - name: build apk
+        run: flutter build apk
+
+      - name: Distribute android apk
+        run: |
+          curl \
+            -H "Authorization: token ${{secrets.DEPLOYGATE_API_KEY}}" \
+            -F "file=@build/app/outputs/flutter-apk/app-release.apk" \
+            -F "message=git:$GIT_HASH" \
+            -F "distribution_name=$GIT_BRANCH" \
+            -F "release_note=new build" \
+            -F "distribution_key=${{secrets.DEPLOYGATE_DIST_PAGE_HASH}}" \
+            "https://deploygate.com/api/users/${{secrets.DEPLOYGATE_USER}}/apps"
