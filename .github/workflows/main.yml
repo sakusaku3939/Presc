@@ -39,10 +39,10 @@ jobs:
       - name: Distribute android apk
         run: |
           curl \
-            -H "Authorization: token ${{env.DEPLOYGATE_API_KEY}}" \
+            -H "Authorization: token ${{secrets.DEPLOYGATE_API_KEY}}" \
             -F "file=@build/app/outputs/flutter-apk/app-release.apk" \
             -F "message=git:`git rev-parse --short $GITHUB_SHA`" \
             -F "distribution_name=`git rev-parse --abbrev-ref $GITHUB_SHA`" \
             -F "release_note=new build" \
-            -F "distribution_key=${{env.DEPLOYGATE_DIST_PAGE_HASH}}" \
-            "https://deploygate.com/api/users/${{env.DEPLOYGATE_USER}}/apps"
+            -F "distribution_key=${{secrets.DEPLOYGATE_DIST_PAGE_HASH}}" \
+            "https://deploygate.com/api/users/${{secrets.DEPLOYGATE_USER}}/apps"
