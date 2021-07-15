@@ -33,13 +33,13 @@ class TagEditScreen extends StatelessWidget {
 
   Widget _addNewTag() {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+      margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
       child: Row(
         children: [
           Icon(Icons.add, color: Colors.black45),
           Expanded(
             child: Container(
-              margin: EdgeInsets.only(left: 32, right: 16),
+              margin: const EdgeInsets.only(left: 32, right: 16),
               child: Consumer<EditableTagItemProvider>(
                 builder: (context, model, child) {
                   return model.isDeleteSelectionMode
@@ -57,7 +57,7 @@ class TagEditScreen extends StatelessWidget {
                           decoration: InputDecoration(
                             isDense: true,
                             border: InputBorder.none,
-                            contentPadding: EdgeInsets.all(0),
+                            contentPadding: const EdgeInsets.all(0),
                             hintStyle: TextStyle(fontSize: 16),
                             hintText: '新しいタグを追加',
                           ),
@@ -95,7 +95,7 @@ class _TagEditScreenAppbar extends StatelessWidget
             ),
             actions: [
               Container(
-                margin: EdgeInsets.only(right: 4),
+                margin: const EdgeInsets.only(right: 4),
                 child: RippleIconButton(
                   Icons.delete_sweep_outlined,
                   onPressed: () => model.isDeleteSelectionMode = true,
@@ -115,7 +115,7 @@ class _TagEditScreenAppbar extends StatelessWidget
             ),
             actions: [
               Container(
-                margin: EdgeInsets.only(right: 4),
+                margin: const EdgeInsets.only(right: 4),
                 child: RippleIconButton(
                   Icons.delete_outlined,
                   onPressed: () => {},

@@ -77,7 +77,7 @@ class DrawerMenu extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(right: 12),
+                padding: const EdgeInsets.only(right: 12),
                 child: TextButton(
                   style: ButtonStyle(
                     overlayColor: MaterialStateProperty.all(Colors.black12),
@@ -119,13 +119,13 @@ class DrawerMenu extends StatelessWidget {
             },
           ),
         Container(
-          margin: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           child: Row(
             children: [
               Icon(Icons.add, color: Colors.black45),
               Expanded(
                 child: Container(
-                  margin: EdgeInsets.only(left: 32, right: 16),
+                  margin: const EdgeInsets.only(left: 32, right: 16),
                   child: TextField(
                     cursorColor: Colors.black45,
                     keyboardType: TextInputType.text,
@@ -133,7 +133,7 @@ class DrawerMenu extends StatelessWidget {
                     decoration: InputDecoration(
                       isDense: true,
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.all(0),
+                      contentPadding: const EdgeInsets.all(0),
                       hintStyle: TextStyle(fontSize: 14),
                       hintText: '新しいタグを追加',
                     ),

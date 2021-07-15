@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 Widget cardPageView() {
   return Container(
-    margin: EdgeInsets.only(top: 16),
+    margin: const EdgeInsets.only(top: 16),
     child: Consumer<ManuscriptProvider>(
       builder: (context, model, child) {
         return Column(children: model.itemList);

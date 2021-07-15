@@ -74,7 +74,7 @@ class ManuscriptEditScreen extends StatelessWidget {
 
   Widget _content() {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -84,7 +84,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             style: TextStyle(fontSize: 24),
           ),
           Container(
-            margin: EdgeInsets.only(top: 16, bottom: 32),
+            margin: const EdgeInsets.only(top: 16, bottom: 32),
             child: Text(
               "吾輩は猫である。名前はまだ無い。\n"
               "どこで生れたかとんと見当がつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。吾輩はここで始めて人間というものを見た。しかもあとで聞くとそれは書生という人間中で一番獰悪な種族であったそうだ。この書生というのは時々我々を捕えて煮て食うという話である。しかしその当時は何という考もなかったから別段恐しいとも思わなかった。ただ彼の掌に載せられてスーと持ち上げられた時何だかフワフワした感じがあったばかりである。\n"
@@ -106,7 +106,7 @@ class ManuscriptEditScreen extends StatelessWidget {
     final _chipList = ["夏目漱石", "練習用"];
     return Container(
       height: 48,
-      padding: EdgeInsets.only(left: 16, right: 88),
+      padding: const EdgeInsets.only(left: 16, right: 88),
       child: Row(
         children: [
           RippleIconButton(
@@ -122,7 +122,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                   children: [
                     for (var i = 0; i < _chipList.length; i++)
                       Padding(
-                        padding: EdgeInsets.only(left: 8),
+                        padding: const EdgeInsets.only(left: 8),
                         child: Chip(
                           shape: RoundedRectangleBorder(
                             side: BorderSide(color: Colors.grey[300], width: 1),
