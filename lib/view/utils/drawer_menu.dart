@@ -112,7 +112,7 @@ class DrawerMenu extends StatelessWidget {
                 dense: true,
                 onTap: () {
                   model.itemList = tag;
-                  model.isVisibleSearchbar = false;
+                  model.state = ManuscriptState.tag;
                   _scaffoldKey.currentState.openEndDrawer();
                 },
               );
