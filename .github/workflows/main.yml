@@ -35,7 +35,7 @@ jobs:
         run: flutter build apk
 
       - name: decode keystore
-        run: echo ${{ secrets.KEYSTORE }} | base64 --decode > ~/.android/debug.keystore
+        run: echo ${{ secrets.ENCODED_DEBUG_KEYSTORE }} | base64 --decode > ~/.android/debug.keystore
       
       - name: Distribute android apk
         run: |
