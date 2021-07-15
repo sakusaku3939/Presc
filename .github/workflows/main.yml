@@ -31,11 +31,11 @@ jobs:
       - name: flutter dependencies install
         run: flutter pub get
         
-      - name: build apk
-        run: flutter build apk
-
       - name: decode keystore
         run: echo ${{ secrets.ENCODED_DEBUG_KEYSTORE }} | base64 --decode > ~/.android/debug.keystore
+      
+      - name: build apk
+        run: flutter build apk
       
       - name: Distribute android apk
         run: |
