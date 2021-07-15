@@ -15,12 +15,12 @@ class ManuscriptScreen extends StatelessWidget {
     return Consumer<ManuscriptProvider>(builder: (context, model, child) {
       return Scaffold(
         key: _scaffoldKey,
-        appBar: !model.isVisibleSearchbar ? _appbar(model) : null,
+        appBar: model.state != ManuscriptState.home ? _appbar(model) : null,
         body: SafeArea(
           child: Scrollbar(
             child: CustomScrollView(
               slivers: [
-                if (model.isVisibleSearchbar)
+                if (model.state == ManuscriptState.home)
                   SliverAppBar(
                     floating: true,
                     snap: true,
@@ -100,7 +100,7 @@ class ManuscriptScreen extends StatelessWidget {
         size: 32,
         onPressed: () {
           model.itemList = '';
-          model.isVisibleSearchbar = true;
+          model.state = ManuscriptState.home;
         },
       ),
       title: Text(

@@ -4,12 +4,12 @@ import 'package:presc/view/utils/script_card.dart';
 class ManuscriptProvider with ChangeNotifier {
   String currentTag = '';
 
-  bool _isVisibleSearchbar = true;
+  int _state = ManuscriptState.home;
 
-  get isVisibleSearchbar => _isVisibleSearchbar;
+  get state => _state;
 
-  set isVisibleSearchbar(bool visible) {
-    _isVisibleSearchbar = visible;
+  set state(int state) {
+    _state = state;
     notifyListeners();
   }
 
@@ -45,4 +45,10 @@ class ManuscriptProvider with ChangeNotifier {
   ManuscriptProvider() {
     _itemList = _defaultItemList;
   }
+}
+
+class ManuscriptState {
+  static const int home = 0;
+  static const int tag = 1;
+  static const int trash = 2;
 }
