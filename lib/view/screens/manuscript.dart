@@ -151,7 +151,7 @@ class ManuscriptScreen extends StatelessWidget {
 
   Widget _trashActionsIcon() {
     return RippleIconButton(
-      Icons.delete_outline,
+      Icons.clear_all,
       onPressed: () => {},
     );
   }
