@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:presc/view/utils/editable_tag_item.dart';
 import 'package:presc/view/utils/ripple_button.dart';
-import 'package:presc/view/utils/unfocus_textfield.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +10,7 @@ class TagEditScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final _tagList = ['宮沢賢治', '練習用'];
 
-    return UnfocusTextField(
+    return KeyboardDismissOnTap(
       child: Scaffold(
         appBar: _TagEditScreenAppbar(),
         backgroundColor: Colors.white,

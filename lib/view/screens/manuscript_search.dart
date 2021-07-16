@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:presc/view/utils/ripple_button.dart';
-import 'package:presc/view/utils/unfocus_textfield.dart';
 
 class ManuscriptSearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return UnfocusTextField(
+    return KeyboardDismissOnTap(
       child: Scaffold(
         appBar: _appbar(context),
         body: SafeArea(
