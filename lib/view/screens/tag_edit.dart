@@ -40,9 +40,10 @@ class TagEditScreen extends StatelessWidget {
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(left: 32, right: 16),
-              child: Consumer<EditableTagItemProvider>(
-                builder: (context, model, child) {
-                  return model.isDeleteSelectionMode
+              child: Selector<EditableTagItemProvider, bool>(
+                selector: (_, model) => model.isDeleteSelectionMode,
+                builder: (context, isDeleteSelectionMode, child) {
+                  return isDeleteSelectionMode
                       ? Text(
                           '新しいタグを追加',
                           style: TextStyle(

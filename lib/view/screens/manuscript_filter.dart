@@ -51,10 +51,11 @@ class ManuscriptFilterScreen extends StatelessWidget {
           );
         },
       ),
-      title: Consumer<ManuscriptProvider>(
-        builder: (context, model, child) {
+      title: Selector<ManuscriptProvider, String>(
+        selector: (_, model) => model.currentTag,
+        builder: (context, currentTag, child) {
           return Text(
-            state == ManuscriptState.tag ? model.currentTag : "ごみ箱",
+            state == ManuscriptState.tag ? currentTag : "ごみ箱",
             style: TextStyle(fontSize: 20),
           );
         },

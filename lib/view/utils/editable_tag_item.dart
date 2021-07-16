@@ -10,11 +10,10 @@ class EditableTagItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<EditableTagItemProvider>(
-      builder: (context, model, child) {
-        return model.isDeleteSelectionMode
-            ? _checkboxList(context, model)
-            : _tagList();
+    return Selector<EditableTagItemProvider, bool>(
+      selector: (_, model) => model.isDeleteSelectionMode,
+      builder: (context, isDeleteSelectionMode, child) {
+        return isDeleteSelectionMode ? _checkboxList(context) : _tagList();
       },
     );
   }
@@ -50,45 +49,51 @@ class EditableTagItem extends StatelessWidget {
     );
   }
 
-  Widget _checkboxList(BuildContext context, EditableTagItemProvider model) {
-    return Container(
-      color: model.checkedList[index]
-          ? Theme.of(context).accentColor.withOpacity(.1)
-          : Colors.white,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () => {model.toggleChecked(index)},
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: Transform.scale(
-                    scale: 1.1,
-                    child: Checkbox(
-                      shape: CircleBorder(),
-                      value: model.checkedList[index],
-                      activeColor: Theme.of(context).accentColor,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      onChanged: (bool value) => model.toggleChecked(index),
+  Widget _checkboxList(BuildContext context) {
+    return Consumer<EditableTagItemProvider>(
+      builder: (context, model, child) {
+        return Container(
+          color: model.checkedList[index]
+              ? Theme.of(context).accentColor.withOpacity(.1)
+              : Colors.white,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => {model.toggleChecked(index)},
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: Transform.scale(
+                        scale: 1.1,
+                        child: Checkbox(
+                          shape: CircleBorder(),
+                          value: model.checkedList[index],
+                          activeColor: Theme.of(context).accentColor,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          onChanged: (bool value) => model.toggleChecked(index),
+                        ),
+                      ),
                     ),
-                  ),
+                    SizedBox(width: 32),
+                    Expanded(
+                      child: Text(
+                        tag,
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(width: 32),
-                Expanded(
-                  child: Text(
-                    tag,
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
