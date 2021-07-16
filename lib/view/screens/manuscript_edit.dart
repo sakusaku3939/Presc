@@ -48,7 +48,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             RippleIconButton(
               Icons.navigate_before,
               size: 32,
-              onPressed: () => {Navigator.pop(context)},
+              onPressed: () => Navigator.pop(context),
             ),
             Row(
               children: [

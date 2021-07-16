@@ -59,7 +59,7 @@ class EditableTagItem extends StatelessWidget {
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: () => {model.toggleChecked(index)},
+              onTap: () => model.toggleChecked(index),
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
