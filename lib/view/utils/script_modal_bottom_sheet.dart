@@ -19,14 +19,14 @@ class ScriptModalBottomSheet {
 
   Widget _sheet(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: 8),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Container(
             width: 30,
             height: 4,
-            margin: EdgeInsets.only(top: 6, bottom: 4),
+            margin: const EdgeInsets.only(top: 6, bottom: 4),
             decoration: BoxDecoration(
               color: Colors.grey[300],
               border: Border.all(color: Colors.grey[300]),
