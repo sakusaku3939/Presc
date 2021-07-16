@@ -37,11 +37,19 @@ class DrawerMenu extends StatelessWidget {
               ),
               _tagList(context),
               Divider(color: Colors.grey[300], height: 24),
-              ListTile(
-                leading: Icon(Icons.delete_outline),
-                title: Text('ごみ箱', style: TextStyle(fontSize: 14)),
-                dense: true,
-                onTap: () {},
+              Consumer<ManuscriptProvider>(
+                builder: (context, model, child) {
+                  return ListTile(
+                    leading: Icon(Icons.delete_outline),
+                    title: Text('ごみ箱', style: TextStyle(fontSize: 14)),
+                    dense: true,
+                    onTap: () {
+                      model.itemList = "trash=ごみ箱";
+                      model.state = ManuscriptState.trash;
+                      _scaffoldKey.currentState.openEndDrawer();
+                    },
+                  );
+                },
               ),
               ListTile(
                 leading: Icon(Icons.settings),
@@ -111,7 +119,7 @@ class DrawerMenu extends StatelessWidget {
                 title: Text(tag, style: TextStyle(fontSize: 14)),
                 dense: true,
                 onTap: () {
-                  model.itemList = tag;
+                  model.itemList = "tag=$tag";
                   model.state = ManuscriptState.tag;
                   _scaffoldKey.currentState.openEndDrawer();
                 },

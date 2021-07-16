@@ -26,24 +26,38 @@ class ManuscriptProvider with ChangeNotifier {
   get itemList => _itemList;
 
   set itemList(String key) {
-    if (key == '') {
-      _itemList = _defaultItemList;
-    } else {
-      _itemList = List.generate(
-        1,
-        (i) => Container(
-          height: 280,
-          margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-          child: ScriptCard("$key$i"),
-        ),
-      );
+    final match = RegExp(r"([a-z]+)=([^&]+)").allMatches(key);
+    final keyType = match.isNotEmpty ? match.first.group(1) : "";
+    final keyName = match.isNotEmpty ? match.first.group(2) : "";
+
+    switch (keyType) {
+      case "tag":
+        _itemList = _generateScriptCard(key, 1);
+        break;
+      case "trash":
+        _itemList = _generateScriptCard(key, 2);
+        break;
+      default:
+        _itemList = _defaultItemList;
+        break;
     }
-    currentTag = key;
+    currentTag = keyName;
     notifyListeners();
   }
 
   ManuscriptProvider() {
     _itemList = _defaultItemList;
+  }
+
+  List<Widget> _generateScriptCard(String key, int length) {
+    return List.generate(
+      length,
+      (i) => Container(
+        height: 280,
+        margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+        child: ScriptCard("$key$i"),
+      ),
+    );
   }
 }
 

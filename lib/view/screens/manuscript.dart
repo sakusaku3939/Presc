@@ -104,32 +104,45 @@ class ManuscriptScreen extends StatelessWidget {
         },
       ),
       title: Text(
-        model.currentTag,
+        model.state == ManuscriptState.tag ? model.currentTag : "ごみ箱",
         style: TextStyle(fontSize: 20),
       ),
       actions: [
-        AspectRatio(
-          aspectRatio: 1,
-          child: ClipOval(
-            child: Material(
-              type: MaterialType.transparency,
-              child: PopupMenuButton<String>(
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    child: Text("タグ名を変更"),
-                    value: "タグ名を変更",
-                  ),
-                  PopupMenuItem(
-                    child: Text("タグを削除"),
-                    value: "タグを削除",
-                  ),
-                ],
-                onSelected: (value) {},
+        model.state == ManuscriptState.tag
+            ? _tagActionsIcon()
+            : _trashActionsIcon()
+      ],
+    );
+  }
+
+  Widget _tagActionsIcon() {
+    return AspectRatio(
+      aspectRatio: 1,
+      child: ClipOval(
+        child: Material(
+          type: MaterialType.transparency,
+          child: PopupMenuButton<String>(
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                child: Text("タグ名を変更"),
+                value: "タグ名を変更",
               ),
-            ),
+              PopupMenuItem(
+                child: Text("タグを削除"),
+                value: "タグを削除",
+              ),
+            ],
+            onSelected: (value) {},
           ),
         ),
-      ],
+      ),
+    );
+  }
+
+  Widget _trashActionsIcon() {
+    return RippleIconButton(
+      Icons.delete_outline,
+      onPressed: () => {},
     );
   }
 }
