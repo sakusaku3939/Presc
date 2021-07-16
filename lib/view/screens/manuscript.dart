@@ -32,7 +32,17 @@ class ManuscriptScreen extends StatelessWidget {
                     flexibleSpace: _searchbar(),
                   ),
                 SliverList(
-                  delegate: SliverChildListDelegate([cardPageView()]),
+                  delegate: SliverChildListDelegate([
+                    if (model.state == ManuscriptState.trash)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
+                        child: Text(
+                          "ごみ箱の中身は7日以内に完全に削除されます",
+                          style: TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    cardPageView()
+                  ]),
                 )
               ],
             ),
