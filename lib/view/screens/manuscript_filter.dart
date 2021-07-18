@@ -45,8 +45,8 @@ class ManuscriptFilterScreen extends StatelessWidget {
             Icons.navigate_before,
             size: 32,
             onPressed: () {
-              model.itemList = '';
               model.state = ManuscriptState.home;
+              model.replace("", 4);
             },
           );
         },

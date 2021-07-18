@@ -9,10 +9,10 @@ import 'package:provider/provider.dart';
 Widget cardPageView() {
   return Container(
     margin: const EdgeInsets.only(top: 16),
-    child: Selector<ManuscriptProvider, List<Widget>>(
-      selector: (_, model) => model.itemList,
+    child: Selector<ManuscriptProvider, AnimatedList>(
+      selector: (_, model) => model.scriptList,
       builder: (context, itemList, child) {
-        return Column(children: itemList);
+        return itemList;
       },
     ),
   );

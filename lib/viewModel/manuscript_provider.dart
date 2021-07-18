@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:presc/view/utils/script_card.dart';
 
 class ManuscriptProvider with ChangeNotifier {
+  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
+  List _itemList = List.generate(4, (index) => index);
   String currentTag = '';
 
   int _state = ManuscriptState.home;
@@ -13,51 +15,40 @@ class ManuscriptProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  List<Widget> _itemList;
-  final List<Widget> _defaultItemList = List.generate(
-    4,
-    (i) => Container(
-      height: 280,
-      margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-      child: ScriptCard("$i"),
-    ),
-  );
+  AnimatedList _scriptList;
 
-  get itemList => _itemList;
+  get scriptList {
+    _scriptList = _scriptList ??
+        AnimatedList(
+          key: _listKey,
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          initialItemCount: _itemList.length,
+          itemBuilder: (BuildContext context, int index, Animation animation) {
+            return FadeTransition(
+              opacity: animation,
+              child: Container(
+                height: 280,
+                margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+                child: ScriptCard("$_state$index"),
+              ),
+            );
+          },
+        );
+    return _scriptList;
+  }
 
-  set itemList(String key) {
-    final match = RegExp(r"([a-z]+)=([^&]+)").allMatches(key);
-    final keyType = match.isNotEmpty ? match.first.group(1) : "";
-    final keyName = match.isNotEmpty ? match.first.group(2) : "";
-
-    switch (keyType) {
-      case "tag":
-        _itemList = _generateScriptCard(key, 1);
-        break;
-      case "trash":
-        _itemList = _generateScriptCard(key, 2);
-        break;
-      default:
-        _itemList = _defaultItemList;
-        break;
+  void replace(String key, int length) {
+    for (int i = 0; i < _itemList.length; i++) {
+      _listKey.currentState.removeItem(0, (context, animation) => Container());
     }
-    currentTag = keyName;
+    _itemList = List.generate(length, (index) => index);
+    for (int i = 0; i < length; i++) {
+      _listKey.currentState
+          .insertItem(0, duration: Duration(milliseconds: 300));
+    }
+    currentTag = key;
     notifyListeners();
-  }
-
-  ManuscriptProvider() {
-    _itemList = _defaultItemList;
-  }
-
-  List<Widget> _generateScriptCard(String key, int length) {
-    return List.generate(
-      length,
-      (i) => Container(
-        height: 280,
-        margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-        child: ScriptCard("$key$i"),
-      ),
-    );
   }
 }
 
