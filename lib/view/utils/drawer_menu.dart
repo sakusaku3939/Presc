@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:presc/view/screens/tag_edit.dart';
-import 'package:presc/view/utils/unfocus_textfield.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -11,7 +11,7 @@ class DrawerMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return UnfocusTextField(
+    return KeyboardDismissOnTap(
       child: Drawer(
         child: SafeArea(
           child: ListView(
@@ -44,8 +44,8 @@ class DrawerMenu extends StatelessWidget {
                     title: Text('ごみ箱', style: TextStyle(fontSize: 14)),
                     dense: true,
                     onTap: () {
-                      model.itemList = "trash=ごみ箱";
                       model.state = ManuscriptState.trash;
+                      model.replace("ごみ箱", 2);
                       _scaffoldKey.currentState.openEndDrawer();
                     },
                   );
@@ -119,8 +119,8 @@ class DrawerMenu extends StatelessWidget {
                 title: Text(tag, style: TextStyle(fontSize: 14)),
                 dense: true,
                 onTap: () {
-                  model.itemList = "tag=$tag";
                   model.state = ManuscriptState.tag;
+                  model.replace(tag, 1);
                   _scaffoldKey.currentState.openEndDrawer();
                 },
               );
