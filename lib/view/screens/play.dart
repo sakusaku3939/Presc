@@ -18,8 +18,8 @@ class PlayScreen extends StatelessWidget {
                 child: ScrollConfiguration(
                   behavior: _MyBehavior(),
                   child: FadingEdgeScrollView.fromSingleChildScrollView(
-                    gradientFractionOnStart: 0.15,
-                    gradientFractionOnEnd: 0.15,
+                    gradientFractionOnStart: 0.2,
+                    gradientFractionOnEnd: 0.2,
                     child: SingleChildScrollView(
                       controller: ScrollController(),
                       child: Padding(
