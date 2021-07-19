@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presc/view/screens/play.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 
 class ManuscriptEditScreen extends StatelessWidget {
@@ -29,7 +30,10 @@ class ManuscriptEditScreen extends StatelessWidget {
       ),
       floatingActionButton: SafeArea(
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PlayScreen()),
+          ),
           child: Icon(Icons.play_arrow),
         ),
       ),
