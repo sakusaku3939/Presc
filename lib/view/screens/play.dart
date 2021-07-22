@@ -14,7 +14,7 @@ class PlayScreen extends StatelessWidget {
             Expanded(
               child: Container(
                 margin:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    const EdgeInsets.fromLTRB(32, 0, 32, 8),
                 child: ScrollConfiguration(
                   behavior: _MyBehavior(),
                   child: FadingEdgeScrollView.fromSingleChildScrollView(
@@ -51,7 +51,7 @@ class PlayScreen extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(32, 16, 32, 32),
+              padding: const EdgeInsets.fromLTRB(32, 12, 32, 24),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
