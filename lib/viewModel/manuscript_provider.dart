@@ -45,7 +45,7 @@ class ManuscriptProvider with ChangeNotifier {
     _itemList = List.generate(length, (index) => index);
     for (int i = 0; i < length; i++) {
       _listKey.currentState
-          .insertItem(0, duration: Duration(milliseconds: 300));
+          .insertItem(0, duration: Duration(milliseconds: 500));
     }
     currentTag = key;
     notifyListeners();
