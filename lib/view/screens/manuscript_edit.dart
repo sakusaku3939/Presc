@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:presc/view/screens/play.dart';
+import 'package:presc/view/screens/playback.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 
 class ManuscriptEditScreen extends StatelessWidget {
