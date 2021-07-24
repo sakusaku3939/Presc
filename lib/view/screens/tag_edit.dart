@@ -106,19 +106,22 @@ class _TagEditScreenAppbar extends StatelessWidget
           ),
           secondChild: AppBar(
             elevation: 0,
+            backgroundColor: Theme.of(context).accentColor,
             leading: RippleIconButton(
               Icons.clear,
+              color: Colors.white,
               onPressed: () => model.isDeleteSelectionMode = false,
             ),
             title: Text(
               "タグを削除",
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 20, color: Colors.white),
             ),
             actions: [
               Container(
                 margin: const EdgeInsets.only(right: 4),
                 child: RippleIconButton(
                   Icons.delete_outlined,
+                  color: Colors.white,
                   onPressed: () => {},
                 ),
               ),
