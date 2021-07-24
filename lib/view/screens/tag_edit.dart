@@ -32,9 +32,9 @@ class TagEditScreen extends StatelessWidget {
   }
 
   Widget _addNewTag() {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-      child: Row(
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 16, 4, 16),
+    child: Row(
         children: [
           Icon(Icons.add, color: Colors.black45),
           Expanded(
