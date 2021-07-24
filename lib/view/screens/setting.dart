@@ -6,12 +6,62 @@ class SettingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: _appbar(context),
       body: SafeArea(
-        child: Column(
-          children: [
-            _preview(),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              _preview(),
+              _fontMenu(),
+              SizedBox(height: 8),
+              Ink(
+                color: Colors.white,
+                child: ListTile(
+                  title: Text("音声認識"),
+                  subtitle: Text("オン"),
+                  contentPadding: EdgeInsets.only(left: 32),
+                  onTap: () => {},
+                ),
+              ),
+              Ink(
+                color: Colors.white,
+                child: ListTile(
+                  title: Text("再生モード"),
+                  subtitle: Text("自動スクロール"),
+                  contentPadding: EdgeInsets.only(left: 32),
+                  onTap: () => {},
+                ),
+              ),
+              Ink(
+                color: Colors.white,
+                child: ListTile(
+                  title: Text("再生速度"),
+                  subtitle: Text("x 1.0"),
+                  contentPadding: EdgeInsets.only(left: 32),
+                  onTap: () => {},
+                ),
+              ),
+              SizedBox(height: 16),
+              Ink(
+                color: Colors.white,
+                child: ListTile(
+                  title: Text("このアプリについて"),
+                  contentPadding: EdgeInsets.only(left: 32),
+                  onTap: () => {},
+                ),
+              ),
+              Ink(
+                color: Colors.white,
+                child: ListTile(
+                  title: Text("オープンソースライセンス"),
+                  contentPadding: EdgeInsets.only(left: 32),
+                  onTap: () => {},
+                ),
+              ),
+              SizedBox(height: 32),
+            ],
+          ),
         ),
       ),
     );
@@ -43,6 +93,50 @@ class SettingScreen extends StatelessWidget {
         height: 200,
         scroll: false,
         gradientFraction: 0.5,
+      ),
+    );
+  }
+
+  Widget _fontMenu() {
+    return Container(
+      height: 40,
+      color: Colors.white,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          TextButton.icon(
+            onPressed: () => {},
+            icon: Icon(Icons.format_size),
+            label: Text('20'),
+            style: TextButton.styleFrom(
+              primary: Colors.grey[700],
+            ),
+          ),
+          TextButton.icon(
+            onPressed: () => {},
+            icon: Icon(Icons.format_line_spacing),
+            label: Text('2.0'),
+            style: TextButton.styleFrom(
+              primary: Colors.grey[700],
+            ),
+          ),
+          TextButton.icon(
+            onPressed: () => {},
+            icon: Icon(Icons.format_color_text),
+            label: Text('□'),
+            style: TextButton.styleFrom(
+              primary: Colors.grey[700],
+            ),
+          ),
+          TextButton.icon(
+            onPressed: () => {},
+            icon: Icon(Icons.format_color_fill),
+            label: Text('■'),
+            style: TextButton.styleFrom(
+              primary: Colors.grey[700],
+            ),
+          ),
+        ],
       ),
     );
   }
