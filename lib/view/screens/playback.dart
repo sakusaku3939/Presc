@@ -3,7 +3,7 @@ import 'package:presc/view/screens/setting.dart';
 import 'package:presc/view/utils/playback_text_view.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 
-class PlayScreen extends StatelessWidget {
+class PlaybackScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

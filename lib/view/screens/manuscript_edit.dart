@@ -32,7 +32,7 @@ class ManuscriptEditScreen extends StatelessWidget {
         child: FloatingActionButton(
           onPressed: () => Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => PlayScreen()),
+            MaterialPageRoute(builder: (context) => PlaybackScreen()),
           ),
           child: Icon(Icons.play_arrow),
         ),

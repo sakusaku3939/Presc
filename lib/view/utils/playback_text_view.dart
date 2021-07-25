@@ -32,12 +32,12 @@ class PlaybackTextView extends StatelessWidget {
               : NeverScrollableScrollPhysics(),
           controller: _scrollController,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: 40),
             child: Text(
               text,
               style: TextStyle(
                 color: Colors.white,
-                height: 2,
+                height: 2.2,
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
               ),

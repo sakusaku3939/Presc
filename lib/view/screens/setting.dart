@@ -115,7 +115,7 @@ class SettingScreen extends StatelessWidget {
           TextButton.icon(
             onPressed: () => {},
             icon: Icon(Icons.format_line_spacing),
-            label: Text('2.0'),
+            label: Text('2.2'),
             style: TextButton.styleFrom(
               primary: Colors.grey[700],
             ),
