@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:presc/view/screens/setting.dart';
 import 'package:presc/view/screens/tag_edit.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:provider/provider.dart';
@@ -55,7 +56,10 @@ class DrawerMenu extends StatelessWidget {
                 leading: Icon(Icons.settings),
                 title: Text('設定', style: TextStyle(fontSize: 14)),
                 dense: true,
-                onTap: () {},
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingScreen()),
+                ),
               ),
             ],
           ),

@@ -32,9 +32,9 @@ class TagEditScreen extends StatelessWidget {
   }
 
   Widget _addNewTag() {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-      child: Row(
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 16, 4, 16),
+    child: Row(
         children: [
           Icon(Icons.add, color: Colors.black45),
           Expanded(
@@ -106,19 +106,22 @@ class _TagEditScreenAppbar extends StatelessWidget
           ),
           secondChild: AppBar(
             elevation: 0,
+            backgroundColor: Theme.of(context).accentColor,
             leading: RippleIconButton(
               Icons.clear,
+              color: Colors.white,
               onPressed: () => model.isDeleteSelectionMode = false,
             ),
             title: Text(
               "タグを削除",
-              style: TextStyle(fontSize: 20),
+              style: TextStyle(fontSize: 20, color: Colors.white),
             ),
             actions: [
               Container(
                 margin: const EdgeInsets.only(right: 4),
                 child: RippleIconButton(
                   Icons.delete_outlined,
+                  color: Colors.white,
                   onPressed: () => {},
                 ),
               ),

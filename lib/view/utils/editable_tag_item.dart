@@ -20,7 +20,7 @@ class EditableTagItem extends StatelessWidget {
 
   Widget _tagList() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+      padding: const EdgeInsets.fromLTRB(24, 16, 4, 16),
       child: Row(
         children: [
           Icon(Icons.tag, color: Colors.black45),
@@ -61,8 +61,7 @@ class EditableTagItem extends StatelessWidget {
             child: InkWell(
               onTap: () => model.toggleChecked(index),
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                padding: const EdgeInsets.fromLTRB(24, 16, 4, 16),
                 child: Row(
                   children: [
                     SizedBox(
