@@ -43,12 +43,12 @@ class ScriptCard extends StatelessWidget {
       tag: heroTag,
       child: Material(
         type: MaterialType.transparency,
-        child: card(context),
+        child: _card(context),
       ),
     );
   }
 
-  Widget card(BuildContext context) {
+  Widget _card(BuildContext context) {
     return ScaleTap(
       scaleMinValue: 0.96,
       onPressed: () => Navigator.push(
