@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:presc/model/manuscript_manager.dart';
 import 'package:presc/view/utils/drawer_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script_card.dart';
@@ -37,7 +38,7 @@ class ManuscriptHomeScreen extends StatelessWidget {
       drawer: DrawerMenu(_scaffoldKey),
       floatingActionButton: SafeArea(
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () => ManuscriptManager().query(),
           child: Icon(Icons.add),
         ),
       ),
