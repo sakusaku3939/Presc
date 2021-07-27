@@ -45,8 +45,7 @@ class DrawerMenu extends StatelessWidget {
                     title: Text('ごみ箱', style: TextStyle(fontSize: 14)),
                     dense: true,
                     onTap: () {
-                      model.state = ManuscriptState.trash;
-                      model.replace("ごみ箱", 2);
+                      model.replaceState(ManuscriptState.trash, 2);
                       _scaffoldKey.currentState.openEndDrawer();
                     },
                   );
@@ -123,8 +122,7 @@ class DrawerMenu extends StatelessWidget {
                 title: Text(tag, style: TextStyle(fontSize: 14)),
                 dense: true,
                 onTap: () {
-                  model.state = ManuscriptState.tag;
-                  model.replace(tag, 1);
+                  model.replaceState(ManuscriptState.tag, 1, key: tag);
                   _scaffoldKey.currentState.openEndDrawer();
                 },
               );

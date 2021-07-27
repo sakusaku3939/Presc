@@ -44,10 +44,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
           return RippleIconButton(
             Icons.navigate_before,
             size: 32,
-            onPressed: () {
-              model.state = ManuscriptState.home;
-              model.replace("", 2);
-            },
+            onPressed: () => model.replaceState(ManuscriptState.home, 2),
           );
         },
       ),

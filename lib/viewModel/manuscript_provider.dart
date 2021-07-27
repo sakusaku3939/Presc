@@ -13,11 +13,6 @@ class ManuscriptProvider with ChangeNotifier {
 
   get state => _state;
 
-  set state(int state) {
-    _state = state;
-    notifyListeners();
-  }
-
   AnimatedList _scriptList;
 
   get scriptList => _scriptList;
@@ -59,7 +54,7 @@ class ManuscriptProvider with ChangeNotifier {
     );
   }
 
-  Future<void> replace(String key, int length) async {
+  Future<void> replaceState(int state, int length, {String key = ""}) async {
     for (int i = 0; i < currentScriptLength; i++) {
       _listKey.currentState.removeItem(0, (context, animation) => Container());
     }
@@ -67,6 +62,7 @@ class ManuscriptProvider with ChangeNotifier {
       _listKey.currentState
           .insertItem(0, duration: Duration(milliseconds: 400));
     }
+    _state = state;
     currentScriptLength = length;
     currentTag = key;
     notifyListeners();
