@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_scale_tap/flutter_scale_tap.dart';
+import "package:intl/intl.dart";
 import 'package:presc/view/screens/manuscript_edit.dart';
 import 'package:presc/view/utils/script_modal_bottom_sheet.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
@@ -12,7 +13,7 @@ Widget cardPageView() {
     child: Selector<ManuscriptProvider, AnimatedList>(
       selector: (_, model) => model.scriptList,
       builder: (context, itemList, child) {
-        return itemList;
+        return itemList ?? Container();
       },
     ),
   );
@@ -33,9 +34,17 @@ BoxDecoration cardShadow(double radius) {
 }
 
 class ScriptCard extends StatelessWidget {
-  ScriptCard(this.heroTag);
+  ScriptCard(
+    this.heroTag, {
+    @required this.title,
+    @required this.content,
+    @required this.date,
+  });
 
   final String heroTag;
+  final String title;
+  final String content;
+  final DateTime date;
 
   @override
   Widget build(BuildContext context) {
@@ -72,25 +81,28 @@ class ScriptCard extends StatelessWidget {
               margin: const EdgeInsets.only(left: 12),
               alignment: Alignment.centerLeft,
               child: Text(
-                "原稿1",
+                title,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 24),
               ),
             ),
-            DefaultTextStyle(
-              style: TextStyle(color: Colors.black),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 6,
-              child: Padding(
-                child: Text(
-                  "吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。吾輩はここで始めて人間というものを見た。しかもあとで聞くとそれは書生という人間中で一番獰悪な種族であったそうだ。この書生というのは時々我々を捕えて煮て食うという話である。しかしその当時は何という考もなかったから別段恐しいとも思わなかった。ただ彼の掌に載せられてスーと持ち上げられた時何だかフワフワした感じがあったばかりである。",
-                  style: TextStyle(
-                    color: Colors.grey[800],
-                    height: 1.8,
-                    fontSize: 14,
+            Container(
+              alignment: Alignment.centerLeft,
+              child: DefaultTextStyle(
+                style: TextStyle(color: Colors.black),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 6,
+                child: Padding(
+                  child: Text(
+                    content,
+                    style: TextStyle(
+                      color: Colors.grey[800],
+                      height: 1.8,
+                      fontSize: 14,
+                    ),
                   ),
+                  padding: const EdgeInsets.fromLTRB(12, 8, 4, 0),
                 ),
-                padding: const EdgeInsets.fromLTRB(12, 8, 4, 0),
               ),
             ),
             Container(
@@ -98,7 +110,7 @@ class ScriptCard extends StatelessWidget {
               child: Align(
                 alignment: Alignment.topRight,
                 child: Text(
-                  "2021/05/21 16:32",
+                  DateFormat('yyyy/MM/dd(E) HH:mm', "ja_JP").format(date),
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey,

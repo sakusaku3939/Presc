@@ -46,7 +46,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
             size: 32,
             onPressed: () {
               model.state = ManuscriptState.home;
-              model.replace("", 4);
+              model.replace("", 2);
             },
           );
         },

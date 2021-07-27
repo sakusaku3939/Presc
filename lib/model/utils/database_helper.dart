@@ -26,7 +26,7 @@ class DatabaseHelper {
     String path = join(documentsDirectory.path, _databaseName);
 
     // Test
-    await deleteDatabase(path);
+    // await deleteDatabase(path);
 
     return await openDatabase(path,
         version: _databaseVersion, onCreate: _create);
@@ -65,6 +65,15 @@ class DatabaseHelper {
     //         FOREIGN KEY (tag_id) REFERENCES ${TagTable.name}(id)
     //       )
     //       ''');
+    insert(
+      MemoTable(
+        id: 0,
+        title: "原稿1",
+        content:
+            "吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。吾輩はここで始めて人間というものを見た。しかもあとで聞くとそれは書生という人間中で一番獰悪な種族であったそうだ。この書生というのは時々我々を捕えて煮て食うという話である。しかしその当時は何という考もなかったから別段恐しいとも思わなかった。ただ彼の掌に載せられてスーと持ち上げられた時何だかフワフワした感じがあったばかりである。",
+        date: DateTime.now(),
+      ),
+    );
   }
 
   Future<int> insert(DatabaseTable table) async {
@@ -77,10 +86,11 @@ class DatabaseHelper {
     return await db.query(tableName);
   }
 
-  Future<int> queryRowCount(String tableName) async {
+  Future<int> queryMaxId(String tableName) async {
     Database db = await instance.database;
     return Sqflite.firstIntValue(
-        await db.rawQuery('SELECT COUNT(*) FROM $tableName'));
+            await db.rawQuery('SELECT MAX(id) FROM $tableName')) ??
+        0;
   }
 
   Future<int> update(DatabaseTable table) async {

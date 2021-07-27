@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:presc/model/manuscript_manager.dart';
 import 'package:presc/view/utils/script_card.dart';
 
 class ManuscriptProvider with ChangeNotifier {
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
-  List _itemList = List.generate(4, (index) => index);
+  final manager = ManuscriptManager();
+
+  int currentScriptLength = 0;
   String currentTag = '';
 
   int _state = ManuscriptState.home;
@@ -17,36 +20,54 @@ class ManuscriptProvider with ChangeNotifier {
 
   AnimatedList _scriptList;
 
-  get scriptList {
-    _scriptList = _scriptList ??
-        AnimatedList(
-          key: _listKey,
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          initialItemCount: _itemList.length,
-          itemBuilder: (BuildContext context, int index, Animation animation) {
-            return FadeTransition(
-              opacity: animation,
-              child: Container(
-                height: 280,
-                margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-                child: ScriptCard("$_state$index"),
-              ),
-            );
-          },
-        );
-    return _scriptList;
+  get scriptList => _scriptList;
+
+  ManuscriptProvider() {
+    _loadScriptList();
   }
 
-  void replace(String key, int length) {
-    for (int i = 0; i < _itemList.length; i++) {
+  Future<void> _loadScriptList() async {
+    final tableList = await manager.queryAll();
+    _scriptList = AnimatedList(
+      key: _listKey,
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      initialItemCount: 0,
+      itemBuilder: (BuildContext context, int index, Animation animation) {
+        return FadeTransition(
+          opacity: animation,
+          child: Container(
+            height: 280,
+            margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+            child: ScriptCard(
+              "$_state$index",
+              title: tableList[index].title,
+              content: tableList[index].content,
+              date: tableList[index].date,
+            ),
+          ),
+        );
+      },
+    );
+    currentScriptLength = tableList.length;
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => {
+        for (int i = 0; i < currentScriptLength; i++)
+          _listKey.currentState
+              .insertItem(0, duration: Duration(milliseconds: 400))
+      },
+    );
+  }
+
+  Future<void> replace(String key, int length) async {
+    for (int i = 0; i < currentScriptLength; i++) {
       _listKey.currentState.removeItem(0, (context, animation) => Container());
     }
-    _itemList = List.generate(length, (index) => index);
     for (int i = 0; i < length; i++) {
       _listKey.currentState
           .insertItem(0, duration: Duration(milliseconds: 400));
     }
+    currentScriptLength = length;
     currentTag = key;
     notifyListeners();
   }
