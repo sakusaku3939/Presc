@@ -46,7 +46,7 @@ class ManuscriptProvider with ChangeNotifier {
     );
     currentScriptLength = scriptTable.length;
     WidgetsBinding.instance.addPostFrameCallback(
-      (_) => Future.delayed(Duration(milliseconds: 100)).then((value) => {
+      (_) => Future.delayed(Duration(milliseconds: 200)).then((value) => {
             for (int i = 0; i < currentScriptLength; i++)
               _listKey.currentState
                   .insertItem(0, duration: Duration(milliseconds: 400))
