@@ -36,7 +36,8 @@ class MemoTable extends DatabaseTable {
         "title": title,
         "content": content,
         "date": date.toUtc().toIso8601String(),
-      };
+      }..removeWhere(
+          (dynamic key, dynamic value) => key == null || value == null);
 }
 
 class TagTable extends DatabaseTable {

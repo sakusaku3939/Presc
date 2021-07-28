@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:presc/model/manuscript_manager.dart';
+import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/utils/script_card.dart';
 
 class ManuscriptProvider with ChangeNotifier {
-  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
-  final manager = ManuscriptManager();
+  final _listKey = GlobalKey<AnimatedListState>();
+  final _manager = ManuscriptManager();
 
   int currentScriptLength = 0;
   String currentTag = '';
@@ -21,8 +22,12 @@ class ManuscriptProvider with ChangeNotifier {
     _loadScriptList();
   }
 
+  List<MemoTable> _scriptTable;
+
+  get scriptTable => _scriptTable;
+
   Future<void> _loadScriptList() async {
-    final tableList = await manager.queryAll();
+    _scriptTable = await _manager.queryAll();
     _scriptList = AnimatedList(
       key: _listKey,
       shrinkWrap: true,
@@ -34,23 +39,18 @@ class ManuscriptProvider with ChangeNotifier {
           child: Container(
             height: 280,
             margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-            child: ScriptCard(
-              "$_state$index",
-              title: tableList[index].title,
-              content: tableList[index].content,
-              date: tableList[index].date,
-            ),
+            child: ScriptCard("$_state$index", index),
           ),
         );
       },
     );
-    currentScriptLength = tableList.length;
+    currentScriptLength = scriptTable.length;
     WidgetsBinding.instance.addPostFrameCallback(
-      (_) => {
-        for (int i = 0; i < currentScriptLength; i++)
-          _listKey.currentState
-              .insertItem(0, duration: Duration(milliseconds: 400))
-      },
+      (_) => Future.delayed(Duration(milliseconds: 100)).then((value) => {
+            for (int i = 0; i < currentScriptLength; i++)
+              _listKey.currentState
+                  .insertItem(0, duration: Duration(milliseconds: 400))
+          }),
     );
   }
 
@@ -65,6 +65,20 @@ class ManuscriptProvider with ChangeNotifier {
     _state = state;
     currentScriptLength = length;
     currentTag = key;
+    notifyListeners();
+  }
+
+  Future<void> saveScript({
+    @required int id,
+    String title,
+    String content,
+  }) async {
+    await _manager.update(id: id, title: title, content: content);
+  }
+
+  Future<void> notifyBack(BuildContext context) async {
+    Navigator.pop(context);
+    _scriptTable = await _manager.queryAll();
     notifyListeners();
   }
 }

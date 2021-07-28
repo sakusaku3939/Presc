@@ -1,53 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:presc/view/screens/playback.dart';
 import 'package:presc/view/utils/ripple_button.dart';
+import 'package:presc/viewModel/manuscript_provider.dart';
+import 'package:provider/provider.dart';
 
 class ManuscriptEditScreen extends StatelessWidget {
-  ManuscriptEditScreen(this.heroTag, {
-    @required this.title,
-    @required this.content,
-    @required this.date,
-  });
+  ManuscriptEditScreen(this.heroTag, this.index);
 
   final String heroTag;
-  final String title;
-  final String content;
-  final DateTime date;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Hero(
-        tag: heroTag,
-        child: Material(
-          type: MaterialType.transparency,
-          child: Container(
-            color: Colors.white,
-            child: Column(
-              children: [
-                Container(child: _menuBar(context)),
-                Expanded(
-                    child: SingleChildScrollView(child: _content(context))),
-                Container(child: _footer()),
-              ],
+    final provider = context.read<ManuscriptProvider>();
+    return WillPopScope(
+      onWillPop: () {
+        provider.notifyBack(context);
+        return Future.value(false);
+      },
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Hero(
+          tag: heroTag,
+          child: Material(
+            type: MaterialType.transparency,
+            child: Container(
+              color: Colors.white,
+              child: Column(
+                children: [
+                  Container(child: _menuBar(context, provider)),
+                  Expanded(
+                      child: SingleChildScrollView(
+                          child: _content(context, provider))),
+                  Container(child: _footer()),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-      floatingActionButton: SafeArea(
-        child: FloatingActionButton(
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => PlaybackScreen()),
+        floatingActionButton: SafeArea(
+          child: FloatingActionButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PlaybackScreen()),
+            ),
+            child: Icon(Icons.play_arrow),
           ),
-          child: Icon(Icons.play_arrow),
         ),
       ),
     );
   }
 
-  Widget _menuBar(BuildContext context) {
+  Widget _menuBar(BuildContext context, ManuscriptProvider provider) {
     return SafeArea(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -60,7 +64,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             RippleIconButton(
               Icons.navigate_before,
               size: 32,
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => provider.notifyBack(context),
             ),
             Row(
               children: [
@@ -84,7 +88,11 @@ class ManuscriptEditScreen extends StatelessWidget {
     );
   }
 
-  Widget _content(BuildContext context) {
+  Widget _content(BuildContext context, ManuscriptProvider provider) {
+    final id = provider.scriptTable[index].id;
+    final title = provider.scriptTable[index].title;
+    final content = provider.scriptTable[index].content;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Column(
@@ -107,6 +115,7 @@ class ManuscriptEditScreen extends StatelessWidget {
               contentPadding: const EdgeInsets.all(0),
             ),
             style: TextStyle(fontSize: 24),
+            onChanged: (text) => provider.saveScript(id: id, title: text),
           ),
           Container(
             margin: const EdgeInsets.only(top: 16, bottom: 32),
@@ -131,6 +140,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                 height: 1.7,
                 fontSize: 16,
               ),
+              onChanged: (text) => provider.saveScript(id: id, content: text),
             ),
           ),
         ],
