@@ -3,10 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:presc/model/manuscript_manager.dart';
 import 'package:presc/model/utils/database_table.dart';
-import 'package:presc/view/utils/script_card.dart';
 
 class ManuscriptProvider with ChangeNotifier {
-  final _listKey = GlobalKey<AnimatedListState>();
+  final listKey = GlobalKey<AnimatedListState>();
   final _manager = ManuscriptManager();
 
   int currentScriptLength = 0;
@@ -15,10 +14,6 @@ class ManuscriptProvider with ChangeNotifier {
   int _state = ManuscriptState.home;
 
   get state => _state;
-
-  AnimatedList _scriptList;
-
-  get scriptList => _scriptList;
 
   ManuscriptProvider() {
     _loadScriptList();
@@ -30,41 +25,23 @@ class ManuscriptProvider with ChangeNotifier {
 
   Future<void> _loadScriptList() async {
     _scriptTable = await _manager.queryAll();
-    _scriptList = AnimatedList(
-      key: _listKey,
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      initialItemCount: 0,
-      itemBuilder: (BuildContext context, int index, Animation animation) {
-        return FadeTransition(
-          opacity: animation,
-          child: Container(
-            height: 280,
-            margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-            child: ScriptCard("$_state$index", index),
-          ),
-        );
-      },
-    );
-    currentScriptLength = scriptTable.length;
     final _listKeyMonitor = (Timer t) {
-      if (_listKey.currentState != null) {
+      if (listKey.currentState != null) {
         t.cancel();
-        for (int i = 0; i < currentScriptLength; i++)
-          _listKey.currentState
-              .insertItem(0, duration: Duration(milliseconds: 200));
+        replaceState(ManuscriptState.home, scriptTable.length);
       }
     };
     Timer.periodic(Duration(milliseconds: 100), _listKeyMonitor);
+    notifyListeners();
   }
 
   Future<void> replaceState(int state, int length, {String key = ""}) async {
     for (int i = 0; i < currentScriptLength; i++) {
-      _listKey.currentState.removeItem(0, (context, animation) => Container());
+      listKey.currentState?.removeItem(0, (context, animation) => Container());
     }
     for (int i = 0; i < length; i++) {
-      _listKey.currentState
-          .insertItem(0, duration: Duration(milliseconds: 400));
+      listKey.currentState
+          ?.insertItem(0, duration: Duration(milliseconds: 400));
     }
     _state = state;
     currentScriptLength = length;

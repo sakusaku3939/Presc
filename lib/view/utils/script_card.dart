@@ -11,10 +11,24 @@ import 'package:provider/provider.dart';
 Widget cardPageView() {
   return Container(
     margin: const EdgeInsets.only(top: 16),
-    child: Selector<ManuscriptProvider, AnimatedList>(
-      selector: (_, model) => model.scriptList,
-      builder: (context, itemList, child) {
-        return itemList ?? Container();
+    child: Consumer<ManuscriptProvider>(
+      builder: (context, model, child) {
+        return model.scriptTable != null ? AnimatedList(
+          key: model.listKey,
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          initialItemCount: 0,
+          itemBuilder: (BuildContext context, int index, Animation animation) {
+            return FadeTransition(
+              opacity: animation,
+              child: Container(
+                height: 280,
+                margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+                child: ScriptCard("${model.state}$index", index),
+              ),
+            );
+          },
+        ) : Container();
       },
     ),
   );
