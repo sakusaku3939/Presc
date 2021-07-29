@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class ManuscriptFilterScreen extends StatelessWidget {
   ManuscriptFilterScreen(this.state);
 
-  final int state;
+  final ManuscriptState state;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
     );
   }
 
-  Widget _appbar(int state) {
+  Widget _appbar(ManuscriptState state) {
     return AppBar(
       elevation: 0,
       leading: Consumer<ManuscriptProvider>(

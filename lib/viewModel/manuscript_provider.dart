@@ -11,7 +11,7 @@ class ManuscriptProvider with ChangeNotifier {
   int currentScriptLength = 0;
   String currentTag = '';
 
-  int _state = ManuscriptState.home;
+  ManuscriptState _state = ManuscriptState.home;
 
   get state => _state;
 
@@ -35,7 +35,7 @@ class ManuscriptProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> replaceState(int state, int length, {String key = ""}) async {
+  Future<void> replaceState(ManuscriptState state, int length, {String key = ""}) async {
     for (int i = 0; i < currentScriptLength; i++) {
       listKey.currentState?.removeItem(0, (context, animation) => Container());
     }
@@ -64,8 +64,8 @@ class ManuscriptProvider with ChangeNotifier {
   }
 }
 
-class ManuscriptState {
-  static const int home = 0;
-  static const int tag = 1;
-  static const int trash = 2;
+enum ManuscriptState {
+  home,
+  tag,
+  trash,
 }
