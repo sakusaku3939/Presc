@@ -111,6 +111,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             maxLines: null,
             decoration: InputDecoration(
               isDense: true,
+              hintText: "タイトル",
               border: InputBorder.none,
               contentPadding: const EdgeInsets.all(0),
             ),
@@ -132,6 +133,7 @@ class ManuscriptEditScreen extends StatelessWidget {
               maxLines: null,
               decoration: InputDecoration(
                 isDense: true,
+                hintText: "メモを入力",
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.all(0),
               ),
