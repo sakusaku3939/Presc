@@ -97,7 +97,6 @@ class DatabaseHelper {
 
   Future<int> update(DatabaseTable table) async {
     Database db = await instance.database;
-    print([table.id]);
     return await db.update(table.tableName, table.toMap(),
         where: 'id = ?', whereArgs: [table.id]);
   }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:presc/model/manuscript_manager.dart';
 import 'package:presc/model/utils/database_table.dart';
@@ -45,13 +47,15 @@ class ManuscriptProvider with ChangeNotifier {
       },
     );
     currentScriptLength = scriptTable.length;
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => Future.delayed(Duration(milliseconds: 200)).then((value) => {
-            for (int i = 0; i < currentScriptLength; i++)
-              _listKey.currentState
-                  .insertItem(0, duration: Duration(milliseconds: 400))
-          }),
-    );
+    final _listKeyMonitor = (Timer t) {
+      if (_listKey.currentState != null) {
+        t.cancel();
+        for (int i = 0; i < currentScriptLength; i++)
+          _listKey.currentState
+              .insertItem(0, duration: Duration(milliseconds: 200));
+      }
+    };
+    Timer.periodic(Duration(milliseconds: 100), _listKeyMonitor);
   }
 
   Future<void> replaceState(int state, int length, {String key = ""}) async {
