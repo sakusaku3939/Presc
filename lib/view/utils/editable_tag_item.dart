@@ -53,7 +53,7 @@ class EditableTagItem extends StatelessWidget {
     return Consumer<EditableTagItemProvider>(
       builder: (context, model, child) {
         return Container(
-          color: model.checkedList[index]
+          color: model.checkList[index]
               ? Theme.of(context).accentColor.withOpacity(.1)
               : Colors.white,
           child: Material(
@@ -71,7 +71,7 @@ class EditableTagItem extends StatelessWidget {
                         scale: 1.1,
                         child: Checkbox(
                           shape: CircleBorder(),
-                          value: model.checkedList[index],
+                          value: model.checkList[index],
                           activeColor: Theme.of(context).accentColor,
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,

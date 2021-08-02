@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class EditableTagItemProvider with ChangeNotifier {
   List<String> _tagList = ['宮沢賢治', '練習用'];
-  List<bool> _checkedList;
+  List<bool> _checkList;
 
-  get checkedList {
-    if (_checkedList == null) {
-      _checkedList = List.filled(_tagList.length, false);
+  get checkList {
+    if (_checkList == null) {
+      _checkList = List.filled(_tagList.length, false);
     }
-    return _checkedList;
+    return _checkList;
   }
 
   bool _isDeleteSelectionMode = false;
@@ -21,7 +21,7 @@ class EditableTagItemProvider with ChangeNotifier {
   }
 
   void toggleChecked(int index) {
-    checkedList[index] = !checkedList[index];
+    checkList[index] = !checkList[index];
     notifyListeners();
   }
 }
