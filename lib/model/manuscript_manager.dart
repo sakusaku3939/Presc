@@ -1,11 +1,11 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:presc/model/utils/database_helper.dart';
 import 'package:presc/model/utils/database_table.dart';
 
 class ManuscriptManager {
   final _dbHelper = DatabaseHelper.instance;
 
-  Future<void> insert({String title = "", String content = ""}) async {
+  Future<int> insert({String title = "", String content = ""}) async {
     DatabaseTable table = MemoTable(
       id: await _dbHelper.queryMaxId(MemoTable.name) + 1,
       title: title,
@@ -13,7 +13,8 @@ class ManuscriptManager {
       date: DateTime.now(),
     );
     final id = await _dbHelper.insert(table);
-    print('inserted row id: $id');
+    print('inserted memo_table id: $id');
+    return id;
   }
 
   Future<void> update({@required int id, String title, String content}) async {
@@ -27,9 +28,8 @@ class ManuscriptManager {
   }
 
   Future<List<MemoTable>> queryAll() async {
-    final res = await _dbHelper.queryAllRows(MemoTable.name);
+    final res = await _dbHelper.queryAll(MemoTable.name);
     List<MemoTable> tableList = res.map((row) => MemoTable.fromMap(row)).toList();
-    print(tableList.first.toMap());
     return tableList;
   }
 }

@@ -59,7 +59,8 @@ class TagTable extends DatabaseTable {
   Map<String, dynamic> toMap() => {
         "id": id,
         "tag_name": tagName,
-      };
+      }..removeWhere(
+          (dynamic key, dynamic value) => key == null || value == null);
 }
 
 // class TrashTable extends _Table {

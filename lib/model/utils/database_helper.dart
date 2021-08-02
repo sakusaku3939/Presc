@@ -83,16 +83,21 @@ class DatabaseHelper {
     return await db.insert(table.tableName, table.toMap());
   }
 
-  Future<List<Map<String, dynamic>>> queryAllRows(String tableName) async {
+  Future<List<Map<String, dynamic>>> queryAll(String tableName) async {
     Database db = await instance.database;
     return await db.query(tableName);
   }
 
+  Future<Map<String, dynamic>> queryById(String tableName, int id) async {
+    Database db = await instance.database;
+    final res = await db.query(tableName, where: 'id = ?', whereArgs: [id]);
+    return res.first;
+  }
+
   Future<int> queryMaxId(String tableName) async {
     Database db = await instance.database;
-    return Sqflite.firstIntValue(
-            await db.rawQuery('SELECT MAX(id) FROM $tableName')) ??
-        0;
+    final res = await db.rawQuery('SELECT MAX(id) FROM $tableName');
+    return Sqflite.firstIntValue(res) ?? 0;
   }
 
   Future<int> update(DatabaseTable table) async {
