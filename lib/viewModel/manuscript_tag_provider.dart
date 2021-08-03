@@ -34,17 +34,17 @@ class ManuscriptTagProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void changeChecked({
+  Future<void> changeChecked({
     @required int memoId,
     @required int tagId,
     @required bool newValue,
-  }) {
+  }) async {
     if (newValue) {
-      _manager.linkTag(memoId, tagId);
+      await _manager.linkTag(memoId, tagId);
     } else {
-      _manager.unlinkTag(memoId, tagId);
+      await _manager.unlinkTag(memoId, tagId);
     }
-    notifyListeners();
+    loadTag(memoId);
   }
 
   Future<void> addTagTest(int memoId) async {

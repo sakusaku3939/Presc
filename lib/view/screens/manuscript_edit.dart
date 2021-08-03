@@ -256,16 +256,17 @@ class ManuscriptEditScreen extends StatelessWidget {
       child: ChoiceChip(
         shape: RoundedRectangleBorder(
           side: BorderSide(
-            color: selected ? Colors.deepOrange[300] : Colors.grey[300],
+            color: selected ? Theme.of(context).accentColor : Colors.grey[300],
             width: 1,
           ),
           borderRadius: BorderRadius.circular(24),
         ),
         label: Text(tagTable.tagName),
-        selectedColor: Colors.deepOrange[300],
+        selectedColor: Theme.of(context).accentColor,
         backgroundColor: Colors.white,
+        pressElevation: 2,
         selected: selected,
-        onSelected: (value) {
+        onSelected: (value) async {
           model.changeChecked(
             memoId: id,
             tagId: tagTable.id,
