@@ -48,7 +48,7 @@ class DatabaseHelper {
           )
           ''');
     await db.execute('''
-          CREATE TABLE tag_${MemoTable.name} (
+          CREATE TABLE ${TagMemoTable.name} (
             memo_id INTEGER,
             tag_id INTEGER,
             FOREIGN KEY (memo_id) REFERENCES ${MemoTable.name}(id),
@@ -109,5 +109,21 @@ class DatabaseHelper {
   Future<int> delete(String tableName, int id) async {
     Database db = await instance.database;
     return await db.delete(tableName, where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<List<Map<String, dynamic>>> queryTagById(int memoId) async {
+    Database db = await instance.database;
+    final cross = TagMemoTable.name;
+    final tag = TagTable.name;
+    return await db.rawQuery('''
+          SELECT $tag.id, $tag.tag_name
+          FROM $cross INNER JOIN $tag ON $tag.id = $cross.tag_id
+          WHERE $cross.memo_id = $memoId
+          ''');
+  }
+
+  Future<void> execute(String sql, List<Object> arguments) async {
+    Database db = await instance.database;
+    await db.execute(sql, arguments);
   }
 }

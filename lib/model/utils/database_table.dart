@@ -63,6 +63,30 @@ class TagTable extends DatabaseTable {
           (dynamic key, dynamic value) => key == null || value == null);
 }
 
+class TagMemoTable extends DatabaseTable {
+  TagMemoTable({
+    @required this.memoId,
+    @required this.tagId,
+  }) : super(name, id: memoId);
+
+  final int memoId;
+  final int tagId;
+
+  static final String name = 'tag_memo_table';
+
+  factory TagMemoTable.fromMap(Map<String, dynamic> map) => TagMemoTable(
+    memoId: map["memo_id"],
+    tagId: map["tag_id"],
+  );
+
+  @override
+  Map<String, dynamic> toMap() => {
+    "memo_id": memoId,
+    "tag_id": tagId,
+  }..removeWhere(
+          (dynamic key, dynamic value) => key == null || value == null);
+}
+
 // class TrashTable extends _Table {
 //   TrashTable({
 //     @required id,

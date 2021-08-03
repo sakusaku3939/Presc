@@ -75,7 +75,7 @@ class ScriptCard extends StatelessWidget {
             context,
             PageRouteBuilder(
               transitionDuration: Duration(milliseconds: 500),
-              pageBuilder: (_, __, ___) => ManuscriptEditScreen(heroTag, index),
+              pageBuilder: (_, __, ___) => ManuscriptEditScreen(context, heroTag, index),
             ),
           ),
           onLongPress: () {

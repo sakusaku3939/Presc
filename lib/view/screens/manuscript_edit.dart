@@ -1,21 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/screens/playback.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
+import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
 
 class ManuscriptEditScreen extends StatelessWidget {
-  ManuscriptEditScreen(this.heroTag, this.index);
+  ManuscriptEditScreen(this.context, this.heroTag, this.index);
 
+  final BuildContext context;
   final String heroTag;
   final int index;
 
+  ManuscriptProvider get _provider => context.read<ManuscriptProvider>();
+
+  int get id => _provider.scriptTable[index].id;
+
+  String get title => _provider.scriptTable[index].title;
+
+  String get content => _provider.scriptTable[index].content;
+
   @override
   Widget build(BuildContext context) {
-    final provider = context.read<ManuscriptProvider>();
     return WillPopScope(
       onWillPop: () {
-        provider.notifyBack(context);
+        _provider.notifyBack(context);
         return Future.value(false);
       },
       child: Scaffold(
@@ -28,11 +38,13 @@ class ManuscriptEditScreen extends StatelessWidget {
               color: Colors.white,
               child: Column(
                 children: [
-                  Container(child: _menuBar(context, provider)),
+                  Container(child: _menuBar(context)),
                   Expanded(
-                      child: SingleChildScrollView(
-                          child: _content(context, provider))),
-                  Container(child: _footer()),
+                    child: SingleChildScrollView(
+                      child: _content(context),
+                    ),
+                  ),
+                  Container(child: _footer(context)),
                 ],
               ),
             ),
@@ -51,7 +63,7 @@ class ManuscriptEditScreen extends StatelessWidget {
     );
   }
 
-  Widget _menuBar(BuildContext context, ManuscriptProvider provider) {
+  Widget _menuBar(BuildContext context) {
     return SafeArea(
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -64,7 +76,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             RippleIconButton(
               Icons.navigate_before,
               size: 32,
-              onPressed: () => provider.notifyBack(context),
+              onPressed: () => _provider.notifyBack(context),
             ),
             Row(
               children: [
@@ -88,11 +100,7 @@ class ManuscriptEditScreen extends StatelessWidget {
     );
   }
 
-  Widget _content(BuildContext context, ManuscriptProvider provider) {
-    final id = provider.scriptTable[index].id;
-    final title = provider.scriptTable[index].title;
-    final content = provider.scriptTable[index].content;
-
+  Widget _content(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Column(
@@ -116,7 +124,7 @@ class ManuscriptEditScreen extends StatelessWidget {
               contentPadding: const EdgeInsets.all(0),
             ),
             style: TextStyle(fontSize: 24),
-            onChanged: (text) => provider.saveScript(id: id, title: text),
+            onChanged: (text) => _provider.saveScript(id: id, title: text),
           ),
           Container(
             margin: const EdgeInsets.only(top: 16, bottom: 32),
@@ -133,7 +141,7 @@ class ManuscriptEditScreen extends StatelessWidget {
               maxLines: null,
               decoration: InputDecoration(
                 isDense: true,
-                hintText: "メモを入力",
+                hintText: "ここに原稿を入力",
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.all(0),
               ),
@@ -142,7 +150,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                 height: 1.7,
                 fontSize: 16,
               ),
-              onChanged: (text) => provider.saveScript(id: id, content: text),
+              onChanged: (text) => _provider.saveScript(id: id, content: text),
             ),
           ),
         ],
@@ -150,16 +158,45 @@ class ManuscriptEditScreen extends StatelessWidget {
     );
   }
 
-  Widget _footer() {
-    final _chipList = ["夏目漱石", "練習用"];
+  Widget _footer(BuildContext context) {
+    final tagList = ["夏目漱石", "練習用", "テスト"];
     return Container(
       height: 48,
-      padding: const EdgeInsets.only(left: 16, right: 88),
+      padding: const EdgeInsets.only(left: 16, right: 24),
       child: Row(
         children: [
           RippleIconButton(
             Icons.playlist_add,
-            onPressed: () {},
+            onPressed: () {
+              // context.read<ManuscriptTagProvider>().addTestTag(id);
+              context.read<ManuscriptTagProvider>().loadTag(id);
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextField(
+                          decoration: InputDecoration(
+                            hintText: "新しいタグを追加",
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Theme.of(context).accentColor,
+                              ),
+                            ),
+                          ),
+                          cursorColor: Theme.of(context).accentColor,
+                        ),
+                        SizedBox(height: 12),
+                        _tagGrid(),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
           ),
           Expanded(
             child: ScrollConfiguration(
@@ -168,7 +205,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    for (var i = 0; i < _chipList.length; i++)
+                    for (var i = 0; i < tagList.length; i++)
                       Padding(
                         padding: const EdgeInsets.only(left: 8),
                         child: Chip(
@@ -183,16 +220,59 @@ class ManuscriptEditScreen extends StatelessWidget {
                           ),
                           backgroundColor: Colors.transparent,
                           key: Key(i.toString()),
-                          label: Text(_chipList[i]),
+                          label: Text(tagList[i]),
                           onDeleted: () => {},
                         ),
-                      )
+                      ),
+                    SizedBox(width: 56),
                   ],
                 ),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _tagGrid() {
+    return Consumer<ManuscriptTagProvider>(
+      builder: (context, model, child) {
+        return Wrap(
+          children: [
+            for (var linkTagTable in model.linkTagTable)
+              _tag(model, selected: true, tagTable: linkTagTable),
+            for (var unlinkTagTable in model.unlinkTagTable)
+              _tag(model, selected: false, tagTable: unlinkTagTable),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _tag(ManuscriptTagProvider model, {bool selected, TagTable tagTable}) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: ChoiceChip(
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            color: selected ? Colors.deepOrange[300] : Colors.grey[300],
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(24),
+        ),
+        label: Text(tagTable.tagName),
+        selectedColor: Colors.deepOrange[300],
+        backgroundColor: Colors.white,
+        selected: selected,
+        onSelected: (value) {
+          model.changeChecked(
+            memoId: id,
+            tagId: tagTable.id,
+            newValue: value,
+          );
+          Navigator.pop(context);
+        },
       ),
     );
   }
