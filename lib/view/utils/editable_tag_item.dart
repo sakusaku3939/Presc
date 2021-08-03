@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
 import 'package:provider/provider.dart';
 
 class EditableTagItem extends StatelessWidget {
-  const EditableTagItem(this.index, this.tag);
+  const EditableTagItem(this.index, this.tagTable);
 
   final int index;
-  final String tag;
+  final TagTable tagTable;
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +43,8 @@ class EditableTagItem extends StatelessWidget {
                   cursorColor: Colors.black45,
                   controller: TextEditingController.fromValue(
                     TextEditingValue(
-                      text: tag,
-                      selection: TextSelection.collapsed(offset: tag.length),
+                      text: tagTable.tagName,
+                      selection: TextSelection.collapsed(offset: tagTable.tagName.length),
                     ),
                   ),
                   keyboardType: TextInputType.text,
@@ -96,7 +97,7 @@ class EditableTagItem extends StatelessWidget {
                     SizedBox(width: 32),
                     Expanded(
                       child: Text(
-                        tag,
+                        tagTable.tagName,
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
