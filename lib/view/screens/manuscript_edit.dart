@@ -159,7 +159,6 @@ class ManuscriptEditScreen extends StatelessWidget {
   }
 
   Widget _footer(BuildContext context) {
-    final tagList = ["夏目漱石", "練習用", "テスト"];
     return Container(
       height: 48,
       padding: const EdgeInsets.only(left: 16, right: 24),
@@ -168,7 +167,6 @@ class ManuscriptEditScreen extends StatelessWidget {
           RippleIconButton(
             Icons.playlist_add,
             onPressed: () {
-              // context.read<ManuscriptTagProvider>().addTestTag(id);
               context.read<ManuscriptTagProvider>().loadTag(id);
               showDialog(
                 context: context,
@@ -203,29 +201,55 @@ class ManuscriptEditScreen extends StatelessWidget {
               behavior: ScrollBehavior(),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    for (var i = 0; i < tagList.length; i++)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8),
-                        child: Chip(
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.grey[300], width: 1),
-                            borderRadius: BorderRadius.circular(24),
+                child: Consumer<ManuscriptTagProvider>(
+                  builder: (context, model, child) {
+                    return Row(
+                      children: [
+                        for (var linkTagTable in model.linkTagTable)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Chip(
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    color: Colors.grey[300], width: 1),
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                              deleteIcon: Icon(
+                                Icons.cancel,
+                                color: Colors.grey[700],
+                                size: 18,
+                              ),
+                              label: Text(linkTagTable.tagName),
+                              backgroundColor: Colors.transparent,
+                              onDeleted: () {
+                                model.changeChecked(
+                                  memoId: id,
+                                  tagId: linkTagTable.id,
+                                  newValue: false,
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      "${linkTagTable.tagName} のタグ付けを解除しました",
+                                    ),
+                                    duration: const Duration(seconds: 2),
+                                    action: SnackBarAction(
+                                      label: "元に戻す",
+                                      onPressed: () => model.changeChecked(
+                                        memoId: id,
+                                        tagId: linkTagTable.id,
+                                        newValue: true,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
-                          deleteIcon: Icon(
-                            Icons.cancel,
-                            color: Colors.grey[700],
-                            size: 18,
-                          ),
-                          backgroundColor: Colors.transparent,
-                          key: Key(i.toString()),
-                          label: Text(tagList[i]),
-                          onDeleted: () => {},
-                        ),
-                      ),
-                    SizedBox(width: 56),
-                  ],
+                        SizedBox(width: 56),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),

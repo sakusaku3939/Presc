@@ -6,6 +6,7 @@ import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/screens/manuscript_edit.dart';
 import 'package:presc/view/utils/script_modal_bottom_sheet.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
+import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
 
 Widget cardPageView() {
@@ -13,22 +14,25 @@ Widget cardPageView() {
     margin: const EdgeInsets.only(top: 16),
     child: Consumer<ManuscriptProvider>(
       builder: (context, model, child) {
-        return model.scriptTable != null ? AnimatedList(
-          key: model.listKey,
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          initialItemCount: 0,
-          itemBuilder: (BuildContext context, int index, Animation animation) {
-            return FadeTransition(
-              opacity: animation,
-              child: Container(
-                height: 280,
-                margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-                child: ScriptCard("${model.state}$index", index),
-              ),
-            );
-          },
-        ) : Container();
+        return model.scriptTable != null
+            ? AnimatedList(
+                key: model.listKey,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                initialItemCount: 0,
+                itemBuilder:
+                    (BuildContext context, int index, Animation animation) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: Container(
+                      height: 280,
+                      margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+                      child: ScriptCard("${model.state}$index", index),
+                    ),
+                  );
+                },
+              )
+            : Container();
       },
     ),
   );
@@ -71,13 +75,17 @@ class ScriptCard extends StatelessWidget {
       builder: (context, scriptTable, child) {
         return ScaleTap(
           scaleMinValue: 0.96,
-          onPressed: () => Navigator.push(
-            context,
-            PageRouteBuilder(
-              transitionDuration: Duration(milliseconds: 500),
-              pageBuilder: (_, __, ___) => ManuscriptEditScreen(context, heroTag, index),
-            ),
-          ),
+          onPressed: () {
+            context.read<ManuscriptTagProvider>().loadTag(scriptTable[index].id);
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                transitionDuration: Duration(milliseconds: 500),
+                pageBuilder: (_, __, ___) =>
+                    ManuscriptEditScreen(context, heroTag, index),
+              ),
+            );
+          },
           onLongPress: () {
             ScriptModalBottomSheet().show(context);
           },
