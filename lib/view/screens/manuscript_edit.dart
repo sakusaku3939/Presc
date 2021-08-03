@@ -230,7 +230,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      "${linkTagTable.tagName} のタグ付けを解除しました",
+                                      "${linkTagTable.tagName} タグを外しました",
                                     ),
                                     duration: const Duration(seconds: 2),
                                     action: SnackBarAction(
