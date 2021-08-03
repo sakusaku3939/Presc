@@ -21,7 +21,16 @@ class TagManager {
       tagName: name,
     );
     await _dbHelper.update(table);
-    print('update id: $id');
+    print('update tag_table id: $id');
+  }
+
+  Future<void> deleteTag({@required int id}) async {
+    await _dbHelper.execute(
+      'DELETE FROM ${TagMemoTable.name} WHERE tag_id = ?',
+      [id],
+    );
+    await _dbHelper.delete(TagTable.name, id);
+    print('delete tag_table id: $id');
   }
 
   Future<void> linkTag(int memoId, int tagId) async {
