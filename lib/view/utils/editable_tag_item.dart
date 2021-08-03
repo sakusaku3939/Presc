@@ -14,12 +14,14 @@ class EditableTagItem extends StatelessWidget {
     return Selector<EditableTagItemProvider, bool>(
       selector: (_, model) => model.isDeleteSelectionMode,
       builder: (context, isDeleteSelectionMode, child) {
-        return isDeleteSelectionMode ? _checkboxList(context) : _tagList();
+        return isDeleteSelectionMode
+            ? _checkboxList(context)
+            : _tagList(context);
       },
     );
   }
 
-  Widget _tagList() {
+  Widget _tagList(BuildContext context) {
     return Material(
       color: Colors.transparent,
       child: Consumer<EditableTagItemProvider>(
@@ -44,17 +46,21 @@ class EditableTagItem extends StatelessWidget {
                   controller: TextEditingController.fromValue(
                     TextEditingValue(
                       text: tagTable.tagName,
-                      selection: TextSelection.collapsed(offset: tagTable.tagName.length),
+                      selection: TextSelection.collapsed(
+                          offset: tagTable.tagName.length),
                     ),
                   ),
                   keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.go,
+                  textInputAction: TextInputAction.done,
                   decoration: InputDecoration(
                     isDense: true,
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.all(0),
                   ),
                   style: TextStyle(fontSize: 16),
+                  onChanged: (text) => context
+                      .read<EditableTagItemProvider>()
+                      .updateTag(tagTable.id, text),
                 ),
               ),
             ],

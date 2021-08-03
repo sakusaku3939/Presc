@@ -21,7 +21,6 @@ class TagManager {
       tagName: name,
     );
     await _dbHelper.update(table);
-    print('update tag_table id: $id');
   }
 
   Future<void> deleteTag({@required int id}) async {
