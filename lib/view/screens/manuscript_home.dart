@@ -38,7 +38,7 @@ class ManuscriptHomeScreen extends StatelessWidget {
       drawer: DrawerMenu(_scaffoldKey),
       floatingActionButton: SafeArea(
         child: FloatingActionButton(
-          onPressed: () => ManuscriptManager().insert(title: "test", content: "content"),
+          onPressed: () => ManuscriptManager().addScript(title: "test", content: "content"),
           child: Icon(Icons.add),
         ),
       ),

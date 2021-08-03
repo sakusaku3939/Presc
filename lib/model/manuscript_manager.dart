@@ -5,7 +5,7 @@ import 'package:presc/model/utils/database_table.dart';
 class ManuscriptManager {
   final _dbHelper = DatabaseHelper.instance;
 
-  Future<int> insert({String title = "", String content = ""}) async {
+  Future<int> addScript({String title = "", String content = ""}) async {
     DatabaseTable table = MemoTable(
       id: await _dbHelper.queryMaxId(MemoTable.name) + 1,
       title: title,
@@ -17,7 +17,7 @@ class ManuscriptManager {
     return id;
   }
 
-  Future<void> update({@required int id, String title, String content}) async {
+  Future<void> updateScript({@required int id, String title, String content}) async {
     DatabaseTable table = MemoTable(
       id: id,
       title: title,
@@ -27,7 +27,7 @@ class ManuscriptManager {
     await _dbHelper.update(table);
   }
 
-  Future<List<MemoTable>> queryAll() async {
+  Future<List<MemoTable>> getAllScript() async {
     final res = await _dbHelper.queryAll(MemoTable.name);
     List<MemoTable> tableList = res.map((row) => MemoTable.fromMap(row)).toList();
     return tableList;

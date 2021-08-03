@@ -24,7 +24,7 @@ class ManuscriptProvider with ChangeNotifier {
   get scriptTable => _scriptTable;
 
   Future<void> _loadScriptList() async {
-    _scriptTable = await _manager.queryAll();
+    _scriptTable = await _manager.getAllScript();
     final _listKeyMonitor = (Timer t) {
       if (listKey.currentState != null) {
         t.cancel();
@@ -54,12 +54,12 @@ class ManuscriptProvider with ChangeNotifier {
     String title,
     String content,
   }) async {
-    await _manager.update(id: id, title: title, content: content);
+    await _manager.updateScript(id: id, title: title, content: content);
   }
 
   Future<void> notifyBack(BuildContext context) async {
     Navigator.pop(context);
-    _scriptTable = await _manager.queryAll();
+    _scriptTable = await _manager.getAllScript();
     notifyListeners();
   }
 }
