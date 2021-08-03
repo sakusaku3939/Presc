@@ -30,7 +30,6 @@ class TagManager {
       tagId: tagId,
     );
     await _dbHelper.insert(table);
-    print('link tag_id: $tagId');
   }
 
   Future<void> unlinkTag(int memoId, int tagId) async {
@@ -38,7 +37,6 @@ class TagManager {
       'DELETE FROM ${TagMemoTable.name} WHERE memo_id = ? AND tag_id = ?',
       [memoId, tagId],
     );
-    print('unlink tag_id: $tagId');
   }
 
   Future<List<TagTable>> getAllTag() async {
