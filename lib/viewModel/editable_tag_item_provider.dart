@@ -5,9 +5,7 @@ class EditableTagItemProvider with ChangeNotifier {
   List<bool> _checkList;
 
   get checkList {
-    if (_checkList == null) {
-      _checkList = List.filled(_tagList.length, false);
-    }
+    if (_checkList == null) _initializeCheckList();
     return _checkList;
   }
 
@@ -16,9 +14,13 @@ class EditableTagItemProvider with ChangeNotifier {
   get isDeleteSelectionMode => _isDeleteSelectionMode;
 
   set isDeleteSelectionMode(bool mode) {
+    _initializeCheckList();
     _isDeleteSelectionMode = mode;
     notifyListeners();
   }
+
+  void _initializeCheckList() =>
+      _checkList = List.filled(_tagList.length, false);
 
   void toggleChecked(int index) {
     checkList[index] = !checkList[index];

@@ -19,32 +19,46 @@ class EditableTagItem extends StatelessWidget {
   }
 
   Widget _tagList() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 16, 4, 16),
-      child: Row(
-        children: [
-          Icon(Icons.tag, color: Colors.black45),
-          SizedBox(width: 32),
-          Expanded(
-            child: TextField(
-              cursorColor: Colors.black45,
-              controller: TextEditingController.fromValue(
-                TextEditingValue(
-                  text: tag,
-                  selection: TextSelection.collapsed(offset: tag.length),
+    return Material(
+      color: Colors.transparent,
+      child: Consumer<EditableTagItemProvider>(
+        builder: (context, model, child) {
+          return InkWell(
+            onLongPress: () {
+              model.isDeleteSelectionMode = true;
+              model.checkList[index] = true;
+            },
+            child: child,
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 16, 4, 16),
+          child: Row(
+            children: [
+              Icon(Icons.tag, color: Colors.black45),
+              SizedBox(width: 32),
+              Expanded(
+                child: TextField(
+                  cursorColor: Colors.black45,
+                  controller: TextEditingController.fromValue(
+                    TextEditingValue(
+                      text: tag,
+                      selection: TextSelection.collapsed(offset: tag.length),
+                    ),
+                  ),
+                  keyboardType: TextInputType.text,
+                  textInputAction: TextInputAction.go,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.all(0),
+                  ),
+                  style: TextStyle(fontSize: 16),
                 ),
               ),
-              keyboardType: TextInputType.text,
-              textInputAction: TextInputAction.go,
-              decoration: InputDecoration(
-                isDense: true,
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.all(0),
-              ),
-              style: TextStyle(fontSize: 16),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
