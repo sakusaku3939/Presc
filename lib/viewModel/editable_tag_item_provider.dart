@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:presc/model/TagManager.dart';
+import 'package:presc/model/tag_manager.dart';
 import 'package:presc/model/utils/database_table.dart';
 
 class EditableTagItemProvider with ChangeNotifier {
