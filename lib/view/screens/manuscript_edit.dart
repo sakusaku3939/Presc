@@ -1,40 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/screens/playback.dart';
 import 'package:presc/view/utils/ripple_button.dart';
+import 'package:presc/viewModel/manuscript_provider.dart';
+import 'package:presc/viewModel/manuscript_tag_provider.dart';
+import 'package:provider/provider.dart';
 
 class ManuscriptEditScreen extends StatelessWidget {
-  ManuscriptEditScreen(this.heroTag);
+  ManuscriptEditScreen(this.context, this.heroTag, this.index);
 
+  final BuildContext context;
   final String heroTag;
+  final int index;
+
+  ManuscriptProvider get _provider => context.read<ManuscriptProvider>();
+
+  int get id => _provider.scriptTable[index].id;
+
+  String get title => _provider.scriptTable[index].title;
+
+  String get content => _provider.scriptTable[index].content;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: Hero(
-        tag: heroTag,
-        child: Material(
-          type: MaterialType.transparency,
-          child: Container(
-            color: Colors.white,
-            child: Column(
-              children: [
-                Container(child: _menuBar(context)),
-                Expanded(
-                    child: SingleChildScrollView(child: _content(context))),
-                Container(child: _footer()),
-              ],
+    return WillPopScope(
+      onWillPop: () {
+        _provider.notifyBack(context);
+        return Future.value(false);
+      },
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Hero(
+          tag: heroTag,
+          child: Material(
+            type: MaterialType.transparency,
+            child: Container(
+              color: Colors.white,
+              child: Column(
+                children: [
+                  Container(child: _menuBar(context)),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: _content(context),
+                    ),
+                  ),
+                  Container(child: _footer(context)),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-      floatingActionButton: SafeArea(
-        child: FloatingActionButton(
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => PlayScreen()),
+        floatingActionButton: SafeArea(
+          child: FloatingActionButton(
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PlaybackScreen()),
+            ),
+            child: Icon(Icons.play_arrow),
           ),
-          child: Icon(Icons.play_arrow),
         ),
       ),
     );
@@ -53,7 +76,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             RippleIconButton(
               Icons.navigate_before,
               size: 32,
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => _provider.notifyBack(context),
             ),
             Row(
               children: [
@@ -78,12 +101,6 @@ class ManuscriptEditScreen extends StatelessWidget {
   }
 
   Widget _content(BuildContext context) {
-    final title = "原稿1";
-    final content = "吾輩は猫である。名前はまだ無い。\n"
-        "どこで生れたかとんと見当がつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。吾輩はここで始めて人間というものを見た。しかもあとで聞くとそれは書生という人間中で一番獰悪な種族であったそうだ。この書生というのは時々我々を捕えて煮て食うという話である。しかしその当時は何という考もなかったから別段恐しいとも思わなかった。ただ彼の掌に載せられてスーと持ち上げられた時何だかフワフワした感じがあったばかりである。\n"
-        "\n"
-        "ようやくの思いで笹原を這い出すと向うに大きな池がある。吾輩は池の前に坐ってどうしたらよかろうと考えて見た。別にこれという分別も出ない。しばらくして泣いたら書生がまた迎に来てくれるかと考え付いた。ニャー、ニャーと試みにやって見たが誰も来ない。そのうち池の上をさらさらと風が渡って日が暮れかかる。腹が非常に減って来た。泣きたくても声が出ない。仕方がない、何でもよいから食物のある所まであるこうと決心をしてそろりそろりと池を左りに廻り始めた。どうも非常に苦しい。そこを我慢して無理やりに這って行くとようやくの事で何となく人間臭い所へ出た。";
-
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Column(
@@ -102,10 +119,12 @@ class ManuscriptEditScreen extends StatelessWidget {
             maxLines: null,
             decoration: InputDecoration(
               isDense: true,
+              hintText: "タイトル",
               border: InputBorder.none,
               contentPadding: const EdgeInsets.all(0),
             ),
             style: TextStyle(fontSize: 24),
+            onChanged: (text) => _provider.saveScript(id: id, title: text),
           ),
           Container(
             margin: const EdgeInsets.only(top: 16, bottom: 32),
@@ -122,6 +141,7 @@ class ManuscriptEditScreen extends StatelessWidget {
               maxLines: null,
               decoration: InputDecoration(
                 isDense: true,
+                hintText: "ここに原稿を入力",
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.all(0),
               ),
@@ -130,6 +150,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                 height: 1.7,
                 fontSize: 16,
               ),
+              onChanged: (text) => _provider.saveScript(id: id, content: text),
             ),
           ),
         ],
@@ -137,49 +158,164 @@ class ManuscriptEditScreen extends StatelessWidget {
     );
   }
 
-  Widget _footer() {
-    final _chipList = ["夏目漱石", "練習用"];
+  Widget _footer(BuildContext context) {
     return Container(
       height: 48,
-      padding: const EdgeInsets.only(left: 16, right: 88),
+      padding: const EdgeInsets.only(left: 16, right: 24),
       child: Row(
         children: [
           RippleIconButton(
             Icons.playlist_add,
-            onPressed: () {},
+            onPressed: () {
+              context.read<ManuscriptTagProvider>().loadTag(id);
+              showDialog(
+                context: context,
+                builder: (context) {
+                  final controller = TextEditingController();
+                  return AlertDialog(
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        TextField(
+                          decoration: InputDecoration(
+                            hintText: "新しいタグを追加",
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Theme.of(context).accentColor,
+                              ),
+                            ),
+                          ),
+                          controller: controller,
+                          cursorColor: Theme.of(context).accentColor,
+                          onSubmitted: (text) {
+                            if (text.trim().isNotEmpty) {
+                              context
+                                  .read<ManuscriptTagProvider>()
+                                  .addTag(id, text);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "新しいタグを追加しました",
+                                  ),
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                            }
+                            controller.clear();
+                          },
+                        ),
+                        SizedBox(height: 12),
+                        _tagGrid(),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
           ),
           Expanded(
             child: ScrollConfiguration(
               behavior: ScrollBehavior(),
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    for (var i = 0; i < _chipList.length; i++)
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8),
-                        child: Chip(
-                          shape: RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.grey[300], width: 1),
-                            borderRadius: BorderRadius.circular(24),
+                child: Consumer<ManuscriptTagProvider>(
+                  builder: (context, model, child) {
+                    return Row(
+                      children: [
+                        for (var linkTagTable in model.linkTagTable)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Chip(
+                              shape: RoundedRectangleBorder(
+                                side: BorderSide(
+                                    color: Colors.grey[300], width: 1),
+                                borderRadius: BorderRadius.circular(24),
+                              ),
+                              deleteIcon: Icon(
+                                Icons.cancel,
+                                color: Colors.grey[700],
+                                size: 18,
+                              ),
+                              label: Text(linkTagTable.tagName),
+                              backgroundColor: Colors.transparent,
+                              onDeleted: () {
+                                model.changeChecked(
+                                  memoId: id,
+                                  tagId: linkTagTable.id,
+                                  newValue: false,
+                                );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      "${linkTagTable.tagName} タグを外しました",
+                                    ),
+                                    duration: const Duration(seconds: 2),
+                                    action: SnackBarAction(
+                                      label: "元に戻す",
+                                      onPressed: () => model.changeChecked(
+                                        memoId: id,
+                                        tagId: linkTagTable.id,
+                                        newValue: true,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
                           ),
-                          deleteIcon: Icon(
-                            Icons.cancel,
-                            color: Colors.grey[700],
-                            size: 18,
-                          ),
-                          backgroundColor: Colors.transparent,
-                          key: Key(i.toString()),
-                          label: Text(_chipList[i]),
-                          onDeleted: () => {},
-                        ),
-                      )
-                  ],
+                        SizedBox(width: 56),
+                      ],
+                    );
+                  },
                 ),
               ),
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _tagGrid() {
+    return Consumer<ManuscriptTagProvider>(
+      builder: (context, model, child) {
+        return Wrap(
+          children: [
+            for (var linkTagTable in model.linkTagTable)
+              _tag(model, selected: true, tagTable: linkTagTable),
+            for (var unlinkTagTable in model.unlinkTagTable)
+              _tag(model, selected: false, tagTable: unlinkTagTable),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget _tag(ManuscriptTagProvider model, {bool selected, TagTable tagTable}) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
+      child: ChoiceChip(
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+            color: selected ? Theme.of(context).accentColor : Colors.grey[300],
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(24),
+        ),
+        label: Text(tagTable.tagName),
+        selectedColor: Theme.of(context).accentColor,
+        backgroundColor: Colors.white,
+        pressElevation: 2,
+        selected: selected,
+        onSelected: (value) async {
+          model.changeChecked(
+            memoId: id,
+            tagId: tagTable.id,
+            newValue: value,
+          );
+          Navigator.pop(context);
+        },
       ),
     );
   }

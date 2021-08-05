@@ -8,8 +8,6 @@ import 'package:provider/provider.dart';
 class TagEditScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final _tagList = ['宮沢賢治', '練習用'];
-
     return KeyboardDismissOnTap(
       child: Scaffold(
         appBar: _TagEditScreenAppbar(),
@@ -17,12 +15,16 @@ class TagEditScreen extends StatelessWidget {
         body: SafeArea(
           child: Scrollbar(
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  for (var i = 0; i < _tagList.length; i++)
-                    EditableTagItem(i, _tagList[i]),
-                  _addNewTag(),
-                ],
+              child: Consumer<EditableTagItemProvider>(
+                builder: (context, model, child) {
+                  return Column(
+                    children: [
+                      for (var i = 0; i < model.allTagTable.length; i++)
+                        EditableTagItem(i, model.allTagTable[i]),
+                      _addNewTag(),
+                    ],
+                  );
+                },
               ),
             ),
           ),
@@ -34,16 +36,16 @@ class TagEditScreen extends StatelessWidget {
   Widget _addNewTag() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 16, 4, 16),
-    child: Row(
+      child: Row(
         children: [
           Icon(Icons.add, color: Colors.black45),
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(left: 32, right: 16),
-              child: Selector<EditableTagItemProvider, bool>(
-                selector: (_, model) => model.isDeleteSelectionMode,
-                builder: (context, isDeleteSelectionMode, child) {
-                  return isDeleteSelectionMode
+              child: Consumer<EditableTagItemProvider>(
+                builder: (context, model, child) {
+                  final controller = TextEditingController();
+                  return model.isDeleteSelectionMode
                       ? Text(
                           '新しいタグを追加',
                           style: TextStyle(
@@ -52,9 +54,10 @@ class TagEditScreen extends StatelessWidget {
                           ),
                         )
                       : TextField(
+                          controller: controller,
                           cursorColor: Colors.black45,
                           keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.go,
+                          textInputAction: TextInputAction.done,
                           decoration: InputDecoration(
                             isDense: true,
                             border: InputBorder.none,
@@ -62,6 +65,20 @@ class TagEditScreen extends StatelessWidget {
                             hintStyle: TextStyle(fontSize: 16),
                             hintText: '新しいタグを追加',
                           ),
+                          onSubmitted: (text) {
+                            if (text.trim().isNotEmpty) {
+                              model.addTag(text);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "新しいタグを追加しました",
+                                  ),
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                            }
+                            controller.clear();
+                          },
                         );
                 },
               ),
@@ -122,7 +139,62 @@ class _TagEditScreenAppbar extends StatelessWidget
                 child: RippleIconButton(
                   Icons.delete_outlined,
                   color: Colors.white,
-                  onPressed: () => {},
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (_) {
+                      final count = model.checkList.where((e) => e).length;
+                      return AlertDialog(
+                        title: Text("$count件のタグを削除"),
+                        content: Text("選択したタグを全て削除しますか？この操作は復元できません。"),
+                        actions: [
+                          TextButton(
+                            child: Text("キャンセル"),
+                            style: ButtonStyle(
+                              padding: MaterialStateProperty.all(
+                                EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 8,
+                                ),
+                              ),
+                              minimumSize: MaterialStateProperty.all(Size.zero),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                          TextButton(
+                            child: Text("削除"),
+                            style: ButtonStyle(
+                              padding: MaterialStateProperty.all(
+                                EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 8,
+                                ),
+                              ),
+                              minimumSize: MaterialStateProperty.all(Size.zero),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            onPressed: () {
+                              for (var i = 0; i < model.checkList.length; i++) {
+                                if (model.checkList[i])
+                                  model.deleteTag(model.allTagTable[i].id);
+                              }
+                              Navigator.pop(context);
+                              model.isDeleteSelectionMode = false;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "$count件のタグを削除しました",
+                                  ),
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                            },
+                          ),
+                          SizedBox(width: 2),
+                        ],
+                      );
+                    },
+                  ),
                 ),
               ),
             ],

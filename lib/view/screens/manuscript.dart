@@ -12,7 +12,7 @@ class ManuscriptScreen extends StatelessWidget {
     KeyboardVisibilityController().onChange.listen((bool visible) {
       if (!visible) FocusManager.instance.primaryFocus.unfocus();
     });
-    return Selector<ManuscriptProvider, int>(
+    return Selector<ManuscriptProvider, ManuscriptState>(
       selector: (_, model) => model.state,
       builder: (context, state, child) {
         return state == ManuscriptState.home

@@ -19,7 +19,7 @@ class PlaybackTextView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollController.jumpTo(scroll ? 0 : 20);
+      _scrollController.jumpTo(scroll ? 0 : 24);
     });
     return Container(
       height: height,
@@ -32,12 +32,12 @@ class PlaybackTextView extends StatelessWidget {
               : NeverScrollableScrollPhysics(),
           controller: _scrollController,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: 32),
             child: Text(
               text,
               style: TextStyle(
                 color: Colors.white,
-                height: 2,
+                height: 2.2,
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
               ),
