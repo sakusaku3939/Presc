@@ -47,6 +47,12 @@ class ManuscriptTagProvider with ChangeNotifier {
     loadTag(memoId);
   }
 
+  Future<void> addTag(int memoId, String name) async {
+    final id = await _manager.addTag(name: name);
+    changeChecked(memoId: memoId, tagId: id, newValue: true);
+    loadTag(memoId);
+  }
+
   Future<void> addTagTest(int memoId) async {
     int id1 = await _manager.addTag(name: "夏目漱石");
     int id2 = await _manager.addTag(name: "練習用");

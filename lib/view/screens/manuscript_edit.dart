@@ -171,6 +171,7 @@ class ManuscriptEditScreen extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (context) {
+                  final controller = TextEditingController();
                   return AlertDialog(
                     content: Column(
                       mainAxisSize: MainAxisSize.min,
@@ -185,7 +186,24 @@ class ManuscriptEditScreen extends StatelessWidget {
                               ),
                             ),
                           ),
+                          controller: controller,
                           cursorColor: Theme.of(context).accentColor,
+                          onSubmitted: (text) {
+                            if (text.trim().isNotEmpty) {
+                              context
+                                  .read<ManuscriptTagProvider>()
+                                  .addTag(id, text);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "新しいタグを追加しました",
+                                  ),
+                                  duration: const Duration(seconds: 2),
+                                ),
+                              );
+                            }
+                            controller.clear();
+                          },
                         ),
                         SizedBox(height: 12),
                         _tagGrid(),
