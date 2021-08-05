@@ -66,16 +66,18 @@ class TagEditScreen extends StatelessWidget {
                             hintText: '新しいタグを追加',
                           ),
                           onSubmitted: (text) {
-                            model.addTag(text);
-                            controller.clear();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  "新しいタグを追加しました",
+                            if (text.trim().isNotEmpty) {
+                              model.addTag(text);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "新しいタグを追加しました",
+                                  ),
+                                  duration: const Duration(seconds: 2),
                                 ),
-                                duration: const Duration(seconds: 2),
-                              ),
-                            );
+                              );
+                            }
+                            controller.clear();
                           },
                         );
                 },
