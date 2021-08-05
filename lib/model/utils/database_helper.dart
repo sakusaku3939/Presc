@@ -153,6 +153,13 @@ class DatabaseHelper {
           tagId: 1,
         ).toMap(),
       ),
+      db.insert(
+        TagMemoTable.name,
+        TagMemoTable(
+          memoId: 1,
+          tagId: 2,
+        ).toMap(),
+      ),
     ]);
   }
 }
