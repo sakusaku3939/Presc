@@ -22,6 +22,14 @@ class EditableTagItem extends StatelessWidget {
   }
 
   Widget _tagList(BuildContext context) {
+    final controller = TextEditingController.fromValue(
+      TextEditingValue(
+        text: tagTable.tagName,
+        selection: TextSelection.collapsed(
+          offset: tagTable.tagName.length,
+        ),
+      ),
+    );
     return Material(
       color: Colors.transparent,
       child: Consumer<EditableTagItemProvider>(
@@ -43,13 +51,7 @@ class EditableTagItem extends StatelessWidget {
               Expanded(
                 child: TextField(
                   cursorColor: Colors.black45,
-                  controller: TextEditingController.fromValue(
-                    TextEditingValue(
-                      text: tagTable.tagName,
-                      selection: TextSelection.collapsed(
-                          offset: tagTable.tagName.length),
-                    ),
-                  ),
+                  controller: controller,
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.done,
                   decoration: InputDecoration(
@@ -58,9 +60,23 @@ class EditableTagItem extends StatelessWidget {
                     contentPadding: const EdgeInsets.all(0),
                   ),
                   style: TextStyle(fontSize: 16),
-                  onChanged: (text) => context
-                      .read<EditableTagItemProvider>()
-                      .updateTag(tagTable.id, text),
+                  onSubmitted: (text) {
+                    if (text.trim().isNotEmpty) {
+                      context
+                          .read<EditableTagItemProvider>()
+                          .updateTag(tagTable.id, text);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            "タグを更新しました",
+                          ),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    } else {
+                      controller.text = tagTable.tagName;
+                    }
+                  },
                 ),
               ),
             ],

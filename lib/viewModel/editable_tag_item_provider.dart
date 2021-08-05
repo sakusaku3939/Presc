@@ -38,6 +38,7 @@ class EditableTagItemProvider with ChangeNotifier {
 
   Future<void> updateTag(int id, String name) async {
     await _manager.updateTag(id: id, name: name);
+    loadTag();
   }
 
   Future<void> deleteTag(int id) async {
