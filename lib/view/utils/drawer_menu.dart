@@ -106,7 +106,8 @@ class DrawerMenu extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => TagEditScreen()),
+                            builder: (context) => TagEditScreen(),
+                          ),
                         );
                       },
                       child: Text(
@@ -127,6 +128,15 @@ class DrawerMenu extends StatelessWidget {
                 title:
                     Text(allTagTable.tagName, style: TextStyle(fontSize: 14)),
                 dense: true,
+                onLongPress: () {
+                  model.loadTag();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TagEditScreen(),
+                    ),
+                  );
+                },
                 onTap: () {
                   context.read<ManuscriptProvider>().replaceState(
                         ManuscriptState.tag,
