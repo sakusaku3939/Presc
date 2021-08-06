@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/utils/editable_tag_item.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
@@ -15,12 +16,13 @@ class TagEditScreen extends StatelessWidget {
         body: SafeArea(
           child: Scrollbar(
             child: SingleChildScrollView(
-              child: Consumer<EditableTagItemProvider>(
-                builder: (context, model, child) {
+              child: Selector<EditableTagItemProvider, List<TagTable>>(
+                selector: (_, model) => model.allTagTable,
+                builder: (context, allTagTable, child) {
                   return Column(
                     children: [
-                      for (var i = 0; i < model.allTagTable.length; i++)
-                        EditableTagItem(i, model.allTagTable[i]),
+                      for (var i = 0; i < allTagTable.length; i++)
+                        EditableTagItem(i, allTagTable[i]),
                       _addNewTag(),
                     ],
                   );
