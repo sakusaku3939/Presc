@@ -239,29 +239,11 @@ class ManuscriptEditScreen extends StatelessWidget {
                               ),
                               label: Text(linkTagTable.tagName),
                               backgroundColor: Colors.transparent,
-                              onDeleted: () {
-                                model.changeChecked(
-                                  memoId: id,
-                                  tagId: linkTagTable.id,
-                                  newValue: false,
-                                );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      "${linkTagTable.tagName} タグを外しました",
-                                    ),
-                                    duration: const Duration(seconds: 2),
-                                    action: SnackBarAction(
-                                      label: "元に戻す",
-                                      onPressed: () => model.changeChecked(
-                                        memoId: id,
-                                        tagId: linkTagTable.id,
-                                        newValue: true,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
+                              onDeleted: () => model.changeChecked(
+                                memoId: id,
+                                tagId: linkTagTable.id,
+                                newValue: false,
+                              ),
                             ),
                           ),
                         SizedBox(width: 56),
