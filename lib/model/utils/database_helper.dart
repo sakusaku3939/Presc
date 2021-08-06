@@ -113,6 +113,17 @@ class DatabaseHelper {
           ''');
   }
 
+  Future<List<Map<String, dynamic>>> queryMemoById(int tagId) async {
+    Database db = await instance.database;
+    final cross = TagMemoTable.name;
+    final memo = MemoTable.name;
+    return await db.rawQuery('''
+          SELECT $memo.id, $memo.title, $memo.content, $memo.date
+          FROM $cross INNER JOIN $memo ON $memo.id = $cross.memo_id
+          WHERE $cross.tag_id = $tagId
+          ''');
+  }
+
   Future<void> execute(String sql, List<Object> arguments) async {
     Database db = await instance.database;
     await db.execute(sql, arguments);

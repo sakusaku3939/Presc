@@ -46,7 +46,7 @@ class DrawerMenu extends StatelessWidget {
                     title: Text('ごみ箱', style: TextStyle(fontSize: 14)),
                     dense: true,
                     onTap: () {
-                      model.replaceState(ManuscriptState.trash, 2);
+                      model.replaceState(ManuscriptState.trash);
                       _scaffoldKey.currentState.openEndDrawer();
                     },
                   );
@@ -71,93 +71,100 @@ class DrawerMenu extends StatelessWidget {
   Widget _tagList(BuildContext context) {
     final _tagList = ['宮沢賢治', '練習用'];
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          margin: const EdgeInsets.fromLTRB(16, 16, 8, 2),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "タグ一覧",
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  color: Theme.of(context).accentColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 12),
-                child: TextButton(
-                  style: ButtonStyle(
-                    overlayColor: MaterialStateProperty.all(Colors.black12),
-                    padding: MaterialStateProperty.all(
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    ),
-                    minimumSize: MaterialStateProperty.all(Size.zero),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  onPressed: () {
-                    context.read<EditableTagItemProvider>().loadTag();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TagEditScreen()),
-                    );
-                  },
-                  child: Text(
-                    "編集",
+    return Consumer<EditableTagItemProvider>(
+      builder: (context, model, child) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: const EdgeInsets.fromLTRB(16, 16, 8, 2),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "タグ一覧",
+                    textAlign: TextAlign.left,
                     style: TextStyle(
-                      color: Colors.grey[700],
+                      color: Theme.of(context).accentColor,
+                      fontWeight: FontWeight.bold,
                       fontSize: 12,
                     ),
                   ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        for (var tag in _tagList)
-          Consumer<ManuscriptProvider>(
-            builder: (context, model, child) {
-              return ListTile(
-                leading: Icon(Icons.tag),
-                title: Text(tag, style: TextStyle(fontSize: 14)),
-                dense: true,
-                onTap: () {
-                  model.replaceState(ManuscriptState.tag, 1, key: tag);
-                  _scaffoldKey.currentState.openEndDrawer();
-                },
-              );
-            },
-          ),
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-          child: Row(
-            children: [
-              Icon(Icons.add, color: Colors.black45),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(left: 32, right: 16),
-                  child: TextField(
-                    cursorColor: Colors.black45,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.go,
-                    decoration: InputDecoration(
-                      isDense: true,
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.all(0),
-                      hintStyle: TextStyle(fontSize: 14),
-                      hintText: '新しいタグを追加',
+                  Padding(
+                    padding: const EdgeInsets.only(right: 12),
+                    child: TextButton(
+                      style: ButtonStyle(
+                        overlayColor: MaterialStateProperty.all(Colors.black12),
+                        padding: MaterialStateProperty.all(
+                          const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 4),
+                        ),
+                        minimumSize: MaterialStateProperty.all(Size.zero),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      onPressed: () {
+                        model.loadTag();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TagEditScreen()),
+                        );
+                      },
+                      child: Text(
+                        "編集",
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 12,
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              )
-            ],
-          ),
-        )
-      ],
+                ],
+              ),
+            ),
+            for (var allTagTable in model.allTagTable)
+              ListTile(
+                leading: Icon(Icons.tag),
+                title:
+                    Text(allTagTable.tagName, style: TextStyle(fontSize: 14)),
+                dense: true,
+                onTap: () {
+                  context.read<ManuscriptProvider>().replaceState(
+                        ManuscriptState.tag,
+                        tagId: allTagTable.id,
+                        tagName: allTagTable.tagName,
+                      );
+                  _scaffoldKey.currentState.openEndDrawer();
+                },
+              ),
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              child: Row(
+                children: [
+                  Icon(Icons.add, color: Colors.black45),
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.only(left: 32, right: 16),
+                      child: TextField(
+                        cursorColor: Colors.black45,
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.go,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.all(0),
+                          hintStyle: TextStyle(fontSize: 14),
+                          hintText: '新しいタグを追加',
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+        );
+      },
     );
   }
 }

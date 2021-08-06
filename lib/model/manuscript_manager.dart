@@ -32,4 +32,10 @@ class ManuscriptManager {
     List<MemoTable> tableList = res.map((row) => MemoTable.fromMap(row)).toList();
     return tableList;
   }
+
+  Future<List<MemoTable>> getScriptByTagId(int id) async {
+    final res = await _dbHelper.queryMemoById(id);
+    List<MemoTable> tableList = res.map((row) => MemoTable.fromMap(row)).toList();
+    return tableList;
+  }
 }

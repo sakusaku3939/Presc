@@ -9,7 +9,7 @@ class ManuscriptProvider with ChangeNotifier {
   final _manager = ManuscriptManager();
 
   int currentScriptLength = 0;
-  String currentTag = '';
+  String currentTag = "";
 
   ManuscriptState _state = ManuscriptState.home;
 
@@ -28,24 +28,36 @@ class ManuscriptProvider with ChangeNotifier {
     final _listKeyMonitor = (Timer t) {
       if (listKey.currentState != null) {
         t.cancel();
-        replaceState(ManuscriptState.home, scriptTable.length);
+        replaceState(ManuscriptState.home);
       }
     };
     Timer.periodic(Duration(milliseconds: 100), _listKeyMonitor);
     notifyListeners();
   }
 
-  Future<void> replaceState(ManuscriptState state, int length, {String key = ""}) async {
+  Future<void> replaceState(ManuscriptState state, {int tagId, String tagName = ""}) async {
     for (int i = 0; i < currentScriptLength; i++) {
       listKey.currentState?.removeItem(0, (context, animation) => Container());
     }
-    for (int i = 0; i < length; i++) {
+    switch (state) {
+      case ManuscriptState.home:
+        _scriptTable = await _manager.getAllScript();
+        break;
+      case ManuscriptState.tag:
+        if (tagId == null) return;
+        _scriptTable = await _manager.getScriptByTagId(tagId);
+        break;
+      case ManuscriptState.trash:
+        // @TODO ごみ箱の実装
+        break;
+    }
+    for (int i = 0; i < _scriptTable.length; i++) {
       listKey.currentState
           ?.insertItem(0, duration: Duration(milliseconds: 400));
     }
     _state = state;
-    currentScriptLength = length;
-    currentTag = key;
+    currentScriptLength = _scriptTable.length;
+    currentTag = tagName;
     notifyListeners();
   }
 
