@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:presc/model/utils/database_table.dart';
+import 'package:presc/view/utils/add_new_tag.dart';
 import 'package:presc/view/utils/editable_tag_item.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
@@ -44,10 +45,10 @@ class TagEditScreen extends StatelessWidget {
           Expanded(
             child: Container(
               margin: const EdgeInsets.only(left: 32, right: 16),
-              child: Consumer<EditableTagItemProvider>(
-                builder: (context, model, child) {
-                  final controller = TextEditingController();
-                  return model.isDeleteSelectionMode
+              child: Selector<EditableTagItemProvider, bool>(
+                selector: (_, model) => model.isDeleteSelectionMode,
+                builder: (context, isDeleteSelectionMode, child) {
+                  return isDeleteSelectionMode
                       ? Text(
                           '新しいタグを追加',
                           style: TextStyle(
@@ -55,33 +56,7 @@ class TagEditScreen extends StatelessWidget {
                             color: Colors.black.withOpacity(0.6),
                           ),
                         )
-                      : TextField(
-                          controller: controller,
-                          cursorColor: Colors.black45,
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.done,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            border: InputBorder.none,
-                            contentPadding: const EdgeInsets.all(0),
-                            hintStyle: TextStyle(fontSize: 16),
-                            hintText: '新しいタグを追加',
-                          ),
-                          onSubmitted: (text) {
-                            if (text.trim().isNotEmpty) {
-                              model.addTag(text);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    "新しいタグを追加しました",
-                                  ),
-                                  duration: const Duration(seconds: 2),
-                                ),
-                              );
-                            }
-                            controller.clear();
-                          },
-                        );
+                      : AddNewTag();
                 },
               ),
             ),

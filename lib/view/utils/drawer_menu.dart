@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:presc/view/screens/setting.dart';
 import 'package:presc/view/screens/tag_edit.dart';
+import 'package:presc/view/utils/add_new_tag.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:provider/provider.dart';
@@ -69,8 +70,6 @@ class DrawerMenu extends StatelessWidget {
   }
 
   Widget _tagList(BuildContext context) {
-    final _tagList = ['宮沢賢治', '練習用'];
-
     return Consumer<EditableTagItemProvider>(
       builder: (context, model, child) {
         return Column(
@@ -145,18 +144,7 @@ class DrawerMenu extends StatelessWidget {
                   Expanded(
                     child: Container(
                       margin: const EdgeInsets.only(left: 32, right: 16),
-                      child: TextField(
-                        cursorColor: Colors.black45,
-                        keyboardType: TextInputType.text,
-                        textInputAction: TextInputAction.go,
-                        decoration: InputDecoration(
-                          isDense: true,
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.all(0),
-                          hintStyle: TextStyle(fontSize: 14),
-                          hintText: '新しいタグを追加',
-                        ),
-                      ),
+                      child: AddNewTag(fontSize: 14),
                     ),
                   )
                 ],
