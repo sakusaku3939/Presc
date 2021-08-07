@@ -21,7 +21,7 @@ class ManuscriptProvider with ChangeNotifier {
 
   List<MemoTable> _scriptTable;
 
-  get scriptTable => _scriptTable;
+  List<MemoTable> get scriptTable => _scriptTable;
 
   Future<void> _loadScriptList() async {
     _scriptTable = await _manager.getAllScript();

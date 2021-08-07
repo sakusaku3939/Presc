@@ -14,25 +14,62 @@ Widget cardPageView() {
     margin: const EdgeInsets.only(top: 16),
     child: Consumer<ManuscriptProvider>(
       builder: (context, model, child) {
-        return model.scriptTable != null
-            ? AnimatedList(
-                key: model.listKey,
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                initialItemCount: 0,
-                itemBuilder:
-                    (BuildContext context, int index, Animation animation) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: Container(
-                      height: 280,
-                      margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-                      child: ScriptCard("${model.state}$index", index),
-                    ),
-                  );
-                },
-              )
-            : Container();
+        if (model.scriptTable == null) {
+          return Container();
+        } else if (model.scriptTable.isNotEmpty) {
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.description_outlined,
+                  color: Colors.grey[700],
+                  size: 64,
+                ),
+                Text("原稿がありません"),
+              ],
+            ),
+          );
+        } else {
+          return AnimatedList(
+            key: model.listKey,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            initialItemCount: 0,
+            itemBuilder:
+                (BuildContext context, int index, Animation animation) {
+              return FadeTransition(
+                opacity: animation,
+                child: Container(
+                  height: 280,
+                  margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+                  child: ScriptCard("${model.state}$index", index),
+                ),
+              );
+            },
+          );
+        }
+        // if (model.scriptTable != null) {
+        //   return AnimatedList(
+        //     key: model.listKey,
+        //     shrinkWrap: true,
+        //     physics: NeverScrollableScrollPhysics(),
+        //     initialItemCount: 0,
+        //     itemBuilder:
+        //         (BuildContext context, int index, Animation animation) {
+        //       return FadeTransition(
+        //         opacity: animation,
+        //         child: Container(
+        //           height: 280,
+        //           margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+        //           child: ScriptCard("${model.state}$index", index),
+        //         ),
+        //       );
+        //     },
+        //   );
+        // } else {
+        //   return Container();
+        // }
       },
     ),
   );
@@ -76,7 +113,9 @@ class ScriptCard extends StatelessWidget {
         return ScaleTap(
           scaleMinValue: 0.96,
           onPressed: () {
-            context.read<ManuscriptTagProvider>().loadTag(scriptTable[index].id);
+            context
+                .read<ManuscriptTagProvider>()
+                .loadTag(scriptTable[index].id);
             Navigator.push(
               context,
               PageRouteBuilder(
