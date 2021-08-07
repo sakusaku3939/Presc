@@ -116,62 +116,71 @@ class _TagEditScreenAppbar extends StatelessWidget
                 child: RippleIconButton(
                   Icons.delete_outlined,
                   color: Colors.white,
-                  onPressed: () => showDialog(
-                    context: context,
-                    builder: (_) {
-                      final count = model.checkList.where((e) => e).length;
-                      return AlertDialog(
-                        title: Text("$count件のタグを削除"),
-                        content: Text("選択したタグを全て削除しますか？この操作は復元できません。"),
-                        actions: [
-                          TextButton(
-                            child: Text("キャンセル"),
-                            style: ButtonStyle(
-                              padding: MaterialStateProperty.all(
-                                EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 8,
-                                ),
-                              ),
-                              minimumSize: MaterialStateProperty.all(Size.zero),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            ),
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                          TextButton(
-                            child: Text("削除"),
-                            style: ButtonStyle(
-                              padding: MaterialStateProperty.all(
-                                EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                  vertical: 8,
-                                ),
-                              ),
-                              minimumSize: MaterialStateProperty.all(Size.zero),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            ),
-                            onPressed: () {
-                              for (var i = 0; i < model.checkList.length; i++) {
-                                if (model.checkList[i])
-                                  model.deleteTag(model.allTagTable[i].id);
-                              }
-                              Navigator.pop(context);
-                              model.isDeleteSelectionMode = false;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    "$count件のタグを削除しました",
+                  onPressed: () {
+                    final count = model.checkList.where((e) => e).length;
+                    if (count > 0)
+                      showDialog(
+                        context: context,
+                        builder: (_) {
+                          return AlertDialog(
+                            title: Text("$count件のタグを削除"),
+                            content: Text("選択したタグを全て削除しますか？この操作は復元できません。"),
+                            actions: [
+                              TextButton(
+                                child: Text("キャンセル"),
+                                style: ButtonStyle(
+                                  padding: MaterialStateProperty.all(
+                                    EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 8,
+                                    ),
                                   ),
-                                  duration: const Duration(seconds: 2),
+                                  minimumSize:
+                                      MaterialStateProperty.all(Size.zero),
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
                                 ),
-                              );
-                            },
-                          ),
-                          SizedBox(width: 2),
-                        ],
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                              TextButton(
+                                child: Text("削除"),
+                                style: ButtonStyle(
+                                  padding: MaterialStateProperty.all(
+                                    EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 8,
+                                    ),
+                                  ),
+                                  minimumSize:
+                                      MaterialStateProperty.all(Size.zero),
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                ),
+                                onPressed: () {
+                                  for (var i = 0;
+                                      i < model.checkList.length;
+                                      i++) {
+                                    if (model.checkList[i])
+                                      model.deleteTag(model.allTagTable[i].id);
+                                  }
+                                  Navigator.pop(context);
+                                  model.isDeleteSelectionMode = false;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        "$count件のタグを削除しました",
+                                      ),
+                                      duration: const Duration(seconds: 2),
+                                    ),
+                                  );
+                                },
+                              ),
+                              SizedBox(width: 2),
+                            ],
+                          );
+                        },
                       );
-                    },
-                  ),
+                  },
                 ),
               ),
             ],
