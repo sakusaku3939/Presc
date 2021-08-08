@@ -16,17 +16,30 @@ Widget cardPageView() {
       builder: (context, model, child) {
         if (model.scriptTable == null) {
           return Container();
-        } else if (model.scriptTable.isNotEmpty) {
-          return Center(
+        } else if (model.scriptTable.isEmpty) {
+          return Container(
+            height: MediaQuery.of(context).size.height - 120,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
                   Icons.description_outlined,
-                  color: Colors.grey[700],
+                  color: Colors.grey,
                   size: 64,
                 ),
-                Text("原稿がありません"),
+                SizedBox(height: 8),
+                Text(
+                  "原稿がまだありません",
+                  style: TextStyle(color: Colors.grey[600]),
+                ),
+                AnimatedList(
+                  key: model.listKey,
+                  shrinkWrap: true,
+                  itemBuilder:
+                      (BuildContext context, int index, Animation animation) {
+                    return Container();
+                  },
+                ),
               ],
             ),
           );
@@ -49,27 +62,6 @@ Widget cardPageView() {
             },
           );
         }
-        // if (model.scriptTable != null) {
-        //   return AnimatedList(
-        //     key: model.listKey,
-        //     shrinkWrap: true,
-        //     physics: NeverScrollableScrollPhysics(),
-        //     initialItemCount: 0,
-        //     itemBuilder:
-        //         (BuildContext context, int index, Animation animation) {
-        //       return FadeTransition(
-        //         opacity: animation,
-        //         child: Container(
-        //           height: 280,
-        //           margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-        //           child: ScriptCard("${model.state}$index", index),
-        //         ),
-        //       );
-        //     },
-        //   );
-        // } else {
-        //   return Container();
-        // }
       },
     ),
   );
