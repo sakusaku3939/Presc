@@ -24,13 +24,13 @@ Widget cardPageView() {
               children: [
                 Icon(
                   Icons.description_outlined,
-                  color: Colors.grey,
+                  color: Colors.grey[600],
                   size: 64,
                 ),
                 SizedBox(height: 8),
                 Text(
                   "原稿がまだありません",
-                  style: TextStyle(color: Colors.grey[600]),
+                  style: TextStyle(color: Colors.grey[700]),
                 ),
                 AnimatedList(
                   key: model.listKey,
