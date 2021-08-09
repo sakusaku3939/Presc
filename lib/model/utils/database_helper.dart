@@ -55,17 +55,14 @@ class DatabaseHelper {
             FOREIGN KEY (tag_id) REFERENCES ${TagTable.name}(id)
           )
           ''');
-    // await db.execute('''
-    //       CREATE TABLE ${TrashTable.name} (
-    //         id INTEGER PRIMARY KEY,
-    //         tag_id INTEGER,
-    //         title TEXT NOT NULL,
-    //         content TEXT NOT NULL,
-    //         date TEXT NOT NULL,
-    //         FOREIGN KEY (tag_id) REFERENCES ${TagTable.name}(id)
-    //       )
-    //       ''');
-
+    await db.execute('''
+          CREATE TABLE ${TrashTable.name} (
+            id INTEGER PRIMARY KEY,
+            title TEXT NOT NULL,
+            content TEXT NOT NULL,
+            date TEXT NOT NULL
+          )
+          ''');
     _init(db);
   }
 
@@ -102,7 +99,7 @@ class DatabaseHelper {
     return await db.delete(tableName, where: 'id = ?', whereArgs: [id]);
   }
 
-  Future<List<Map<String, dynamic>>> queryTagById(int memoId) async {
+  Future<List<Map<String, dynamic>>> queryTagByMemoId(int memoId) async {
     Database db = await instance.database;
     final cross = TagMemoTable.name;
     final tag = TagTable.name;
@@ -113,7 +110,7 @@ class DatabaseHelper {
           ''');
   }
 
-  Future<List<Map<String, dynamic>>> queryMemoById(int tagId) async {
+  Future<List<Map<String, dynamic>>> queryMemoByTagId(int tagId) async {
     Database db = await instance.database;
     final cross = TagMemoTable.name;
     final memo = MemoTable.name;
@@ -162,13 +159,6 @@ class DatabaseHelper {
         TagMemoTable(
           memoId: 1,
           tagId: 1,
-        ).toMap(),
-      ),
-      db.insert(
-        TagMemoTable.name,
-        TagMemoTable(
-          memoId: 1,
-          tagId: 2,
         ).toMap(),
       ),
     ]);

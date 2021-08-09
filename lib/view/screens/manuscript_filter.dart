@@ -27,7 +27,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 12),
                     ),
                   ),
-                cardPageView()
+                ScriptCard(context),
               ],
             ),
           ),
@@ -44,7 +44,10 @@ class ManuscriptFilterScreen extends StatelessWidget {
           return RippleIconButton(
             Icons.navigate_before,
             size: 32,
-            onPressed: () => model.replaceState(ManuscriptState.home),
+            onPressed: () {
+              model.replaceState(ManuscriptState.home);
+              ScaffoldMessenger.of(context).clearSnackBars();
+            },
           );
         },
       ),

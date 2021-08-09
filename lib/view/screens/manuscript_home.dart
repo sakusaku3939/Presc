@@ -31,7 +31,7 @@ class ManuscriptHomeScreen extends StatelessWidget {
                 flexibleSpace: _searchbar(context),
               ),
               SliverList(
-                delegate: SliverChildListDelegate([cardPageView()]),
+                delegate: SliverChildListDelegate([ScriptCard(context)]),
               )
             ],
           ),

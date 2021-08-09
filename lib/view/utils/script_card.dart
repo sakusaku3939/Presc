@@ -9,62 +9,77 @@ import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
 
-Widget cardPageView() {
-  return Container(
-    margin: const EdgeInsets.only(top: 16),
-    child: Consumer<ManuscriptProvider>(
-      builder: (context, model, child) {
-        if (model.scriptTable == null) {
-          return Container();
-        } else if (model.scriptTable.isEmpty) {
-          return Container(
-            height: MediaQuery.of(context).size.height - 120,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.description_outlined,
-                  color: Colors.grey[600],
-                  size: 64,
-                ),
-                SizedBox(height: 8),
-                Text(
-                  "原稿がまだありません",
-                  style: TextStyle(color: Colors.grey[700]),
-                ),
-                AnimatedList(
-                  key: model.listKey,
-                  shrinkWrap: true,
-                  itemBuilder:
-                      (BuildContext context, int index, Animation animation) {
-                    return Container();
-                  },
-                ),
-              ],
-            ),
-          );
-        } else {
-          return AnimatedList(
+class ScriptCard extends StatelessWidget {
+  ScriptCard(this.context);
+
+  final BuildContext context;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 16),
+      child: Consumer<ManuscriptProvider>(
+        builder: (context, model, child) {
+          if (model.scriptTable == null)
+            return _placeholder();
+          else if (model.scriptTable.isEmpty)
+            return _emptyView(model);
+          else
+            return _scriptListView(model);
+        },
+      ),
+    );
+  }
+
+  Widget _placeholder() => Container();
+
+  Widget _emptyView(ManuscriptProvider model) {
+    return Container(
+      height: MediaQuery.of(context).size.height - 120,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.description_outlined,
+            color: Colors.grey[600],
+            size: 64,
+          ),
+          SizedBox(height: 8),
+          Text(
+            "原稿がまだありません",
+            style: TextStyle(color: Colors.grey[700]),
+          ),
+          AnimatedList(
             key: model.listKey,
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            initialItemCount: 0,
             itemBuilder:
                 (BuildContext context, int index, Animation animation) {
-              return FadeTransition(
-                opacity: animation,
-                child: Container(
-                  height: 280,
-                  margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-                  child: ScriptCard("${model.state}$index", index),
-                ),
-              );
+              return Container();
             },
-          );
-        }
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _scriptListView(ManuscriptProvider model) {
+    return AnimatedList(
+      key: model.listKey,
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      initialItemCount: 0,
+      itemBuilder: (BuildContext context, int index, Animation animation) {
+        return FadeTransition(
+          opacity: animation,
+          child: Container(
+            height: 280,
+            margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+            child: _Card(context, "${model.state}$index", index),
+          ),
+        );
       },
-    ),
-  );
+    );
+  }
 }
 
 BoxDecoration cardShadow(double radius) {
@@ -81,9 +96,10 @@ BoxDecoration cardShadow(double radius) {
   );
 }
 
-class ScriptCard extends StatelessWidget {
-  ScriptCard(this.heroTag, this.index);
+class _Card extends StatelessWidget {
+  _Card(this.context, this.heroTag, this.index);
 
+  final BuildContext context;
   final String heroTag;
   final int index;
 
@@ -113,7 +129,7 @@ class ScriptCard extends StatelessWidget {
               PageRouteBuilder(
                 transitionDuration: Duration(milliseconds: 500),
                 pageBuilder: (_, __, ___) =>
-                    ManuscriptEditScreen(context, heroTag, index),
+                    ManuscriptEditScreen(this.context, heroTag, index),
               ),
             );
           },

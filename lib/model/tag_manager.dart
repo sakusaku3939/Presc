@@ -29,7 +29,7 @@ class TagManager {
       [id],
     );
     await _dbHelper.delete(TagTable.name, id);
-    print('delete tag_table id: $id');
+    print('deleted tag_table id: $id');
   }
 
   Future<void> linkTag(int memoId, int tagId) async {
@@ -54,7 +54,7 @@ class TagManager {
   }
 
   Future<List<TagTable>> getLinkTagById(int memoId) async {
-    final res = await _dbHelper.queryTagById(memoId);
+    final res = await _dbHelper.queryTagByMemoId(memoId);
     List<TagTable> tableList = res.map((row) => TagTable.fromMap(row)).toList();
     return tableList;
   }

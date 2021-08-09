@@ -27,15 +27,34 @@ class ManuscriptManager {
     await _dbHelper.update(table);
   }
 
-  Future<List<MemoTable>> getAllScript() async {
-    final res = await _dbHelper.queryAll(MemoTable.name);
+  Future<List<MemoTable>> getAllScript({trash = false}) async {
+    final res = await _dbHelper.queryAll(trash ? TrashTable.name : MemoTable.name);
     List<MemoTable> tableList = res.map((row) => MemoTable.fromMap(row)).toList();
     return tableList;
   }
 
-  Future<List<MemoTable>> getScriptByTagId(int id) async {
-    final res = await _dbHelper.queryMemoById(id);
+  Future<List<MemoTable>> getScriptByTagId(int tagId) async {
+    final res = await _dbHelper.queryMemoByTagId(tagId);
     List<MemoTable> tableList = res.map((row) => MemoTable.fromMap(row)).toList();
     return tableList;
+  }
+
+  Future<int> moveToTrash(int memoId) async {
+    await updateScript(id: memoId);
+    final res = await _dbHelper.queryById(MemoTable.name, memoId);
+    DatabaseTable table = TrashTable.fromMap(res);
+    final id = await _dbHelper.insert(table);
+    await _dbHelper.delete(MemoTable.name, memoId);
+    print('deleted memo_table id: $memoId');
+    return id;
+  }
+
+  Future<int> restoreFromTrash(int trashId) async {
+    final res = await _dbHelper.queryById(TrashTable.name, trashId);
+    DatabaseTable table = MemoTable.fromMap(res);
+    final id = await _dbHelper.insert(table);
+    await _dbHelper.delete(TrashTable.name, trashId);
+    print('restored memo_table id: $id');
+    return id;
   }
 }

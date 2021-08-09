@@ -78,22 +78,9 @@ class ManuscriptEditScreen extends StatelessWidget {
               size: 32,
               onPressed: () => _provider.notifyBack(context),
             ),
-            Row(
-              children: [
-                RippleIconButton(
-                  Icons.share,
-                  onPressed: () => {},
-                ),
-                RippleIconButton(
-                  Icons.delete_outline,
-                  onPressed: () => {},
-                ),
-                RippleIconButton(
-                  Icons.info_outline,
-                  onPressed: () => {},
-                ),
-              ],
-            )
+            _provider.state == ManuscriptState.trash
+                ? _trashStateMenu()
+                : _editStateMenu()
           ],
         ),
       ),
@@ -256,6 +243,84 @@ class ManuscriptEditScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _editStateMenu() {
+    return Row(
+      children: [
+        RippleIconButton(
+          Icons.share,
+          onPressed: () => {},
+        ),
+        RippleIconButton(
+          Icons.delete_outline,
+          onPressed: () async {
+            Navigator.pop(context);
+            await Future.delayed(Duration(milliseconds: 400));
+
+            final newId = await _provider.moveToTrash(id);
+            final index = this.index;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  "ごみ箱に移動しました",
+                ),
+                duration: const Duration(seconds: 3),
+                action: SnackBarAction(
+                  label: "元に戻す",
+                  onPressed: () async {
+                    await _provider.restoreFromTrash(newId);
+                    await _provider.updateScriptTable();
+                    _provider.insertScriptItem(index);
+                  },
+                ),
+              ),
+            );
+            _provider.removeScriptItem(index);
+            await _provider.updateScriptTable();
+          },
+        ),
+        RippleIconButton(
+          Icons.info_outline,
+          onPressed: () => {},
+        ),
+      ],
+    );
+  }
+
+  Widget _trashStateMenu() {
+    return Row(
+      children: [
+        RippleIconButton(
+          Icons.restore_outlined,
+          onPressed: () async {
+            Navigator.pop(context);
+            await Future.delayed(Duration(milliseconds: 400));
+
+            final newId = await _provider.restoreFromTrash(id);
+            final index = this.index;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  "ごみ箱から復元しました",
+                ),
+                duration: const Duration(seconds: 3),
+                action: SnackBarAction(
+                  label: "元に戻す",
+                  onPressed: () async {
+                    await _provider.moveToTrash(newId);
+                    await _provider.updateScriptTable();
+                    _provider.insertScriptItem(index);
+                  },
+                ),
+              ),
+            );
+            _provider.removeScriptItem(index);
+            await _provider.updateScriptTable();
+          },
+        ),
+      ],
     );
   }
 

@@ -13,7 +13,7 @@ class ManuscriptProvider with ChangeNotifier {
 
   ManuscriptState _state = ManuscriptState.home;
 
-  get state => _state;
+  ManuscriptState get state => _state;
 
   ManuscriptProvider() {
     _loadScriptList();
@@ -35,10 +35,9 @@ class ManuscriptProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> replaceState(ManuscriptState state, {int tagId, String tagName = ""}) async {
-    for (int i = 0; i < currentScriptLength; i++) {
-      listKey.currentState?.removeItem(0, (context, animation) => Container());
-    }
+  Future<void> replaceState(ManuscriptState state,
+      {int tagId, String tagName = ""}) async {
+    for (int i = 0; i < currentScriptLength; i++) removeScriptItem(0);
     switch (state) {
       case ManuscriptState.home:
         _scriptTable = await _manager.getAllScript();
@@ -48,18 +47,22 @@ class ManuscriptProvider with ChangeNotifier {
         _scriptTable = await _manager.getScriptByTagId(tagId);
         break;
       case ManuscriptState.trash:
-        // @TODO ごみ箱の実装
+        _scriptTable = await _manager.getAllScript(trash: true);
         break;
     }
-    for (int i = 0; i < _scriptTable.length; i++) {
-      listKey.currentState
-          ?.insertItem(0, duration: Duration(milliseconds: 400));
-    }
+    for (int i = 0; i < _scriptTable.length; i++) insertScriptItem(0);
+
     _state = state;
     currentScriptLength = _scriptTable.length;
     currentTag = tagName;
     notifyListeners();
   }
+
+  void removeScriptItem(int index) => listKey.currentState
+      ?.removeItem(index, (context, animation) => Container());
+
+  void insertScriptItem(int index) => listKey.currentState
+      ?.insertItem(index, duration: Duration(milliseconds: 400));
 
   Future<void> saveScript({
     @required int id,
@@ -69,15 +72,23 @@ class ManuscriptProvider with ChangeNotifier {
     await _manager.updateScript(id: id, title: title, content: content);
   }
 
+  Future<int> moveToTrash(int id) async => await _manager.moveToTrash(id);
+
+  Future<int> restoreFromTrash(int id) async =>
+      await _manager.restoreFromTrash(id);
+
+  Future<void> updateScriptTable() async {
+    _scriptTable = await _manager.getAllScript(
+      trash: state == ManuscriptState.trash,
+    );
+    currentScriptLength = _scriptTable.length;
+  }
+
   Future<void> notifyBack(BuildContext context) async {
     Navigator.pop(context);
-    _scriptTable = await _manager.getAllScript();
+    await updateScriptTable();
     notifyListeners();
   }
 }
 
-enum ManuscriptState {
-  home,
-  tag,
-  trash,
-}
+enum ManuscriptState { home, tag, trash }
