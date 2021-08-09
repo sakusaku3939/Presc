@@ -257,7 +257,7 @@ class ManuscriptEditScreen extends StatelessWidget {
           Icons.delete_outline,
           onPressed: () async {
             Navigator.pop(context);
-            await Future.delayed(Duration(milliseconds: 400));
+            await Future.delayed(Duration(milliseconds: 300));
 
             final newId = await _provider.moveToTrash(memoId: id);
             final index = this.index;
@@ -296,7 +296,7 @@ class ManuscriptEditScreen extends StatelessWidget {
           Icons.restore_outlined,
           onPressed: () async {
             Navigator.pop(context);
-            await Future.delayed(Duration(milliseconds: 400));
+            await Future.delayed(Duration(milliseconds: 300));
 
             final newId = await _provider.restoreFromTrash(trashId: id);
             final index = this.index;

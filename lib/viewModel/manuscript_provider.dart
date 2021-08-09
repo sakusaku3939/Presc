@@ -62,7 +62,7 @@ class ManuscriptProvider with ChangeNotifier {
       ?.removeItem(index, (context, animation) => Container());
 
   void insertScriptItem(int index) => listKey.currentState
-      ?.insertItem(index, duration: Duration(milliseconds: 400));
+      ?.insertItem(index, duration: Duration(milliseconds: 300));
 
   Future<void> saveScript({
     @required int id,
