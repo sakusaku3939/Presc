@@ -66,10 +66,16 @@ class ManuscriptManager {
     return memoId;
   }
 
-  Future<void> clearTrash() async => await _dbHelper.deleteAll(TrashTable.name);
+  Future<void> clearTrash() async {
+    final trashTable = await getAllScript(trash: true);
+    trashTable.forEach((element) {
+      _dbHelper.delete(TagMemoTable.name, element.id, idName: "memo_id");
+    });
+    await _dbHelper.deleteAll(TrashTable.name);
+  }
 
   Future<void> deleteTrash({@required int trashId}) async {
-    await _dbHelper.delete(TagMemoTable.name, trashId, idName: "memo_id");
+    _dbHelper.delete(TagMemoTable.name, trashId, idName: "memo_id");
     await _dbHelper.delete(TrashTable.name, trashId);
   }
 }

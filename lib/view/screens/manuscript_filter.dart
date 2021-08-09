@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presc/view/utils/dialog_manager.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script_card.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
@@ -12,7 +13,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appbar(state),
+      appBar: _appbar(context, state),
       body: SafeArea(
         child: Scrollbar(
           child: SingleChildScrollView(
@@ -36,7 +37,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
     );
   }
 
-  Widget _appbar(ManuscriptState state) {
+  Widget _appbar(BuildContext context, ManuscriptState state) {
     return AppBar(
       elevation: 0,
       leading: Consumer<ManuscriptProvider>(
@@ -61,7 +62,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
         },
       ),
       actions: [
-        state == ManuscriptState.tag ? _tagActionsIcon() : _trashActionsIcon()
+        state == ManuscriptState.tag ? _tagActionsIcon() : _trashActionsIcon(context)
       ],
     );
   }
@@ -90,10 +91,38 @@ class ManuscriptFilterScreen extends StatelessWidget {
     );
   }
 
-  Widget _trashActionsIcon() {
+  Widget _trashActionsIcon(BuildContext context) {
     return RippleIconButton(
       Icons.clear_all,
-      onPressed: () => {},
+      onPressed: () {
+        DialogManager.show(
+          context,
+          content: Text("ごみ箱の中身を空にしますか？"),
+          actions: [
+            DialogTextButton(
+              "キャンセル",
+              onPressed: () => Navigator.pop(context),
+            ),
+            DialogTextButton(
+              "全て削除",
+              onPressed: () async {
+                final provider = context.read<ManuscriptProvider>();
+                await provider.clearTrash();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      "ごみ箱を空にしました",
+                    ),
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+                await provider.replaceState(state);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
