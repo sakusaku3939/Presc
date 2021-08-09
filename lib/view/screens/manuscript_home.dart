@@ -4,6 +4,8 @@ import 'package:presc/model/manuscript_manager.dart';
 import 'package:presc/view/utils/drawer_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script_card.dart';
+import 'package:presc/viewModel/editable_tag_item_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'manuscript_search.dart';
 
@@ -26,10 +28,10 @@ class ManuscriptHomeScreen extends StatelessWidget {
                 backgroundColor: Colors.transparent,
                 elevation: 0,
                 leading: Container(),
-                flexibleSpace: _searchbar(),
+                flexibleSpace: _searchbar(context),
               ),
               SliverList(
-                delegate: SliverChildListDelegate([cardPageView()]),
+                delegate: SliverChildListDelegate([ScriptCard(context)]),
               )
             ],
           ),
@@ -45,7 +47,7 @@ class ManuscriptHomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _searchbar() {
+  Widget _searchbar(BuildContext context) {
     return SafeArea(
       child: Container(
         margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
@@ -65,7 +67,10 @@ class ManuscriptHomeScreen extends StatelessWidget {
                   children: [
                     RippleIconButton(
                       Icons.menu,
-                      onPressed: () => _scaffoldKey.currentState.openDrawer(),
+                      onPressed: () {
+                        context.read<EditableTagItemProvider>().loadTag();
+                        _scaffoldKey.currentState.openDrawer();
+                      },
                     ),
                     Expanded(
                       child: Container(

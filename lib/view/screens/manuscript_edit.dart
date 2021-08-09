@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/screens/playback.dart';
+import 'package:presc/view/utils/popup_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
+import 'package:presc/view/utils/trash_move_manager.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +43,9 @@ class ManuscriptEditScreen extends StatelessWidget {
                   Container(child: _menuBar(context)),
                   Expanded(
                     child: SingleChildScrollView(
-                      child: _content(context),
+                      child: _provider.state != ManuscriptState.trash
+                          ? _editableContent(context)
+                          : _uneditableContent(context),
                     ),
                   ),
                   Container(child: _footer(context)),
@@ -52,10 +56,13 @@ class ManuscriptEditScreen extends StatelessWidget {
         ),
         floatingActionButton: SafeArea(
           child: FloatingActionButton(
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => PlaybackScreen()),
-            ),
+            onPressed: () => {
+              if (_provider.state != ManuscriptState.trash)
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PlaybackScreen()),
+                )
+            },
             child: Icon(Icons.play_arrow),
           ),
         ),
@@ -78,29 +85,16 @@ class ManuscriptEditScreen extends StatelessWidget {
               size: 32,
               onPressed: () => _provider.notifyBack(context),
             ),
-            Row(
-              children: [
-                RippleIconButton(
-                  Icons.share,
-                  onPressed: () => {},
-                ),
-                RippleIconButton(
-                  Icons.delete_outline,
-                  onPressed: () => {},
-                ),
-                RippleIconButton(
-                  Icons.info_outline,
-                  onPressed: () => {},
-                ),
-              ],
-            )
+            _provider.state != ManuscriptState.trash
+                ? _editStateMenu()
+                : _trashStateMenu()
           ],
         ),
       ),
     );
   }
 
-  Widget _content(BuildContext context) {
+  Widget _editableContent(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Column(
@@ -158,6 +152,32 @@ class ManuscriptEditScreen extends StatelessWidget {
     );
   }
 
+  Widget _uneditableContent(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      width: double.infinity,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 4),
+          Text(
+            title,
+            style: TextStyle(fontSize: 24),
+          ),
+          SizedBox(height: 16),
+          Text(
+            content,
+            style: TextStyle(
+              color: Colors.grey[800],
+              height: 1.7,
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _footer(BuildContext context) {
     return Container(
       height: 48,
@@ -167,51 +187,53 @@ class ManuscriptEditScreen extends StatelessWidget {
           RippleIconButton(
             Icons.playlist_add,
             onPressed: () {
-              context.read<ManuscriptTagProvider>().loadTag(id);
-              showDialog(
-                context: context,
-                builder: (context) {
-                  final controller = TextEditingController();
-                  return AlertDialog(
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextField(
-                          decoration: InputDecoration(
-                            hintText: "新しいタグを追加",
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Theme.of(context).accentColor,
+              if (_provider.state != ManuscriptState.trash) {
+                context.read<ManuscriptTagProvider>().loadTag(memoId: id);
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    final controller = TextEditingController();
+                    return AlertDialog(
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextField(
+                            decoration: InputDecoration(
+                              hintText: "新しいタグを追加",
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).accentColor,
+                                ),
                               ),
                             ),
-                          ),
-                          controller: controller,
-                          cursorColor: Theme.of(context).accentColor,
-                          onSubmitted: (text) {
-                            if (text.trim().isNotEmpty) {
-                              context
-                                  .read<ManuscriptTagProvider>()
-                                  .addTag(id, text);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    "新しいタグを追加しました",
+                            controller: controller,
+                            cursorColor: Theme.of(context).accentColor,
+                            onSubmitted: (text) {
+                              if (text.trim().isNotEmpty) {
+                                context
+                                    .read<ManuscriptTagProvider>()
+                                    .addTag(memoId: id, name: text);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      "新しいタグを追加しました",
+                                    ),
+                                    duration: const Duration(seconds: 2),
                                   ),
-                                  duration: const Duration(seconds: 2),
-                                ),
-                              );
-                            }
-                            controller.clear();
-                          },
-                        ),
-                        SizedBox(height: 12),
-                        _tagGrid(),
-                      ],
-                    ),
-                  );
-                },
-              );
+                                );
+                              }
+                              controller.clear();
+                            },
+                          ),
+                          SizedBox(height: 12),
+                          _tagGrid(),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              }
             },
           ),
           Expanded(
@@ -239,28 +261,13 @@ class ManuscriptEditScreen extends StatelessWidget {
                               ),
                               label: Text(linkTagTable.tagName),
                               backgroundColor: Colors.transparent,
-                              onDeleted: () {
-                                model.changeChecked(
-                                  memoId: id,
-                                  tagId: linkTagTable.id,
-                                  newValue: false,
-                                );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      "${linkTagTable.tagName} タグを外しました",
-                                    ),
-                                    duration: const Duration(seconds: 2),
-                                    action: SnackBarAction(
-                                      label: "元に戻す",
-                                      onPressed: () => model.changeChecked(
-                                        memoId: id,
-                                        tagId: linkTagTable.id,
-                                        newValue: true,
-                                      ),
-                                    ),
-                                  ),
-                                );
+                              onDeleted: () => {
+                                if (_provider.state != ManuscriptState.trash)
+                                  model.changeChecked(
+                                    memoId: id,
+                                    tagId: linkTagTable.id,
+                                    newValue: false,
+                                  )
                               },
                             ),
                           ),
@@ -274,6 +281,69 @@ class ManuscriptEditScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _editStateMenu() {
+    return Row(
+      children: [
+        RippleIconButton(
+          Icons.share,
+          onPressed: () => {},
+        ),
+        RippleIconButton(
+          Icons.delete_outline,
+          onPressed: () async {
+            Navigator.pop(context);
+            await Future.delayed(Duration(milliseconds: 300));
+            TrashMoveManager.move(
+              context: context,
+              provider: _provider,
+              index: index,
+            );
+          },
+        ),
+        RippleIconButton(
+          Icons.info_outline,
+          onPressed: () => {},
+        ),
+      ],
+    );
+  }
+
+  Widget _trashStateMenu() {
+    return Row(
+      children: [
+        RippleIconButton(
+          Icons.restore_outlined,
+          onPressed: () async {
+            Navigator.pop(context);
+            await Future.delayed(Duration(milliseconds: 300));
+            TrashMoveManager.restore(
+              context: context,
+              provider: _provider,
+              index: index,
+            );
+          },
+        ),
+        PopupMenu(
+          [
+            PopupMenuItem(
+              child: Text("完全に削除"),
+              value: "delete",
+            )
+          ],
+          onSelected: (_) async {
+            Navigator.pop(context);
+            await Future.delayed(Duration(milliseconds: 300));
+            TrashMoveManager.delete(
+              context: context,
+              provider: _provider,
+              index: index,
+            );
+          },
+        ),
+      ],
     );
   }
 

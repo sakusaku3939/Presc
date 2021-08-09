@@ -9,33 +9,80 @@ import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
 
-Widget cardPageView() {
-  return Container(
-    margin: const EdgeInsets.only(top: 16),
-    child: Consumer<ManuscriptProvider>(
-      builder: (context, model, child) {
-        return model.scriptTable != null
-            ? AnimatedList(
-                key: model.listKey,
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                initialItemCount: 0,
-                itemBuilder:
-                    (BuildContext context, int index, Animation animation) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: Container(
-                      height: 280,
-                      margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-                      child: ScriptCard("${model.state}$index", index),
-                    ),
-                  );
-                },
-              )
-            : Container();
+class ScriptCard extends StatelessWidget {
+  ScriptCard(this.context);
+
+  final BuildContext context;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 16),
+      child: Consumer<ManuscriptProvider>(
+        builder: (context, model, child) {
+          if (model.scriptTable == null)
+            return _placeholder();
+          else if (model.scriptTable.isEmpty)
+            return _emptyView(model);
+          else
+            return _scriptListView(model);
+        },
+      ),
+    );
+  }
+
+  Widget _placeholder() => Container();
+
+  Widget _emptyView(ManuscriptProvider model) {
+    return Container(
+      height: MediaQuery.of(context).size.height -
+          (model.state != ManuscriptState.trash ? 120 : 140),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            model.state != ManuscriptState.trash
+                ? Icons.description_outlined
+                : Icons.delete_outline,
+            color: Colors.grey[600],
+            size: 64,
+          ),
+          SizedBox(height: 8),
+          Text(
+            model.state != ManuscriptState.trash ? "原稿がまだありません" : "ごみ箱は空です",
+            style: TextStyle(color: Colors.grey[700]),
+          ),
+          AnimatedList(
+            key: model.listKey,
+            shrinkWrap: true,
+            itemBuilder:
+                (BuildContext context, int index, Animation animation) {
+              return Container();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _scriptListView(ManuscriptProvider model) {
+    return AnimatedList(
+      key: model.listKey,
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      initialItemCount: 0,
+      itemBuilder: (BuildContext context, int index, Animation animation) {
+        return FadeTransition(
+          opacity: animation,
+          child: Container(
+            height: 280,
+            margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+            child: _Card(this.context, "${model.state}$index", index),
+          ),
+        );
       },
-    ),
-  );
+    );
+  }
 }
 
 BoxDecoration cardShadow(double radius) {
@@ -52,9 +99,10 @@ BoxDecoration cardShadow(double radius) {
   );
 }
 
-class ScriptCard extends StatelessWidget {
-  ScriptCard(this.heroTag, this.index);
+class _Card extends StatelessWidget {
+  _Card(this.context, this.heroTag, this.index);
 
+  final BuildContext context;
   final String heroTag;
   final int index;
 
@@ -64,30 +112,32 @@ class ScriptCard extends StatelessWidget {
       tag: heroTag,
       child: Material(
         type: MaterialType.transparency,
-        child: _card(context),
+        child: _card(),
       ),
     );
   }
 
-  Widget _card(BuildContext context) {
+  Widget _card() {
     return Selector<ManuscriptProvider, List<MemoTable>>(
       selector: (_, model) => model.scriptTable,
       builder: (context, scriptTable, child) {
         return ScaleTap(
           scaleMinValue: 0.96,
           onPressed: () {
-            context.read<ManuscriptTagProvider>().loadTag(scriptTable[index].id);
+            context
+                .read<ManuscriptTagProvider>()
+                .loadTag(memoId: scriptTable[index].id);
             Navigator.push(
               context,
               PageRouteBuilder(
                 transitionDuration: Duration(milliseconds: 500),
                 pageBuilder: (_, __, ___) =>
-                    ManuscriptEditScreen(context, heroTag, index),
+                    ManuscriptEditScreen(this.context, heroTag, index),
               ),
             );
           },
           onLongPress: () {
-            ScriptModalBottomSheet().show(context);
+            ScriptModalBottomSheet.show(this.context, index);
           },
           child: Container(
             constraints: const BoxConstraints.expand(),

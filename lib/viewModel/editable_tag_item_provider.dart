@@ -4,7 +4,6 @@ import 'package:presc/model/utils/database_table.dart';
 
 class EditableTagItemProvider with ChangeNotifier {
   final _manager = TagManager();
-  List<String> _tagList = ['宮沢賢治', '練習用'];
   List<TagTable> _allTagTable = [];
 
   List<TagTable> get allTagTable => _allTagTable;

@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:math';
+import 'package:collection/collection.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
@@ -55,17 +57,14 @@ class DatabaseHelper {
             FOREIGN KEY (tag_id) REFERENCES ${TagTable.name}(id)
           )
           ''');
-    // await db.execute('''
-    //       CREATE TABLE ${TrashTable.name} (
-    //         id INTEGER PRIMARY KEY,
-    //         tag_id INTEGER,
-    //         title TEXT NOT NULL,
-    //         content TEXT NOT NULL,
-    //         date TEXT NOT NULL,
-    //         FOREIGN KEY (tag_id) REFERENCES ${TagTable.name}(id)
-    //       )
-    //       ''');
-
+    await db.execute('''
+          CREATE TABLE ${TrashTable.name} (
+            id INTEGER PRIMARY KEY,
+            title TEXT NOT NULL,
+            content TEXT NOT NULL,
+            date TEXT NOT NULL
+          )
+          ''');
     _init(db);
   }
 
@@ -85,10 +84,19 @@ class DatabaseHelper {
     return res.first;
   }
 
-  Future<int> queryMaxId(String tableName) async {
+  Future<int> queryMaxId(String tableName, {String compareTableName}) async {
     Database db = await instance.database;
     final res = await db.rawQuery('SELECT MAX(id) FROM $tableName');
-    return Sqflite.firstIntValue(res) ?? 0;
+    if (compareTableName == null) {
+      return Sqflite.firstIntValue(res) ?? 0;
+    } else {
+      final res2 = await db.rawQuery('SELECT MAX(id) FROM $compareTableName');
+      final list = [
+        Sqflite.firstIntValue(res),
+        Sqflite.firstIntValue(res2),
+      ].whereNotNull().toList();
+      return list.isNotEmpty ? list.reduce(max) : 0;
+    }
   }
 
   Future<int> update(DatabaseTable table) async {
@@ -97,12 +105,17 @@ class DatabaseHelper {
         where: 'id = ?', whereArgs: [table.id]);
   }
 
-  Future<int> delete(String tableName, int id) async {
+  Future<int> deleteAll(String tableName) async {
     Database db = await instance.database;
-    return await db.delete(tableName, where: 'id = ?', whereArgs: [id]);
+    return await db.delete(tableName);
   }
 
-  Future<List<Map<String, dynamic>>> queryTagById(int memoId) async {
+  Future<int> delete(String tableName, int id, {String idName = "id"}) async {
+    Database db = await instance.database;
+    return await db.delete(tableName, where: '$idName = ?', whereArgs: [id]);
+  }
+
+  Future<List<Map<String, dynamic>>> queryTagByMemoId(int memoId) async {
     Database db = await instance.database;
     final cross = TagMemoTable.name;
     final tag = TagTable.name;
@@ -110,6 +123,17 @@ class DatabaseHelper {
           SELECT $tag.id, $tag.tag_name
           FROM $cross INNER JOIN $tag ON $tag.id = $cross.tag_id
           WHERE $cross.memo_id = $memoId
+          ''');
+  }
+
+  Future<List<Map<String, dynamic>>> queryMemoByTagId(int tagId) async {
+    Database db = await instance.database;
+    final cross = TagMemoTable.name;
+    final memo = MemoTable.name;
+    return await db.rawQuery('''
+          SELECT $memo.id, $memo.title, $memo.content, $memo.date
+          FROM $cross INNER JOIN $memo ON $memo.id = $cross.memo_id
+          WHERE $cross.tag_id = $tagId
           ''');
   }
 
@@ -151,13 +175,6 @@ class DatabaseHelper {
         TagMemoTable(
           memoId: 1,
           tagId: 1,
-        ).toMap(),
-      ),
-      db.insert(
-        TagMemoTable.name,
-        TagMemoTable(
-          memoId: 1,
-          tagId: 2,
         ).toMap(),
       ),
     ]);

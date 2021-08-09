@@ -87,27 +87,33 @@ class TagMemoTable extends DatabaseTable {
           (dynamic key, dynamic value) => key == null || value == null);
 }
 
-// class TrashTable extends _Table {
-//   TrashTable({
-//     @required id,
-//     @required this.tagId,
-//     this.title = "",
-//     this.content = "",
-//     this.date,
-//   }) : super(name, id: id);
-//
-//   final List<String> tagId;
-//   final String title;
-//   final String content;
-//   final DateTime date;
-//
-//   static final String name = 'trash_table';
-//
-//   @override
-//   Map<String, dynamic> toMap() => {
-//     "id": id,
-//     "title": title,
-//     "content": content,
-//     "date": date.toUtc().toIso8601String(),
-//   };
-// }
+class TrashTable extends DatabaseTable {
+  TrashTable({
+    @required id,
+    this.title = "",
+    this.content = "",
+    this.date,
+  }) : super(name, id: id);
+
+  final String title;
+  final String content;
+  final DateTime date;
+
+  static final String name = 'trash_table';
+
+  factory TrashTable.fromMap(Map<String, dynamic> map) => TrashTable(
+    id: map["id"],
+    title: map["title"],
+    content: map["content"],
+    date: DateTime.parse(map["date"]).toLocal(),
+  );
+
+  @override
+  Map<String, dynamic> toMap() => {
+    "id": id,
+    "title": title,
+    "content": content,
+    "date": date.toUtc().toIso8601String(),
+  }..removeWhere(
+          (dynamic key, dynamic value) => key == null || value == null);
+}
