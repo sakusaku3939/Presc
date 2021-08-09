@@ -17,7 +17,8 @@ class ManuscriptManager {
     return id;
   }
 
-  Future<void> updateScript({@required int id, String title, String content}) async {
+  Future<void> updateScript(
+      {@required int id, String title, String content}) async {
     DatabaseTable table = MemoTable(
       id: id,
       title: title,
@@ -28,14 +29,17 @@ class ManuscriptManager {
   }
 
   Future<List<MemoTable>> getAllScript({trash = false}) async {
-    final res = await _dbHelper.queryAll(trash ? TrashTable.name : MemoTable.name);
-    List<MemoTable> tableList = res.map((row) => MemoTable.fromMap(row)).toList();
+    final res =
+        await _dbHelper.queryAll(trash ? TrashTable.name : MemoTable.name);
+    List<MemoTable> tableList =
+        res.map((row) => MemoTable.fromMap(row)).toList();
     return tableList;
   }
 
   Future<List<MemoTable>> getScriptByTagId({@required int tagId}) async {
     final res = await _dbHelper.queryMemoByTagId(tagId);
-    List<MemoTable> tableList = res.map((row) => MemoTable.fromMap(row)).toList();
+    List<MemoTable> tableList =
+        res.map((row) => MemoTable.fromMap(row)).toList();
     return tableList;
   }
 
@@ -57,4 +61,9 @@ class ManuscriptManager {
     print('restored memo_table id: $memoId');
     return memoId;
   }
+
+  Future<void> clearTrash() async => await _dbHelper.deleteAll(TrashTable.name);
+
+  Future<void> deleteTrash({@required int trashId}) async =>
+      await _dbHelper.delete(TrashTable.name, trashId);
 }

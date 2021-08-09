@@ -86,6 +86,11 @@ class ManuscriptProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> clearTrash() async => await _manager.clearTrash();
+
+  Future<void> deleteTrash({@required int trashId}) async =>
+      await _manager.deleteTrash(trashId: trashId);
+
   Future<void> notifyBack(BuildContext context) async {
     Navigator.pop(context);
     await updateScriptTable();

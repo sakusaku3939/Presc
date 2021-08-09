@@ -126,7 +126,8 @@ class ScriptModalBottomSheet {
                 ),
                 DialogTextButton(
                   "削除",
-                  onPressed: () {
+                  onPressed: () async {
+                    await model.deleteTrash(trashId: model.scriptTable[index].id);
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
@@ -135,6 +136,8 @@ class ScriptModalBottomSheet {
                         duration: const Duration(seconds: 2),
                       ),
                     );
+                    await model.updateScriptTable();
+                    model.removeScriptItem(index);
                     Navigator.pop(context);
                   },
                 ),

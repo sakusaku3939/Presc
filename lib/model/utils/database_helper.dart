@@ -94,6 +94,11 @@ class DatabaseHelper {
         where: 'id = ?', whereArgs: [table.id]);
   }
 
+  Future<int> deleteAll(String tableName) async {
+    Database db = await instance.database;
+    return await db.delete(tableName);
+  }
+
   Future<int> delete(String tableName, int id) async {
     Database db = await instance.database;
     return await db.delete(tableName, where: 'id = ?', whereArgs: [id]);
