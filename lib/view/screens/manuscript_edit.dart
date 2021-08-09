@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/screens/playback.dart';
+import 'package:presc/view/utils/popup_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/trash_move_manager.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
@@ -283,6 +284,23 @@ class ManuscriptEditScreen extends StatelessWidget {
             Navigator.pop(context);
             await Future.delayed(Duration(milliseconds: 300));
             TrashMoveManager.restore(
+              context: context,
+              provider: _provider,
+              index: index,
+            );
+          },
+        ),
+        PopupMenu(
+          [
+            PopupMenuItem(
+              child: Text("完全に削除"),
+              value: "delete",
+            )
+          ],
+          onSelected: (_) async {
+            Navigator.pop(context);
+            await Future.delayed(Duration(milliseconds: 300));
+            TrashMoveManager.delete(
               context: context,
               provider: _provider,
               index: index,

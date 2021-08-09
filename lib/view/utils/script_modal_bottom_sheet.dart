@@ -3,8 +3,6 @@ import 'package:presc/view/utils/trash_move_manager.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:provider/provider.dart';
 
-import 'dialog_manager.dart';
-
 class ScriptModalBottomSheet {
   static void show(BuildContext context, int index) {
     showModalBottomSheet(
@@ -116,32 +114,10 @@ class ScriptModalBottomSheet {
           title: Text('完全に削除'),
           onTap: () {
             Navigator.pop(context);
-            DialogManager.show(
-              context,
-              content: Text("${model.scriptTable[index].title}を完全に削除しますか？"),
-              actions: [
-                DialogTextButton(
-                  "キャンセル",
-                  onPressed: () => Navigator.pop(context),
-                ),
-                DialogTextButton(
-                  "削除",
-                  onPressed: () async {
-                    await model.deleteTrash(trashId: model.scriptTable[index].id);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "完全に削除しました",
-                        ),
-                        duration: const Duration(seconds: 2),
-                      ),
-                    );
-                    await model.updateScriptTable();
-                    model.removeScriptItem(index);
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
+            TrashMoveManager.delete(
+              context: context,
+              provider: model,
+              index: index,
             );
           },
         ),

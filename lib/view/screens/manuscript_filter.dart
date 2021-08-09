@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:presc/view/utils/dialog_manager.dart';
+import 'package:presc/view/utils/popup_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script_card.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
@@ -62,32 +63,26 @@ class ManuscriptFilterScreen extends StatelessWidget {
         },
       ),
       actions: [
-        state == ManuscriptState.tag ? _tagActionsIcon() : _trashActionsIcon(context)
+        state == ManuscriptState.tag
+            ? _tagActionsIcon()
+            : _trashActionsIcon(context)
       ],
     );
   }
 
   Widget _tagActionsIcon() {
-    return AspectRatio(
-      aspectRatio: 1,
-      child: ClipOval(
-        child: Material(
-          type: MaterialType.transparency,
-          child: PopupMenuButton<String>(
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                child: Text("タグ名を変更"),
-                value: "タグ名を変更",
-              ),
-              PopupMenuItem(
-                child: Text("タグを削除"),
-                value: "タグを削除",
-              ),
-            ],
-            onSelected: (value) {},
-          ),
+    return PopupMenu(
+      [
+        PopupMenuItem(
+          child: Text("タグ名を変更"),
+          value: "change",
         ),
-      ),
+        PopupMenuItem(
+          child: Text("タグを削除"),
+          value: "delete",
+        ),
+      ],
+      onSelected: (value) {},
     );
   }
 
