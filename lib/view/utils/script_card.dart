@@ -112,12 +112,12 @@ class _Card extends StatelessWidget {
       tag: heroTag,
       child: Material(
         type: MaterialType.transparency,
-        child: _card(context),
+        child: _card(),
       ),
     );
   }
 
-  Widget _card(BuildContext context) {
+  Widget _card() {
     return Selector<ManuscriptProvider, List<MemoTable>>(
       selector: (_, model) => model.scriptTable,
       builder: (context, scriptTable, child) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/utils/add_new_tag.dart';
+import 'package:presc/view/utils/dialog_manager.dart';
 import 'package:presc/view/utils/editable_tag_item.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
@@ -119,66 +120,35 @@ class _TagEditScreenAppbar extends StatelessWidget
                   onPressed: () {
                     final count = model.checkList.where((e) => e).length;
                     if (count > 0)
-                      showDialog(
-                        context: context,
-                        builder: (_) {
-                          return AlertDialog(
-                            title: Text("$count件のタグを削除"),
-                            content: Text("選択したタグを全て削除しますか？この操作は復元できません。"),
-                            actions: [
-                              TextButton(
-                                child: Text("キャンセル"),
-                                style: ButtonStyle(
-                                  padding: MaterialStateProperty.all(
-                                    EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 8,
-                                    ),
+                      DialogManager.show(
+                        context,
+                        title: Text("$count件のタグを削除"),
+                        content: Text("選択したタグを全て削除しますか？この操作は復元できません。"),
+                        actions: [
+                          DialogTextButton(
+                            "キャンセル",
+                            onPressed: () => Navigator.pop(context),
+                          ),
+                          DialogTextButton(
+                            "削除",
+                            onPressed: () {
+                              for (var i = 0; i < model.checkList.length; i++) {
+                                if (model.checkList[i])
+                                  model.deleteTag(model.allTagTable[i].id);
+                              }
+                              Navigator.pop(context);
+                              model.isDeleteSelectionMode = false;
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    "$count件のタグを削除しました",
                                   ),
-                                  minimumSize:
-                                      MaterialStateProperty.all(Size.zero),
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
+                                  duration: const Duration(seconds: 2),
                                 ),
-                                onPressed: () => Navigator.pop(context),
-                              ),
-                              TextButton(
-                                child: Text("削除"),
-                                style: ButtonStyle(
-                                  padding: MaterialStateProperty.all(
-                                    EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                      vertical: 8,
-                                    ),
-                                  ),
-                                  minimumSize:
-                                      MaterialStateProperty.all(Size.zero),
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                ),
-                                onPressed: () {
-                                  for (var i = 0;
-                                      i < model.checkList.length;
-                                      i++) {
-                                    if (model.checkList[i])
-                                      model.deleteTag(model.allTagTable[i].id);
-                                  }
-                                  Navigator.pop(context);
-                                  model.isDeleteSelectionMode = false;
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        "$count件のタグを削除しました",
-                                      ),
-                                      duration: const Duration(seconds: 2),
-                                    ),
-                                  );
-                                },
-                              ),
-                              SizedBox(width: 2),
-                            ],
-                          );
-                        },
+                              );
+                            },
+                          ),
+                        ],
                       );
                   },
                 ),

@@ -3,6 +3,8 @@ import 'package:presc/view/utils/trash_move_manager.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:provider/provider.dart';
 
+import 'dialog_manager.dart';
+
 class ScriptModalBottomSheet {
   static void show(BuildContext context, int index) {
     showModalBottomSheet(
@@ -37,55 +39,110 @@ class ScriptModalBottomSheet {
             ),
           ),
           Consumer<ManuscriptProvider>(
-            builder: (context, model, child) {
+            builder: (_, model, child) {
               return model.state != ManuscriptState.trash
-                  ? Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        ListTile(
-                          leading: Transform.translate(
-                            offset: Offset(8, 0),
-                            child: Icon(Icons.play_arrow_outlined),
-                          ),
-                          title: Text('原稿を再生'),
-                          onTap: () => {},
-                        ),
-                        ListTile(
-                          leading: Transform.translate(
-                            offset: Offset(8, 0),
-                            child: Icon(Icons.delete_outline),
-                          ),
-                          title: Text('ごみ箱に移動'),
-                          onTap: () {
-                            TrashMoveManager.move(
-                              context: context,
-                              provider: model,
-                              index: index,
-                            );
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ],
-                    )
-                  : ListTile(
-                      leading: Transform.translate(
-                        offset: Offset(8, 0),
-                        child: Icon(Icons.restore_outlined),
-                      ),
-                      title: Text('復元する'),
-                      onTap: () {
-                        TrashMoveManager.restore(
-                          context: context,
-                          provider: model,
-                          index: index,
-                        );
-                        Navigator.pop(context);
-                      },
-                    );
+                  ? _defaultSheet(context, model, index)
+                  : _trashSheet(context, model, index);
             },
           ),
         ],
       ),
+    );
+  }
+
+  static Widget _defaultSheet(
+    BuildContext context,
+    ManuscriptProvider model,
+    int index,
+  ) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        ListTile(
+          leading: Transform.translate(
+            offset: Offset(8, 0),
+            child: Icon(Icons.play_arrow_outlined),
+          ),
+          title: Text('原稿を再生'),
+          onTap: () => {},
+        ),
+        ListTile(
+          leading: Transform.translate(
+            offset: Offset(8, 0),
+            child: Icon(Icons.delete_outline),
+          ),
+          title: Text('ごみ箱に移動'),
+          onTap: () {
+            TrashMoveManager.move(
+              context: context,
+              provider: model,
+              index: index,
+            );
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    );
+  }
+
+  static Widget _trashSheet(
+    BuildContext context,
+    ManuscriptProvider model,
+    int index,
+  ) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        ListTile(
+          leading: Transform.translate(
+            offset: Offset(8, 0),
+            child: Icon(Icons.restore_outlined),
+          ),
+          title: Text('復元する'),
+          onTap: () {
+            TrashMoveManager.restore(
+              context: context,
+              provider: model,
+              index: index,
+            );
+            Navigator.pop(context);
+          },
+        ),
+        ListTile(
+          leading: Transform.translate(
+            offset: Offset(8, 0),
+            child: Icon(Icons.delete_outlined),
+          ),
+          title: Text('完全に削除'),
+          onTap: () {
+            Navigator.pop(context);
+            DialogManager.show(
+              context,
+              content: Text("${model.scriptTable[index].title}を完全に削除しますか？"),
+              actions: [
+                DialogTextButton(
+                  "キャンセル",
+                  onPressed: () => Navigator.pop(context),
+                ),
+                DialogTextButton(
+                  "削除",
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "完全に削除しました",
+                        ),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            );
+          },
+        ),
+      ],
     );
   }
 }
