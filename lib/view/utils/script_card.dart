@@ -35,18 +35,21 @@ class ScriptCard extends StatelessWidget {
 
   Widget _emptyView(ManuscriptProvider model) {
     return Container(
-      height: MediaQuery.of(context).size.height - 120,
+      height: MediaQuery.of(context).size.height -
+          (model.state != ManuscriptState.trash ? 120 : 140),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            Icons.description_outlined,
+            model.state != ManuscriptState.trash
+                ? Icons.description_outlined
+                : Icons.delete_outline,
             color: Colors.grey[600],
             size: 64,
           ),
           SizedBox(height: 8),
           Text(
-            "原稿がまだありません",
+            model.state != ManuscriptState.trash ? "原稿がまだありません" : "ごみ箱は空です",
             style: TextStyle(color: Colors.grey[700]),
           ),
           AnimatedList(

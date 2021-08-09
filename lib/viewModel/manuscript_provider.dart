@@ -82,6 +82,7 @@ class ManuscriptProvider with ChangeNotifier {
       trash: state == ManuscriptState.trash,
     );
     currentScriptLength = _scriptTable.length;
+    notifyListeners();
   }
 
   Future<void> notifyBack(BuildContext context) async {
