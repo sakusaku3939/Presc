@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/screens/playback.dart';
 import 'package:presc/view/utils/ripple_button.dart';
+import 'package:presc/view/utils/trash_move_manager.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
@@ -258,27 +259,11 @@ class ManuscriptEditScreen extends StatelessWidget {
           onPressed: () async {
             Navigator.pop(context);
             await Future.delayed(Duration(milliseconds: 300));
-
-            final newId = await _provider.moveToTrash(memoId: id);
-            final index = this.index;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  "ごみ箱に移動しました",
-                ),
-                duration: const Duration(seconds: 3),
-                action: SnackBarAction(
-                  label: "元に戻す",
-                  onPressed: () async {
-                    await _provider.restoreFromTrash(trashId: newId);
-                    await _provider.updateScriptTable();
-                    _provider.insertScriptItem(index);
-                  },
-                ),
-              ),
+            TrashMoveManager.move(
+              context: context,
+              provider: _provider,
+              index: index,
             );
-            _provider.removeScriptItem(index);
-            await _provider.updateScriptTable();
           },
         ),
         RippleIconButton(
@@ -297,27 +282,11 @@ class ManuscriptEditScreen extends StatelessWidget {
           onPressed: () async {
             Navigator.pop(context);
             await Future.delayed(Duration(milliseconds: 300));
-
-            final newId = await _provider.restoreFromTrash(trashId: id);
-            final index = this.index;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  "ごみ箱から復元しました",
-                ),
-                duration: const Duration(seconds: 3),
-                action: SnackBarAction(
-                  label: "元に戻す",
-                  onPressed: () async {
-                    await _provider.moveToTrash(memoId: newId);
-                    await _provider.updateScriptTable();
-                    _provider.insertScriptItem(index);
-                  },
-                ),
-              ),
+            TrashMoveManager.restore(
+              context: context,
+              provider: _provider,
+              index: index,
             );
-            _provider.removeScriptItem(index);
-            await _provider.updateScriptTable();
           },
         ),
       ],

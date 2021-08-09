@@ -137,7 +137,7 @@ class _Card extends StatelessWidget {
             );
           },
           onLongPress: () {
-            ScriptModalBottomSheet().show(context);
+            ScriptModalBottomSheet.show(this.context, index);
           },
           child: Container(
             constraints: const BoxConstraints.expand(),

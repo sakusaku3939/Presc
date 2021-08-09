@@ -43,18 +43,18 @@ class ManuscriptManager {
     await updateScript(id: memoId);
     final res = await _dbHelper.queryById(MemoTable.name, memoId);
     DatabaseTable table = TrashTable.fromMap(res);
-    final id = await _dbHelper.insert(table);
+    final trashId = await _dbHelper.insert(table);
     await _dbHelper.delete(MemoTable.name, memoId);
     print('deleted memo_table id: $memoId');
-    return id;
+    return trashId;
   }
 
   Future<int> restoreFromTrash({@required int trashId}) async {
     final res = await _dbHelper.queryById(TrashTable.name, trashId);
     DatabaseTable table = MemoTable.fromMap(res);
-    final id = await _dbHelper.insert(table);
+    final memoId = await _dbHelper.insert(table);
     await _dbHelper.delete(TrashTable.name, trashId);
-    print('restored memo_table id: $id');
-    return id;
+    print('restored memo_table id: $memoId');
+    return memoId;
   }
 }

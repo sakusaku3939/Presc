@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:presc/view/utils/trash_move_manager.dart';
+import 'package:presc/viewModel/manuscript_provider.dart';
+import 'package:provider/provider.dart';
 
 class ScriptModalBottomSheet {
-  void show(BuildContext context) {
+  static void show(BuildContext context, int index) {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -12,12 +15,12 @@ class ScriptModalBottomSheet {
       ),
       backgroundColor: Colors.white,
       builder: (ctx) {
-        return _sheet(context);
+        return _sheet(context, index);
       },
     );
   }
 
-  Widget _sheet(BuildContext context) {
+  static Widget _sheet(BuildContext context, int index) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       child: Column(
@@ -33,21 +36,53 @@ class ScriptModalBottomSheet {
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-          ListTile(
-            leading: Transform.translate(
-              offset: Offset(8, 0),
-              child: Icon(Icons.play_arrow_outlined),
-            ),
-            title: Text('原稿を再生'),
-            onTap: () => {},
-          ),
-          ListTile(
-            leading: Transform.translate(
-              offset: Offset(8, 0),
-              child: Icon(Icons.delete_outline),
-            ),
-            title: Text('ごみ箱に移動'),
-            onTap: () => {},
+          Consumer<ManuscriptProvider>(
+            builder: (context, model, child) {
+              return model.state != ManuscriptState.trash
+                  ? Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        ListTile(
+                          leading: Transform.translate(
+                            offset: Offset(8, 0),
+                            child: Icon(Icons.play_arrow_outlined),
+                          ),
+                          title: Text('原稿を再生'),
+                          onTap: () => {},
+                        ),
+                        ListTile(
+                          leading: Transform.translate(
+                            offset: Offset(8, 0),
+                            child: Icon(Icons.delete_outline),
+                          ),
+                          title: Text('ごみ箱に移動'),
+                          onTap: () {
+                            TrashMoveManager.move(
+                              context: context,
+                              provider: model,
+                              index: index,
+                            );
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    )
+                  : ListTile(
+                      leading: Transform.translate(
+                        offset: Offset(8, 0),
+                        child: Icon(Icons.restore_outlined),
+                      ),
+                      title: Text('復元する'),
+                      onTap: () {
+                        TrashMoveManager.restore(
+                          context: context,
+                          provider: model,
+                          index: index,
+                        );
+                        Navigator.pop(context);
+                      },
+                    );
+            },
           ),
         ],
       ),
