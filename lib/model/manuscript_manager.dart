@@ -6,8 +6,12 @@ class ManuscriptManager {
   final _dbHelper = DatabaseHelper.instance;
 
   Future<int> addScript({String title = "", String content = ""}) async {
+    final maxId = await _dbHelper.queryMaxId(
+      MemoTable.name,
+      compareTableName: TrashTable.name,
+    );
     DatabaseTable table = MemoTable(
-      id: await _dbHelper.queryMaxId(MemoTable.name) + 1,
+      id: maxId + 1,
       title: title,
       content: content,
       date: DateTime.now(),

@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:math';
+import 'package:collection/collection.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
@@ -82,10 +84,19 @@ class DatabaseHelper {
     return res.first;
   }
 
-  Future<int> queryMaxId(String tableName) async {
+  Future<int> queryMaxId(String tableName, {String compareTableName}) async {
     Database db = await instance.database;
     final res = await db.rawQuery('SELECT MAX(id) FROM $tableName');
-    return Sqflite.firstIntValue(res) ?? 0;
+    if (compareTableName == null) {
+      return Sqflite.firstIntValue(res) ?? 0;
+    } else {
+      final res2 = await db.rawQuery('SELECT MAX(id) FROM $compareTableName');
+      final list = [
+        Sqflite.firstIntValue(res),
+        Sqflite.firstIntValue(res2),
+      ].whereNotNull().toList();
+      return list.isNotEmpty ? list.reduce(max) : 0;
+    }
   }
 
   Future<int> update(DatabaseTable table) async {
