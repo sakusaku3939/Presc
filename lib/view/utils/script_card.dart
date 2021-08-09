@@ -126,7 +126,7 @@ class _Card extends StatelessWidget {
           onPressed: () {
             context
                 .read<ManuscriptTagProvider>()
-                .loadTag(scriptTable[index].id);
+                .loadTag(memoId: scriptTable[index].id);
             Navigator.push(
               context,
               PageRouteBuilder(

@@ -44,7 +44,7 @@ class ManuscriptProvider with ChangeNotifier {
         break;
       case ManuscriptState.tag:
         if (tagId == null) return;
-        _scriptTable = await _manager.getScriptByTagId(tagId);
+        _scriptTable = await _manager.getScriptByTagId(tagId: tagId);
         break;
       case ManuscriptState.trash:
         _scriptTable = await _manager.getAllScript(trash: true);
@@ -72,10 +72,11 @@ class ManuscriptProvider with ChangeNotifier {
     await _manager.updateScript(id: id, title: title, content: content);
   }
 
-  Future<int> moveToTrash(int id) async => await _manager.moveToTrash(id);
+  Future<int> moveToTrash({@required int memoId}) async =>
+      await _manager.moveToTrash(memoId: memoId);
 
-  Future<int> restoreFromTrash(int id) async =>
-      await _manager.restoreFromTrash(id);
+  Future<int> restoreFromTrash({@required int trashId}) async =>
+      await _manager.restoreFromTrash(trashId: trashId);
 
   Future<void> updateScriptTable() async {
     _scriptTable = await _manager.getAllScript(

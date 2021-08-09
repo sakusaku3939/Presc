@@ -154,7 +154,7 @@ class ManuscriptEditScreen extends StatelessWidget {
           RippleIconButton(
             Icons.playlist_add,
             onPressed: () {
-              context.read<ManuscriptTagProvider>().loadTag(id);
+              context.read<ManuscriptTagProvider>().loadTag(memoId: id);
               showDialog(
                 context: context,
                 builder: (context) {
@@ -179,7 +179,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                             if (text.trim().isNotEmpty) {
                               context
                                   .read<ManuscriptTagProvider>()
-                                  .addTag(id, text);
+                                  .addTag(memoId: id, name: text);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
@@ -259,7 +259,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             Navigator.pop(context);
             await Future.delayed(Duration(milliseconds: 400));
 
-            final newId = await _provider.moveToTrash(id);
+            final newId = await _provider.moveToTrash(memoId: id);
             final index = this.index;
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -270,7 +270,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                 action: SnackBarAction(
                   label: "元に戻す",
                   onPressed: () async {
-                    await _provider.restoreFromTrash(newId);
+                    await _provider.restoreFromTrash(trashId: newId);
                     await _provider.updateScriptTable();
                     _provider.insertScriptItem(index);
                   },
@@ -298,7 +298,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             Navigator.pop(context);
             await Future.delayed(Duration(milliseconds: 400));
 
-            final newId = await _provider.restoreFromTrash(id);
+            final newId = await _provider.restoreFromTrash(trashId: id);
             final index = this.index;
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
@@ -309,7 +309,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                 action: SnackBarAction(
                   label: "元に戻す",
                   onPressed: () async {
-                    await _provider.moveToTrash(newId);
+                    await _provider.moveToTrash(memoId: newId);
                     await _provider.updateScriptTable();
                     _provider.insertScriptItem(index);
                   },

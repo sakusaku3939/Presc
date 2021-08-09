@@ -33,13 +33,13 @@ class ManuscriptManager {
     return tableList;
   }
 
-  Future<List<MemoTable>> getScriptByTagId(int tagId) async {
+  Future<List<MemoTable>> getScriptByTagId({@required int tagId}) async {
     final res = await _dbHelper.queryMemoByTagId(tagId);
     List<MemoTable> tableList = res.map((row) => MemoTable.fromMap(row)).toList();
     return tableList;
   }
 
-  Future<int> moveToTrash(int memoId) async {
+  Future<int> moveToTrash({@required int memoId}) async {
     await updateScript(id: memoId);
     final res = await _dbHelper.queryById(MemoTable.name, memoId);
     DatabaseTable table = TrashTable.fromMap(res);
@@ -49,7 +49,7 @@ class ManuscriptManager {
     return id;
   }
 
-  Future<int> restoreFromTrash(int trashId) async {
+  Future<int> restoreFromTrash({@required int trashId}) async {
     final res = await _dbHelper.queryById(TrashTable.name, trashId);
     DatabaseTable table = MemoTable.fromMap(res);
     final id = await _dbHelper.insert(table);

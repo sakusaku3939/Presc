@@ -32,7 +32,7 @@ class TagManager {
     print('deleted tag_table id: $id');
   }
 
-  Future<void> linkTag(int memoId, int tagId) async {
+  Future<void> linkTag({@required int memoId, @required int tagId}) async {
     DatabaseTable table = TagMemoTable(
       memoId: memoId,
       tagId: tagId,
@@ -40,7 +40,7 @@ class TagManager {
     await _dbHelper.insert(table);
   }
 
-  Future<void> unlinkTag(int memoId, int tagId) async {
+  Future<void> unlinkTag({@required int memoId, @required int tagId}) async {
     await _dbHelper.execute(
       'DELETE FROM ${TagMemoTable.name} WHERE memo_id = ? AND tag_id = ?',
       [memoId, tagId],
@@ -53,7 +53,7 @@ class TagManager {
     return tableList;
   }
 
-  Future<List<TagTable>> getLinkTagById(int memoId) async {
+  Future<List<TagTable>> getLinkTagById({@required int memoId}) async {
     final res = await _dbHelper.queryTagByMemoId(memoId);
     List<TagTable> tableList = res.map((row) => TagTable.fromMap(row)).toList();
     return tableList;
