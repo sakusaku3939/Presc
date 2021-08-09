@@ -24,10 +24,7 @@ class TagManager {
   }
 
   Future<void> deleteTag({@required int id}) async {
-    await _dbHelper.execute(
-      'DELETE FROM ${TagMemoTable.name} WHERE tag_id = ?',
-      [id],
-    );
+    await _dbHelper.delete(TagMemoTable.name, id, idName: "tag_id");
     await _dbHelper.delete(TagTable.name, id);
     print('deleted tag_table id: $id');
   }

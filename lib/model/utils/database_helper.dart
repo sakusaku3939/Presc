@@ -110,9 +110,9 @@ class DatabaseHelper {
     return await db.delete(tableName);
   }
 
-  Future<int> delete(String tableName, int id) async {
+  Future<int> delete(String tableName, int id, {String idName = "id"}) async {
     Database db = await instance.database;
-    return await db.delete(tableName, where: 'id = ?', whereArgs: [id]);
+    return await db.delete(tableName, where: '$idName = ?', whereArgs: [id]);
   }
 
   Future<List<Map<String, dynamic>>> queryTagByMemoId(int memoId) async {

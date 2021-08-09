@@ -68,6 +68,8 @@ class ManuscriptManager {
 
   Future<void> clearTrash() async => await _dbHelper.deleteAll(TrashTable.name);
 
-  Future<void> deleteTrash({@required int trashId}) async =>
-      await _dbHelper.delete(TrashTable.name, trashId);
+  Future<void> deleteTrash({@required int trashId}) async {
+    await _dbHelper.delete(TagMemoTable.name, trashId, idName: "memo_id");
+    await _dbHelper.delete(TrashTable.name, trashId);
+  }
 }
