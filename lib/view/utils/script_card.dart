@@ -77,7 +77,7 @@ class ScriptCard extends StatelessWidget {
           child: Container(
             height: 280,
             margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-            child: _Card(context, "${model.state}$index", index),
+            child: _Card(this.context, "${model.state}$index", index),
           ),
         );
       },
