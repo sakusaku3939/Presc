@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/screens/playback.dart';
+import 'package:presc/view/utils/dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/trash_move_manager.dart';
@@ -189,49 +190,45 @@ class ManuscriptEditScreen extends StatelessWidget {
             onPressed: () {
               if (_provider.state != ManuscriptState.trash) {
                 context.read<ManuscriptTagProvider>().loadTag(memoId: id);
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    final controller = TextEditingController();
-                    return AlertDialog(
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextField(
-                            decoration: InputDecoration(
-                              hintText: "新しいタグを追加",
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Theme.of(context).accentColor,
-                                ),
-                              ),
+                final controller = TextEditingController();
+                DialogManager.show(
+                  context,
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextField(
+                        decoration: InputDecoration(
+                          hintText: "新しいタグを追加",
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Theme.of(context).accentColor,
                             ),
-                            controller: controller,
-                            cursorColor: Theme.of(context).accentColor,
-                            onSubmitted: (text) {
-                              if (text.trim().isNotEmpty) {
-                                context
-                                    .read<ManuscriptTagProvider>()
-                                    .addTag(memoId: id, name: text);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      "新しいタグを追加しました",
-                                    ),
-                                    duration: const Duration(seconds: 2),
-                                  ),
-                                );
-                              }
-                              controller.clear();
-                            },
                           ),
-                          SizedBox(height: 12),
-                          _tagGrid(),
-                        ],
+                        ),
+                        controller: controller,
+                        cursorColor: Theme.of(context).accentColor,
+                        onSubmitted: (text) {
+                          if (text.trim().isNotEmpty) {
+                            context
+                                .read<ManuscriptTagProvider>()
+                                .addTag(memoId: id, name: text);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "新しいタグを追加しました",
+                                ),
+                                duration: const Duration(seconds: 2),
+                              ),
+                            );
+                          }
+                          controller.clear();
+                        },
                       ),
-                    );
-                  },
+                      SizedBox(height: 12),
+                      _tagGrid(),
+                    ],
+                  ),
                 );
               }
             },
