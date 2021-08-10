@@ -26,6 +26,11 @@ class ManuscriptProvider with ChangeNotifier {
 
   TagTable get currentTagTable => _currentTagTable;
 
+  set currentTagTable(TagTable tagTable) {
+    _currentTagTable = tagTable;
+    notifyListeners();
+  }
+
   Future<void> _loadScriptList() async {
     _scriptTable = await _manager.getAllScript();
     final _listKeyMonitor = (Timer t) {

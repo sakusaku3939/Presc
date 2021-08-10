@@ -41,7 +41,6 @@ class ManuscriptFilterScreen extends StatelessWidget {
   }
 
   Widget _appbar(BuildContext context) {
-    final currentTagTable = context.read<ManuscriptProvider>().currentTagTable;
     return AppBar(
       elevation: 0,
       leading: Consumer<ManuscriptProvider>(
@@ -56,69 +55,119 @@ class ManuscriptFilterScreen extends StatelessWidget {
           );
         },
       ),
-      title: Text(
-        state == ManuscriptState.tag ? currentTagTable.tagName : "ごみ箱",
-        style: TextStyle(fontSize: 20),
+      title: Selector<ManuscriptProvider, TagTable>(
+        selector: (_, model) => model.currentTagTable,
+        builder: (context, currentTagTable, child) {
+          return Text(
+            state == ManuscriptState.tag ? currentTagTable.tagName : "ごみ箱",
+            style: TextStyle(fontSize: 20),
+          );
+        },
       ),
       actions: [
         state == ManuscriptState.tag
-            ? _tagActionsIcon(context, currentTagTable)
+            ? _tagActionsIcon(context)
             : _trashActionsIcon(context)
       ],
     );
   }
 
-  Widget _tagActionsIcon(BuildContext context, TagTable currentTagTable) {
-    return PopupMenu(
-      [
-        PopupMenuItem(
-          child: Text("タグ名を変更"),
-          value: "change",
-        ),
-        PopupMenuItem(
-          child: Text("タグを削除"),
-          value: "delete",
-        ),
-      ],
-      onSelected: (value) {
-        switch (value) {
-          case "change":
-            break;
-          case "delete":
-            DialogManager.show(
-              context,
-              content: Text(
-                "タグ ${currentTagTable.tagName}を削除しますか？この操作は元に戻せません。",
-              ),
-              actions: [
-                DialogTextButton(
-                  "キャンセル",
-                  onPressed: () => Navigator.pop(context),
-                ),
-                DialogTextButton(
-                  "削除",
-                  onPressed: () async {
-                    context
-                        .read<EditableTagItemProvider>()
-                        .deleteTag(currentTagTable.id);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          "タグを削除しました",
+  Widget _tagActionsIcon(BuildContext context) {
+    final tagItemProvider = context.read<EditableTagItemProvider>();
+    return Consumer<ManuscriptProvider>(
+      builder: (context, model, child) {
+        return PopupMenu(
+          [
+            PopupMenuItem(
+              child: Text("タグ名を変更"),
+              value: "change",
+            ),
+            PopupMenuItem(
+              child: Text("タグを削除"),
+              value: "delete",
+            ),
+          ],
+          onSelected: (value) {
+            switch (value) {
+              case "change":
+                DialogManager.show(
+                  context,
+                  content: TextField(
+                    decoration: InputDecoration(
+                      hintText: "ここにタグ名を入力",
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Theme.of(context).accentColor,
                         ),
-                        duration: const Duration(seconds: 2),
                       ),
-                    );
-                    Navigator.pop(context);
-                    context
-                        .read<ManuscriptProvider>()
-                        .replaceState(ManuscriptState.home);
-                  },
-                ),
-              ],
-            );
-            break;
-        }
+                    ),
+                    controller: TextEditingController.fromValue(
+                      TextEditingValue(
+                        text: model.currentTagTable.tagName,
+                        selection: TextSelection.collapsed(
+                          offset: model.currentTagTable.tagName.length,
+                        ),
+                      ),
+                    ),
+                    autofocus: true,
+                    cursorColor: Theme.of(context).accentColor,
+                    onSubmitted: (text) async {
+                      if (text.trim().isNotEmpty) {
+                        await tagItemProvider.updateTag(
+                          model.currentTagTable.id,
+                          text,
+                        );
+                        model.currentTagTable = TagTable(
+                          id: model.currentTagTable.id,
+                          tagName: text,
+                        );
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "タグを更新しました",
+                            ),
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                );
+                break;
+              case "delete":
+                DialogManager.show(
+                  context,
+                  content: Text(
+                    "タグ ${model.currentTagTable.tagName}を削除しますか？この操作は元に戻せません。",
+                  ),
+                  actions: [
+                    DialogTextButton(
+                      "キャンセル",
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    DialogTextButton(
+                      "削除",
+                      onPressed: () async {
+                        tagItemProvider.deleteTag(model.currentTagTable.id);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "タグを削除しました",
+                            ),
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
+                        Navigator.pop(context);
+                        model.replaceState(ManuscriptState.home);
+                      },
+                    ),
+                  ],
+                );
+                break;
+            }
+          },
+        );
       },
     );
   }
