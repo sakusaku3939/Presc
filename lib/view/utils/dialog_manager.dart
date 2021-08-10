@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class DialogManager {
   static void show(
     BuildContext context, {
-    Text title,
-    Text content,
+    Widget title,
+    Widget content,
     List<Widget> actions,
   }) {
     showDialog(

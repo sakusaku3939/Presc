@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/utils/dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script_card.dart';
+import 'package:presc/viewModel/editable_tag_item_provider.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +16,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appbar(context, state),
+      appBar: _appbar(context),
       body: SafeArea(
         child: Scrollbar(
           child: SingleChildScrollView(
@@ -38,7 +40,8 @@ class ManuscriptFilterScreen extends StatelessWidget {
     );
   }
 
-  Widget _appbar(BuildContext context, ManuscriptState state) {
+  Widget _appbar(BuildContext context) {
+    final currentTagTable = context.read<ManuscriptProvider>().currentTagTable;
     return AppBar(
       elevation: 0,
       leading: Consumer<ManuscriptProvider>(
@@ -53,24 +56,19 @@ class ManuscriptFilterScreen extends StatelessWidget {
           );
         },
       ),
-      title: Selector<ManuscriptProvider, String>(
-        selector: (_, model) => model.currentTag,
-        builder: (context, currentTag, child) {
-          return Text(
-            state == ManuscriptState.tag ? currentTag : "ごみ箱",
-            style: TextStyle(fontSize: 20),
-          );
-        },
+      title: Text(
+        state == ManuscriptState.tag ? currentTagTable.tagName : "ごみ箱",
+        style: TextStyle(fontSize: 20),
       ),
       actions: [
         state == ManuscriptState.tag
-            ? _tagActionsIcon()
+            ? _tagActionsIcon(context, currentTagTable)
             : _trashActionsIcon(context)
       ],
     );
   }
 
-  Widget _tagActionsIcon() {
+  Widget _tagActionsIcon(BuildContext context, TagTable currentTagTable) {
     return PopupMenu(
       [
         PopupMenuItem(
@@ -82,7 +80,46 @@ class ManuscriptFilterScreen extends StatelessWidget {
           value: "delete",
         ),
       ],
-      onSelected: (value) {},
+      onSelected: (value) {
+        switch (value) {
+          case "change":
+            break;
+          case "delete":
+            DialogManager.show(
+              context,
+              content: Text(
+                "タグ ${currentTagTable.tagName}を削除しますか？この操作は元に戻せません。",
+              ),
+              actions: [
+                DialogTextButton(
+                  "キャンセル",
+                  onPressed: () => Navigator.pop(context),
+                ),
+                DialogTextButton(
+                  "削除",
+                  onPressed: () async {
+                    context
+                        .read<EditableTagItemProvider>()
+                        .deleteTag(currentTagTable.id);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "タグを削除しました",
+                        ),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                    Navigator.pop(context);
+                    context
+                        .read<ManuscriptProvider>()
+                        .replaceState(ManuscriptState.home);
+                  },
+                ),
+              ],
+            );
+            break;
+        }
+      },
     );
   }
 
