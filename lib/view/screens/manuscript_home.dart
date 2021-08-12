@@ -1,12 +1,13 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:presc/model/manuscript_manager.dart';
 import 'package:presc/view/utils/drawer_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script_card.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
+import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:provider/provider.dart';
 
+import 'manuscript_edit.dart';
 import 'manuscript_search.dart';
 
 class ManuscriptHomeScreen extends StatelessWidget {
@@ -40,7 +41,20 @@ class ManuscriptHomeScreen extends StatelessWidget {
       drawer: DrawerMenu(_scaffoldKey),
       floatingActionButton: SafeArea(
         child: FloatingActionButton(
-          onPressed: () => ManuscriptManager().addScript(title: "test", content: "content"),
+          onPressed: () async {
+            final provider = context.read<ManuscriptProvider>();
+            await provider.addScript(title: "", content: "");
+            await provider.updateScriptTable();
+            provider.insertScriptItem(0);
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                transitionDuration: Duration(milliseconds: 500),
+                pageBuilder: (_, __, ___) =>
+                    ManuscriptEditScreen(context, 0),
+              ),
+            );
+          },
           child: Icon(Icons.add),
         ),
       ),

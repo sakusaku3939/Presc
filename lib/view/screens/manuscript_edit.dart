@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/screens/playback.dart';
+import 'package:presc/view/utils/dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/trash_move_manager.dart';
@@ -9,10 +10,9 @@ import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
 
 class ManuscriptEditScreen extends StatelessWidget {
-  ManuscriptEditScreen(this.context, this.heroTag, this.index);
+  ManuscriptEditScreen(this.context, this.index);
 
   final BuildContext context;
-  final String heroTag;
   final int index;
 
   ManuscriptProvider get _provider => context.read<ManuscriptProvider>();
@@ -23,17 +23,30 @@ class ManuscriptEditScreen extends StatelessWidget {
 
   String get content => _provider.scriptTable[index].content;
 
+  Future<void> _back() async {
+    await _provider.notifyBack(context);
+    if (title.isEmpty && content.isEmpty) {
+      await Future.delayed(Duration(milliseconds: 300));
+      TrashMoveManager.move(
+        context: context,
+        provider: _provider,
+        index: index,
+        customMessage: "空の原稿をごみ箱に移動しました"
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () {
-        _provider.notifyBack(context);
+      onWillPop: () async {
+        await _back();
         return Future.value(false);
       },
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Hero(
-          tag: heroTag,
+          tag: id,
           child: Material(
             type: MaterialType.transparency,
             child: Container(
@@ -83,7 +96,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             RippleIconButton(
               Icons.navigate_before,
               size: 32,
-              onPressed: () => _provider.notifyBack(context),
+              onPressed: () async => await _back(),
             ),
             _provider.state != ManuscriptState.trash
                 ? _editStateMenu()
@@ -135,7 +148,7 @@ class ManuscriptEditScreen extends StatelessWidget {
               maxLines: null,
               decoration: InputDecoration(
                 isDense: true,
-                hintText: "ここに原稿を入力",
+                hintText: "ここに入力",
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.all(0),
               ),
@@ -189,49 +202,45 @@ class ManuscriptEditScreen extends StatelessWidget {
             onPressed: () {
               if (_provider.state != ManuscriptState.trash) {
                 context.read<ManuscriptTagProvider>().loadTag(memoId: id);
-                showDialog(
-                  context: context,
-                  builder: (context) {
-                    final controller = TextEditingController();
-                    return AlertDialog(
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextField(
-                            decoration: InputDecoration(
-                              hintText: "新しいタグを追加",
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Theme.of(context).accentColor,
-                                ),
-                              ),
+                final controller = TextEditingController();
+                DialogManager.show(
+                  context,
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextField(
+                        decoration: InputDecoration(
+                          hintText: "新しいタグを追加",
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Theme.of(context).accentColor,
                             ),
-                            controller: controller,
-                            cursorColor: Theme.of(context).accentColor,
-                            onSubmitted: (text) {
-                              if (text.trim().isNotEmpty) {
-                                context
-                                    .read<ManuscriptTagProvider>()
-                                    .addTag(memoId: id, name: text);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      "新しいタグを追加しました",
-                                    ),
-                                    duration: const Duration(seconds: 2),
-                                  ),
-                                );
-                              }
-                              controller.clear();
-                            },
                           ),
-                          SizedBox(height: 12),
-                          _tagGrid(),
-                        ],
+                        ),
+                        controller: controller,
+                        cursorColor: Theme.of(context).accentColor,
+                        onSubmitted: (text) {
+                          if (text.trim().isNotEmpty) {
+                            context
+                                .read<ManuscriptTagProvider>()
+                                .addTag(memoId: id, name: text);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  "新しいタグを追加しました",
+                                ),
+                                duration: const Duration(seconds: 2),
+                              ),
+                            );
+                          }
+                          controller.clear();
+                        },
                       ),
-                    );
-                  },
+                      SizedBox(height: 12),
+                      _tagGrid(),
+                    ],
+                  ),
                 );
               }
             },

@@ -123,11 +123,11 @@ class DrawerMenu extends StatelessWidget {
                 ],
               ),
             ),
-            for (var allTagTable in model.allTagTable)
+            for (var tagTable in model.allTagTable)
               ListTile(
                 leading: Icon(Icons.tag),
                 title:
-                    Text(allTagTable.tagName, style: TextStyle(fontSize: 14)),
+                    Text(tagTable.tagName, style: TextStyle(fontSize: 14)),
                 dense: true,
                 onLongPress: () {
                   model.loadTag();
@@ -141,8 +141,8 @@ class DrawerMenu extends StatelessWidget {
                 onTap: () {
                   context.read<ManuscriptProvider>().replaceState(
                         ManuscriptState.tag,
-                        tagId: allTagTable.id,
-                        tagName: allTagTable.tagName,
+                        tagId: tagTable.id,
+                        tagName: tagTable.tagName,
                       );
                   ScaffoldMessenger.of(context).clearSnackBars();
                   _scaffoldKey.currentState.openEndDrawer();

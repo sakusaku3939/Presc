@@ -3,17 +3,24 @@ import 'package:flutter/material.dart';
 class DialogManager {
   static void show(
     BuildContext context, {
-    Text title,
-    Text content,
+    Widget title,
+    Widget content,
     List<Widget> actions,
   }) {
+    List<Widget> _adjustActions;
+    if (actions != null) {
+      _adjustActions = [
+        actions,
+        [SizedBox(width: 2)],
+      ].expand((_) => _).toList();
+    }
     showDialog(
       context: context,
       builder: (_) {
         return AlertDialog(
           title: title,
           content: content,
-          actions: [actions, [SizedBox(width: 2)]].expand((_) => _).toList(),
+          actions: _adjustActions,
         );
       },
     );

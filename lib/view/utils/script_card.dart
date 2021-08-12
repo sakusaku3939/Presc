@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_scale_tap/flutter_scale_tap.dart';
 import "package:intl/intl.dart";
+import 'package:presc/config/safe_area_size.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/screens/manuscript_edit.dart';
 import 'package:presc/view/utils/script_modal_bottom_sheet.dart';
@@ -16,18 +17,15 @@ class ScriptCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(top: 16),
-      child: Consumer<ManuscriptProvider>(
-        builder: (context, model, child) {
-          if (model.scriptTable == null)
-            return _placeholder();
-          else if (model.scriptTable.isEmpty)
-            return _emptyView(model);
-          else
-            return _scriptListView(model);
-        },
-      ),
+    return Consumer<ManuscriptProvider>(
+      builder: (context, model, child) {
+        if (model.scriptTable == null)
+          return _placeholder();
+        else if (model.scriptTable.isEmpty)
+          return _emptyView(model);
+        else
+          return _scriptListView(model);
+      },
     );
   }
 
@@ -35,8 +33,8 @@ class ScriptCard extends StatelessWidget {
 
   Widget _emptyView(ManuscriptProvider model) {
     return Container(
-      height: MediaQuery.of(context).size.height -
-          (model.state != ManuscriptState.trash ? 120 : 140),
+      height: SafeAreaSize.of(context).height -
+          (model.state != ManuscriptState.tag ? 30 : 0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -66,21 +64,24 @@ class ScriptCard extends StatelessWidget {
   }
 
   Widget _scriptListView(ManuscriptProvider model) {
-    return AnimatedList(
-      key: model.listKey,
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      initialItemCount: 0,
-      itemBuilder: (BuildContext context, int index, Animation animation) {
-        return FadeTransition(
-          opacity: animation,
-          child: Container(
-            height: 280,
-            margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-            child: _Card(this.context, "${model.state}$index", index),
-          ),
-        );
-      },
+    return Container(
+      margin: const EdgeInsets.only(top: 16),
+      child: AnimatedList(
+        key: model.listKey,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        initialItemCount: 0,
+        itemBuilder: (BuildContext context, int index, Animation animation) {
+          return FadeTransition(
+            opacity: animation,
+            child: Container(
+              height: 280,
+              margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
+              child: _Card(this.context, index),
+            ),
+          );
+        },
+      ),
     );
   }
 }
@@ -100,16 +101,15 @@ BoxDecoration cardShadow(double radius) {
 }
 
 class _Card extends StatelessWidget {
-  _Card(this.context, this.heroTag, this.index);
+  _Card(this.context, this.index);
 
   final BuildContext context;
-  final String heroTag;
   final int index;
 
   @override
   Widget build(BuildContext context) {
     return Hero(
-      tag: heroTag,
+      tag: context.read<ManuscriptProvider>().scriptTable[index].id,
       child: Material(
         type: MaterialType.transparency,
         child: _card(),
@@ -121,6 +121,8 @@ class _Card extends StatelessWidget {
     return Selector<ManuscriptProvider, List<MemoTable>>(
       selector: (_, model) => model.scriptTable,
       builder: (context, scriptTable, child) {
+        final title = scriptTable[index].title;
+        final content = scriptTable[index].content;
         return ScaleTap(
           scaleMinValue: 0.96,
           onPressed: () {
@@ -132,7 +134,7 @@ class _Card extends StatelessWidget {
               PageRouteBuilder(
                 transitionDuration: Duration(milliseconds: 500),
                 pageBuilder: (_, __, ___) =>
-                    ManuscriptEditScreen(this.context, heroTag, index),
+                    ManuscriptEditScreen(this.context, index),
               ),
             );
           },
@@ -150,7 +152,7 @@ class _Card extends StatelessWidget {
                   margin: const EdgeInsets.only(left: 12),
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    scriptTable[index].title,
+                    title.isNotEmpty ? title : "タイトルなし",
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 24),
                   ),
@@ -163,7 +165,7 @@ class _Card extends StatelessWidget {
                     maxLines: 6,
                     child: Padding(
                       child: Text(
-                        scriptTable[index].content,
+                        content.isNotEmpty ? content : "追加のテキストはありません",
                         style: TextStyle(
                           color: Colors.grey[800],
                           height: 1.8,

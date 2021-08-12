@@ -8,8 +8,7 @@ class ManuscriptProvider with ChangeNotifier {
   final listKey = GlobalKey<AnimatedListState>();
   final _manager = ManuscriptManager();
 
-  int currentScriptLength = 0;
-  String currentTag = "";
+  int _currentScriptLength = 0;
 
   ManuscriptState _state = ManuscriptState.home;
 
@@ -22,6 +21,15 @@ class ManuscriptProvider with ChangeNotifier {
   List<MemoTable> _scriptTable;
 
   List<MemoTable> get scriptTable => _scriptTable;
+
+  TagTable _currentTagTable;
+
+  TagTable get currentTagTable => _currentTagTable;
+
+  set currentTagTable(TagTable tagTable) {
+    _currentTagTable = tagTable;
+    notifyListeners();
+  }
 
   Future<void> _loadScriptList() async {
     _scriptTable = await _manager.getAllScript();
@@ -37,7 +45,7 @@ class ManuscriptProvider with ChangeNotifier {
 
   Future<void> replaceState(ManuscriptState state,
       {int tagId, String tagName = ""}) async {
-    for (int i = 0; i < currentScriptLength; i++) removeScriptItem(0);
+    for (int i = 0; i < _currentScriptLength; i++) removeScriptItem(0);
     switch (state) {
       case ManuscriptState.home:
         _scriptTable = await _manager.getAllScript();
@@ -53,8 +61,8 @@ class ManuscriptProvider with ChangeNotifier {
     for (int i = 0; i < _scriptTable.length; i++) insertScriptItem(0);
 
     _state = state;
-    currentScriptLength = _scriptTable.length;
-    currentTag = tagName;
+    _currentScriptLength = _scriptTable.length;
+    _currentTagTable = TagTable(id: tagId, tagName: tagName);
     notifyListeners();
   }
 
@@ -63,6 +71,11 @@ class ManuscriptProvider with ChangeNotifier {
 
   void insertScriptItem(int index) => listKey.currentState
       ?.insertItem(index, duration: Duration(milliseconds: 300));
+
+  Future<int> addScript({
+    String title,
+    String content,
+  }) async => await _manager.addScript(title: title, content: content);
 
   Future<void> saveScript({
     @required int id,
@@ -82,7 +95,7 @@ class ManuscriptProvider with ChangeNotifier {
     _scriptTable = await _manager.getAllScript(
       trash: state == ManuscriptState.trash,
     );
-    currentScriptLength = _scriptTable.length;
+    _currentScriptLength = _scriptTable.length;
     notifyListeners();
   }
 
