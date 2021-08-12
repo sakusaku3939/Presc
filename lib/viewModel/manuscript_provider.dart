@@ -72,6 +72,11 @@ class ManuscriptProvider with ChangeNotifier {
   void insertScriptItem(int index) => listKey.currentState
       ?.insertItem(index, duration: Duration(milliseconds: 300));
 
+  Future<int> addScript({
+    String title,
+    String content,
+  }) async => await _manager.addScript(title: title, content: content);
+
   Future<void> saveScript({
     @required int id,
     String title,

@@ -10,10 +10,9 @@ import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
 
 class ManuscriptEditScreen extends StatelessWidget {
-  ManuscriptEditScreen(this.context, this.heroTag, this.index);
+  ManuscriptEditScreen(this.context, this.index);
 
   final BuildContext context;
-  final String heroTag;
   final int index;
 
   ManuscriptProvider get _provider => context.read<ManuscriptProvider>();
@@ -24,17 +23,30 @@ class ManuscriptEditScreen extends StatelessWidget {
 
   String get content => _provider.scriptTable[index].content;
 
+  Future<void> _back() async {
+    await _provider.notifyBack(context);
+    if (title.isEmpty && content.isEmpty) {
+      await Future.delayed(Duration(milliseconds: 300));
+      TrashMoveManager.move(
+        context: context,
+        provider: _provider,
+        index: index,
+        customMessage: "空の原稿をごみ箱に移動しました"
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () {
-        _provider.notifyBack(context);
+      onWillPop: () async {
+        await _back();
         return Future.value(false);
       },
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Hero(
-          tag: heroTag,
+          tag: id,
           child: Material(
             type: MaterialType.transparency,
             child: Container(
@@ -84,7 +96,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             RippleIconButton(
               Icons.navigate_before,
               size: 32,
-              onPressed: () => _provider.notifyBack(context),
+              onPressed: () async => await _back(),
             ),
             _provider.state != ManuscriptState.trash
                 ? _editStateMenu()
@@ -136,7 +148,7 @@ class ManuscriptEditScreen extends StatelessWidget {
               maxLines: null,
               decoration: InputDecoration(
                 isDense: true,
-                hintText: "ここに原稿を入力",
+                hintText: "ここに入力",
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.all(0),
               ),

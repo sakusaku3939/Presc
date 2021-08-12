@@ -8,6 +8,7 @@ class TrashMoveManager {
     @required BuildContext context,
     @required ManuscriptProvider provider,
     @required int index,
+    String customMessage,
   }) async {
     final newId = await provider.moveToTrash(
       memoId: provider.scriptTable[index].id,
@@ -15,7 +16,7 @@ class TrashMoveManager {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          "ごみ箱に移動しました",
+          customMessage ?? "ごみ箱に移動しました",
         ),
         duration: const Duration(seconds: 3),
         action: SnackBarAction(

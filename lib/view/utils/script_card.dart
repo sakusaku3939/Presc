@@ -77,7 +77,7 @@ class ScriptCard extends StatelessWidget {
             child: Container(
               height: 280,
               margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-              child: _Card(this.context, "${model.state}$index", index),
+              child: _Card(this.context, index),
             ),
           );
         },
@@ -101,16 +101,15 @@ BoxDecoration cardShadow(double radius) {
 }
 
 class _Card extends StatelessWidget {
-  _Card(this.context, this.heroTag, this.index);
+  _Card(this.context, this.index);
 
   final BuildContext context;
-  final String heroTag;
   final int index;
 
   @override
   Widget build(BuildContext context) {
     return Hero(
-      tag: heroTag,
+      tag: context.read<ManuscriptProvider>().scriptTable[index].id,
       child: Material(
         type: MaterialType.transparency,
         child: _card(),
@@ -122,6 +121,8 @@ class _Card extends StatelessWidget {
     return Selector<ManuscriptProvider, List<MemoTable>>(
       selector: (_, model) => model.scriptTable,
       builder: (context, scriptTable, child) {
+        final title = scriptTable[index].title;
+        final content = scriptTable[index].content;
         return ScaleTap(
           scaleMinValue: 0.96,
           onPressed: () {
@@ -133,7 +134,7 @@ class _Card extends StatelessWidget {
               PageRouteBuilder(
                 transitionDuration: Duration(milliseconds: 500),
                 pageBuilder: (_, __, ___) =>
-                    ManuscriptEditScreen(this.context, heroTag, index),
+                    ManuscriptEditScreen(this.context, index),
               ),
             );
           },
@@ -151,7 +152,7 @@ class _Card extends StatelessWidget {
                   margin: const EdgeInsets.only(left: 12),
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    scriptTable[index].title,
+                    title.isNotEmpty ? title : "タイトルなし",
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 24),
                   ),
@@ -164,7 +165,7 @@ class _Card extends StatelessWidget {
                     maxLines: 6,
                     child: Padding(
                       child: Text(
-                        scriptTable[index].content,
+                        content.isNotEmpty ? content : "追加のテキストはありません",
                         style: TextStyle(
                           color: Colors.grey[800],
                           height: 1.8,
