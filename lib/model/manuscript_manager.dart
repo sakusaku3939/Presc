@@ -45,6 +45,7 @@ class ManuscriptManager {
     final res = await _dbHelper.queryMemoByTagId(tagId);
     List<MemoTable> tableList =
         res.map((row) => MemoTable.fromMap(row)).toList();
+    tableList.sort((a, b) => b.date.compareTo(a.date));
     return tableList;
   }
 
