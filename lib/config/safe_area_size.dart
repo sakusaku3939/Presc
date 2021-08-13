@@ -5,10 +5,8 @@ class SafeAreaSize {
   static BuildContext _context;
 
   factory SafeAreaSize.of(BuildContext context) {
-    if (_instance == null) {
-    _instance = SafeAreaSize._privateConstructor();
-    }
     _context = context;
+    _instance ??= SafeAreaSize._privateConstructor();
     return _instance;
   }
 
