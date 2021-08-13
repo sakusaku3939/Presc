@@ -73,7 +73,7 @@ class ManuscriptEditScreen extends StatelessWidget {
               if (_provider.state != ManuscriptState.trash)
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => PlaybackScreen()),
+                  MaterialPageRoute(builder: (context) => PlaybackScreen(index)),
                 )
             },
             child: Icon(Icons.play_arrow),
