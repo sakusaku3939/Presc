@@ -73,7 +73,7 @@ class PlaybackScreen extends StatelessWidget {
                               if (model.playFabState)
                                 context
                                     .read<PlaybackProvider>()
-                                    .reflectRecognizedText("どこでとんと");
+                                    .reflectRecognizedText("どこでとんと事だけ");
                             },
                           ),
                         ),
