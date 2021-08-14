@@ -107,7 +107,6 @@ class ManuscriptProvider with ChangeNotifier {
   Future<void> notifyBack(BuildContext context) async {
     Navigator.pop(context);
     await updateScriptTable();
-    notifyListeners();
   }
 }
 
