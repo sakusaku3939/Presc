@@ -103,7 +103,7 @@ class PlaybackTextView extends StatelessWidget {
     if (recognizedText.isNotEmpty) {
       final RenderBox box = _richTextKey.currentContext?.findRenderObject();
       _scrollController.animateTo(
-        _textHeight(textSpan, box?.size?.width) - 44,
+        _textHeight(textSpan, box?.size?.width) - 88,
         duration: Duration(milliseconds: 1000),
         curve: Curves.ease,
       );
@@ -117,7 +117,9 @@ class PlaybackTextView extends StatelessWidget {
       maxLines: 1,
     )..layout(minWidth: 0, maxWidth: double.infinity);
 
-    final countLines = (textPainter.size.width / textWidth ?? 1).ceil();
+    textWidth ??= 1;
+    final lfCount = '\n'.allMatches(textSpan.text).length * 0.5;
+    final countLines = (textPainter.size.width / textWidth + lfCount).ceil();
     final height = countLines * textPainter.size.height;
     return height;
   }
