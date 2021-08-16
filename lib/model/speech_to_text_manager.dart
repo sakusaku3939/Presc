@@ -4,8 +4,8 @@ import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
-class SpeechToText {
-  static SpeechToText _instance;
+class SpeechToTextManager {
+  static SpeechToTextManager _instance;
 
   String lastWords = "";
   String lastError = "";
@@ -18,10 +18,10 @@ class SpeechToText {
   stt.SpeechToText _speech = stt.SpeechToText();
   bool _isStopFlagValid = false;
 
-  SpeechToText._();
+  SpeechToTextManager._();
 
-  factory SpeechToText() {
-    _instance ??= SpeechToText._();
+  factory SpeechToTextManager() {
+    _instance ??= SpeechToTextManager._();
     return _instance;
   }
 
@@ -29,6 +29,7 @@ class SpeechToText {
     void Function(String lastWords) resultListener,
     void Function(String error) errorListener,
     void Function(String status) statusListener,
+    bool log = true,
   }) async {
     this.resultListener = resultListener;
     this.errorListener = errorListener;
@@ -37,26 +38,39 @@ class SpeechToText {
         onError: _errorListener, onStatus: _statusListener);
     if (available) {
       _isStopFlagValid = false;
-      _speech.listen(onResult: _resultListener);
+      await _speech.listen(onResult: _resultListener);
+      if (log) print("start recognition");
     } else {
-      print("speech recognition not available.");
+      if (log) print("speech recognition not available.");
       this.errorListener("not_available");
     }
   }
 
-  Future<void> stop() async {
+  Future<void> stop({bool log = true}) async {
     _isStopFlagValid = true;
-    _speech.stop();
+    await _speech.stop();
+    if (log) print("stop recognition");
   }
 
-  void restart() {
-    stop();
-    Timer(Duration(milliseconds: 500), speak);
+  Future<void> restart() async {
+    await stop(log: false);
+    Timer(
+      Duration(milliseconds: 300),
+      () => speak(
+        resultListener: this.resultListener,
+        errorListener: this.errorListener,
+        statusListener: this.statusListener,
+        log: false,
+      ),
+    );
   }
 
   void _resultListener(SpeechRecognitionResult result) {
     lastWords = result.recognizedWords;
-    if (resultListener != null) resultListener(lastWords);
+    if (result.finalResult && lastWords.isNotEmpty) {
+      print("result: ${result.recognizedWords}");
+      if (resultListener != null) resultListener(lastWords);
+    }
   }
 
   void _errorListener(SpeechRecognitionError error) {

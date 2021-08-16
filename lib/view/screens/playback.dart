@@ -14,94 +14,106 @@ class PlaybackScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[900],
-      appBar: _appbar(context),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: Container(
-                margin: const EdgeInsets.fromLTRB(32, 0, 32, 8),
-                child: PlaybackTextView(
-                  context.read<ManuscriptProvider>().scriptTable[index].content,
+    return WillPopScope(
+      onWillPop: () async {
+        context.read<SpeechToTextProvider>().back(context);
+        return Future.value(false);
+      },
+      child: Scaffold(
+        backgroundColor: Colors.grey[900],
+        appBar: _appbar(context),
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: Container(
+                  margin: const EdgeInsets.fromLTRB(32, 0, 32, 8),
+                  child: PlaybackTextView(
+                    context
+                        .read<ManuscriptProvider>()
+                        .scriptTable[index]
+                        .content,
+                  ),
                 ),
               ),
-            ),
-            Text(
-              "0:17",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 40,
-                fontWeight: FontWeight.bold,
+              Text(
+                "0:17",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            Consumer<PlaybackProvider>(
-              builder: (context, model, child) {
-                return Padding(
-                  padding: const EdgeInsets.fromLTRB(32, 12, 32, 24),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        width: 48,
-                        child: RippleIconButton(
-                          Icons.mic,
-                          size: 28,
-                          color: Colors.white,
-                          onPressed: () => {},
-                        ),
-                      ),
-                      Container(
-                        width: 48,
-                        child: RippleIconButton(
-                          Icons.skip_previous_outlined,
-                          size: 32,
-                          color: Colors.white,
-                          onPressed: () => {},
-                        ),
-                      ),
-                      Container(
-                        width: 64,
-                        child: FittedBox(
-                          child: FloatingActionButton(
-                            child: model.playFabState
-                                ? Icon(Icons.pause)
-                                : Icon(Icons.play_arrow),
-                            onPressed: () {
-                              model.playFabState = !model.playFabState;
-                              PlaybackTextView.reset(context);
-                              if (model.playFabState)
-                                context.read<SpeechToTextProvider>().start(context);
-                              // .reflect("どこでとんと事だけ");
-                            },
+              Consumer<PlaybackProvider>(
+                builder: (context, model, child) {
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(32, 12, 32, 24),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          width: 48,
+                          child: RippleIconButton(
+                            Icons.mic,
+                            size: 28,
+                            color: Colors.white,
+                            onPressed: () => {},
                           ),
                         ),
-                      ),
-                      Container(
-                        width: 48,
-                        child: RippleIconButton(
-                          Icons.skip_next_outlined,
-                          size: 32,
-                          color: Colors.white,
-                          onPressed: () => {},
+                        Container(
+                          width: 48,
+                          child: RippleIconButton(
+                            Icons.skip_previous_outlined,
+                            size: 32,
+                            color: Colors.white,
+                            onPressed: () => {},
+                          ),
                         ),
-                      ),
-                      Container(
-                        width: 48,
-                        child: RippleIconButton(
-                          Icons.text_rotate_vertical,
-                          size: 28,
-                          color: Colors.white,
-                          onPressed: () => {},
+                        Container(
+                          width: 64,
+                          child: FittedBox(
+                            child: FloatingActionButton(
+                              child: model.playFabState
+                                  ? Icon(Icons.pause)
+                                  : Icon(Icons.play_arrow),
+                              onPressed: () {
+                                model.playFabState = !model.playFabState;
+                                PlaybackTextView.reset(context);
+                                final provider = context.read<SpeechToTextProvider>();
+                                if (model.playFabState) {
+                                  provider.start(context);
+                                } else {
+                                  provider.stop();
+                                }
+                              },
+                            ),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ],
+                        Container(
+                          width: 48,
+                          child: RippleIconButton(
+                            Icons.skip_next_outlined,
+                            size: 32,
+                            color: Colors.white,
+                            onPressed: () => {},
+                          ),
+                        ),
+                        Container(
+                          width: 48,
+                          child: RippleIconButton(
+                            Icons.text_rotate_vertical,
+                            size: 28,
+                            color: Colors.white,
+                            onPressed: () => {},
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -116,9 +128,7 @@ class PlaybackScreen extends StatelessWidget {
         Icons.navigate_before,
         color: Colors.white,
         size: 32,
-        onPressed: () {
-          Navigator.pop(context);
-        },
+        onPressed: () => context.read<SpeechToTextProvider>().back(context),
       ),
       title: Text(
         "原稿1",
