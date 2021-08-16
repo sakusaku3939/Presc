@@ -6,6 +6,7 @@ import 'package:presc/viewModel/editable_tag_item_provider.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:presc/viewModel/playback_provider.dart';
+import 'package:presc/viewModel/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -24,6 +25,8 @@ void main() async {
               create: (context) => ManuscriptTagProvider()),
           ChangeNotifierProvider(
               create: (context) => PlaybackProvider()),
+          ChangeNotifierProvider(
+              create: (context) => SpeechToTextProvider()),
         ],
         child: MyApp(),
       ),

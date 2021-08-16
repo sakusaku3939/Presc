@@ -1,6 +1,6 @@
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
-import 'package:presc/viewModel/playback_provider.dart';
+import 'package:presc/viewModel/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
 
 class PlaybackTextView extends StatelessWidget {
@@ -22,7 +22,7 @@ class PlaybackTextView extends StatelessWidget {
   final GlobalKey _richTextKey = GlobalKey();
 
   static void reset(BuildContext context) {
-    final provider = context.read<PlaybackProvider>();
+    final provider = context.read<SpeechToTextProvider>();
     provider.recognizedText = "";
     provider.unrecognizedText = content;
   }
@@ -58,7 +58,7 @@ class PlaybackTextView extends StatelessWidget {
   }
 
   Widget _playbackText() {
-    return Consumer<PlaybackProvider>(
+    return Consumer<SpeechToTextProvider>(
       builder: (context, model, child) {
         final recognizedTextSpan = TextSpan(
           text: model.recognizedText,

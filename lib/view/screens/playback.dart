@@ -4,6 +4,7 @@ import 'package:presc/view/utils/playback_text_view.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/playback_provider.dart';
+import 'package:presc/viewModel/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
 
 class PlaybackScreen extends StatelessWidget {
@@ -71,9 +72,8 @@ class PlaybackScreen extends StatelessWidget {
                               model.playFabState = !model.playFabState;
                               PlaybackTextView.reset(context);
                               if (model.playFabState)
-                                context
-                                    .read<PlaybackProvider>()
-                                    .reflectRecognizedText("どこでとんと事だけ");
+                                context.read<SpeechToTextProvider>().start(context);
+                              // .reflect("どこでとんと事だけ");
                             },
                           ),
                         ),
