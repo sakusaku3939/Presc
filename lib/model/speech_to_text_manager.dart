@@ -55,7 +55,7 @@ class SpeechToTextManager {
   Future<void> restart() async {
     await stop(log: false);
     Timer(
-      Duration(milliseconds: 300),
+      Duration(milliseconds: 400),
       () => speak(
         resultListener: this.resultListener,
         errorListener: this.errorListener,

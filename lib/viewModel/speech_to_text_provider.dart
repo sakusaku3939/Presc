@@ -19,7 +19,7 @@ class SpeechToTextProvider with ChangeNotifier {
           ),
         );
     _manager.speak(
-      resultListener: reflect,
+      resultListener: _reflect,
       errorListener: (error) {
         context.read<PlaybackProvider>().playFabState = false;
         switch (error) {
@@ -38,24 +38,25 @@ class SpeechToTextProvider with ChangeNotifier {
 
   void stop() => _manager.stop();
 
-  List<String> _ngram(String target, int n) =>
-      List.generate(target.length - n + 1, (i) => target.substring(i, i + n));
-
-  void reflect(String lastWords) {
-    int lastIndex = -1;
-    _ngram(lastWords, 3).forEach((t) {
-      lastIndex = max(unrecognizedText.indexOf(t), lastIndex);
-    });
-    if (lastIndex != -1) {
-      recognizedText += unrecognizedText.substring(0, lastIndex + 3);
-      unrecognizedText = unrecognizedText.substring(lastIndex + 3);
-      notifyListeners();
-    }
-  }
-
   void back(BuildContext context) {
     stop();
     context.read<PlaybackProvider>().playFabState = false;
     Navigator.pop(context);
+  }
+
+  List<String> _ngram(String target, int n) =>
+      List.generate(target.length - n + 1, (i) => target.substring(i, i + n));
+
+  void _reflect(String lastWords) {
+    final rangeUnrecognizedText = unrecognizedText.substring(0, 300);
+    int lastIndex = -1;
+    _ngram(lastWords, 4).forEach((t) {
+      lastIndex = max(rangeUnrecognizedText.indexOf(t), lastIndex);
+    });
+    if (lastIndex != -1) {
+      recognizedText += unrecognizedText.substring(0, lastIndex + 4);
+      unrecognizedText = unrecognizedText.substring(lastIndex + 4);
+      notifyListeners();
+    }
   }
 }
