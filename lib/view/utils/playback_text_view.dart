@@ -60,15 +60,7 @@ class PlaybackTextView extends StatelessWidget {
   Widget _playbackText() {
     return Consumer<SpeechToTextProvider>(
       builder: (context, model, child) {
-        final recognizedTextSpan = TextSpan(
-          text: model.recognizedText,
-          style: TextStyle(
-            backgroundColor: Colors.grey[100],
-            height: 2.2,
-            fontSize: 20,
-          ),
-        );
-        _scrollRecognizedText(model.recognizedText, recognizedTextSpan);
+        _scrollRecognizedText(model.recognizedText);
 
         return Text.rich(
           TextSpan(
@@ -99,26 +91,35 @@ class PlaybackTextView extends StatelessWidget {
     );
   }
 
-  void _scrollRecognizedText(String recognizedText, TextSpan textSpan) {
+  void _scrollRecognizedText(String recognizedText) {
     if (recognizedText.isNotEmpty) {
       final RenderBox box = _richTextKey.currentContext?.findRenderObject();
-      _scrollController.animateTo(
-        _textHeight(textSpan, box?.size?.width) - 88,
-        duration: Duration(milliseconds: 1000),
-        curve: Curves.ease,
-      );
+      if (_scrollController.offset <
+          _scrollController.position.maxScrollExtent) {
+        _scrollController.animateTo(
+          _textHeight(recognizedText, box?.size?.width) - 88,
+          duration: Duration(milliseconds: 1000),
+          curve: Curves.ease,
+        );
+      }
     }
   }
 
-  double _textHeight(TextSpan textSpan, double textWidth) {
+  double _textHeight(String text, double textWidth) {
     final TextPainter textPainter = TextPainter(
-      text: textSpan,
+      text: TextSpan(
+        text: text.replaceAll('\n', ''),
+        style: TextStyle(
+          height: 2.2,
+          fontSize: 20,
+        ),
+      ),
       textDirection: TextDirection.ltr,
       maxLines: 1,
     )..layout(minWidth: 0, maxWidth: double.infinity);
 
     textWidth ??= 1;
-    final lfCount = '\n'.allMatches(textSpan.text).length * 0.5;
+    final lfCount = '\n'.allMatches(text).length * 0.5;
     final countLines = (textPainter.size.width / textWidth + lfCount).ceil();
     final height = countLines * textPainter.size.height;
     return height;
