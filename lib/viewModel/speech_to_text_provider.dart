@@ -22,6 +22,7 @@ class SpeechToTextProvider with ChangeNotifier {
       resultListener: _reflect,
       errorListener: (error) {
         context.read<PlaybackProvider>().playFabState = false;
+        _manager.stop();
         switch (error) {
           case "not_available":
             showSnackBar("音声認識が利用できません");
@@ -48,7 +49,9 @@ class SpeechToTextProvider with ChangeNotifier {
       List.generate(target.length - n + 1, (i) => target.substring(i, i + n));
 
   void _reflect(String lastWords) {
-    final rangeUnrecognizedText = unrecognizedText.substring(0, 300);
+    final rangeUnrecognizedText = unrecognizedText.length > 75
+        ? unrecognizedText.substring(0, 75)
+        : unrecognizedText;
     int lastIndex = -1;
     _ngram(lastWords, 4).forEach((t) {
       lastIndex = max(rangeUnrecognizedText.indexOf(t), lastIndex);
