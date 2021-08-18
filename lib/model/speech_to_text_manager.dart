@@ -14,6 +14,7 @@ class SpeechToTextManager {
   void Function(String lastWords) resultListener;
   void Function(String error) errorListener;
   void Function(String status) statusListener;
+  void Function(double level) soundLevelListener;
 
   stt.SpeechToText _speech = stt.SpeechToText();
   bool _isStopFlagValid = false;
@@ -38,7 +39,10 @@ class SpeechToTextManager {
         onError: _errorListener, onStatus: _statusListener);
     if (available) {
       _isStopFlagValid = false;
-      await _speech.listen(onResult: _resultListener);
+      await _speech.listen(
+        onResult: _resultListener,
+        onSoundLevelChange: _soundLevelListener,
+      );
       if (log) print("start recognition");
     } else {
       if (log) print("speech recognition not available.");
@@ -71,6 +75,10 @@ class SpeechToTextManager {
       print("result: ${result.recognizedWords}");
       if (resultListener != null) resultListener(lastWords);
     }
+  }
+
+  void _soundLevelListener(double level) {
+    if (soundLevelListener != null) soundLevelListener(level);
   }
 
   void _errorListener(SpeechRecognitionError error) {
