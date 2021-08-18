@@ -49,8 +49,8 @@ class SpeechToTextProvider with ChangeNotifier {
       List.generate(target.length - n + 1, (i) => target.substring(i, i + n));
 
   void _reflect(String lastWords) {
-    final rangeUnrecognizedText = unrecognizedText.length > 75
-        ? unrecognizedText.substring(0, 75)
+    final rangeUnrecognizedText = unrecognizedText.length > 150
+        ? unrecognizedText.substring(0, 150)
         : unrecognizedText;
     int lastIndex = -1;
     _ngram(lastWords, 4).forEach((t) {
