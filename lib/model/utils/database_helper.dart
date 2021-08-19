@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:path/path.dart';
+import 'package:presc/config/sample_text.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -11,11 +12,15 @@ class DatabaseHelper {
   static final _databaseName = "ManuscriptDatabase.db";
   static final _databaseVersion = 1;
 
-  DatabaseHelper._privateConstructor();
-
-  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
-
+  static DatabaseHelper _instance;
   static Database _database;
+
+  DatabaseHelper._();
+
+  factory DatabaseHelper() {
+    _instance ??= DatabaseHelper._();
+    return _instance;
+  }
 
   Future<Database> get database async {
     if (_database != null) return _database;
@@ -69,23 +74,23 @@ class DatabaseHelper {
   }
 
   Future<int> insert(DatabaseTable table) async {
-    Database db = await instance.database;
+    Database db = await _instance.database;
     return await db.insert(table.tableName, table.toMap());
   }
 
   Future<List<Map<String, dynamic>>> queryAll(String tableName) async {
-    Database db = await instance.database;
+    Database db = await _instance.database;
     return await db.query(tableName);
   }
 
   Future<Map<String, dynamic>> queryById(String tableName, int id) async {
-    Database db = await instance.database;
+    Database db = await _instance.database;
     final res = await db.query(tableName, where: 'id = ?', whereArgs: [id]);
     return res.first;
   }
 
   Future<int> queryMaxId(String tableName, {String compareTableName}) async {
-    Database db = await instance.database;
+    Database db = await _instance.database;
     final res = await db.rawQuery('SELECT MAX(id) FROM $tableName');
     if (compareTableName == null) {
       return Sqflite.firstIntValue(res) ?? 0;
@@ -100,23 +105,23 @@ class DatabaseHelper {
   }
 
   Future<int> update(DatabaseTable table) async {
-    Database db = await instance.database;
+    Database db = await _instance.database;
     return await db.update(table.tableName, table.toMap(),
         where: 'id = ?', whereArgs: [table.id]);
   }
 
   Future<int> deleteAll(String tableName) async {
-    Database db = await instance.database;
+    Database db = await _instance.database;
     return await db.delete(tableName);
   }
 
   Future<int> delete(String tableName, int id, {String idName = "id"}) async {
-    Database db = await instance.database;
+    Database db = await _instance.database;
     return await db.delete(tableName, where: '$idName = ?', whereArgs: [id]);
   }
 
   Future<List<Map<String, dynamic>>> queryTagByMemoId(int memoId) async {
-    Database db = await instance.database;
+    Database db = await _instance.database;
     final cross = TagMemoTable.name;
     final tag = TagTable.name;
     return await db.rawQuery('''
@@ -127,7 +132,7 @@ class DatabaseHelper {
   }
 
   Future<List<Map<String, dynamic>>> queryMemoByTagId(int tagId) async {
-    Database db = await instance.database;
+    Database db = await _instance.database;
     final cross = TagMemoTable.name;
     final memo = MemoTable.name;
     return await db.rawQuery('''
@@ -138,7 +143,7 @@ class DatabaseHelper {
   }
 
   Future<void> execute(String sql, List<Object> arguments) async {
-    Database db = await instance.database;
+    Database db = await _instance.database;
     await db.execute(sql, arguments);
   }
 
@@ -148,11 +153,8 @@ class DatabaseHelper {
         MemoTable.name,
         MemoTable(
           id: 1,
-          title: "原稿1",
-          content: "吾輩は猫である。名前はまだ無い。\n"
-              "どこで生れたかとんと見当がつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。吾輩はここで始めて人間というものを見た。しかもあとで聞くとそれは書生という人間中で一番獰悪な種族であったそうだ。この書生というのは時々我々を捕えて煮て食うという話である。しかしその当時は何という考もなかったから別段恐しいとも思わなかった。ただ彼の掌に載せられてスーと持ち上げられた時何だかフワフワした感じがあったばかりである。\n"
-              "\n"
-              "ようやくの思いで笹原を這い出すと向うに大きな池がある。吾輩は池の前に坐ってどうしたらよかろうと考えて見た。別にこれという分別も出ない。しばらくして泣いたら書生がまた迎に来てくれるかと考え付いた。ニャー、ニャーと試みにやって見たが誰も来ない。そのうち池の上をさらさらと風が渡って日が暮れかかる。腹が非常に減って来た。泣きたくても声が出ない。仕方がない、何でもよいから食物のある所まであるこうと決心をしてそろりそろりと池を左りに廻り始めた。どうも非常に苦しい。そこを我慢して無理やりに這って行くとようやくの事で何となく人間臭い所へ出た。",
+          title: SampleText.sampleTitle,
+          content: SampleText.sampleContent,
           date: DateTime.now(),
         ).toMap(),
       ),

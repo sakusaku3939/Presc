@@ -3,14 +3,14 @@ import 'package:presc/model/utils/database_helper.dart';
 import 'package:presc/model/utils/database_table.dart';
 
 class TagManager {
-  final _dbHelper = DatabaseHelper.instance;
+  final _helper = DatabaseHelper();
 
   Future<int> addTag({String name = ""}) async {
     DatabaseTable table = TagTable(
-      id: await _dbHelper.queryMaxId(TagTable.name) + 1,
+      id: await _helper.queryMaxId(TagTable.name) + 1,
       tagName: name,
     );
-    final id = await _dbHelper.insert(table);
+    final id = await _helper.insert(table);
     print('inserted tag_table id: $id');
     return id;
   }
@@ -20,12 +20,12 @@ class TagManager {
       id: id,
       tagName: name,
     );
-    await _dbHelper.update(table);
+    await _helper.update(table);
   }
 
   Future<void> deleteTag({@required int id}) async {
-    await _dbHelper.delete(TagMemoTable.name, id, idName: "tag_id");
-    await _dbHelper.delete(TagTable.name, id);
+    await _helper.delete(TagMemoTable.name, id, idName: "tag_id");
+    await _helper.delete(TagTable.name, id);
     print('deleted tag_table id: $id');
   }
 
@@ -34,24 +34,24 @@ class TagManager {
       memoId: memoId,
       tagId: tagId,
     );
-    await _dbHelper.insert(table);
+    await _helper.insert(table);
   }
 
   Future<void> unlinkTag({@required int memoId, @required int tagId}) async {
-    await _dbHelper.execute(
+    await _helper.execute(
       'DELETE FROM ${TagMemoTable.name} WHERE memo_id = ? AND tag_id = ?',
       [memoId, tagId],
     );
   }
 
   Future<List<TagTable>> getAllTag() async {
-    final res = await _dbHelper.queryAll(TagTable.name);
+    final res = await _helper.queryAll(TagTable.name);
     List<TagTable> tableList = res.map((row) => TagTable.fromMap(row)).toList();
     return tableList;
   }
 
   Future<List<TagTable>> getLinkTagById({@required int memoId}) async {
-    final res = await _dbHelper.queryTagByMemoId(memoId);
+    final res = await _helper.queryTagByMemoId(memoId);
     List<TagTable> tableList = res.map((row) => TagTable.fromMap(row)).toList();
     return tableList;
   }

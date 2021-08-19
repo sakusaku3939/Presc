@@ -13,26 +13,37 @@ class ManuscriptFilterScreen extends StatelessWidget {
 
   final ManuscriptState state;
 
+  void _back(BuildContext context) {
+    context.read<ManuscriptProvider>().replaceState(ManuscriptState.home);
+    ScaffoldMessenger.of(context).clearSnackBars();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _appbar(context),
-      body: SafeArea(
-        child: Scrollbar(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (state == ManuscriptState.trash)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
-                    child: Text(
-                      "ごみ箱の中身は7日以内に完全に削除されます",
-                      style: TextStyle(fontSize: 12),
+    return WillPopScope(
+      onWillPop: () async {
+        _back(context);
+        return Future.value(false);
+      },
+      child: Scaffold(
+        appBar: _appbar(context),
+        body: SafeArea(
+          child: Scrollbar(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (state == ManuscriptState.trash)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
+                      child: Text(
+                        "ごみ箱の中身は7日以内に完全に削除されます",
+                        style: TextStyle(fontSize: 12),
+                      ),
                     ),
-                  ),
-                ScriptCard(context),
-              ],
+                  ScriptCard(context),
+                ],
+              ),
             ),
           ),
         ),
@@ -43,17 +54,10 @@ class ManuscriptFilterScreen extends StatelessWidget {
   Widget _appbar(BuildContext context) {
     return AppBar(
       elevation: 0,
-      leading: Consumer<ManuscriptProvider>(
-        builder: (context, model, child) {
-          return RippleIconButton(
-            Icons.navigate_before,
-            size: 32,
-            onPressed: () {
-              model.replaceState(ManuscriptState.home);
-              ScaffoldMessenger.of(context).clearSnackBars();
-            },
-          );
-        },
+      leading: RippleIconButton(
+        Icons.navigate_before,
+        size: 32,
+        onPressed: () => _back(context),
       ),
       title: Selector<ManuscriptProvider, TagTable>(
         selector: (_, model) => model.currentTagTable,

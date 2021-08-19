@@ -108,94 +108,94 @@ class _Card extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Hero(
-      tag: context.read<ManuscriptProvider>().scriptTable[index].id,
-      child: Material(
-        type: MaterialType.transparency,
-        child: _card(),
-      ),
-    );
-  }
-
-  Widget _card() {
     return Selector<ManuscriptProvider, List<MemoTable>>(
       selector: (_, model) => model.scriptTable,
       builder: (context, scriptTable, child) {
-        final title = scriptTable[index].title;
-        final content = scriptTable[index].content;
-        return ScaleTap(
-          scaleMinValue: 0.96,
-          onPressed: () {
-            context
-                .read<ManuscriptTagProvider>()
-                .loadTag(memoId: scriptTable[index].id);
-            Navigator.push(
-              context,
-              PageRouteBuilder(
-                transitionDuration: Duration(milliseconds: 500),
-                pageBuilder: (_, __, ___) =>
-                    ManuscriptEditScreen(this.context, index),
-              ),
-            );
-          },
-          onLongPress: () {
-            ScriptModalBottomSheet.show(this.context, index);
-          },
-          child: Container(
-            constraints: const BoxConstraints.expand(),
-            padding: const EdgeInsets.only(left: 16, right: 16),
-            decoration: cardShadow(16),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(left: 12),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    title.isNotEmpty ? title : "タイトルなし",
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 24),
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: DefaultTextStyle(
-                    style: TextStyle(color: Colors.black),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 6,
-                    child: Padding(
-                      child: Text(
-                        content.isNotEmpty ? content : "追加のテキストはありません",
-                        style: TextStyle(
-                          color: Colors.grey[800],
-                          height: 1.8,
-                          fontSize: 14,
-                        ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(12, 8, 4, 0),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(top: 16, right: 12),
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: Text(
-                      DateFormat('yyyy/MM/dd(E) HH:mm', "ja_JP").format(
-                        scriptTable[index].date,
-                      ),
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+        return Hero(
+          tag: scriptTable[index].id,
+          child: Material(
+            type: MaterialType.transparency,
+            child: _card(scriptTable),
           ),
         );
       },
+    );
+  }
+
+  Widget _card(List<MemoTable> scriptTable) {
+    final title = scriptTable[index].title;
+    final content = scriptTable[index].content;
+    return ScaleTap(
+      scaleMinValue: 0.96,
+      onPressed: () {
+        context
+            .read<ManuscriptTagProvider>()
+            .loadTag(memoId: scriptTable[index].id);
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            transitionDuration: Duration(milliseconds: 500),
+            pageBuilder: (_, __, ___) =>
+                ManuscriptEditScreen(this.context, index),
+          ),
+        );
+      },
+      onLongPress: () {
+        ScriptModalBottomSheet.show(this.context, index);
+      },
+      child: Container(
+        constraints: const BoxConstraints.expand(),
+        padding: const EdgeInsets.only(left: 16, right: 16),
+        decoration: cardShadow(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(left: 12),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                title.isNotEmpty ? title : "タイトルなし",
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 24),
+              ),
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              child: DefaultTextStyle(
+                style: TextStyle(color: Colors.black),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 6,
+                child: Padding(
+                  child: Text(
+                    content.isNotEmpty ? content : "追加のテキストはありません",
+                    style: TextStyle(
+                      color: Colors.grey[800],
+                      height: 1.8,
+                      fontSize: 14,
+                    ),
+                  ),
+                  padding: const EdgeInsets.fromLTRB(12, 8, 4, 0),
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 16, right: 12),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Text(
+                  DateFormat('yyyy/MM/dd(E) HH:mm', "ja_JP").format(
+                    scriptTable[index].date,
+                  ),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

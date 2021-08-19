@@ -36,6 +36,7 @@ dependencies:
   path_provider: ^2.0.2
 
   animations: ^2.0.1
+  speech_to_text: ^4.2.1
   flutter_scale_tap: ^1.0.5
   flutter_keyboard_visibility: ^5.0.2
   fading_edge_scrollview: ^2.0.0

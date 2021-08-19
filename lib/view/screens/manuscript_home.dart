@@ -5,6 +5,7 @@ import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script_card.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
+import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'manuscript_edit.dart';
@@ -43,8 +44,9 @@ class ManuscriptHomeScreen extends StatelessWidget {
         child: FloatingActionButton(
           onPressed: () async {
             final provider = context.read<ManuscriptProvider>();
-            await provider.addScript(title: "", content: "");
+            final id = await provider.addScript(title: "", content: "");
             await provider.updateScriptTable();
+            await context.read<ManuscriptTagProvider>().loadTag(memoId: id);
             provider.insertScriptItem(0);
             Navigator.push(
               context,

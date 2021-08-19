@@ -66,9 +66,10 @@ class TrashMoveManager {
     @required ManuscriptProvider provider,
     @required int index,
   }) async {
+    final title = provider.scriptTable[index].title;
     DialogManager.show(
       context,
-      content: Text("${provider.scriptTable[index].title}を完全に削除しますか？"),
+      content: Text("${title.isNotEmpty ? title : "(タイトルなし)"}を完全に削除しますか？"),
       actions: [
         DialogTextButton(
           "キャンセル",
