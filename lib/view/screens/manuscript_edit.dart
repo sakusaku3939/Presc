@@ -4,6 +4,7 @@ import 'package:presc/view/screens/playback.dart';
 import 'package:presc/view/utils/dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
+import 'package:presc/view/utils/tag_grid.dart';
 import 'package:presc/view/utils/trash_move_manager.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/manuscript_tag_provider.dart';
@@ -28,11 +29,10 @@ class ManuscriptEditScreen extends StatelessWidget {
     if (title.isEmpty && content.isEmpty) {
       await Future.delayed(Duration(milliseconds: 300));
       TrashMoveManager.move(
-        context: context,
-        provider: _provider,
-        index: index,
-        customMessage: "空の原稿をごみ箱に移動しました"
-      );
+          context: context,
+          provider: _provider,
+          index: index,
+          customMessage: "空の原稿をごみ箱に移動しました");
     }
   }
 
@@ -72,10 +72,10 @@ class ManuscriptEditScreen extends StatelessWidget {
             onPressed: () async {
               if (_provider.state != ManuscriptState.trash)
                 await _provider.updateScriptTable();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PlaybackScreen(index)),
-                );
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PlaybackScreen(index)),
+              );
             },
             child: Icon(Icons.play_arrow),
           ),
@@ -239,7 +239,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                         },
                       ),
                       SizedBox(height: 12),
-                      _tagGrid(),
+                      TagGrid(memoId: id),
                     ],
                   ),
                 );
@@ -354,49 +354,6 @@ class ManuscriptEditScreen extends StatelessWidget {
           },
         ),
       ],
-    );
-  }
-
-  Widget _tagGrid() {
-    return Consumer<ManuscriptTagProvider>(
-      builder: (context, model, child) {
-        return Wrap(
-          children: [
-            for (var linkTagTable in model.linkTagTable)
-              _tag(model, selected: true, tagTable: linkTagTable),
-            for (var unlinkTagTable in model.unlinkTagTable)
-              _tag(model, selected: false, tagTable: unlinkTagTable),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _tag(ManuscriptTagProvider model, {bool selected, TagTable tagTable}) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 8),
-      child: ChoiceChip(
-        shape: RoundedRectangleBorder(
-          side: BorderSide(
-            color: selected ? Theme.of(context).accentColor : Colors.grey[300],
-            width: 1,
-          ),
-          borderRadius: BorderRadius.circular(24),
-        ),
-        label: Text(tagTable.tagName),
-        selectedColor: Theme.of(context).accentColor,
-        backgroundColor: Colors.white,
-        pressElevation: 2,
-        selected: selected,
-        onSelected: (value) async {
-          model.changeChecked(
-            memoId: id,
-            tagId: tagTable.id,
-            newValue: value,
-          );
-          Navigator.pop(context);
-        },
-      ),
     );
   }
 }
