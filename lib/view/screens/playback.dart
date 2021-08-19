@@ -178,7 +178,7 @@ class PlaybackScreen extends StatelessWidget {
               Container(
                 width: model.width(context),
                 height: model.height[i],
-                color: Colors.red,
+                color: Colors.red.withOpacity(.8),
               ),
           ],
         );
