@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/screens/playback.dart';
 import 'package:presc/view/utils/dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
@@ -175,14 +174,17 @@ class ManuscriptEditScreen extends StatelessWidget {
         children: [
           SizedBox(height: 4),
           Text(
-            title,
-            style: TextStyle(fontSize: 24),
+            title.isNotEmpty ? title : "タイトルなし",
+            style: TextStyle(
+              color: title.isNotEmpty ? null : Theme.of(context).hintColor,
+              fontSize: 24,
+            ),
           ),
           SizedBox(height: 16),
           Text(
-            content,
+            content.isNotEmpty ? content : "追加のテキストはありません",
             style: TextStyle(
-              color: Colors.grey[800],
+              color: content.isNotEmpty ? Colors.grey[800] : Theme.of(context).hintColor,
               height: 1.7,
               fontSize: 16,
             ),
