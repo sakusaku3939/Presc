@@ -53,7 +53,7 @@ class ManuscriptHomeScreen extends StatelessWidget {
               PageRouteBuilder(
                 transitionDuration: Duration(milliseconds: 500),
                 pageBuilder: (_, __, ___) =>
-                    ManuscriptEditScreen(context, 0),
+                    ManuscriptEditScreen(context, 0, autofocus: true),
               ),
             );
           },
