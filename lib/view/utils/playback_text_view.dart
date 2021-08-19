@@ -50,7 +50,7 @@ class PlaybackTextView extends StatelessWidget {
   }
 
   void _init(BuildContext context) {
-    if (scroll) content = text;
+    content = text;
     reset(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollController.jumpTo(scroll ? 0 : 24);
