@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presc/config/sample_text.dart';
 import 'package:presc/view/utils/playback_text_view.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 
@@ -87,9 +88,7 @@ class SettingScreen extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 32),
       color: Colors.grey[900],
       child: PlaybackTextView(
-        "吾輩は猫である。名前はまだ無い。\n"
-        "どこで生れたかとんと見当がつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。"
-        "吾輩はここで始めて人間というものを見た。しかもあとで聞くとそれは書生という人間中で一番獰悪な種族であったそうだ。",
+        SampleText.setting,
         height: 200,
         scroll: false,
         gradientFraction: 0.5,
