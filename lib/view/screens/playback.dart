@@ -4,6 +4,7 @@ import 'package:presc/view/utils/playback_text_view.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/playback_provider.dart';
+import 'package:presc/viewModel/playback_timer_provider.dart';
 import 'package:presc/viewModel/playback_visualizer_provider.dart';
 import 'package:presc/viewModel/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
@@ -13,11 +14,16 @@ class PlaybackScreen extends StatelessWidget {
 
   final int index;
 
+  void _back(BuildContext context) {
+    context.read<SpeechToTextProvider>().back(context);
+    context.read<PlaybackTimerProvider>().reset();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        context.read<SpeechToTextProvider>().back(context);
+      onWillPop: () {
+        _back(context);
         return Future.value(false);
       },
       child: Scaffold(
@@ -46,13 +52,18 @@ class PlaybackScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Text(
-                    "0:17",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Selector<PlaybackTimerProvider, String>(
+                    selector: (_, model) => model.time,
+                    builder: (context, time, child) {
+                      return Text(
+                        time,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    },
                   ),
                   Consumer<PlaybackProvider>(
                     builder: (context, model, child) {
@@ -89,12 +100,16 @@ class PlaybackScreen extends StatelessWidget {
                                   onPressed: () {
                                     model.playFabState = !model.playFabState;
                                     PlaybackTextView.reset(context);
-                                    final provider =
+                                    final speech =
                                         context.read<SpeechToTextProvider>();
+                                    final timer =
+                                        context.read<PlaybackTimerProvider>();
                                     if (model.playFabState) {
-                                      provider.start(context);
+                                      speech.start(context);
+                                      timer.start();
                                     } else {
-                                      provider.stop();
+                                      speech.stop();
+                                      timer.stop();
                                     }
                                   },
                                 ),
@@ -141,7 +156,7 @@ class PlaybackScreen extends StatelessWidget {
         Icons.navigate_before,
         color: Colors.white,
         size: 32,
-        onPressed: () => context.read<SpeechToTextProvider>().back(context),
+        onPressed: () => _back(context),
       ),
       title: Text(
         context.read<ManuscriptProvider>().scriptTable[index].title,

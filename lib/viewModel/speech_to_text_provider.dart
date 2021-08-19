@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:presc/model/speech_to_text_manager.dart';
+import 'package:presc/viewModel/playback_timer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 
@@ -22,6 +23,7 @@ class SpeechToTextProvider with ChangeNotifier {
       resultListener: _reflect,
       errorListener: (error) {
         context.read<PlaybackProvider>().playFabState = false;
+        context.read<PlaybackTimerProvider>().stop();
         _manager.stop();
         switch (error) {
           case "not_available":
