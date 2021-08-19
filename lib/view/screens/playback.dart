@@ -144,7 +144,7 @@ class PlaybackScreen extends StatelessWidget {
         onPressed: () => context.read<SpeechToTextProvider>().back(context),
       ),
       title: Text(
-        "原稿1",
+        context.read<ManuscriptProvider>().scriptTable[index].title,
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
