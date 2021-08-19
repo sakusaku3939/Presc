@@ -10,10 +10,11 @@ import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
 
 class ManuscriptEditScreen extends StatelessWidget {
-  ManuscriptEditScreen(this.context, this.index);
+  ManuscriptEditScreen(this.context, this.index, {this.autofocus = false});
 
   final BuildContext context;
   final int index;
+  final bool autofocus;
 
   ManuscriptProvider get _provider => context.read<ManuscriptProvider>();
 
@@ -27,11 +28,11 @@ class ManuscriptEditScreen extends StatelessWidget {
     await _provider.notifyBack(context);
     if (title.isEmpty && content.isEmpty) {
       await Future.delayed(Duration(milliseconds: 300));
-      TrashMoveManager.move(
-          context: context,
-          provider: _provider,
-          index: index,
-          customMessage: "空の原稿をごみ箱に移動しました");
+      TrashMoveManager.deleteEmpty(
+        context: context,
+        provider: _provider,
+        index: index,
+      );
     }
   }
 
@@ -123,6 +124,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             ),
             keyboardType: TextInputType.text,
             textInputAction: TextInputAction.go,
+            autofocus: autofocus,
             maxLines: null,
             decoration: InputDecoration(
               isDense: true,
@@ -184,7 +186,9 @@ class ManuscriptEditScreen extends StatelessWidget {
           Text(
             content.isNotEmpty ? content : "追加のテキストはありません",
             style: TextStyle(
-              color: content.isNotEmpty ? Colors.grey[800] : Theme.of(context).hintColor,
+              color: content.isNotEmpty
+                  ? Colors.grey[800]
+                  : Theme.of(context).hintColor,
               height: 1.7,
               fontSize: 16,
             ),
