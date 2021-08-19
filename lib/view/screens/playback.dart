@@ -67,6 +67,8 @@ class PlaybackScreen extends StatelessWidget {
                   ),
                   Consumer<PlaybackProvider>(
                     builder: (context, model, child) {
+                      final speech = context.read<SpeechToTextProvider>();
+                      final timer = context.read<PlaybackTimerProvider>();
                       return Padding(
                         padding: const EdgeInsets.fromLTRB(32, 12, 32, 24),
                         child: Row(
@@ -87,7 +89,17 @@ class PlaybackScreen extends StatelessWidget {
                                 Icons.skip_previous_outlined,
                                 size: 32,
                                 color: Colors.white,
-                                onPressed: () => {},
+                                onPressed: () {
+                                  model.playFabState = false;
+                                  speech.stop();
+                                  timer.reset();
+                                  PlaybackTextView.reset(context);
+                                  model.scrollController.animateTo(
+                                    0,
+                                    duration: Duration(milliseconds: 300),
+                                    curve: Curves.ease,
+                                  );
+                                },
                               ),
                             ),
                             Container(
@@ -100,10 +112,6 @@ class PlaybackScreen extends StatelessWidget {
                                   onPressed: () {
                                     model.playFabState = !model.playFabState;
                                     PlaybackTextView.reset(context);
-                                    final speech =
-                                        context.read<SpeechToTextProvider>();
-                                    final timer =
-                                        context.read<PlaybackTimerProvider>();
                                     if (model.playFabState) {
                                       speech.start(context);
                                       timer.start();
@@ -121,7 +129,17 @@ class PlaybackScreen extends StatelessWidget {
                                 Icons.skip_next_outlined,
                                 size: 32,
                                 color: Colors.white,
-                                onPressed: () => {},
+                                onPressed: () {
+                                  model.playFabState = false;
+                                  speech.stop();
+                                  timer.stop();
+                                  PlaybackTextView.reset(context);
+                                  model.scrollController.animateTo(
+                                    model.scrollController.position.maxScrollExtent,
+                                    duration: Duration(milliseconds: 300),
+                                    curve: Curves.ease,
+                                  );
+                                },
                               ),
                             ),
                             Container(

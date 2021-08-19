@@ -1,5 +1,6 @@
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
+import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +19,6 @@ class PlaybackTextView extends StatelessWidget {
   final bool scroll;
   final double gradientFraction;
 
-  final ScrollController _scrollController = ScrollController();
   final GlobalKey _richTextKey = GlobalKey();
 
   static void reset(BuildContext context) {
@@ -39,7 +39,7 @@ class PlaybackTextView extends StatelessWidget {
           physics: (scroll)
               ? BouncingScrollPhysics()
               : NeverScrollableScrollPhysics(),
-          controller: _scrollController,
+          controller: context.read<PlaybackProvider>().scrollController,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 32),
             child: _playbackText(),
@@ -53,15 +53,14 @@ class PlaybackTextView extends StatelessWidget {
     content = text;
     reset(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollController.jumpTo(scroll ? 0 : 24);
+      context.read<PlaybackProvider>().scrollController.jumpTo(scroll ? 0 : 24);
     });
   }
 
   Widget _playbackText() {
     return Consumer<SpeechToTextProvider>(
       builder: (context, model, child) {
-        _scrollRecognizedText(model.recognizedText);
-
+        _scrollRecognizedText(context, model.recognizedText);
         return Text.rich(
           TextSpan(
             style: DefaultTextStyle.of(context).style,
@@ -91,12 +90,12 @@ class PlaybackTextView extends StatelessWidget {
     );
   }
 
-  void _scrollRecognizedText(String recognizedText) {
+  void _scrollRecognizedText(BuildContext context, String recognizedText) {
     if (recognizedText.isNotEmpty) {
+      final scroll = context.read<PlaybackProvider>().scrollController;
       final RenderBox box = _richTextKey.currentContext?.findRenderObject();
-      if (_scrollController.offset <
-          _scrollController.position.maxScrollExtent) {
-        _scrollController.animateTo(
+      if (scroll.offset < scroll.position.maxScrollExtent) {
+        scroll.animateTo(
           _textHeight(recognizedText, box?.size?.width) - 88,
           duration: Duration(milliseconds: 1000),
           curve: Curves.ease,

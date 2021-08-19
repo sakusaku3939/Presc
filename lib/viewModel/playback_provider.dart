@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class PlaybackProvider with ChangeNotifier {
+  ScrollController scrollController = ScrollController();
+
   bool _playFabState = false;
 
   bool get playFabState => _playFabState;
