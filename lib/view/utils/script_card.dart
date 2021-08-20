@@ -166,6 +166,7 @@ class _Card extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 6,
                 child: Padding(
+                  padding: const EdgeInsets.fromLTRB(12, 8, 4, 0),
                   child: Text(
                     content.isNotEmpty ? content : "追加のテキストはありません",
                     style: TextStyle(
@@ -174,12 +175,11 @@ class _Card extends StatelessWidget {
                       fontSize: 14,
                     ),
                   ),
-                  padding: const EdgeInsets.fromLTRB(12, 8, 4, 0),
                 ),
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 16, right: 12),
+              margin: const EdgeInsets.only(top: 12, right: 12),
               child: Align(
                 alignment: Alignment.topRight,
                 child: Text(
