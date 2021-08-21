@@ -94,7 +94,7 @@ class PlaybackScreen extends StatelessWidget {
                                   speech.stop();
                                   timer.reset();
                                   PlaybackTextView.reset(context);
-                                  model.scrollController.animateTo(
+                                  model.scrollController?.animateTo(
                                     0,
                                     duration: Duration(milliseconds: 300),
                                     curve: Curves.ease,
@@ -134,7 +134,7 @@ class PlaybackScreen extends StatelessWidget {
                                   speech.stop();
                                   timer.stop();
                                   PlaybackTextView.reset(context);
-                                  model.scrollController.animateTo(
+                                  model.scrollController?.animateTo(
                                     model.scrollController.position.maxScrollExtent,
                                     duration: Duration(milliseconds: 300),
                                     curve: Curves.ease,

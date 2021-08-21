@@ -19,6 +19,7 @@ class PlaybackTextView extends StatelessWidget {
   final bool scroll;
   final double gradientFraction;
 
+  final ScrollController _scrollController = ScrollController();
   final GlobalKey _richTextKey = GlobalKey();
 
   static void reset(BuildContext context) {
@@ -39,7 +40,7 @@ class PlaybackTextView extends StatelessWidget {
           physics: (scroll)
               ? BouncingScrollPhysics()
               : NeverScrollableScrollPhysics(),
-          controller: context.read<PlaybackProvider>().scrollController,
+          controller: _scrollController,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 32),
             child: _playbackText(),
@@ -53,7 +54,8 @@ class PlaybackTextView extends StatelessWidget {
     content = text;
     reset(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<PlaybackProvider>().scrollController.jumpTo(scroll ? 0 : 24);
+      _scrollController.jumpTo(scroll ? 0 : 24);
+      context.read<PlaybackProvider>().scrollController = _scrollController;
     });
   }
 
@@ -92,7 +94,7 @@ class PlaybackTextView extends StatelessWidget {
 
   void _scrollRecognizedText(BuildContext context, String recognizedText) {
     if (recognizedText.isNotEmpty) {
-      final scroll = context.read<PlaybackProvider>().scrollController;
+      final scroll = _scrollController;
       final RenderBox box = _richTextKey.currentContext?.findRenderObject();
       if (scroll.offset < scroll.position.maxScrollExtent) {
         scroll.animateTo(
