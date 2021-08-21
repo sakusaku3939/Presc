@@ -40,6 +40,7 @@ dependencies:
   flutter_scale_tap: ^1.0.5
   flutter_keyboard_visibility: ^5.0.2
   fading_edge_scrollview: ^2.0.0
+  flutter_native_splash: ^1.2.1
 
 dev_dependencies:
   flutter_test:
@@ -95,3 +96,7 @@ flutter_icons:
   image_path: "assets/images/icon.png"
   adaptive_icon_background: "#FF6E42"
   adaptive_icon_foreground: "assets/images/foreground.png"
+
+flutter_native_splash:
+  image: "assets/images/splash.png"
+  color: "#FF6E42"
