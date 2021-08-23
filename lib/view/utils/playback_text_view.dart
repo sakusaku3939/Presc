@@ -1,5 +1,6 @@
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
+import 'package:presc/config/playback_text_style.dart';
 import 'package:presc/view/utils/horizontal_text.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/speech_to_text_provider.dart';
@@ -65,37 +66,29 @@ class PlaybackTextView extends StatelessWidget {
     return Consumer<SpeechToTextProvider>(
       builder: (context, model, child) {
         _scrollRecognizedText(context, model.recognizedText);
-        return scrollVertical
-            ? Text.rich(
+        if (scrollVertical)
+          return Text.rich(
+            TextSpan(
+              style: DefaultTextStyle.of(context).style,
+              children: [
                 TextSpan(
-                  style: DefaultTextStyle.of(context).style,
-                  children: [
-                    TextSpan(
-                      text: model.recognizedText,
-                      style: TextStyle(
-                        backgroundColor: Colors.grey[100],
-                        height: 2.2,
-                        fontSize: 20,
-                      ),
-                    ),
-                    TextSpan(
-                      text: model.unrecognizedText,
-                      style: TextStyle(
-                        color: Colors.white,
-                        height: 2.2,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ],
+                  text: model.recognizedText,
+                  style: PlaybackTextStyle.recognized(PlaybackAxis.vertical),
                 ),
-                key: _playbackTextKey,
-              )
-            : HorizontalText(
-                key: _playbackTextKey,
-                recognizedText: model.recognizedText,
-                unrecognizedText: model.unrecognizedText,
-              );
+                TextSpan(
+                  text: model.unrecognizedText,
+                  style: PlaybackTextStyle.unrecognized(PlaybackAxis.vertical),
+                ),
+              ],
+            ),
+            key: _playbackTextKey,
+          );
+        else
+          return HorizontalText(
+            key: _playbackTextKey,
+            recognizedText: model.recognizedText,
+            unrecognizedText: model.unrecognizedText,
+          );
       },
     );
   }
@@ -132,10 +125,7 @@ class PlaybackTextView extends StatelessWidget {
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
         text: text.replaceAll('\n', ''),
-        style: TextStyle(
-          height: 2.2,
-          fontSize: 20,
-        ),
+        style: PlaybackTextStyle.recognized(PlaybackAxis.vertical),
       ),
       textDirection: TextDirection.ltr,
       maxLines: 1,

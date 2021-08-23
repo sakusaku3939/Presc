@@ -1,5 +1,6 @@
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
+import 'package:presc/config/playback_text_style.dart';
 import 'package:presc/config/sample_text.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 
@@ -103,12 +104,7 @@ class SettingScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 32),
               child: Text(
                 SampleText.setting,
-                style: TextStyle(
-                  color: Colors.white,
-                  height: 2.2,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
+                style: PlaybackTextStyle.unrecognized(PlaybackAxis.vertical),
               ),
             ),
           ),
