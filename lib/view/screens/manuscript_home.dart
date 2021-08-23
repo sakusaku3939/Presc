@@ -27,10 +27,10 @@ class ManuscriptHomeScreen extends StatelessWidget {
                 snap: true,
                 toolbarHeight: 64,
                 expandedHeight: 0,
-                backgroundColor: Colors.transparent,
+                backgroundColor: Color(0xFFF7F7F7),
                 elevation: 0,
                 leading: Container(),
-                flexibleSpace: _searchbar(context),
+                flexibleSpace: _appbar(context),
               ),
               SliverList(
                 delegate: SliverChildListDelegate([ScriptCard(context)]),
@@ -60,6 +60,62 @@ class ManuscriptHomeScreen extends StatelessWidget {
           child: Icon(Icons.add),
         ),
       ),
+    );
+  }
+
+  Widget _appbar(BuildContext context) {
+    return SafeArea(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          RippleIconButton(
+            Icons.menu,
+            onPressed: () {
+              context.read<EditableTagItemProvider>().loadTag();
+              _scaffoldKey.currentState.openDrawer();
+            },
+          ),
+          Container(
+            margin: const EdgeInsets.fromLTRB(0, 20, 8, 20),
+            child: Image.asset('assets/images/logo.png'),
+          ),
+          RippleIconButton(
+            Icons.search,
+            onPressed: () {
+              context.read<EditableTagItemProvider>().loadTag();
+              _scaffoldKey.currentState.openDrawer();
+            },
+          ),
+        ],
+      ),
+    );
+    return SafeArea(
+      child: Row(
+          children: [
+            RippleIconButton(
+              Icons.menu,
+              onPressed: () {
+                context.read<EditableTagItemProvider>().loadTag();
+                _scaffoldKey.currentState.openDrawer();
+              },
+            ),
+            Image.asset(
+              'assets/images/logo.png',
+              alignment: Alignment.centerLeft,
+            ),
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.only(left: 24),
+                child: Text(
+                  "原稿を検索",
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
     );
   }
 
