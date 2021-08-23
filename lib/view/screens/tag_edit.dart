@@ -122,6 +122,7 @@ class _TagEditScreenAppbar extends StatelessWidget
                     if (count > 0)
                       DialogManager.show(
                         context,
+                        contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
                         title: Text("$count件のタグを削除"),
                         content: Text("選択したタグを全て削除しますか？この操作は復元できません。"),
                         actions: [

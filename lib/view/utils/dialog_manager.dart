@@ -5,6 +5,8 @@ class DialogManager {
     BuildContext context, {
     Widget title,
     Widget content,
+    EdgeInsetsGeometry contentPadding =
+        const EdgeInsets.fromLTRB(24, 20, 24, 16),
     List<Widget> actions,
   }) {
     List<Widget> _adjustActions;
@@ -20,6 +22,7 @@ class DialogManager {
         return AlertDialog(
           title: title,
           content: content,
+          contentPadding: contentPadding,
           actions: _adjustActions,
         );
       },
@@ -36,7 +39,7 @@ class DialogTextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      child: Text(text),
+      child: Text(text, style: TextStyle(color: Theme.of(context).accentColor)),
       style: ButtonStyle(
         padding: MaterialStateProperty.all(
           EdgeInsets.symmetric(
