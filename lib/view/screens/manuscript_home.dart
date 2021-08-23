@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:presc/config/custom_color.dart';
 import 'package:presc/view/utils/drawer_menu.dart';
@@ -82,10 +81,24 @@ class ManuscriptHomeScreen extends StatelessWidget {
           ),
           RippleIconButton(
             Icons.search,
-            onPressed: () {
-              context.read<EditableTagItemProvider>().loadTag();
-              _scaffoldKey.currentState.openDrawer();
-            },
+            onPressed: () => Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    ManuscriptSearchScreen(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  return ZoomPageTransitionsBuilder().buildTransitions(
+                    MaterialPageRoute(
+                        builder: (context) => ManuscriptSearchScreen()),
+                    context,
+                    animation,
+                    secondaryAnimation,
+                    child,
+                  );
+                },
+              ),
+            ),
           ),
         ],
       ),
