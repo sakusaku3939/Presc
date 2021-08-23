@@ -1,6 +1,6 @@
+import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:presc/config/sample_text.dart';
-import 'package:presc/view/utils/playback_text_view.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 
 class SettingScreen extends StatelessWidget {
@@ -84,14 +84,35 @@ class SettingScreen extends StatelessWidget {
   }
 
   Widget _preview() {
+    final ScrollController scrollController = ScrollController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollController.jumpTo(24);
+    });
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 32),
       color: Colors.grey[900],
-      child: PlaybackTextView(
-        SampleText.setting,
+      child: Container(
         height: 200,
-        scroll: false,
-        gradientFraction: 0.5,
+        child: FadingEdgeScrollView.fromSingleChildScrollView(
+          gradientFractionOnStart: 0.5,
+          gradientFractionOnEnd: 0.5,
+          child: SingleChildScrollView(
+            physics: NeverScrollableScrollPhysics(),
+            controller: scrollController,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 32),
+              child: Text(
+                SampleText.setting,
+                style: TextStyle(
+                  color: Colors.white,
+                  height: 2.2,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

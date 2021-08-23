@@ -1,5 +1,6 @@
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
+import 'package:presc/view/utils/horizontal_text.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
@@ -7,87 +8,90 @@ import 'package:provider/provider.dart';
 class PlaybackTextView extends StatelessWidget {
   PlaybackTextView(
     this.text, {
-    this.height,
-    this.scroll = true,
     this.gradientFraction = 0.2,
   });
 
-  static String content;
-
   final String text;
-  final double height;
-  final bool scroll;
   final double gradientFraction;
 
+  static String _content;
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _richTextKey = GlobalKey();
 
   static void reset(BuildContext context) {
     final provider = context.read<SpeechToTextProvider>();
     provider.recognizedText = "";
-    provider.unrecognizedText = content;
+    provider.unrecognizedText = _content;
   }
 
   @override
   Widget build(BuildContext context) {
     _init(context);
-    return Container(
-      height: height,
-      child: FadingEdgeScrollView.fromSingleChildScrollView(
-        gradientFractionOnStart: gradientFraction,
-        gradientFractionOnEnd: gradientFraction,
-        child: SingleChildScrollView(
-          physics: (scroll)
-              ? BouncingScrollPhysics()
-              : NeverScrollableScrollPhysics(),
-          controller: _scrollController,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 32),
-            child: _playbackText(),
+    return Selector<PlaybackProvider, bool>(
+      selector: (_, model) => model.scrollVertical,
+      builder: (context, scrollVertical, child) {
+        return FadingEdgeScrollView.fromSingleChildScrollView(
+          gradientFractionOnStart: gradientFraction,
+          gradientFractionOnEnd: gradientFraction,
+          child: SingleChildScrollView(
+            scrollDirection: scrollVertical ? Axis.vertical : Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            controller: _scrollController,
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: _playbackText(scrollVertical),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
   void _init(BuildContext context) {
-    content = text;
+    _content = text;
     reset(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollController.jumpTo(scroll ? 0 : 24);
+      final provider = context.read<PlaybackProvider>();
       context.read<PlaybackProvider>().scrollController = _scrollController;
+      _scrollController.jumpTo(
+        provider.scrollVertical
+            ? 0
+            : _scrollController.position.maxScrollExtent,
+      );
     });
   }
 
-  Widget _playbackText() {
+  Widget _playbackText(bool scrollVertical) {
     return Consumer<SpeechToTextProvider>(
       builder: (context, model, child) {
         _scrollRecognizedText(context, model.recognizedText);
-        return Text.rich(
-          TextSpan(
-            style: DefaultTextStyle.of(context).style,
-            children: [
-              TextSpan(
-                text: model.recognizedText,
-                style: TextStyle(
-                  backgroundColor: Colors.grey[100],
-                  height: 2.2,
-                  fontSize: 20,
+        return scrollVertical
+            ? Text.rich(
+                TextSpan(
+                  style: DefaultTextStyle.of(context).style,
+                  children: [
+                    TextSpan(
+                      text: model.recognizedText,
+                      style: TextStyle(
+                        backgroundColor: Colors.grey[100],
+                        height: 2.2,
+                        fontSize: 20,
+                      ),
+                    ),
+                    TextSpan(
+                      text: model.unrecognizedText,
+                      style: TextStyle(
+                        color: Colors.white,
+                        height: 2.2,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              TextSpan(
-                text: model.unrecognizedText,
-                style: TextStyle(
-                  color: Colors.white,
-                  height: 2.2,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-            ],
-          ),
-          key: _richTextKey,
-        );
+                key: _richTextKey,
+              )
+            : HorizontalText(model.unrecognizedText);
       },
     );
   }

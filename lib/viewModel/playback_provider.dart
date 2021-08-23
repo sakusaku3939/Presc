@@ -11,4 +11,13 @@ class PlaybackProvider with ChangeNotifier {
     _playFabState = state;
     notifyListeners();
   }
+
+  bool _scrollVertical = true;
+
+  bool get scrollVertical => _scrollVertical;
+
+  set scrollVertical(bool vertical) {
+    _scrollVertical = vertical;
+    notifyListeners();
+  }
 }

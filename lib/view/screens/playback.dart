@@ -42,14 +42,11 @@ class PlaybackScreen extends StatelessWidget {
               Column(
                 children: [
                   Expanded(
-                    child: Container(
-                      margin: const EdgeInsets.fromLTRB(32, 0, 32, 8),
-                      child: PlaybackTextView(
-                        context
-                            .read<ManuscriptProvider>()
-                            .scriptTable[index]
-                            .content,
-                      ),
+                    child: PlaybackTextView(
+                      context
+                          .read<ManuscriptProvider>()
+                          .scriptTable[index]
+                          .content,
                     ),
                   ),
                   Selector<PlaybackTimerProvider, String>(
@@ -135,7 +132,8 @@ class PlaybackScreen extends StatelessWidget {
                                   timer.stop();
                                   PlaybackTextView.reset(context);
                                   model.scrollController?.animateTo(
-                                    model.scrollController.position.maxScrollExtent,
+                                    model.scrollController.position
+                                        .maxScrollExtent,
                                     duration: Duration(milliseconds: 300),
                                     curve: Curves.ease,
                                   );
@@ -145,10 +143,20 @@ class PlaybackScreen extends StatelessWidget {
                             Container(
                               width: 48,
                               child: RippleIconButton(
-                                Icons.text_rotate_vertical,
+                                model.scrollVertical
+                                    ? Icons.text_rotate_vertical
+                                    : Icons.text_rotation_none,
                                 size: 28,
                                 color: Colors.white,
-                                onPressed: () => {},
+                                onPressed: () {
+                                  model.scrollVertical = !model.scrollVertical;
+                                  model.scrollController.jumpTo(
+                                    model.scrollVertical
+                                        ? 0
+                                        : model.scrollController.position
+                                            .maxScrollExtent,
+                                  );
+                                },
                               ),
                             ),
                           ],
