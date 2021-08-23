@@ -1,5 +1,6 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:presc/config/custom_color.dart';
 import 'package:presc/view/utils/drawer_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script_card.dart';
@@ -27,7 +28,7 @@ class ManuscriptHomeScreen extends StatelessWidget {
                 snap: true,
                 toolbarHeight: 64,
                 expandedHeight: 0,
-                backgroundColor: Color(0xFFF7F7F7),
+                backgroundColor: CustomColor.backgroundColor,
                 elevation: 0,
                 leading: Container(),
                 flexibleSpace: _appbar(context),
