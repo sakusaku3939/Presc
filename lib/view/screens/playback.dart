@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:presc/view/screens/setting.dart';
+import 'package:presc/view/utils/dialog_manager.dart';
 import 'package:presc/view/utils/playback_text_view.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
@@ -66,6 +67,20 @@ class PlaybackScreen extends StatelessWidget {
                     builder: (context, model, child) {
                       final speech = context.read<SpeechToTextProvider>();
                       final timer = context.read<PlaybackTimerProvider>();
+
+                      IconData scrollModeIcon;
+                      switch(model.scrollMode) {
+                        case ScrollMode.manual:
+                          scrollModeIcon = Icons.update_disabled;
+                          break;
+                        case ScrollMode.auto:
+                          scrollModeIcon = Icons.loop;
+                          break;
+                        case ScrollMode.recognition:
+                          scrollModeIcon = Icons.mic;
+                          break;
+                      }
+
                       return Padding(
                         padding: const EdgeInsets.fromLTRB(32, 12, 32, 24),
                         child: Row(
@@ -74,10 +89,44 @@ class PlaybackScreen extends StatelessWidget {
                             Container(
                               width: 48,
                               child: RippleIconButton(
-                                Icons.mic,
+                                scrollModeIcon,
                                 size: 28,
                                 color: Colors.white,
-                                onPressed: () => {},
+                                onPressed: () {
+                                  final change = (value) {
+                                    model.scrollMode = value;
+                                    Navigator.pop(context);
+                                  };
+                                  DialogManager.show(
+                                    context,
+                                    contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 12,
+                                    ),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        RadioListTile(
+                                          title: Text("手動スクロール"),
+                                          groupValue: model.scrollMode,
+                                          value: ScrollMode.manual,
+                                          onChanged: (value) => change(value),
+                                        ),
+                                        RadioListTile(
+                                          title: Text("自動スクロール"),
+                                          groupValue: model.scrollMode,
+                                          value: ScrollMode.auto,
+                                          onChanged: (value) => change(value),
+                                        ),
+                                        RadioListTile(
+                                          title: Text("音声認識"),
+                                          groupValue: model.scrollMode,
+                                          value: ScrollMode.recognition,
+                                          onChanged: (value) => change(value),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                             Container(
