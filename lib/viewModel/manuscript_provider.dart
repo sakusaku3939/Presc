@@ -91,9 +91,10 @@ class ManuscriptProvider with ChangeNotifier {
   Future<int> restoreFromTrash({@required int trashId}) async =>
       await _manager.restoreFromTrash(trashId: trashId);
 
-  Future<void> updateScriptTable() async {
+  Future<void> updateScriptTable({sort = false}) async {
     _scriptTable = await _manager.getAllScript(
       trash: state == ManuscriptState.trash,
+      sort: sort,
     );
     _currentScriptLength = _scriptTable.length;
     notifyListeners();
@@ -106,7 +107,7 @@ class ManuscriptProvider with ChangeNotifier {
 
   Future<void> notifyBack(BuildContext context) async {
     Navigator.pop(context);
-    await updateScriptTable();
+    await updateScriptTable(sort: true);
   }
 }
 

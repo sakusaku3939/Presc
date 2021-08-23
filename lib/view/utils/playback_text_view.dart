@@ -1,108 +1,131 @@
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
+import 'package:presc/view/utils/horizontal_text.dart';
+import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
 
 class PlaybackTextView extends StatelessWidget {
   PlaybackTextView(
     this.text, {
-    this.height,
-    this.scroll = true,
     this.gradientFraction = 0.2,
   });
 
-  static String content;
-
   final String text;
-  final double height;
-  final bool scroll;
   final double gradientFraction;
 
+  static String _content;
   final ScrollController _scrollController = ScrollController();
-  final GlobalKey _richTextKey = GlobalKey();
+  final GlobalKey _playbackTextKey = GlobalKey();
 
   static void reset(BuildContext context) {
     final provider = context.read<SpeechToTextProvider>();
     provider.recognizedText = "";
-    provider.unrecognizedText = content;
+    provider.unrecognizedText = _content;
   }
 
   @override
   Widget build(BuildContext context) {
     _init(context);
-    return Container(
-      height: height,
-      child: FadingEdgeScrollView.fromSingleChildScrollView(
-        gradientFractionOnStart: gradientFraction,
-        gradientFractionOnEnd: gradientFraction,
-        child: SingleChildScrollView(
-          physics: (scroll)
-              ? BouncingScrollPhysics()
-              : NeverScrollableScrollPhysics(),
-          controller: _scrollController,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 32),
-            child: _playbackText(),
+    return Selector<PlaybackProvider, bool>(
+      selector: (_, model) => model.scrollVertical,
+      builder: (context, scrollVertical, child) {
+        return FadingEdgeScrollView.fromSingleChildScrollView(
+          gradientFractionOnStart: gradientFraction,
+          gradientFractionOnEnd: gradientFraction,
+          child: SingleChildScrollView(
+            scrollDirection: scrollVertical ? Axis.vertical : Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            controller: _scrollController,
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: _playbackText(scrollVertical),
+            ),
           ),
-        ),
-      ),
-    );
-  }
-
-  void _init(BuildContext context) {
-    content = text;
-    reset(context);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollController.jumpTo(scroll ? 0 : 24);
-    });
-  }
-
-  Widget _playbackText() {
-    return Consumer<SpeechToTextProvider>(
-      builder: (context, model, child) {
-        _scrollRecognizedText(model.recognizedText);
-
-        return Text.rich(
-          TextSpan(
-            style: DefaultTextStyle.of(context).style,
-            children: [
-              TextSpan(
-                text: model.recognizedText,
-                style: TextStyle(
-                  backgroundColor: Colors.grey[100],
-                  height: 2.2,
-                  fontSize: 20,
-                ),
-              ),
-              TextSpan(
-                text: model.unrecognizedText,
-                style: TextStyle(
-                  color: Colors.white,
-                  height: 2.2,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-            ],
-          ),
-          key: _richTextKey,
         );
       },
     );
   }
 
-  void _scrollRecognizedText(String recognizedText) {
+  void _init(BuildContext context) {
+    _content = text;
+    reset(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = context.read<PlaybackProvider>();
+      provider.scrollController = _scrollController;
+      _scrollController.jumpTo(
+        provider.scrollVertical
+            ? 0
+            : _scrollController.position.maxScrollExtent,
+      );
+    });
+  }
+
+  Widget _playbackText(bool scrollVertical) {
+    return Consumer<SpeechToTextProvider>(
+      builder: (context, model, child) {
+        _scrollRecognizedText(context, model.recognizedText);
+        return scrollVertical
+            ? Text.rich(
+                TextSpan(
+                  style: DefaultTextStyle.of(context).style,
+                  children: [
+                    TextSpan(
+                      text: model.recognizedText,
+                      style: TextStyle(
+                        backgroundColor: Colors.grey[100],
+                        height: 2.2,
+                        fontSize: 20,
+                      ),
+                    ),
+                    TextSpan(
+                      text: model.unrecognizedText,
+                      style: TextStyle(
+                        color: Colors.white,
+                        height: 2.2,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+                key: _playbackTextKey,
+              )
+            : HorizontalText(
+                key: _playbackTextKey,
+                recognizedText: model.recognizedText,
+                unrecognizedText: model.unrecognizedText,
+              );
+      },
+    );
+  }
+
+  void _scrollRecognizedText(BuildContext context, String recognizedText) {
     if (recognizedText.isNotEmpty) {
-      final RenderBox box = _richTextKey.currentContext?.findRenderObject();
-      if (_scrollController.offset <
-          _scrollController.position.maxScrollExtent) {
-        _scrollController.animateTo(
+      final scroll = _scrollController;
+      final RenderBox box = _playbackTextKey.currentContext?.findRenderObject();
+      if (context.read<PlaybackProvider>().scrollVertical)
+        _scrollTo(
           _textHeight(recognizedText, box?.size?.width) - 88,
-          duration: Duration(milliseconds: 1000),
-          curve: Curves.ease,
+          limit: scroll.offset < scroll.position.maxScrollExtent,
         );
-      }
+      else
+        _scrollTo(
+          scroll.position.maxScrollExtent -
+              _textHeight(recognizedText, box?.size?.height) +
+              44,
+          limit: scroll.offset > 0,
+        );
     }
+  }
+
+  void _scrollTo(double offset, {bool limit}) {
+    if (limit)
+      _scrollController.animateTo(
+        offset,
+        duration: Duration(milliseconds: 1000),
+        curve: Curves.ease,
+      );
   }
 
   double _textHeight(String text, double textWidth) {

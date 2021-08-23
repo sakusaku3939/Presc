@@ -8,16 +8,13 @@ class TrashMoveManager {
     @required BuildContext context,
     @required ManuscriptProvider provider,
     @required int index,
-    String customMessage,
   }) async {
     final newId = await provider.moveToTrash(
       memoId: provider.scriptTable[index].id,
     );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          customMessage ?? "ごみ箱に移動しました",
-        ),
+        content: Text("ごみ箱に移動しました"),
         duration: const Duration(seconds: 3),
         action: SnackBarAction(
           label: "元に戻す",
@@ -27,6 +24,27 @@ class TrashMoveManager {
             provider.insertScriptItem(index);
           },
         ),
+      ),
+    );
+    provider.removeScriptItem(index);
+    await provider.updateScriptTable();
+  }
+
+  static Future<void> deleteEmpty({
+    @required BuildContext context,
+    @required ManuscriptProvider provider,
+    @required int index,
+  }) async {
+    final newId = await provider.moveToTrash(
+      memoId: provider.scriptTable[index].id,
+    );
+    await provider.deleteTrash(trashId: newId);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          "空の原稿を削除しました",
+        ),
+        duration: const Duration(seconds: 3),
       ),
     );
     provider.removeScriptItem(index);

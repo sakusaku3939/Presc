@@ -37,6 +37,7 @@ class SpeechToTextProvider with ChangeNotifier {
         }
       },
     );
+    notifyListeners();
   }
 
   void stop() => _manager.stop();

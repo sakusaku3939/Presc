@@ -25,5 +25,6 @@ class PlaybackTimerProvider with ChangeNotifier {
   void reset() {
     stop();
     _time = DateTime.utc(0, 0, 0);
+    notifyListeners();
   }
 }

@@ -42,14 +42,11 @@ class PlaybackScreen extends StatelessWidget {
               Column(
                 children: [
                   Expanded(
-                    child: Container(
-                      margin: const EdgeInsets.fromLTRB(32, 0, 32, 8),
-                      child: PlaybackTextView(
-                        context
-                            .read<ManuscriptProvider>()
-                            .scriptTable[index]
-                            .content,
-                      ),
+                    child: PlaybackTextView(
+                      context
+                          .read<ManuscriptProvider>()
+                          .scriptTable[index]
+                          .content,
                     ),
                   ),
                   Selector<PlaybackTimerProvider, String>(
@@ -67,6 +64,8 @@ class PlaybackScreen extends StatelessWidget {
                   ),
                   Consumer<PlaybackProvider>(
                     builder: (context, model, child) {
+                      final speech = context.read<SpeechToTextProvider>();
+                      final timer = context.read<PlaybackTimerProvider>();
                       return Padding(
                         padding: const EdgeInsets.fromLTRB(32, 12, 32, 24),
                         child: Row(
@@ -87,7 +86,19 @@ class PlaybackScreen extends StatelessWidget {
                                 Icons.skip_previous_outlined,
                                 size: 32,
                                 color: Colors.white,
-                                onPressed: () => {},
+                                onPressed: () {
+                                  model.playFabState = false;
+                                  speech.stop();
+                                  model.scrollVertical
+                                      ? timer.reset()
+                                      : timer.stop();
+                                  PlaybackTextView.reset(context);
+                                  model.scrollController?.animateTo(
+                                    0,
+                                    duration: Duration(milliseconds: 300),
+                                    curve: Curves.ease,
+                                  );
+                                },
                               ),
                             ),
                             Container(
@@ -99,11 +110,6 @@ class PlaybackScreen extends StatelessWidget {
                                       : Icon(Icons.play_arrow),
                                   onPressed: () {
                                     model.playFabState = !model.playFabState;
-                                    PlaybackTextView.reset(context);
-                                    final speech =
-                                        context.read<SpeechToTextProvider>();
-                                    final timer =
-                                        context.read<PlaybackTimerProvider>();
                                     if (model.playFabState) {
                                       speech.start(context);
                                       timer.start();
@@ -121,16 +127,43 @@ class PlaybackScreen extends StatelessWidget {
                                 Icons.skip_next_outlined,
                                 size: 32,
                                 color: Colors.white,
-                                onPressed: () => {},
+                                onPressed: () {
+                                  model.playFabState = false;
+                                  speech.stop();
+                                  timer.stop();
+                                  model.scrollVertical
+                                      ? timer.stop()
+                                      : timer.reset();
+                                  PlaybackTextView.reset(context);
+                                  model.scrollController?.animateTo(
+                                    model.scrollController.position
+                                        .maxScrollExtent,
+                                    duration: Duration(milliseconds: 300),
+                                    curve: Curves.ease,
+                                  );
+                                },
                               ),
                             ),
                             Container(
                               width: 48,
                               child: RippleIconButton(
-                                Icons.text_rotate_vertical,
+                                model.scrollVertical
+                                    ? Icons.text_rotate_vertical
+                                    : Icons.text_rotation_none,
                                 size: 28,
                                 color: Colors.white,
-                                onPressed: () => {},
+                                onPressed: () {
+                                  model.scrollVertical = !model.scrollVertical;
+                                  model.playFabState = false;
+                                  speech.stop();
+                                  timer.stop();
+                                  model.scrollController.jumpTo(
+                                    model.scrollVertical
+                                        ? 0
+                                        : model.scrollController.position
+                                            .maxScrollExtent,
+                                  );
+                                },
                               ),
                             ),
                           ],
