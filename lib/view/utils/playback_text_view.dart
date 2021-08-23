@@ -16,7 +16,7 @@ class PlaybackTextView extends StatelessWidget {
 
   static String _content;
   final ScrollController _scrollController = ScrollController();
-  final GlobalKey _richTextKey = GlobalKey();
+  final GlobalKey _playbackTextKey = GlobalKey();
 
   static void reset(BuildContext context) {
     final provider = context.read<SpeechToTextProvider>();
@@ -52,7 +52,7 @@ class PlaybackTextView extends StatelessWidget {
     reset(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider = context.read<PlaybackProvider>();
-      context.read<PlaybackProvider>().scrollController = _scrollController;
+      provider.scrollController = _scrollController;
       _scrollController.jumpTo(
         provider.scrollVertical
             ? 0
@@ -89,9 +89,13 @@ class PlaybackTextView extends StatelessWidget {
                     ),
                   ],
                 ),
-                key: _richTextKey,
+                key: _playbackTextKey,
               )
-            : HorizontalText(model.unrecognizedText);
+            : HorizontalText(
+                key: _playbackTextKey,
+                recognizedText: model.recognizedText,
+                unrecognizedText: model.unrecognizedText,
+              );
       },
     );
   }
@@ -99,15 +103,29 @@ class PlaybackTextView extends StatelessWidget {
   void _scrollRecognizedText(BuildContext context, String recognizedText) {
     if (recognizedText.isNotEmpty) {
       final scroll = _scrollController;
-      final RenderBox box = _richTextKey.currentContext?.findRenderObject();
-      if (scroll.offset < scroll.position.maxScrollExtent) {
-        scroll.animateTo(
+      final RenderBox box = _playbackTextKey.currentContext?.findRenderObject();
+      if (context.read<PlaybackProvider>().scrollVertical)
+        _scrollTo(
           _textHeight(recognizedText, box?.size?.width) - 88,
-          duration: Duration(milliseconds: 1000),
-          curve: Curves.ease,
+          limit: scroll.offset < scroll.position.maxScrollExtent,
         );
-      }
+      else
+        _scrollTo(
+          scroll.position.maxScrollExtent -
+              _textHeight(recognizedText, box?.size?.height) +
+              44,
+          limit: scroll.offset > 0,
+        );
     }
+  }
+
+  void _scrollTo(double offset, {bool limit}) {
+    if (limit)
+      _scrollController.animateTo(
+        offset,
+        duration: Duration(milliseconds: 1000),
+        curve: Curves.ease,
+      );
   }
 
   double _textHeight(String text, double textWidth) {

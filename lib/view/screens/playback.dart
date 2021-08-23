@@ -89,7 +89,9 @@ class PlaybackScreen extends StatelessWidget {
                                 onPressed: () {
                                   model.playFabState = false;
                                   speech.stop();
-                                  timer.reset();
+                                  model.scrollVertical
+                                      ? timer.reset()
+                                      : timer.stop();
                                   PlaybackTextView.reset(context);
                                   model.scrollController?.animateTo(
                                     0,
@@ -108,7 +110,6 @@ class PlaybackScreen extends StatelessWidget {
                                       : Icon(Icons.play_arrow),
                                   onPressed: () {
                                     model.playFabState = !model.playFabState;
-                                    PlaybackTextView.reset(context);
                                     if (model.playFabState) {
                                       speech.start(context);
                                       timer.start();
@@ -130,6 +131,9 @@ class PlaybackScreen extends StatelessWidget {
                                   model.playFabState = false;
                                   speech.stop();
                                   timer.stop();
+                                  model.scrollVertical
+                                      ? timer.stop()
+                                      : timer.reset();
                                   PlaybackTextView.reset(context);
                                   model.scrollController?.animateTo(
                                     model.scrollController.position
@@ -150,6 +154,9 @@ class PlaybackScreen extends StatelessWidget {
                                 color: Colors.white,
                                 onPressed: () {
                                   model.scrollVertical = !model.scrollVertical;
+                                  model.playFabState = false;
+                                  speech.stop();
+                                  timer.stop();
                                   model.scrollController.jumpTo(
                                     model.scrollVertical
                                         ? 0
