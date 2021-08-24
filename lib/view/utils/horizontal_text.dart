@@ -77,7 +77,7 @@ class HorizontalText extends StatelessWidget {
         Row(
           children: [
             _text(String.fromCharCode(rune), recognized: i - distance < 0),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
           ],
         ),
       );
