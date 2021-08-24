@@ -82,7 +82,11 @@ class PlaybackTextView extends StatelessWidget {
         return NotificationListener(
           onNotification: (notification) {
             if (model.scrollMode == ScrollMode.auto)
-              _returnToScroll(notification, model.playFabState);
+              _returnToScroll(
+                notification,
+                playFabState: model.playFabState,
+                scrollVertical: model.scrollVertical,
+              );
             return true;
           },
           child: FadingEdgeScrollView.fromSingleChildScrollView(
@@ -122,7 +126,7 @@ class PlaybackTextView extends StatelessWidget {
     @required bool scrollVertical,
     autoScroll = false,
   }) {
-    if (autoScroll) _autoScroll(playFabState);
+    if (autoScroll) _autoScroll(playFabState, scrollVertical);
     if (scrollVertical)
       return Text(
         _content,
@@ -137,35 +141,40 @@ class PlaybackTextView extends StatelessWidget {
       );
   }
 
-  void _autoScroll(bool playFabState) {
-    final speedFactor = 8;
+  void _autoScroll(bool playFabState, bool scrollVertical) {
+    final speedFactor = 10;
 
     if (_scrollController.hasClients) {
+      final offset = _scrollController.offset;
       final maxExtent = _scrollController.position.maxScrollExtent;
-      final distanceDifference = maxExtent - _scrollController.offset;
+      final distanceDifference = scrollVertical ? maxExtent - offset : offset;
       final durationDouble = distanceDifference / speedFactor;
 
-      if (distanceDifference <= 0)
-        return;
-      else if (playFabState)
+      if (distanceDifference <= 0) return;
+
+      if (playFabState)
         _scrollController?.animateTo(
-          _scrollController.position.maxScrollExtent,
+          scrollVertical ? maxExtent : 0,
           duration: Duration(seconds: durationDouble.toInt()),
           curve: Curves.linear,
         );
       else
         _scrollController.animateTo(
-          _scrollController.offset,
+          offset,
           duration: Duration(milliseconds: 1),
           curve: Curves.linear,
         );
     }
   }
 
-  void _returnToScroll(Notification notification, bool playFabState) {
+  void _returnToScroll(
+    Notification notification, {
+    @required bool playFabState,
+    @required bool scrollVertical,
+  }) {
     if (notification is ScrollEndNotification && playFabState) {
       Timer(Duration(seconds: 1), () {
-        _autoScroll(playFabState);
+        _autoScroll(playFabState, scrollVertical);
       });
     }
   }
