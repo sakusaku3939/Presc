@@ -107,18 +107,21 @@ class PlaybackScreen extends StatelessWidget {
                                       children: [
                                         RadioListTile(
                                           title: Text("手動スクロール"),
+                                          subtitle: Text("スクロールを行いません"),
                                           groupValue: model.scrollMode,
                                           value: ScrollMode.manual,
                                           onChanged: (value) => change(value),
                                         ),
                                         RadioListTile(
                                           title: Text("自動スクロール"),
+                                          subtitle: Text("一定の速度でスクロールします"),
                                           groupValue: model.scrollMode,
                                           value: ScrollMode.auto,
                                           onChanged: (value) => change(value),
                                         ),
                                         RadioListTile(
                                           title: Text("音声認識"),
+                                          subtitle: Text("認識した文字分だけスクロールします"),
                                           groupValue: model.scrollMode,
                                           value: ScrollMode.recognition,
                                           onChanged: (value) => change(value),
