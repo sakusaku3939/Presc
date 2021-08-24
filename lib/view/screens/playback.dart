@@ -69,7 +69,7 @@ class PlaybackScreen extends StatelessWidget {
                       IconData scrollModeIcon;
                       switch (model.scrollMode) {
                         case ScrollMode.manual:
-                          scrollModeIcon = Icons.update_disabled;
+                          scrollModeIcon = Icons.touch_app_outlined;
                           break;
                         case ScrollMode.auto:
                           scrollModeIcon = Icons.loop;
