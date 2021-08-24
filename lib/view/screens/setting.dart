@@ -2,7 +2,11 @@ import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:presc/config/playback_text_style.dart';
 import 'package:presc/config/sample_text.dart';
+import 'package:presc/view/utils/horizontal_text.dart';
+import 'package:presc/view/utils/radio_dialog_manager.dart';
 import 'package:presc/view/utils/ripple_button.dart';
+import 'package:presc/viewModel/playback_provider.dart';
+import 'package:provider/provider.dart';
 
 class SettingScreen extends StatelessWidget {
   @override
@@ -12,57 +16,79 @@ class SettingScreen extends StatelessWidget {
       appBar: _appbar(context),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _preview(),
-              _fontMenu(),
-              SizedBox(height: 8),
-              Ink(
-                color: Colors.white,
-                child: ListTile(
-                  title: Text("音声認識"),
-                  subtitle: Text("オン"),
-                  contentPadding: EdgeInsets.only(left: 32),
-                  onTap: () => {},
-                ),
-              ),
-              Ink(
-                color: Colors.white,
-                child: ListTile(
-                  title: Text("再生モード"),
-                  subtitle: Text("自動スクロール"),
-                  contentPadding: EdgeInsets.only(left: 32),
-                  onTap: () => {},
-                ),
-              ),
-              Ink(
-                color: Colors.white,
-                child: ListTile(
-                  title: Text("再生速度"),
-                  subtitle: Text("x 1.0"),
-                  contentPadding: EdgeInsets.only(left: 32),
-                  onTap: () => {},
-                ),
-              ),
-              SizedBox(height: 16),
-              Ink(
-                color: Colors.white,
-                child: ListTile(
-                  title: Text("このアプリについて"),
-                  contentPadding: EdgeInsets.only(left: 32),
-                  onTap: () => {},
-                ),
-              ),
-              Ink(
-                color: Colors.white,
-                child: ListTile(
-                  title: Text("オープンソースライセンス"),
-                  contentPadding: EdgeInsets.only(left: 32),
-                  onTap: () => {},
-                ),
-              ),
-              SizedBox(height: 32),
-            ],
+          child: Consumer<PlaybackProvider>(
+            builder: (context, model, child) {
+              return Column(
+                children: [
+                  model.scrollVertical
+                      ? _verticalPreview()
+                      : _horizontalPreview(),
+                  _fontMenu(),
+                  SizedBox(height: 8),
+                  Ink(
+                    color: Colors.white,
+                    child: ListTile(
+                      title: Text("書式の向き"),
+                      subtitle: Text(model.scrollVertical ? "横書き" : "縦書き"),
+                      contentPadding: EdgeInsets.only(left: 32),
+                      onTap: () => {
+                        RadioDialogManager.show(
+                          context,
+                          groupValue: model.scrollVertical,
+                          itemList: [
+                            RadioDialogItem(
+                              title: "横書き",
+                              value: true,
+                            ),
+                            RadioDialogItem(
+                              title: "縦書き",
+                              value: false,
+                            ),
+                          ],
+                          onChanged: (value) => model.scrollVertical = value,
+                        )
+                      },
+                    ),
+                  ),
+                  Ink(
+                    color: Colors.white,
+                    child: ListTile(
+                      title: Text("再生モード"),
+                      subtitle: Text("自動スクロール"),
+                      contentPadding: EdgeInsets.only(left: 32),
+                      onTap: () => {},
+                    ),
+                  ),
+                  Ink(
+                    color: Colors.white,
+                    child: ListTile(
+                      title: Text("再生速度"),
+                      subtitle: Text("x 1.0"),
+                      contentPadding: EdgeInsets.only(left: 32),
+                      onTap: () => {},
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Ink(
+                    color: Colors.white,
+                    child: ListTile(
+                      title: Text("このアプリについて"),
+                      contentPadding: EdgeInsets.only(left: 32),
+                      onTap: () => {},
+                    ),
+                  ),
+                  Ink(
+                    color: Colors.white,
+                    child: ListTile(
+                      title: Text("オープンソースライセンス"),
+                      contentPadding: EdgeInsets.only(left: 32),
+                      onTap: () => {},
+                    ),
+                  ),
+                  SizedBox(height: 32),
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -84,28 +110,55 @@ class SettingScreen extends StatelessWidget {
     );
   }
 
-  Widget _preview() {
+  Widget _verticalPreview() {
     final ScrollController scrollController = ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       scrollController.jumpTo(24);
     });
     return Container(
+      height: 200,
       padding: EdgeInsets.symmetric(horizontal: 32),
       color: Colors.grey[900],
-      child: Container(
-        height: 200,
-        child: FadingEdgeScrollView.fromSingleChildScrollView(
-          gradientFractionOnStart: 0.5,
-          gradientFractionOnEnd: 0.5,
-          child: SingleChildScrollView(
-            physics: NeverScrollableScrollPhysics(),
-            controller: scrollController,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 32),
-              child: Text(
-                SampleText.setting,
-                style: PlaybackTextStyle.unrecognized(PlaybackAxis.vertical),
-              ),
+      child: FadingEdgeScrollView.fromSingleChildScrollView(
+        gradientFractionOnStart: 0.5,
+        gradientFractionOnEnd: 0.5,
+        child: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
+          controller: scrollController,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 32),
+            child: Text(
+              SampleText.setting,
+              style: PlaybackTextStyle.unrecognized(PlaybackAxis.vertical),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _horizontalPreview() {
+    final ScrollController scrollController = ScrollController();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollController.jumpTo(scrollController.position.maxScrollExtent - 24);
+    });
+    return Container(
+      height: 200,
+      padding: EdgeInsets.symmetric(vertical: 8),
+      color: Colors.grey[900],
+      child: FadingEdgeScrollView.fromSingleChildScrollView(
+        gradientFractionOnStart: 0.3,
+        gradientFractionOnEnd: 0.3,
+        child: SingleChildScrollView(
+          physics: NeverScrollableScrollPhysics(),
+          controller: scrollController,
+          scrollDirection: Axis.horizontal,
+          child: Container(
+            height: 200,
+            padding: EdgeInsets.symmetric(horizontal: 32),
+            child: HorizontalText(
+              unrecognizedText: SampleText.setting,
+              recognizedText: "",
             ),
           ),
         ),

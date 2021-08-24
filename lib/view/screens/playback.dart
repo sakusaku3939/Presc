@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presc/view/screens/setting.dart';
-import 'package:presc/view/utils/dialog_manager.dart';
 import 'package:presc/view/utils/playback_text_view.dart';
+import 'package:presc/view/utils/radio_dialog_manager.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/playback_provider.dart';
@@ -90,45 +90,33 @@ class PlaybackScreen extends StatelessWidget {
                                 scrollModeIcon,
                                 size: 28,
                                 color: Colors.white,
-                                onPressed: () {
-                                  final change = (value) {
-                                    model.scrollMode = value;
-                                    model.playFabState = false;
-                                    playbackTextView.reset(context);
-                                    Navigator.pop(context);
-                                  };
-                                  DialogManager.show(
+                                onPressed: () => {
+                                  RadioDialogManager.show(
                                     context,
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      vertical: 12,
-                                    ),
-                                    content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        RadioListTile(
-                                          title: Text("手動スクロール"),
-                                          subtitle: Text("スクロールを行いません"),
-                                          groupValue: model.scrollMode,
-                                          value: ScrollMode.manual,
-                                          onChanged: (value) => change(value),
-                                        ),
-                                        RadioListTile(
-                                          title: Text("自動スクロール"),
-                                          subtitle: Text("一定の速度でスクロールします"),
-                                          groupValue: model.scrollMode,
-                                          value: ScrollMode.auto,
-                                          onChanged: (value) => change(value),
-                                        ),
-                                        RadioListTile(
-                                          title: Text("音声認識"),
-                                          subtitle: Text("認識した文字分だけスクロールします"),
-                                          groupValue: model.scrollMode,
-                                          value: ScrollMode.recognition,
-                                          onChanged: (value) => change(value),
-                                        ),
-                                      ],
-                                    ),
-                                  );
+                                    groupValue: model.scrollMode,
+                                    itemList: [
+                                      RadioDialogItem(
+                                        title: "手動スクロール",
+                                        subtitle: "スクロールを行いません",
+                                        value: ScrollMode.manual,
+                                      ),
+                                      RadioDialogItem(
+                                        title: "自動スクロール",
+                                        subtitle: "一定の速度でスクロールします",
+                                        value: ScrollMode.auto,
+                                      ),
+                                      RadioDialogItem(
+                                        title: "音声認識",
+                                        subtitle: "認識した文字分だけスクロールします",
+                                        value: ScrollMode.recognition,
+                                      ),
+                                    ],
+                                    onChanged: (value) {
+                                      model.scrollMode = value;
+                                      model.playFabState = false;
+                                      playbackTextView.reset(context);
+                                    },
+                                  )
                                 },
                               ),
                             ),
