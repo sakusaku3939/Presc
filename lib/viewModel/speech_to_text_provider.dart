@@ -33,7 +33,7 @@ class SpeechToTextProvider with ChangeNotifier {
             showSnackBar("ネットワークエラーが発生しました");
             break;
           case "error_busy":
-            showSnackBar("音声認識がビジー状態です");
+            showSnackBar("マイクがビジー状態です");
             break;
           default:
             showSnackBar("エラー: $error");
