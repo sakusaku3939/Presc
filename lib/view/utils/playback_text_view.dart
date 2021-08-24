@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:presc/config/playback_text_style.dart';
 import 'package:presc/view/utils/horizontal_text.dart';
 import 'package:presc/viewModel/playback_provider.dart';
+import 'package:presc/viewModel/playback_timer_provider.dart';
 import 'package:presc/viewModel/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -19,28 +22,81 @@ class PlaybackTextView extends StatelessWidget {
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _playbackTextKey = GlobalKey();
 
-  static void reset(BuildContext context) {
+  void stop(BuildContext context) {
+    final speech = context.read<SpeechToTextProvider>();
+    final timer = context.read<PlaybackTimerProvider>();
+    speech.stop();
+    timer.stop();
+  }
+
+  void reset(BuildContext context) {
+    stop(context);
     final provider = context.read<SpeechToTextProvider>();
     provider.recognizedText = "";
     provider.unrecognizedText = _content;
   }
 
+  void jumpTo(double value) => _scrollController.jumpTo(value);
+
+  void scrollToStart() => _scrollController.animateTo(
+        0,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.ease,
+      );
+
+  void scrollToEnd() => _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.ease,
+      );
+
   @override
   Widget build(BuildContext context) {
     _init(context);
-    return Selector<PlaybackProvider, bool>(
-      selector: (_, model) => model.scrollVertical,
-      builder: (context, scrollVertical, child) {
-        return FadingEdgeScrollView.fromSingleChildScrollView(
-          gradientFractionOnStart: gradientFraction,
-          gradientFractionOnEnd: gradientFraction,
-          child: SingleChildScrollView(
-            scrollDirection: scrollVertical ? Axis.vertical : Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            controller: _scrollController,
-            child: Padding(
-              padding: const EdgeInsets.all(32),
-              child: _playbackText(scrollVertical),
+    return Consumer<PlaybackProvider>(
+      builder: (context, model, child) {
+        Widget playbackText;
+        switch (model.scrollMode) {
+          case ScrollMode.manual:
+            playbackText = _textView(
+              playFabState: model.playFabState,
+              scrollVertical: model.scrollVertical,
+              autoScroll: false,
+            );
+            break;
+          case ScrollMode.auto:
+            playbackText = _textView(
+              playFabState: model.playFabState,
+              scrollVertical: model.scrollVertical,
+              autoScroll: true,
+            );
+            break;
+          case ScrollMode.recognition:
+            playbackText = _RecognizedTextView(
+              controller: _scrollController,
+              playbackTextKey: _playbackTextKey,
+              scrollVertical: model.scrollVertical,
+            );
+            break;
+        }
+        return NotificationListener(
+          onNotification: (notification) {
+            if (model.scrollMode == ScrollMode.auto)
+              _returnToScroll(notification, model.playFabState);
+            return true;
+          },
+          child: FadingEdgeScrollView.fromSingleChildScrollView(
+            gradientFractionOnStart: gradientFraction,
+            gradientFractionOnEnd: gradientFraction,
+            child: SingleChildScrollView(
+              scrollDirection:
+                  model.scrollVertical ? Axis.vertical : Axis.horizontal,
+              physics: const BouncingScrollPhysics(),
+              controller: _scrollController,
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: playbackText,
+              ),
             ),
           ),
         );
@@ -54,15 +110,80 @@ class PlaybackTextView extends StatelessWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider = context.read<PlaybackProvider>();
       provider.scrollController = _scrollController;
-      _scrollController.jumpTo(
-        provider.scrollVertical
-            ? 0
-            : _scrollController.position.maxScrollExtent,
-      );
+      if (provider.scrollVertical)
+        jumpTo(0);
+      else
+        jumpTo(_scrollController.position.maxScrollExtent);
     });
   }
 
-  Widget _playbackText(bool scrollVertical) {
+  Widget _textView({
+    @required bool playFabState,
+    @required bool scrollVertical,
+    autoScroll = false,
+  }) {
+    if (autoScroll) _autoScroll(playFabState);
+    if (scrollVertical)
+      return Text(
+        _content,
+        style: PlaybackTextStyle.unrecognized(PlaybackAxis.vertical),
+        key: _playbackTextKey,
+      );
+    else
+      return HorizontalText(
+        key: _playbackTextKey,
+        recognizedText: "",
+        unrecognizedText: _content,
+      );
+  }
+
+  void _autoScroll(bool playFabState) {
+    final speedFactor = 8;
+
+    if (_scrollController.hasClients) {
+      final maxExtent = _scrollController.position.maxScrollExtent;
+      final distanceDifference = maxExtent - _scrollController.offset;
+      final durationDouble = distanceDifference / speedFactor;
+
+      if (distanceDifference <= 0)
+        return;
+      else if (playFabState)
+        _scrollController?.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: Duration(seconds: durationDouble.toInt()),
+          curve: Curves.linear,
+        );
+      else
+        _scrollController.animateTo(
+          _scrollController.offset,
+          duration: Duration(milliseconds: 1),
+          curve: Curves.linear,
+        );
+    }
+  }
+
+  void _returnToScroll(Notification notification, bool playFabState) {
+    if (notification is ScrollEndNotification && playFabState) {
+      Timer(Duration(seconds: 1), () {
+        _autoScroll(playFabState);
+      });
+    }
+  }
+}
+
+class _RecognizedTextView extends StatelessWidget {
+  const _RecognizedTextView({
+    @required this.controller,
+    @required this.playbackTextKey,
+    @required this.scrollVertical,
+  });
+
+  final ScrollController controller;
+  final GlobalKey playbackTextKey;
+  final bool scrollVertical;
+
+  @override
+  Widget build(BuildContext context) {
     return Consumer<SpeechToTextProvider>(
       builder: (context, model, child) {
         _scrollRecognizedText(context, model.recognizedText);
@@ -81,11 +202,11 @@ class PlaybackTextView extends StatelessWidget {
                 ),
               ],
             ),
-            key: _playbackTextKey,
+            key: playbackTextKey,
           );
         else
           return HorizontalText(
-            key: _playbackTextKey,
+            key: playbackTextKey,
             recognizedText: model.recognizedText,
             unrecognizedText: model.unrecognizedText,
           );
@@ -95,8 +216,8 @@ class PlaybackTextView extends StatelessWidget {
 
   void _scrollRecognizedText(BuildContext context, String recognizedText) {
     if (recognizedText.isNotEmpty) {
-      final scroll = _scrollController;
-      final RenderBox box = _playbackTextKey.currentContext?.findRenderObject();
+      final scroll = controller;
+      final RenderBox box = playbackTextKey.currentContext?.findRenderObject();
       if (context.read<PlaybackProvider>().scrollVertical)
         _scrollTo(
           _textHeight(recognizedText, box?.size?.width) - 88,
@@ -114,7 +235,7 @@ class PlaybackTextView extends StatelessWidget {
 
   void _scrollTo(double offset, {bool limit}) {
     if (limit)
-      _scrollController.animateTo(
+      controller.animateTo(
         offset,
         duration: Duration(milliseconds: 1000),
         curve: Curves.ease,

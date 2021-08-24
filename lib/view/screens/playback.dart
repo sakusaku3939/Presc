@@ -22,6 +22,9 @@ class PlaybackScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final playbackTextView = PlaybackTextView(
+      context.read<ManuscriptProvider>().scriptTable[index].content,
+    );
     return WillPopScope(
       onWillPop: () {
         _back(context);
@@ -43,12 +46,7 @@ class PlaybackScreen extends StatelessWidget {
               Column(
                 children: [
                   Expanded(
-                    child: PlaybackTextView(
-                      context
-                          .read<ManuscriptProvider>()
-                          .scriptTable[index]
-                          .content,
-                    ),
+                    child: playbackTextView,
                   ),
                   Selector<PlaybackTimerProvider, String>(
                     selector: (_, model) => model.time,
@@ -69,7 +67,7 @@ class PlaybackScreen extends StatelessWidget {
                       final timer = context.read<PlaybackTimerProvider>();
 
                       IconData scrollModeIcon;
-                      switch(model.scrollMode) {
+                      switch (model.scrollMode) {
                         case ScrollMode.manual:
                           scrollModeIcon = Icons.update_disabled;
                           break;
@@ -95,6 +93,8 @@ class PlaybackScreen extends StatelessWidget {
                                 onPressed: () {
                                   final change = (value) {
                                     model.scrollMode = value;
+                                    model.playFabState = false;
+                                    playbackTextView.reset(context);
                                     Navigator.pop(context);
                                   };
                                   DialogManager.show(
@@ -139,16 +139,12 @@ class PlaybackScreen extends StatelessWidget {
                                 size: 32,
                                 color: Colors.white,
                                 onPressed: () {
-                                  model.playFabState = false;
-                                  speech.stop();
-                                  model.scrollVertical
-                                      ? timer.reset()
-                                      : timer.stop();
-                                  PlaybackTextView.reset(context);
-                                  model.scrollController?.animateTo(
-                                    0,
-                                    duration: Duration(milliseconds: 300),
-                                    curve: Curves.ease,
+                                  playbackTextView.reset(context);
+                                  playbackTextView.scrollToStart();
+                                  if (model.scrollVertical) timer.reset();
+                                  Future.delayed(
+                                    Duration(milliseconds: 300),
+                                    () => model.playFabState = false,
                                   );
                                 },
                               ),
@@ -163,11 +159,13 @@ class PlaybackScreen extends StatelessWidget {
                                   onPressed: () {
                                     model.playFabState = !model.playFabState;
                                     if (model.playFabState) {
-                                      speech.start(context);
+                                      if (model.scrollMode ==
+                                          ScrollMode.recognition) {
+                                        speech.start(context);
+                                      }
                                       timer.start();
                                     } else {
-                                      speech.stop();
-                                      timer.stop();
+                                      playbackTextView.stop(context);
                                     }
                                   },
                                 ),
@@ -180,18 +178,12 @@ class PlaybackScreen extends StatelessWidget {
                                 size: 32,
                                 color: Colors.white,
                                 onPressed: () {
-                                  model.playFabState = false;
-                                  speech.stop();
-                                  timer.stop();
-                                  model.scrollVertical
-                                      ? timer.stop()
-                                      : timer.reset();
-                                  PlaybackTextView.reset(context);
-                                  model.scrollController?.animateTo(
-                                    model.scrollController.position
-                                        .maxScrollExtent,
-                                    duration: Duration(milliseconds: 300),
-                                    curve: Curves.ease,
+                                  playbackTextView.reset(context);
+                                  playbackTextView.scrollToEnd();
+                                  if (!model.scrollVertical) timer.reset();
+                                  Future.delayed(
+                                    Duration(milliseconds: 300),
+                                    () => model.playFabState = false,
                                   );
                                 },
                               ),
@@ -207,8 +199,7 @@ class PlaybackScreen extends StatelessWidget {
                                 onPressed: () {
                                   model.scrollVertical = !model.scrollVertical;
                                   model.playFabState = false;
-                                  speech.stop();
-                                  timer.stop();
+                                  playbackTextView.stop(context);
                                   model.scrollController.jumpTo(
                                     model.scrollVertical
                                         ? 0
