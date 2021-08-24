@@ -1,5 +1,5 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:presc/config/custom_color.dart';
 import 'package:presc/view/utils/drawer_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script_card.dart';
@@ -27,10 +27,10 @@ class ManuscriptHomeScreen extends StatelessWidget {
                 snap: true,
                 toolbarHeight: 64,
                 expandedHeight: 0,
-                backgroundColor: Colors.transparent,
+                backgroundColor: CustomColor.backgroundColor,
                 elevation: 0,
                 leading: Container(),
-                flexibleSpace: _searchbar(context),
+                flexibleSpace: _appbar(context),
               ),
               SliverList(
                 delegate: SliverChildListDelegate([ScriptCard(context)]),
@@ -63,48 +63,44 @@ class ManuscriptHomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _searchbar(BuildContext context) {
+  Widget _appbar(BuildContext context) {
     return SafeArea(
-      child: Container(
-        margin: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-        decoration: cardShadow(8),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
-          child: OpenContainer(
-            openBuilder: (_, closeContainer) => ManuscriptSearchScreen(),
-            onClosed: (res) => {},
-            tappable: true,
-            closedElevation: 0,
-            closedBuilder: (_, openContainer) => GestureDetector(
-              onTap: openContainer,
-              child: Container(
-                margin: const EdgeInsets.only(left: 4),
-                child: Row(
-                  children: [
-                    RippleIconButton(
-                      Icons.menu,
-                      onPressed: () {
-                        context.read<EditableTagItemProvider>().loadTag();
-                        _scaffoldKey.currentState.openDrawer();
-                      },
-                    ),
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.only(left: 24),
-                        child: Text(
-                          "原稿を検索",
-                          style: TextStyle(
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          RippleIconButton(
+            Icons.menu,
+            onPressed: () {
+              context.read<EditableTagItemProvider>().loadTag();
+              _scaffoldKey.currentState.openDrawer();
+            },
+          ),
+          Container(
+            margin: const EdgeInsets.fromLTRB(0, 20, 8, 20),
+            child: Image.asset('assets/images/logo.png'),
+          ),
+          RippleIconButton(
+            Icons.search,
+            onPressed: () => Navigator.push(
+              context,
+              PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) =>
+                    ManuscriptSearchScreen(),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  return ZoomPageTransitionsBuilder().buildTransitions(
+                    MaterialPageRoute(
+                        builder: (context) => ManuscriptSearchScreen()),
+                    context,
+                    animation,
+                    secondaryAnimation,
+                    child,
+                  );
+                },
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

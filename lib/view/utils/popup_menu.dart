@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 
 class PopupMenu extends StatelessWidget {
-  PopupMenu(this.menuItem, {@required this.onSelected});
+  PopupMenu(
+    this.menuItem, {
+    this.offset = const Offset(0, 0),
+    this.icon,
+    this.size,
+    @required this.onSelected,
+  });
 
   final List<PopupMenuEntry<String>> menuItem;
+  final Offset offset;
+  final Icon icon;
+  final double size;
   final Function(String value) onSelected;
 
   @override
@@ -14,6 +23,9 @@ class PopupMenu extends StatelessWidget {
         child: Material(
           type: MaterialType.transparency,
           child: PopupMenuButton<String>(
+            offset: offset,
+            icon: icon,
+            iconSize: size,
             itemBuilder: (context) => menuItem,
             onSelected: onSelected,
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presc/view/screens/setting.dart';
 import 'package:presc/view/utils/playback_text_view.dart';
+import 'package:presc/view/utils/radio_dialog_manager.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/playback_provider.dart';
@@ -21,6 +22,9 @@ class PlaybackScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final playbackTextView = PlaybackTextView(
+      context.read<ManuscriptProvider>().scriptTable[index].content,
+    );
     return WillPopScope(
       onWillPop: () {
         _back(context);
@@ -42,12 +46,7 @@ class PlaybackScreen extends StatelessWidget {
               Column(
                 children: [
                   Expanded(
-                    child: PlaybackTextView(
-                      context
-                          .read<ManuscriptProvider>()
-                          .scriptTable[index]
-                          .content,
-                    ),
+                    child: playbackTextView,
                   ),
                   Selector<PlaybackTimerProvider, String>(
                     selector: (_, model) => model.time,
@@ -66,6 +65,20 @@ class PlaybackScreen extends StatelessWidget {
                     builder: (context, model, child) {
                       final speech = context.read<SpeechToTextProvider>();
                       final timer = context.read<PlaybackTimerProvider>();
+
+                      IconData scrollModeIcon;
+                      switch (model.scrollMode) {
+                        case ScrollMode.manual:
+                          scrollModeIcon = Icons.touch_app_outlined;
+                          break;
+                        case ScrollMode.auto:
+                          scrollModeIcon = Icons.loop;
+                          break;
+                        case ScrollMode.recognition:
+                          scrollModeIcon = Icons.mic;
+                          break;
+                      }
+
                       return Padding(
                         padding: const EdgeInsets.fromLTRB(32, 12, 32, 24),
                         child: Row(
@@ -74,10 +87,37 @@ class PlaybackScreen extends StatelessWidget {
                             Container(
                               width: 48,
                               child: RippleIconButton(
-                                Icons.mic,
+                                scrollModeIcon,
                                 size: 28,
                                 color: Colors.white,
-                                onPressed: () => {},
+                                onPressed: () => {
+                                  RadioDialogManager.show(
+                                    context,
+                                    groupValue: model.scrollMode,
+                                    itemList: [
+                                      RadioDialogItem(
+                                        title: "手動スクロール",
+                                        subtitle: "スクロールを行いません",
+                                        value: ScrollMode.manual,
+                                      ),
+                                      RadioDialogItem(
+                                        title: "自動スクロール",
+                                        subtitle: "一定の速度でスクロールします",
+                                        value: ScrollMode.auto,
+                                      ),
+                                      RadioDialogItem(
+                                        title: "音声認識",
+                                        subtitle: "認識した文字分だけスクロールします",
+                                        value: ScrollMode.recognition,
+                                      ),
+                                    ],
+                                    onChanged: (value) {
+                                      model.scrollMode = value;
+                                      model.playFabState = false;
+                                      playbackTextView.reset(context);
+                                    },
+                                  )
+                                },
                               ),
                             ),
                             Container(
@@ -87,16 +127,12 @@ class PlaybackScreen extends StatelessWidget {
                                 size: 32,
                                 color: Colors.white,
                                 onPressed: () {
-                                  model.playFabState = false;
-                                  speech.stop();
-                                  model.scrollVertical
-                                      ? timer.reset()
-                                      : timer.stop();
-                                  PlaybackTextView.reset(context);
-                                  model.scrollController?.animateTo(
-                                    0,
-                                    duration: Duration(milliseconds: 300),
-                                    curve: Curves.ease,
+                                  playbackTextView.reset(context);
+                                  playbackTextView.scrollToStart();
+                                  if (model.scrollVertical) timer.reset();
+                                  Future.delayed(
+                                    Duration(milliseconds: 300),
+                                    () => model.playFabState = false,
                                   );
                                 },
                               ),
@@ -111,11 +147,13 @@ class PlaybackScreen extends StatelessWidget {
                                   onPressed: () {
                                     model.playFabState = !model.playFabState;
                                     if (model.playFabState) {
-                                      speech.start(context);
+                                      if (model.scrollMode ==
+                                          ScrollMode.recognition) {
+                                        speech.start(context);
+                                      }
                                       timer.start();
                                     } else {
-                                      speech.stop();
-                                      timer.stop();
+                                      playbackTextView.stop(context);
                                     }
                                   },
                                 ),
@@ -128,18 +166,12 @@ class PlaybackScreen extends StatelessWidget {
                                 size: 32,
                                 color: Colors.white,
                                 onPressed: () {
-                                  model.playFabState = false;
-                                  speech.stop();
-                                  timer.stop();
-                                  model.scrollVertical
-                                      ? timer.stop()
-                                      : timer.reset();
-                                  PlaybackTextView.reset(context);
-                                  model.scrollController?.animateTo(
-                                    model.scrollController.position
-                                        .maxScrollExtent,
-                                    duration: Duration(milliseconds: 300),
-                                    curve: Curves.ease,
+                                  playbackTextView.reset(context);
+                                  playbackTextView.scrollToEnd();
+                                  if (!model.scrollVertical) timer.reset();
+                                  Future.delayed(
+                                    Duration(milliseconds: 300),
+                                    () => model.playFabState = false,
                                   );
                                 },
                               ),
@@ -155,8 +187,7 @@ class PlaybackScreen extends StatelessWidget {
                                 onPressed: () {
                                   model.scrollVertical = !model.scrollVertical;
                                   model.playFabState = false;
-                                  speech.stop();
-                                  timer.stop();
+                                  playbackTextView.stop(context);
                                   model.scrollController.jumpTo(
                                     model.scrollVertical
                                         ? 0

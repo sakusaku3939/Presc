@@ -85,8 +85,7 @@ class DrawerMenu extends StatelessWidget {
                     "タグ一覧",
                     textAlign: TextAlign.left,
                     style: TextStyle(
-                      color: Theme.of(context).accentColor,
-                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[600],
                       fontSize: 12,
                     ),
                   ),

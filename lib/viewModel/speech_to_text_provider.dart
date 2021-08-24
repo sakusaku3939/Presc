@@ -30,10 +30,14 @@ class SpeechToTextProvider with ChangeNotifier {
             showSnackBar("音声認識が利用できません");
             break;
           case "error_network":
-            showSnackBar("ネットワークエラー");
+            showSnackBar("ネットワークエラーが発生しました");
+            break;
+          case "error_busy":
+            showSnackBar("マイクがビジー状態です");
             break;
           default:
             showSnackBar("エラー: $error");
+            break;
         }
       },
     );

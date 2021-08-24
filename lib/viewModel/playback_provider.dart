@@ -12,6 +12,15 @@ class PlaybackProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  ScrollMode _scrollMode = ScrollMode.recognition;
+
+  ScrollMode get scrollMode => _scrollMode;
+
+  set scrollMode(ScrollMode mode) {
+    _scrollMode = mode;
+    notifyListeners();
+  }
+
   bool _scrollVertical = true;
 
   bool get scrollVertical => _scrollVertical;
@@ -20,4 +29,10 @@ class PlaybackProvider with ChangeNotifier {
     _scrollVertical = vertical;
     notifyListeners();
   }
+}
+
+enum ScrollMode {
+  manual,
+  auto,
+  recognition,
 }

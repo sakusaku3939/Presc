@@ -94,49 +94,74 @@ class ManuscriptFilterScreen extends StatelessWidget {
           onSelected: (value) {
             switch (value) {
               case "change":
+                final controller = TextEditingController.fromValue(
+                  TextEditingValue(
+                    text: model.currentTagTable.tagName,
+                    selection: TextSelection.collapsed(
+                      offset: model.currentTagTable.tagName.length,
+                    ),
+                  ),
+                );
                 DialogManager.show(
                   context,
-                  content: TextField(
-                    decoration: InputDecoration(
-                      hintText: "ここにタグ名を入力",
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Theme.of(context).accentColor,
+                  contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
+                  content: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "タグ",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[700],
                         ),
                       ),
-                    ),
-                    controller: TextEditingController.fromValue(
-                      TextEditingValue(
-                        text: model.currentTagTable.tagName,
-                        selection: TextSelection.collapsed(
-                          offset: model.currentTagTable.tagName.length,
-                        ),
-                      ),
-                    ),
-                    autofocus: true,
-                    cursorColor: Theme.of(context).accentColor,
-                    onSubmitted: (text) async {
-                      if (text.trim().isNotEmpty) {
-                        await tagItemProvider.updateTag(
-                          model.currentTagTable.id,
-                          text,
-                        );
-                        model.currentTagTable = TagTable(
-                          id: model.currentTagTable.id,
-                          tagName: text,
-                        );
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              "タグを更新しました",
+                      TextField(
+                        decoration: InputDecoration(
+                          hintText: "ここに名前を入力",
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Theme.of(context).accentColor,
                             ),
-                            duration: const Duration(seconds: 2),
                           ),
-                        );
-                      }
-                    },
+                        ),
+                        controller: controller,
+                        autofocus: true,
+                        cursorColor: Theme.of(context).accentColor,
+                      ),
+                    ],
                   ),
+                  actions: [
+                    DialogTextButton(
+                      "キャンセル",
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    DialogTextButton(
+                      "変更",
+                      onPressed: () async {
+                        final text = controller.text;
+                        if (text.trim().isNotEmpty) {
+                          await tagItemProvider.updateTag(
+                            model.currentTagTable.id,
+                            text,
+                          );
+                          model.currentTagTable = TagTable(
+                            id: model.currentTagTable.id,
+                            tagName: text,
+                          );
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                "タグを更新しました",
+                              ),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ],
                 );
                 break;
               case "delete":

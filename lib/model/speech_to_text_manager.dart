@@ -52,14 +52,16 @@ class SpeechToTextManager {
 
   Future<void> stop({bool log = true}) async {
     _isStopFlagValid = true;
-    await _speech.stop();
-    if (log) print("stop recognition");
+    if (_speech.isListening) {
+      await _speech.stop();
+      if (log) print("stop recognition");
+    }
   }
 
   Future<void> restart() async {
     await stop(log: false);
     Timer(
-      Duration(milliseconds: 400),
+      Duration(milliseconds: 500),
       () => speak(
         resultListener: this.resultListener,
         errorListener: this.errorListener,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presc/config/playback_text_style.dart';
 
 class HorizontalText extends StatelessWidget {
   HorizontalText({
@@ -49,7 +50,9 @@ class HorizontalText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final length = recognizedText.replaceAll('\n', '').length;
+    final length = recognizedText
+        .replaceAll('\n', '')
+        .length;
     final split = (recognizedText + unrecognizedText).split("\n");
 
     List<Widget> list = [];
@@ -74,7 +77,7 @@ class HorizontalText extends StatelessWidget {
         Row(
           children: [
             _text(String.fromCharCode(rune), recognized: i - distance < 0),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
           ],
         ),
       );
@@ -90,17 +93,8 @@ class HorizontalText extends StatelessWidget {
 
   Widget _text(String char, {bool recognized = false}) {
     final style = recognized
-        ? TextStyle(
-            backgroundColor: Colors.grey[100],
-            height: 1.3,
-            fontSize: 20,
-          )
-        : TextStyle(
-            color: Colors.white,
-            height: 1.3,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          );
+        ? PlaybackTextStyle.recognized(PlaybackAxis.horizontal)
+        : PlaybackTextStyle.unrecognized(PlaybackAxis.horizontal);
     if (_punctuation.contains(char)) {
       return RotatedBox(
         quarterTurns: -2,

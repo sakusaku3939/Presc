@@ -65,7 +65,7 @@ class ScriptCard extends StatelessWidget {
 
   Widget _scriptListView(ManuscriptProvider model) {
     return Container(
-      margin: const EdgeInsets.only(top: 16),
+      margin: EdgeInsets.only(top: model.state == ManuscriptState.home ? 8 : 12),
       child: AnimatedList(
         key: model.listKey,
         shrinkWrap: true,
