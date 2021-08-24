@@ -59,7 +59,7 @@ class SpeechToTextManager {
   Future<void> restart() async {
     await stop(log: false);
     Timer(
-      Duration(milliseconds: 400),
+      Duration(milliseconds: 500),
       () => speak(
         resultListener: this.resultListener,
         errorListener: this.errorListener,
