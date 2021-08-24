@@ -37,6 +37,7 @@ class SpeechToTextProvider with ChangeNotifier {
             break;
           default:
             showSnackBar("エラー: $error");
+            break;
         }
       },
     );
