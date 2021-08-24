@@ -54,9 +54,36 @@ class SettingScreen extends StatelessWidget {
                     color: Colors.white,
                     child: ListTile(
                       title: Text("再生モード"),
-                      subtitle: Text("自動スクロール"),
+                      subtitle: Text(
+                        model.scrollMode == ScrollMode.manual
+                            ? "手動スクロール"
+                            : model.scrollMode == ScrollMode.auto
+                                ? "自動スクロール"
+                                : "音声認識",
+                      ),
                       contentPadding: EdgeInsets.only(left: 32),
-                      onTap: () => {},
+                      onTap: () => RadioDialogManager.show(
+                        context,
+                        groupValue: model.scrollMode,
+                        itemList: [
+                          RadioDialogItem(
+                            title: "手動スクロール",
+                            subtitle: "スクロールを行いません",
+                            value: ScrollMode.manual,
+                          ),
+                          RadioDialogItem(
+                            title: "自動スクロール",
+                            subtitle: "一定の速度でスクロールします",
+                            value: ScrollMode.auto,
+                          ),
+                          RadioDialogItem(
+                            title: "音声認識",
+                            subtitle: "認識した文字分だけスクロールします",
+                            value: ScrollMode.recognition,
+                          ),
+                        ],
+                        onChanged: (value) => model.scrollMode = value,
+                      ),
                     ),
                   ),
                   Ink(
