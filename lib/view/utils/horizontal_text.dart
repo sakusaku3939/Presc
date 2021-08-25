@@ -96,9 +96,8 @@ class HorizontalText extends StatelessWidget {
   }
 
   Widget _text(BuildContext context, String char, {bool recognized = false}) {
-    final style = recognized
-        ? PlaybackTextStyle.of(context.read<PlaybackProvider>()).recognized
-        : PlaybackTextStyle.of(context.read<PlaybackProvider>()).unrecognized;
+    final config = PlaybackTextStyle.of(context.read<PlaybackProvider>());
+    final style = recognized ? config.recognized : config.unrecognized;
     if (_punctuation.contains(char)) {
       return RotatedBox(
         quarterTurns: -2,
