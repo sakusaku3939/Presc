@@ -15,14 +15,19 @@ class PlaybackTextStyle {
 
   TextStyle get recognized => TextStyle(
         backgroundColor: Colors.grey[100],
-        height: _model.fontHeight - (_model.scrollVertical ? 0 : 1.0),
+        height: _model.scrollVertical ? _model.fontHeight : 1.2,
         fontSize: _model.fontSize.toDouble(),
       );
 
   TextStyle get unrecognized => TextStyle(
         color: Colors.white,
-        height: _model.fontHeight - (_model.scrollVertical ? 0 : 1.0),
+        height: _model.scrollVertical ? _model.fontHeight : 1.2,
         fontWeight: FontWeight.bold,
         fontSize: _model.fontSize.toDouble(),
       );
+
+  TextStyle get calculation => TextStyle(
+    height: _model.fontHeight,
+    fontSize: _model.fontSize.toDouble(),
+  );
 }

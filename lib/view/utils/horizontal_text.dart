@@ -70,6 +70,7 @@ class HorizontalText extends StatelessWidget {
   }
 
   Widget _textWrap(BuildContext context, Runes runes, int distance) {
+    final provider = context.read<PlaybackProvider>();
     int i = 0;
     List<Widget> list = [];
     for (var rune in runes) {
@@ -77,11 +78,14 @@ class HorizontalText extends StatelessWidget {
         Row(
           children: [
             _text(
-              context,
+              provider,
               String.fromCharCode(rune),
               recognized: i - distance < 0,
             ),
-            const SizedBox(width: 16),
+            SizedBox(
+              width:
+                  provider.fontHeight * provider.fontSize - provider.fontSize,
+            ),
           ],
         ),
       );
@@ -95,8 +99,9 @@ class HorizontalText extends StatelessWidget {
     );
   }
 
-  Widget _text(BuildContext context, String char, {bool recognized = false}) {
-    final config = PlaybackTextStyle.of(context.read<PlaybackProvider>());
+  Widget _text(PlaybackProvider provider, String char,
+      {bool recognized = false}) {
+    final config = PlaybackTextStyle.of(provider);
     final style = recognized ? config.recognized : config.unrecognized;
     if (_punctuation.contains(char)) {
       return RotatedBox(

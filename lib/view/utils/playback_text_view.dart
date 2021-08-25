@@ -215,8 +215,7 @@ class _RecognizedTextView extends StatelessWidget {
       else
         _scrollTo(
           scroll.position.maxScrollExtent -
-              _textHeight(recognizedText, box?.size?.height) +
-              44,
+              _textHeight(recognizedText, box?.size?.height),
           limit: scroll.offset > 0,
         );
     }
@@ -235,7 +234,7 @@ class _RecognizedTextView extends StatelessWidget {
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
         text: text.replaceAll('\n', ''),
-        style: PlaybackTextStyle.of(playbackProvider).recognized,
+        style: PlaybackTextStyle.of(playbackProvider).calculation,
       ),
       textDirection: TextDirection.ltr,
       maxLines: 1,
