@@ -1,7 +1,7 @@
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:presc/config/playback_text_style.dart';
-import 'package:presc/config/sample_text.dart';
+import 'package:presc/config/sample_text_config.dart';
 import 'package:presc/config/scroll_speed_config.dart';
 import 'package:presc/view/utils/horizontal_text.dart';
 import 'package:presc/view/utils/radio_dialog_manager.dart';
@@ -169,7 +169,7 @@ class SettingScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 32),
             child: Text(
-              SampleText.setting,
+              SampleTextConfig.setting,
               style: PlaybackTextStyle.unrecognized(PlaybackAxis.vertical),
             ),
           ),
@@ -198,7 +198,7 @@ class SettingScreen extends StatelessWidget {
             height: 200,
             padding: EdgeInsets.symmetric(horizontal: 32),
             child: HorizontalText(
-              unrecognizedText: SampleText.setting,
+              unrecognizedText: SampleTextConfig.setting,
               recognizedText: "",
             ),
           ),

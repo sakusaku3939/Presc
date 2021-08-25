@@ -1,4 +1,4 @@
-class SampleText {
+class SampleTextConfig {
   static const String sampleTitle = "吾輩は猫である";
 
   static const String sampleContent = "吾輩は猫である。名前はまだ無い。\n"
