@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:presc/config/playback_text_style.dart';
+import 'package:presc/config/scroll_speed_config.dart';
 import 'package:presc/view/utils/horizontal_text.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
@@ -58,35 +59,23 @@ class PlaybackTextView extends StatelessWidget {
         Widget playbackText;
         switch (model.scrollMode) {
           case ScrollMode.manual:
-            playbackText = _textView(
-              playFabState: model.playFabState,
-              scrollVertical: model.scrollVertical,
-              autoScroll: false,
-            );
+            playbackText = _textView(model, autoScroll: false);
             break;
           case ScrollMode.auto:
-            playbackText = _textView(
-              playFabState: model.playFabState,
-              scrollVertical: model.scrollVertical,
-              autoScroll: true,
-            );
+            playbackText = _textView(model, autoScroll: true);
             break;
           case ScrollMode.recognition:
             playbackText = _RecognizedTextView(
+              playbackProvider: model,
               controller: _scrollController,
               playbackTextKey: _playbackTextKey,
-              scrollVertical: model.scrollVertical,
             );
             break;
         }
         return NotificationListener(
           onNotification: (notification) {
             if (model.scrollMode == ScrollMode.auto)
-              _returnToScroll(
-                notification,
-                playFabState: model.playFabState,
-                scrollVertical: model.scrollVertical,
-              );
+              _returnToScroll(notification, model);
             return true;
           },
           child: FadingEdgeScrollView.fromSingleChildScrollView(
@@ -121,16 +110,12 @@ class PlaybackTextView extends StatelessWidget {
     });
   }
 
-  Widget _textView({
-    @required bool playFabState,
-    @required bool scrollVertical,
-    autoScroll = false,
-  }) {
-    if (autoScroll) _autoScroll(playFabState, scrollVertical);
-    if (scrollVertical)
+  Widget _textView(PlaybackProvider model, {autoScroll = false}) {
+    if (autoScroll) _autoScroll(model);
+    if (model.scrollVertical)
       return Text(
         _content,
-        style: PlaybackTextStyle.unrecognized(PlaybackAxis.vertical),
+        style: PlaybackTextStyle.of(model).unrecognized,
         key: _playbackTextKey,
       );
     else
@@ -141,20 +126,19 @@ class PlaybackTextView extends StatelessWidget {
       );
   }
 
-  void _autoScroll(bool playFabState, bool scrollVertical) {
-    final speedFactor = 10;
-
+  void _autoScroll(PlaybackProvider model) {
     if (_scrollController.hasClients) {
+      final speed = ScrollSpeedConfig.kSpeed * model.scrollSpeedMagnification;
       final offset = _scrollController.offset;
       final maxExtent = _scrollController.position.maxScrollExtent;
-      final distanceDifference = scrollVertical ? maxExtent - offset : offset;
-      final durationDouble = distanceDifference / speedFactor;
+      final distance = model.scrollVertical ? maxExtent - offset : offset;
+      final durationDouble = distance / speed;
 
-      if (distanceDifference <= 0) return;
+      if (distance <= 0) return;
 
-      if (playFabState)
+      if (model.playFabState)
         _scrollController?.animateTo(
-          scrollVertical ? maxExtent : 0,
+          model.scrollVertical ? maxExtent : 0,
           duration: Duration(seconds: durationDouble.toInt()),
           curve: Curves.linear,
         );
@@ -167,14 +151,10 @@ class PlaybackTextView extends StatelessWidget {
     }
   }
 
-  void _returnToScroll(
-    Notification notification, {
-    @required bool playFabState,
-    @required bool scrollVertical,
-  }) {
-    if (notification is ScrollEndNotification && playFabState) {
+  void _returnToScroll(Notification notification, PlaybackProvider model) {
+    if (notification is ScrollEndNotification && model.playFabState) {
       Timer(Duration(seconds: 1), () {
-        _autoScroll(playFabState, scrollVertical);
+        _autoScroll(model);
       });
     }
   }
@@ -182,32 +162,32 @@ class PlaybackTextView extends StatelessWidget {
 
 class _RecognizedTextView extends StatelessWidget {
   const _RecognizedTextView({
+    @required this.playbackProvider,
     @required this.controller,
     @required this.playbackTextKey,
-    @required this.scrollVertical,
   });
 
+  final PlaybackProvider playbackProvider;
   final ScrollController controller;
   final GlobalKey playbackTextKey;
-  final bool scrollVertical;
 
   @override
   Widget build(BuildContext context) {
     return Consumer<SpeechToTextProvider>(
       builder: (context, model, child) {
         _scrollRecognizedText(context, model.recognizedText);
-        if (scrollVertical)
+        if (playbackProvider.scrollVertical)
           return Text.rich(
             TextSpan(
               style: DefaultTextStyle.of(context).style,
               children: [
                 TextSpan(
                   text: model.recognizedText,
-                  style: PlaybackTextStyle.recognized(PlaybackAxis.vertical),
+                  style: PlaybackTextStyle.of(playbackProvider).recognized,
                 ),
                 TextSpan(
                   text: model.unrecognizedText,
-                  style: PlaybackTextStyle.unrecognized(PlaybackAxis.vertical),
+                  style: PlaybackTextStyle.of(playbackProvider).unrecognized,
                 ),
               ],
             ),
@@ -255,7 +235,7 @@ class _RecognizedTextView extends StatelessWidget {
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
         text: text.replaceAll('\n', ''),
-        style: PlaybackTextStyle.recognized(PlaybackAxis.vertical),
+        style: PlaybackTextStyle.of(playbackProvider).recognized,
       ),
       textDirection: TextDirection.ltr,
       maxLines: 1,

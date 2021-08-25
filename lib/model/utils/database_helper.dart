@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:path/path.dart';
-import 'package:presc/config/sample_text.dart';
+import 'package:presc/config/sample_text_config.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -153,8 +153,8 @@ class DatabaseHelper {
         MemoTable.name,
         MemoTable(
           id: 1,
-          title: SampleText.sampleTitle,
-          content: SampleText.sampleContent,
+          title: SampleTextConfig.sampleTitle,
+          content: SampleTextConfig.sampleContent,
           date: DateTime.now(),
         ).toMap(),
       ),

@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:presc/viewModel/playback_provider.dart';
 
 class PlaybackTextStyle {
-  static TextStyle recognized(PlaybackAxis axis) => TextStyle(
+  static PlaybackTextStyle _instance;
+  static PlaybackProvider _model;
+
+  PlaybackTextStyle._();
+
+  factory PlaybackTextStyle.of(PlaybackProvider model) {
+    _model = model;
+    _instance ??= PlaybackTextStyle._();
+    return _instance;
+  }
+
+  TextStyle get recognized => TextStyle(
         backgroundColor: Colors.grey[100],
-        height: axis == PlaybackAxis.vertical ? 2.2 : 1.3,
-        fontSize: 20,
+        height: _model.fontHeight - (_model.scrollVertical ? 0 : 1.0),
+        fontSize: _model.fontSize.toDouble(),
       );
 
-  static TextStyle unrecognized(PlaybackAxis axis) => TextStyle(
-    color: Colors.white,
-    height: axis == PlaybackAxis.vertical ? 2.2 : 1.3,
-    fontWeight: FontWeight.bold,
-    fontSize: 20,
-  );
-}
-
-enum PlaybackAxis {
-  vertical,
-  horizontal,
+  TextStyle get unrecognized => TextStyle(
+        color: Colors.white,
+        height: _model.fontHeight - (_model.scrollVertical ? 0 : 1.0),
+        fontWeight: FontWeight.bold,
+        fontSize: _model.fontSize.toDouble(),
+      );
 }
