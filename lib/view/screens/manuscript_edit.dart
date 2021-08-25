@@ -70,12 +70,14 @@ class ManuscriptEditScreen extends StatelessWidget {
         floatingActionButton: SafeArea(
           child: FloatingActionButton(
             onPressed: () async {
-              if (_provider.state != ManuscriptState.trash)
+              if (_provider.state != ManuscriptState.trash) {
                 await _provider.updateScriptTable();
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => PlaybackScreen(index)),
-              );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PlaybackScreen(index)),
+                );
+              }
             },
             child: Icon(Icons.play_arrow),
           ),
