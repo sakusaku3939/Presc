@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:presc/config/playback_style_config.dart';
 
 class PlaybackProvider with ChangeNotifier {
   ScrollController scrollController;
