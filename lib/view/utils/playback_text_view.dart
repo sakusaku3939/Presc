@@ -66,9 +66,9 @@ class PlaybackTextView extends StatelessWidget {
             break;
           case ScrollMode.recognition:
             playbackText = _RecognizedTextView(
+              playbackProvider: model,
               controller: _scrollController,
               playbackTextKey: _playbackTextKey,
-              scrollVertical: model.scrollVertical,
             );
             break;
         }
@@ -115,7 +115,7 @@ class PlaybackTextView extends StatelessWidget {
     if (model.scrollVertical)
       return Text(
         _content,
-        style: PlaybackTextStyle.unrecognized(PlaybackAxis.vertical),
+        style: PlaybackTextStyle.of(model).unrecognized,
         key: _playbackTextKey,
       );
     else
@@ -162,32 +162,32 @@ class PlaybackTextView extends StatelessWidget {
 
 class _RecognizedTextView extends StatelessWidget {
   const _RecognizedTextView({
+    @required this.playbackProvider,
     @required this.controller,
     @required this.playbackTextKey,
-    @required this.scrollVertical,
   });
 
+  final PlaybackProvider playbackProvider;
   final ScrollController controller;
   final GlobalKey playbackTextKey;
-  final bool scrollVertical;
 
   @override
   Widget build(BuildContext context) {
     return Consumer<SpeechToTextProvider>(
       builder: (context, model, child) {
         _scrollRecognizedText(context, model.recognizedText);
-        if (scrollVertical)
+        if (playbackProvider.scrollVertical)
           return Text.rich(
             TextSpan(
               style: DefaultTextStyle.of(context).style,
               children: [
                 TextSpan(
                   text: model.recognizedText,
-                  style: PlaybackTextStyle.recognized(PlaybackAxis.vertical),
+                  style: PlaybackTextStyle.of(playbackProvider).recognized,
                 ),
                 TextSpan(
                   text: model.unrecognizedText,
-                  style: PlaybackTextStyle.unrecognized(PlaybackAxis.vertical),
+                  style: PlaybackTextStyle.of(playbackProvider).unrecognized,
                 ),
               ],
             ),
@@ -235,7 +235,7 @@ class _RecognizedTextView extends StatelessWidget {
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
         text: text.replaceAll('\n', ''),
-        style: PlaybackTextStyle.recognized(PlaybackAxis.vertical),
+        style: PlaybackTextStyle.of(playbackProvider).recognized,
       ),
       textDirection: TextDirection.ltr,
       maxLines: 1,

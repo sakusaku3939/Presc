@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presc/config/playback_style_config.dart';
 
 class PlaybackProvider with ChangeNotifier {
   ScrollController scrollController;
@@ -36,6 +37,15 @@ class PlaybackProvider with ChangeNotifier {
 
   set scrollSpeedMagnification(double value) {
     _scrollSpeedMagnification = value;
+    notifyListeners();
+  }
+
+  int _fontSize = 20;
+
+  int get fontSize => _fontSize;
+
+  set fontSize(int size) {
+    _fontSize = size;
     notifyListeners();
   }
 }

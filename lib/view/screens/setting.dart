@@ -1,5 +1,7 @@
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:presc/config/playback_style_config.dart';
 import 'package:presc/config/playback_text_style.dart';
 import 'package:presc/config/sample_text_config.dart';
 import 'package:presc/config/scroll_speed_config.dart';
@@ -22,9 +24,9 @@ class SettingScreen extends StatelessWidget {
               return Column(
                 children: [
                   model.scrollVertical
-                      ? _verticalPreview()
+                      ? _verticalPreview(model)
                       : _horizontalPreview(),
-                  _fontMenu(),
+                  _menu(context, model),
                   SizedBox(height: 8),
                   Ink(
                     color: Colors.white,
@@ -151,7 +153,7 @@ class SettingScreen extends StatelessWidget {
     );
   }
 
-  Widget _verticalPreview() {
+  Widget _verticalPreview(PlaybackProvider model) {
     final ScrollController scrollController = ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       scrollController.jumpTo(24);
@@ -170,7 +172,7 @@ class SettingScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 32),
             child: Text(
               SampleTextConfig.setting,
-              style: PlaybackTextStyle.unrecognized(PlaybackAxis.vertical),
+              style: PlaybackTextStyle.of(model).unrecognized,
             ),
           ),
         ),
@@ -207,7 +209,7 @@ class SettingScreen extends StatelessWidget {
     );
   }
 
-  Widget _fontMenu() {
+  Widget _menu(BuildContext context, PlaybackProvider model) {
     return Container(
       height: 40,
       color: Colors.white,
@@ -215,9 +217,33 @@ class SettingScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           TextButton.icon(
-            onPressed: () => {},
+            onPressed: () => {
+              showCupertinoModalPopup(
+                context: context,
+                builder: (context) {
+                  return Container(
+                    height: 180,
+                    color: Colors.white,
+                    child: CupertinoPicker(
+                      itemExtent: 32,
+                      scrollController: FixedExtentScrollController(
+                        initialItem: PlaybackStyleConfig.fontSizeList
+                            .indexOf(model.fontSize),
+                      ),
+                      children: [
+                        for (var fontSize in PlaybackStyleConfig.fontSizeList)
+                          Text(fontSize.toString())
+                      ],
+                      onSelectedItemChanged: (index) => {
+                        model.fontSize = PlaybackStyleConfig.fontSizeList[index]
+                      },
+                    ),
+                  );
+                },
+              ),
+            },
             icon: Icon(Icons.format_size),
-            label: Text('20'),
+            label: Text(model.fontSize.toString()),
             style: TextButton.styleFrom(
               primary: Colors.grey[700],
             ),
