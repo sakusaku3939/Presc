@@ -85,7 +85,8 @@ class SpeechToTextManager {
 
   void _errorListener(SpeechRecognitionError error) {
     lastError = error.toString();
-    if (error.errorMsg == "error_speech_timeout") {
+    if (error.errorMsg == "error_speech_timeout" ||
+        error.errorMsg == "error_no_match") {
       restart();
     } else {
       print(lastError);
