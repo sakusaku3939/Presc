@@ -27,7 +27,7 @@ class SpeechToTextProvider with ChangeNotifier {
         _manager.stop();
         switch (error) {
           case "not_available":
-            showSnackBar("音声認識が利用できません");
+            showSnackBar("音声認識を行うにはマイクの許可が必要です");
             break;
           case "error_network":
             showSnackBar("ネットワークエラーが発生しました");
