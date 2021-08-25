@@ -29,6 +29,15 @@ class PlaybackProvider with ChangeNotifier {
     _scrollVertical = vertical;
     notifyListeners();
   }
+
+  double _scrollSpeedMagnification = 1.0;
+
+  double get scrollSpeedMagnification => _scrollSpeedMagnification;
+
+  set scrollSpeedMagnification(double value) {
+    _scrollSpeedMagnification = value;
+    notifyListeners();
+  }
 }
 
 enum ScrollMode {

@@ -2,6 +2,7 @@ import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
 import 'package:presc/config/playback_text_style.dart';
 import 'package:presc/config/sample_text.dart';
+import 'package:presc/config/scroll_speed_config.dart';
 import 'package:presc/view/utils/horizontal_text.dart';
 import 'package:presc/view/utils/radio_dialog_manager.dart';
 import 'package:presc/view/utils/ripple_button.dart';
@@ -90,9 +91,22 @@ class SettingScreen extends StatelessWidget {
                     color: Colors.white,
                     child: ListTile(
                       title: Text("再生速度"),
-                      subtitle: Text("x 1.0"),
+                      subtitle: Text("x ${model.scrollSpeedMagnification}"),
                       contentPadding: EdgeInsets.only(left: 32),
-                      onTap: () => {},
+                      enabled: model.scrollMode == ScrollMode.auto,
+                      onTap: () => RadioDialogManager.show(
+                        context,
+                        groupValue: model.scrollSpeedMagnification,
+                        itemList: [
+                          for (var speed in ScrollSpeedConfig.magnification)
+                            RadioDialogItem(
+                              title: "x $speed",
+                              value: speed,
+                            ),
+                        ],
+                        onChanged: (value) =>
+                            model.scrollSpeedMagnification = value,
+                      ),
                     ),
                   ),
                   SizedBox(height: 16),
