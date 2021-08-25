@@ -156,7 +156,7 @@ class SettingScreen extends StatelessWidget {
   Widget _verticalPreview(PlaybackProvider model) {
     final ScrollController scrollController = ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      scrollController.jumpTo(24);
+      scrollController.jumpTo(32);
     });
     return Container(
       height: 200,
@@ -183,11 +183,11 @@ class SettingScreen extends StatelessWidget {
   Widget _horizontalPreview() {
     final ScrollController scrollController = ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      scrollController.jumpTo(scrollController.position.maxScrollExtent - 24);
+      scrollController.jumpTo(scrollController.position.maxScrollExtent - 32);
     });
     return Container(
       height: 200,
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: 12),
       color: Colors.grey[900],
       child: FadingEdgeScrollView.fromSingleChildScrollView(
         gradientFractionOnStart: 0.3,
@@ -217,6 +217,11 @@ class SettingScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           TextButton.icon(
+            icon: Icon(Icons.format_size),
+            label: Text(model.fontSize.toString()),
+            style: TextButton.styleFrom(
+              primary: Colors.grey[700],
+            ),
             onPressed: () => {
               showCupertinoModalPopup(
                 context: context,
@@ -242,35 +247,54 @@ class SettingScreen extends StatelessWidget {
                 },
               ),
             },
-            icon: Icon(Icons.format_size),
-            label: Text(model.fontSize.toString()),
-            style: TextButton.styleFrom(
-              primary: Colors.grey[700],
-            ),
           ),
           TextButton.icon(
-            onPressed: () => {},
             icon: Icon(Icons.format_line_spacing),
-            label: Text('2.2'),
+            label: Text(model.fontHeight.toString()),
             style: TextButton.styleFrom(
               primary: Colors.grey[700],
             ),
+            onPressed: () => {
+              showCupertinoModalPopup(
+                context: context,
+                builder: (context) {
+                  return Container(
+                    height: 180,
+                    color: Colors.white,
+                    child: CupertinoPicker(
+                      itemExtent: 32,
+                      scrollController: FixedExtentScrollController(
+                        initialItem: PlaybackStyleConfig.fontHeightList
+                            .indexOf(model.fontHeight),
+                      ),
+                      children: [
+                        for (var fontHeight in PlaybackStyleConfig.fontHeightList)
+                          Text(fontHeight.toString())
+                      ],
+                      onSelectedItemChanged: (index) => {
+                        model.fontHeight = PlaybackStyleConfig.fontHeightList[index]
+                      },
+                    ),
+                  );
+                },
+              ),
+            },
           ),
           TextButton.icon(
-            onPressed: () => {},
             icon: Icon(Icons.format_color_text),
             label: Text('□'),
             style: TextButton.styleFrom(
               primary: Colors.grey[700],
             ),
+            onPressed: () => {},
           ),
           TextButton.icon(
-            onPressed: () => {},
             icon: Icon(Icons.format_color_fill),
             label: Text('■'),
             style: TextButton.styleFrom(
               primary: Colors.grey[700],
             ),
+            onPressed: () => {},
           ),
         ],
       ),

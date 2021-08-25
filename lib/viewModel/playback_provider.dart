@@ -48,6 +48,15 @@ class PlaybackProvider with ChangeNotifier {
     _fontSize = size;
     notifyListeners();
   }
+
+  double _fontHeight = 2.4;
+
+  double get fontHeight => _fontHeight;
+
+  set fontHeight(double height) {
+    _fontHeight = height;
+    notifyListeners();
+  }
 }
 
 enum ScrollMode {
