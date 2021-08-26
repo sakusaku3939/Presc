@@ -1,12 +1,14 @@
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:presc/config/color_config.dart';
 import 'package:presc/config/playback_style_config.dart';
 import 'package:presc/config/playback_text_style.dart';
 import 'package:presc/config/sample_text_config.dart';
 import 'package:presc/config/scroll_speed_config.dart';
+import 'package:presc/view/utils/dialog/color_dialog_manager.dart';
 import 'package:presc/view/utils/horizontal_text.dart';
-import 'package:presc/view/utils/radio_dialog_manager.dart';
+import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:provider/provider.dart';
@@ -25,8 +27,8 @@ class SettingScreen extends StatelessWidget {
                 children: [
                   model.scrollVertical
                       ? _verticalPreview(model)
-                      : _horizontalPreview(),
-                  _menu(context, model),
+                      : _horizontalPreview(model),
+                  _textMenu(context, model),
                   SizedBox(height: 8),
                   Ink(
                     color: Colors.white,
@@ -161,7 +163,7 @@ class SettingScreen extends StatelessWidget {
     return Container(
       height: 200,
       padding: EdgeInsets.symmetric(horizontal: 32),
-      color: Colors.grey[900],
+      color: model.backgroundColor,
       child: FadingEdgeScrollView.fromSingleChildScrollView(
         gradientFractionOnStart: 0.5,
         gradientFractionOnEnd: 0.5,
@@ -180,7 +182,7 @@ class SettingScreen extends StatelessWidget {
     );
   }
 
-  Widget _horizontalPreview() {
+  Widget _horizontalPreview(PlaybackProvider model) {
     final ScrollController scrollController = ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       scrollController.jumpTo(scrollController.position.maxScrollExtent - 32);
@@ -188,7 +190,7 @@ class SettingScreen extends StatelessWidget {
     return Container(
       height: 200,
       padding: EdgeInsets.symmetric(vertical: 12),
-      color: Colors.grey[900],
+      color: model.backgroundColor,
       child: FadingEdgeScrollView.fromSingleChildScrollView(
         gradientFractionOnStart: 0.3,
         gradientFractionOnEnd: 0.3,
@@ -209,7 +211,7 @@ class SettingScreen extends StatelessWidget {
     );
   }
 
-  Widget _menu(BuildContext context, PlaybackProvider model) {
+  Widget _textMenu(BuildContext context, PlaybackProvider model) {
     return Container(
       height: 40,
       color: Colors.white,
@@ -220,7 +222,7 @@ class SettingScreen extends StatelessWidget {
             icon: Icon(Icons.format_size),
             label: Text(model.fontSize.toString()),
             style: TextButton.styleFrom(
-              primary: Colors.grey[700],
+              primary: ColorConfig.iconColor,
             ),
             onPressed: () => {
               showCupertinoModalPopup(
@@ -252,7 +254,7 @@ class SettingScreen extends StatelessWidget {
             icon: Icon(Icons.format_line_spacing),
             label: Text(model.fontHeight.toString()),
             style: TextButton.styleFrom(
-              primary: Colors.grey[700],
+              primary: ColorConfig.iconColor,
             ),
             onPressed: () => {
               showCupertinoModalPopup(
@@ -268,11 +270,13 @@ class SettingScreen extends StatelessWidget {
                             .indexOf(model.fontHeight),
                       ),
                       children: [
-                        for (var fontHeight in PlaybackStyleConfig.fontHeightList)
+                        for (var fontHeight
+                            in PlaybackStyleConfig.fontHeightList)
                           Text(fontHeight.toString())
                       ],
                       onSelectedItemChanged: (index) => {
-                        model.fontHeight = PlaybackStyleConfig.fontHeightList[index]
+                        model.fontHeight =
+                            PlaybackStyleConfig.fontHeightList[index]
                       },
                     ),
                   );
@@ -282,22 +286,36 @@ class SettingScreen extends StatelessWidget {
           ),
           TextButton.icon(
             icon: Icon(Icons.format_color_text),
-            label: Text('□'),
+            label: _selectColorSquare(model.textColor),
             style: TextButton.styleFrom(
-              primary: Colors.grey[700],
+              primary: ColorConfig.iconColor,
             ),
-            onPressed: () => {},
+            onPressed: () => ColorDialogManager.show(
+              context,
+              pickerColor: model.textColor,
+              initialColor: ColorConfig.playbackTextColor,
+              onSubmitted: (color) => model.textColor = color,
+            ),
           ),
           TextButton.icon(
             icon: Icon(Icons.format_color_fill),
-            label: Text('■'),
+            label: _selectColorSquare(model.backgroundColor),
             style: TextButton.styleFrom(
-              primary: Colors.grey[700],
+              primary: ColorConfig.iconColor,
             ),
-            onPressed: () => {},
+            onPressed: () => ColorDialogManager.show(
+              context,
+              pickerColor: model.backgroundColor,
+              initialColor: ColorConfig.playbackBackgroundColor,
+              onSubmitted: (color) => model.backgroundColor = color,
+            ),
           ),
         ],
       ),
     );
   }
+
+  Text _selectColorSquare(Color color) => color == Colors.white
+      ? Text("□")
+      : Text("■", style: TextStyle(color: color));
 }

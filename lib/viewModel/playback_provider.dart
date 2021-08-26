@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presc/config/color_config.dart';
 
 class PlaybackProvider with ChangeNotifier {
   bool _playFabState = false;
@@ -52,6 +53,24 @@ class PlaybackProvider with ChangeNotifier {
 
   set fontHeight(double height) {
     _fontHeight = height;
+    notifyListeners();
+  }
+
+  Color _backgroundColor = ColorConfig.playbackBackgroundColor;
+
+  Color get backgroundColor => _backgroundColor;
+
+  set backgroundColor(Color color) {
+    _backgroundColor = color;
+    notifyListeners();
+  }
+
+  Color _textColor = ColorConfig.playbackTextColor;
+
+  Color get textColor => _textColor;
+
+  set textColor(Color color) {
+    _textColor = color;
     notifyListeners();
   }
 }
