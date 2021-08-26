@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:presc/config/color_config.dart';
+import 'package:presc/config/init_config.dart';
 import 'package:presc/model/utils/enum_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,7 +28,7 @@ class PlaybackProvider with ChangeNotifier {
   ScrollMode get scrollMode =>
       _scrollMode ??
       _scrollModeFromVal(_prefs?.getString("scrollMode")) ??
-      ScrollMode.recognition;
+      InitConfig.scrollMode;
 
   set scrollMode(ScrollMode mode) {
     _scrollMode = mode;
@@ -43,7 +44,10 @@ class PlaybackProvider with ChangeNotifier {
   */
   bool _scrollVertical;
 
-  bool get scrollVertical => _scrollVertical ?? _prefs?.getBool("scrollVertical") ?? true;
+  bool get scrollVertical =>
+      _scrollVertical ??
+      _prefs?.getBool("scrollVertical") ??
+      InitConfig.scrollVertical;
 
   set scrollVertical(bool vertical) {
     _scrollVertical = vertical;
@@ -59,7 +63,7 @@ class PlaybackProvider with ChangeNotifier {
   double get scrollSpeedMagnification =>
       _scrollSpeedMagnification ??
       _prefs?.getDouble("scrollSpeedMagnification") ??
-      1.0;
+      InitConfig.scrollSpeedMagnification;
 
   set scrollSpeedMagnification(double value) {
     _scrollSpeedMagnification = value;
@@ -72,7 +76,8 @@ class PlaybackProvider with ChangeNotifier {
   */
   int _fontSize;
 
-  int get fontSize => _fontSize ?? _prefs?.getInt("fontSize") ?? 20;
+  int get fontSize =>
+      _fontSize ?? _prefs?.getInt("fontSize") ?? InitConfig.fontSize;
 
   set fontSize(int size) {
     _fontSize = size;
@@ -86,7 +91,7 @@ class PlaybackProvider with ChangeNotifier {
   double _fontHeight;
 
   double get fontHeight =>
-      _fontHeight ?? _prefs?.getDouble("fontHeight") ?? 2.4;
+      _fontHeight ?? _prefs?.getDouble("fontHeight") ?? InitConfig.fontHeight;
 
   set fontHeight(double height) {
     _fontHeight = height;
