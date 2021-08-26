@@ -188,12 +188,7 @@ class PlaybackScreen extends StatelessWidget {
                                   model.scrollVertical = !model.scrollVertical;
                                   model.playFabState = false;
                                   playbackTextView.stop(context);
-                                  model.scrollController.jumpTo(
-                                    model.scrollVertical
-                                        ? 0
-                                        : model.scrollController.position
-                                            .maxScrollExtent,
-                                  );
+                                  playbackTextView.scrollToInit(context);
                                 },
                               ),
                             ),
