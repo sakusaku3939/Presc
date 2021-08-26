@@ -19,20 +19,17 @@ void main() async {
     runApp(
       MultiProvider(
         providers: [
+          ChangeNotifierProvider(create: (context) => ManuscriptProvider()),
           ChangeNotifierProvider(
-              create: (context) => ManuscriptProvider()),
+            create: (context) => EditableTagItemProvider(),
+          ),
+          ChangeNotifierProvider(create: (context) => ManuscriptTagProvider()),
+          ChangeNotifierProvider(create: (context) => PlaybackProvider()),
+          ChangeNotifierProvider(create: (context) => SpeechToTextProvider()),
           ChangeNotifierProvider(
-              create: (context) => EditableTagItemProvider()),
-          ChangeNotifierProvider(
-              create: (context) => ManuscriptTagProvider()),
-          ChangeNotifierProvider(
-              create: (context) => PlaybackProvider()),
-          ChangeNotifierProvider(
-              create: (context) => SpeechToTextProvider()),
-          ChangeNotifierProvider(
-              create: (context) => PlaybackVisualizerProvider()),
-          ChangeNotifierProvider(
-              create: (context) => PlaybackTimerProvider()),
+            create: (context) => PlaybackVisualizerProvider(),
+          ),
+          ChangeNotifierProvider(create: (context) => PlaybackTimerProvider()),
         ],
         child: MyApp(),
       ),
@@ -44,18 +41,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Presc',
-        theme: ThemeData(
-          primaryColor: Colors.white,
-          accentColor: Colors.deepOrange[400],
-        ),
-        localizationsDelegates: [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        supportedLocales: [
-          Locale('ja', ''),
-        ],
-        home: ManuscriptScreen());
+      title: 'Presc',
+      theme: ThemeData(
+        primaryColor: Colors.white,
+        accentColor: Colors.deepOrange[400],
+      ),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('ja', ''),
+      ],
+      home: ManuscriptScreen(),
+    );
   }
 }
