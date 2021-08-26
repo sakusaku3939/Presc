@@ -7,6 +7,7 @@ import 'package:presc/config/scroll_speed_config.dart';
 import 'package:presc/view/utils/horizontal_text.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
+import 'package:presc/viewModel/playback_visualizer_provider.dart';
 import 'package:presc/viewModel/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -26,8 +27,10 @@ class PlaybackTextView extends StatelessWidget {
   void stop(BuildContext context) {
     final speech = context.read<SpeechToTextProvider>();
     final timer = context.read<PlaybackTimerProvider>();
+    final visualizer = context.read<PlaybackVisualizerProvider>();
     speech.stop();
     timer.stop();
+    WidgetsBinding.instance.addPostFrameCallback((_) => visualizer.reset());
   }
 
   void reset(BuildContext context) {
