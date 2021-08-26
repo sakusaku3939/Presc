@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:presc/config/color_config.dart';
+import 'package:presc/model/utils/enum_helper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PlaybackProvider with ChangeNotifier {
+  SharedPreferences _prefs;
+  _ScrollModeHelper _modeHelper = _ScrollModeHelper();
+
+  /*
+  *  再生ボタン（再生/一時停止）
+  */
   bool _playFabState = false;
 
   bool get playFabState => _playFabState;
@@ -11,67 +19,120 @@ class PlaybackProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  ScrollMode _scrollMode = ScrollMode.recognition;
+  /*
+  *  再生モード（手動スクロール/自動スクロール/音声認識）
+  */
+  ScrollMode _scrollMode;
 
-  ScrollMode get scrollMode => _scrollMode;
+  ScrollMode get scrollMode =>
+      _scrollMode ??
+      _scrollModeFromVal(_prefs?.getString("scrollMode")) ??
+      ScrollMode.recognition;
 
   set scrollMode(ScrollMode mode) {
     _scrollMode = mode;
+    _prefs?.setString("scrollMode", _modeHelper.name(mode));
     notifyListeners();
   }
 
-  bool _scrollVertical = true;
+  ScrollMode _scrollModeFromVal(String value) =>
+      value != null ? _modeHelper.valueOf(value) : null;
 
-  bool get scrollVertical => _scrollVertical;
+  /*
+  *  書式の向き（縦書き/横書き）
+  */
+  bool _scrollVertical;
+
+  bool get scrollVertical => _scrollVertical ?? _prefs?.getBool("scrollVertical") ?? true;
 
   set scrollVertical(bool vertical) {
     _scrollVertical = vertical;
+    _prefs?.setBool("scrollVertical", vertical);
     notifyListeners();
   }
 
-  double _scrollSpeedMagnification = 1.0;
+  /*
+  *  原稿の再生速度
+  */
+  double _scrollSpeedMagnification;
 
-  double get scrollSpeedMagnification => _scrollSpeedMagnification;
+  double get scrollSpeedMagnification =>
+      _scrollSpeedMagnification ??
+      _prefs?.getDouble("scrollSpeedMagnification") ??
+      1.0;
 
   set scrollSpeedMagnification(double value) {
     _scrollSpeedMagnification = value;
+    _prefs?.setDouble("scrollSpeedMagnification", value);
     notifyListeners();
   }
 
-  int _fontSize = 20;
+  /*
+  *  フォントサイズ
+  */
+  int _fontSize;
 
-  int get fontSize => _fontSize;
+  int get fontSize => _fontSize ?? _prefs?.getInt("fontSize") ?? 20;
 
   set fontSize(int size) {
     _fontSize = size;
+    _prefs?.setInt("fontSize", size);
     notifyListeners();
   }
 
-  double _fontHeight = 2.4;
+  /*
+  *  フォントの高さ
+  */
+  double _fontHeight;
 
-  double get fontHeight => _fontHeight;
+  double get fontHeight =>
+      _fontHeight ?? _prefs?.getDouble("fontHeight") ?? 2.4;
 
   set fontHeight(double height) {
     _fontHeight = height;
+    _prefs?.setDouble("fontHeight", height);
     notifyListeners();
   }
 
-  Color _backgroundColor = ColorConfig.playbackBackgroundColor;
+  /*
+  *  背景色
+  */
+  Color _backgroundColor;
 
-  Color get backgroundColor => _backgroundColor;
+  Color get backgroundColor =>
+      _backgroundColor ??
+      _colorFromVal(_prefs?.getInt("backgroundColor")) ??
+      ColorConfig.playbackBackgroundColor;
 
   set backgroundColor(Color color) {
     _backgroundColor = color;
+    _prefs?.setInt("backgroundColor", color.value);
     notifyListeners();
   }
 
-  Color _textColor = ColorConfig.playbackTextColor;
+  /*
+  *  文字色
+  */
+  Color _textColor;
 
-  Color get textColor => _textColor;
+  Color get textColor =>
+      _textColor ??
+      _colorFromVal(_prefs?.getInt("textColor")) ??
+      ColorConfig.playbackTextColor;
 
   set textColor(Color color) {
     _textColor = color;
+    _prefs?.setInt("textColor", color.value);
     notifyListeners();
+  }
+
+  Color _colorFromVal(int value) => value != null ? Color(value) : null;
+
+  PlaybackProvider() {
+    Future(() async {
+      _prefs = await SharedPreferences.getInstance();
+      notifyListeners();
+    });
   }
 }
 
@@ -79,4 +140,9 @@ enum ScrollMode {
   manual,
   auto,
   recognition,
+}
+
+class _ScrollModeHelper extends EnumHelper<ScrollMode> {
+  @override
+  List<ScrollMode> values() => ScrollMode.values;
 }
