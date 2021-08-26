@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/utils/add_new_tag.dart';
-import 'package:presc/view/utils/dialog_manager.dart';
+import 'package:presc/view/utils/dialog/dialog_manager.dart';
 import 'package:presc/view/utils/editable_tag_item.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';

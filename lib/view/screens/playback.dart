@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presc/view/screens/setting.dart';
 import 'package:presc/view/utils/playback_text_view.dart';
-import 'package:presc/view/utils/radio_dialog_manager.dart';
+import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/playback_provider.dart';

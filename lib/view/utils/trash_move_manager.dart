@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 
-import 'dialog_manager.dart';
+import 'dialog/dialog_manager.dart';
 
 class TrashMoveManager {
   static Future<void> move({

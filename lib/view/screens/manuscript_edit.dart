@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:presc/view/screens/playback.dart';
-import 'package:presc/view/utils/dialog_manager.dart';
+import 'package:presc/view/utils/dialog/dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/tag_grid.dart';
