@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presc/config/color_config.dart';
 import 'package:presc/view/screens/playback.dart';
 import 'package:presc/view/utils/dialog/dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
@@ -274,7 +275,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                               ),
                               deleteIcon: Icon(
                                 Icons.cancel,
-                                color: Colors.grey[700],
+                                color: ColorConfig.iconColor,
                                 size: 18,
                               ),
                               label: Text(linkTagTable.tagName),
