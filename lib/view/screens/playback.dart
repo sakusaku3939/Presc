@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presc/config/color_config.dart';
 import 'package:presc/view/screens/setting.dart';
 import 'package:presc/view/utils/playback_text_view.dart';
 import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
@@ -31,7 +32,7 @@ class PlaybackScreen extends StatelessWidget {
         return Future.value(false);
       },
       child: Scaffold(
-        backgroundColor: Colors.grey[900],
+        backgroundColor: ColorConfig.playbackBackgroundColor,
         appBar: _appbar(context),
         body: SafeArea(
           child: Stack(
@@ -208,7 +209,7 @@ class PlaybackScreen extends StatelessWidget {
 
   Widget _appbar(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.grey[900],
+      backgroundColor: ColorConfig.playbackBackgroundColor,
       centerTitle: true,
       elevation: 0,
       leading: RippleIconButton(
