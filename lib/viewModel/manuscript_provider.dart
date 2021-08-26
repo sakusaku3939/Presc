@@ -15,7 +15,17 @@ class ManuscriptProvider with ChangeNotifier {
   ManuscriptState get state => _state;
 
   ManuscriptProvider() {
-    _loadScriptList();
+    Future(() async {
+      _scriptTable = await _manager.getAllScript();
+      final _listKeyMonitor = (Timer t) {
+        if (listKey.currentState != null) {
+          t.cancel();
+          replaceState(ManuscriptState.home);
+        }
+      };
+      Timer.periodic(Duration(milliseconds: 100), _listKeyMonitor);
+      notifyListeners();
+    });
   }
 
   List<MemoTable> _scriptTable;
@@ -28,18 +38,6 @@ class ManuscriptProvider with ChangeNotifier {
 
   set currentTagTable(TagTable tagTable) {
     _currentTagTable = tagTable;
-    notifyListeners();
-  }
-
-  Future<void> _loadScriptList() async {
-    _scriptTable = await _manager.getAllScript();
-    final _listKeyMonitor = (Timer t) {
-      if (listKey.currentState != null) {
-        t.cancel();
-        replaceState(ManuscriptState.home);
-      }
-    };
-    Timer.periodic(Duration(milliseconds: 100), _listKeyMonitor);
     notifyListeners();
   }
 
