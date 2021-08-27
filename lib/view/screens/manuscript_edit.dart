@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import "package:intl/intl.dart";
 import 'package:presc/config/color_config.dart';
+import 'package:presc/model/char_counter.dart';
 import 'package:presc/view/screens/playback.dart';
 import 'package:presc/view/utils/dialog/dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
@@ -16,6 +18,7 @@ class ManuscriptEditScreen extends StatelessWidget {
   final BuildContext context;
   final int index;
   final bool autofocus;
+  String _currentContent;
 
   ManuscriptProvider get _provider => context.read<ManuscriptProvider>();
 
@@ -24,6 +27,8 @@ class ManuscriptEditScreen extends StatelessWidget {
   String get title => _provider.scriptTable[index].title;
 
   String get content => _provider.scriptTable[index].content;
+
+  DateTime get date => _provider.scriptTable[index].date;
 
   Future<void> _back() async {
     await _provider.notifyBack(context);
@@ -162,7 +167,10 @@ class ManuscriptEditScreen extends StatelessWidget {
                 height: 1.7,
                 fontSize: 16,
               ),
-              onChanged: (text) => _provider.saveScript(id: id, content: text),
+              onChanged: (text) {
+                _currentContent = text;
+                _provider.saveScript(id: id, content: text);
+              },
             ),
           ),
         ],
@@ -324,7 +332,60 @@ class ManuscriptEditScreen extends StatelessWidget {
         ),
         RippleIconButton(
           Icons.info_outline,
-          onPressed: () => {},
+          onPressed: () => {
+            DialogManager.show(
+              context,
+              contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "文字数",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  Text(
+                    CharCounter.includeSpace(_currentContent ?? content)
+                        .toString(),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    "空白を除いた文字数",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  Text(
+                    CharCounter.ignoreSpace(_currentContent ?? content)
+                        .toString(),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    "最終更新日時",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                  Text(
+                    DateFormat('yyyy/MM/dd(E) HH:mm', "ja_JP").format(
+                      _provider.scriptTable[index].date,
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                DialogTextButton(
+                  "戻る",
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            )
+          },
         ),
       ],
     );
