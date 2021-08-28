@@ -11,6 +11,7 @@ import 'package:presc/view/utils/trash_move_manager.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:share/share.dart';
 
 class ManuscriptEditScreen extends StatelessWidget {
   ManuscriptEditScreen(this.context, this.index, {this.autofocus = false});
@@ -140,7 +141,10 @@ class ManuscriptEditScreen extends StatelessWidget {
               contentPadding: const EdgeInsets.all(0),
             ),
             style: TextStyle(fontSize: 24),
-            onChanged: (text) => _provider.saveScript(id: id, title: text),
+            onChanged: (text) {
+              _CurrentScript.title = text;
+              _provider.saveScript(id: id, title: text);
+            },
           ),
           Container(
             margin: const EdgeInsets.only(top: 16, bottom: 32),
@@ -315,7 +319,11 @@ class ManuscriptEditScreen extends StatelessWidget {
       children: [
         RippleIconButton(
           Icons.share,
-          onPressed: () => {},
+          onPressed: () => Share.share(
+            (_CurrentScript.title ?? title) +
+                "\n\n" +
+                (_CurrentScript.content ?? content),
+          ),
         ),
         RippleIconButton(
           Icons.delete_outline,
