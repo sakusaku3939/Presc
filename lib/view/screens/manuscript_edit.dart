@@ -18,7 +18,6 @@ class ManuscriptEditScreen extends StatelessWidget {
   final BuildContext context;
   final int index;
   final bool autofocus;
-  String _currentContent;
 
   ManuscriptProvider get _provider => context.read<ManuscriptProvider>();
 
@@ -168,7 +167,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                 fontSize: 16,
               ),
               onChanged: (text) {
-                _currentContent = text;
+                _CurrentScript.content = text;
                 _provider.saveScript(id: id, content: text);
               },
             ),
@@ -348,7 +347,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    CharCounter.includeSpace(_currentContent ?? content)
+                    CharCounter.includeSpace(_CurrentScript.content ?? content)
                         .toString(),
                   ),
                   SizedBox(height: 16),
@@ -360,7 +359,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    CharCounter.ignoreSpace(_currentContent ?? content)
+                    CharCounter.ignoreSpace(_CurrentScript.content ?? content)
                         .toString(),
                   ),
                   SizedBox(height: 16),
@@ -426,4 +425,9 @@ class ManuscriptEditScreen extends StatelessWidget {
       ],
     );
   }
+}
+
+class _CurrentScript {
+  static String title;
+  static String content;
 }
