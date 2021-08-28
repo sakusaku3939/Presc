@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presc/view/screens/playback.dart';
 import 'package:presc/view/utils/trash_move_manager.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:provider/provider.dart';
@@ -57,13 +58,18 @@ class ScriptModalBottomSheet {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         ListTile(
-          leading: Transform.translate(
-            offset: Offset(8, 0),
-            child: Icon(Icons.play_arrow_outlined),
-          ),
-          title: Text('原稿を再生'),
-          onTap: () => {},
-        ),
+            leading: Transform.translate(
+              offset: Offset(8, 0),
+              child: Icon(Icons.play_arrow_outlined),
+            ),
+            title: Text('原稿を再生'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PlaybackScreen(index)),
+              );
+            }),
         ListTile(
           leading: Transform.translate(
             offset: Offset(8, 0),
