@@ -19,6 +19,7 @@ class ManuscriptEditScreen extends StatelessWidget {
   final BuildContext context;
   final int index;
   final bool autofocus;
+  final _current = _CurrentScript();
 
   ManuscriptProvider get _provider => context.read<ManuscriptProvider>();
 
@@ -142,7 +143,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             ),
             style: TextStyle(fontSize: 24),
             onChanged: (text) {
-              _CurrentScript.title = text;
+              _current.title = text;
               _provider.saveScript(id: id, title: text);
             },
           ),
@@ -171,7 +172,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                 fontSize: 16,
               ),
               onChanged: (text) {
-                _CurrentScript.content = text;
+                _current.content = text;
                 _provider.saveScript(id: id, content: text);
               },
             ),
@@ -320,9 +321,9 @@ class ManuscriptEditScreen extends StatelessWidget {
         RippleIconButton(
           Icons.share,
           onPressed: () => Share.share(
-            (_CurrentScript.title ?? title) +
+            (_current.title ?? title) +
                 "\n\n" +
-                (_CurrentScript.content ?? content),
+                (_current.content ?? content),
           ),
         ),
         RippleIconButton(
@@ -355,7 +356,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    CharCounter.includeSpace(_CurrentScript.content ?? content)
+                    CharCounter.includeSpace(_current.content ?? content)
                         .toString(),
                   ),
                   SizedBox(height: 16),
@@ -367,7 +368,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    CharCounter.ignoreSpace(_CurrentScript.content ?? content)
+                    CharCounter.ignoreSpace(_current.content ?? content)
                         .toString(),
                   ),
                   SizedBox(height: 16),
@@ -436,6 +437,6 @@ class ManuscriptEditScreen extends StatelessWidget {
 }
 
 class _CurrentScript {
-  static String title;
-  static String content;
+  String title;
+  String content;
 }
