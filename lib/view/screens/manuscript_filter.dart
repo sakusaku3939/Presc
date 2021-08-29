@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:presc/model/utils/database_table.dart';
-import 'package:presc/view/utils/dialog_manager.dart';
+import 'package:presc/view/utils/dialog/dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script_card.dart';
@@ -37,7 +37,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
                       child: Text(
-                        "ごみ箱の中身は7日以内に完全に削除されます",
+                        "ごみ箱の中身は7日後に完全に削除されます",
                         style: TextStyle(fontSize: 12),
                       ),
                     ),

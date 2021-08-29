@@ -26,4 +26,9 @@ class PlaybackVisualizerProvider with ChangeNotifier {
 
   double width(BuildContext context) =>
       MediaQuery.of(context).size.width / barSize - _spaceWidth;
+
+  void reset() {
+    _height = List.generate(barSize, (_) => 0);
+    notifyListeners();
+  }
 }

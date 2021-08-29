@@ -7,6 +7,7 @@ import 'package:presc/config/scroll_speed_config.dart';
 import 'package:presc/view/utils/horizontal_text.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
+import 'package:presc/viewModel/playback_visualizer_provider.dart';
 import 'package:presc/viewModel/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -26,8 +27,10 @@ class PlaybackTextView extends StatelessWidget {
   void stop(BuildContext context) {
     final speech = context.read<SpeechToTextProvider>();
     final timer = context.read<PlaybackTimerProvider>();
+    final visualizer = context.read<PlaybackVisualizerProvider>();
     speech.stop();
     timer.stop();
+    WidgetsBinding.instance.addPostFrameCallback((_) => visualizer.reset());
   }
 
   void reset(BuildContext context) {
@@ -36,8 +39,6 @@ class PlaybackTextView extends StatelessWidget {
     provider.recognizedText = "";
     provider.unrecognizedText = _content;
   }
-
-  void jumpTo(double value) => _scrollController.jumpTo(value);
 
   void scrollToStart() => _scrollController.animateTo(
         0,
@@ -50,6 +51,15 @@ class PlaybackTextView extends StatelessWidget {
         duration: Duration(milliseconds: 300),
         curve: Curves.ease,
       );
+
+  void scrollToInit(BuildContext context) =>
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final provider = context.read<PlaybackProvider>();
+        if (provider.scrollVertical)
+          _scrollController.jumpTo(0);
+        else
+          _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -100,14 +110,7 @@ class PlaybackTextView extends StatelessWidget {
   void _init(BuildContext context) {
     _content = text;
     reset(context);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final provider = context.read<PlaybackProvider>();
-      provider.scrollController = _scrollController;
-      if (provider.scrollVertical)
-        jumpTo(0);
-      else
-        jumpTo(_scrollController.position.maxScrollExtent);
-    });
+    scrollToInit(context);
   }
 
   Widget _textView(PlaybackProvider model, {autoScroll = false}) {
@@ -215,8 +218,7 @@ class _RecognizedTextView extends StatelessWidget {
       else
         _scrollTo(
           scroll.position.maxScrollExtent -
-              _textHeight(recognizedText, box?.size?.height) +
-              44,
+              _textHeight(recognizedText, box?.size?.height),
           limit: scroll.offset > 0,
         );
     }
@@ -235,7 +237,7 @@ class _RecognizedTextView extends StatelessWidget {
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
         text: text.replaceAll('\n', ''),
-        style: PlaybackTextStyle.of(playbackProvider).recognized,
+        style: PlaybackTextStyle.of(playbackProvider).calculation,
       ),
       textDirection: TextDirection.ltr,
       maxLines: 1,

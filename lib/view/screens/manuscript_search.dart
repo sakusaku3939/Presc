@@ -1,27 +1,48 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:presc/view/utils/ripple_button.dart';
+import 'package:presc/view/utils/script_card.dart';
+import 'package:presc/viewModel/manuscript_provider.dart';
+import 'package:provider/provider.dart';
 
 class ManuscriptSearchScreen extends StatelessWidget {
+  void _back(BuildContext context) {
+    context.read<ManuscriptProvider>().replaceState(ManuscriptState.home);
+    ScaffoldMessenger.of(context).clearSnackBars();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return KeyboardDismissOnTap(
-      child: Scaffold(
-        appBar: _appbar(context),
-        body: SafeArea(
-          child: Container(),
+    return WillPopScope(
+      onWillPop: () async {
+        _back(context);
+        return Future.value(false);
+      },
+      child: KeyboardDismissOnTap(
+        child: Scaffold(
+          appBar: _appbar(context),
+          body: SafeArea(
+            child: Scrollbar(
+              child: SingleChildScrollView(
+                child: ScriptCard(context),
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
 
   Widget _appbar(BuildContext context) {
+    Timer _timer;
     return AppBar(
       elevation: 1,
       leading: RippleIconButton(
         Icons.navigate_before,
         size: 32,
-        onPressed: () => Navigator.pop(context),
+        onPressed: () => _back(context),
       ),
       title: TextField(
         autofocus: true,
@@ -35,6 +56,15 @@ class ManuscriptSearchScreen extends StatelessWidget {
           hintStyle: TextStyle(fontSize: 16, color: Colors.grey),
           hintText: '原稿を検索',
         ),
+        onChanged: (text) async {
+          _timer?.cancel();
+          _timer = Timer(
+            Duration(milliseconds: 200),
+            () => context
+                .read<ManuscriptProvider>()
+                .replaceState(ManuscriptState.search, searchWord: text),
+          );
+        },
       ),
     );
   }

@@ -41,6 +41,13 @@ class ManuscriptManager {
     return tableList;
   }
 
+  Future<List<MemoTable>> searchScript({@required String keyword}) async {
+    final res = await _helper.search(keyword);
+    List<MemoTable> tableList = res.map((row) => MemoTable.fromMap(row)).toList();
+    tableList.sort((a, b) => b.date.compareTo(a.date));
+    return tableList;
+  }
+
   Future<List<MemoTable>> getScriptByTagId({@required int tagId}) async {
     final res = await _helper.queryMemoByTagId(tagId);
     List<MemoTable> tableList =
@@ -79,5 +86,15 @@ class ManuscriptManager {
   Future<void> deleteTrash({@required int trashId}) async {
     _helper.delete(TagMemoTable.name, trashId, idName: "memo_id");
     await _helper.delete(TrashTable.name, trashId);
+  }
+
+  Future<void> deleteTrashAutomatically() async {
+    final trashTable = await getAllScript(trash: true);
+    trashTable.forEach((element) {
+      final difference = DateTime.now().difference(element.date);
+      if (difference.inDays >= 7) {
+        deleteTrash(trashId: element.id);
+      }
+    });
   }
 }

@@ -104,6 +104,15 @@ class DatabaseHelper {
     }
   }
 
+  Future<List<Map<String, dynamic>>> search(String keyword) async {
+    Database db = await _instance.database;
+    return await db.query(
+      MemoTable.name,
+      where: 'title LIKE ? or content LIKE ?',
+      whereArgs: ['%$keyword%', '%$keyword%'],
+    );
+  }
+
   Future<int> update(DatabaseTable table) async {
     Database db = await _instance.database;
     return await db.update(table.tableName, table.toMap(),

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:presc/config/custom_color_config.dart';
+import 'package:presc/config/color_config.dart';
 
 class RippleIconButton extends StatelessWidget {
   RippleIconButton(
     this.icon, {
     this.size = 24,
-    this.color = CustomColorConfig.iconColor,
+    this.color = ColorConfig.iconColor,
     this.onPressed,
   });
 

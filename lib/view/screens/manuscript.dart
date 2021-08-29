@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:presc/view/screens/manuscript_search.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -15,9 +16,21 @@ class ManuscriptScreen extends StatelessWidget {
     return Selector<ManuscriptProvider, ManuscriptState>(
       selector: (_, model) => model.state,
       builder: (context, state, child) {
-        return state == ManuscriptState.home
-            ? ManuscriptHomeScreen()
-            : ManuscriptFilterScreen(state);
+        switch (state) {
+          case ManuscriptState.home:
+            return ManuscriptHomeScreen();
+            break;
+          case ManuscriptState.tag:
+          case ManuscriptState.trash:
+            return ManuscriptFilterScreen(state);
+            break;
+          case ManuscriptState.search:
+            return ManuscriptSearchScreen();
+            break;
+          default:
+            return Container();
+            break;
+        }
       },
     );
   }

@@ -13,6 +13,7 @@ class SpeechToTextProvider with ChangeNotifier {
   String recognizedText = "";
 
   void start(BuildContext context) {
+    _reflect("どこで生まれたかとんと");
     final showSnackBar = (text) => ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(text),

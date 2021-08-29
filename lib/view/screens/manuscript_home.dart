@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:presc/config/custom_color_config.dart';
+import 'package:presc/config/color_config.dart';
 import 'package:presc/view/utils/drawer_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script_card.dart';
@@ -9,7 +9,6 @@ import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'manuscript_edit.dart';
-import 'manuscript_search.dart';
 
 class ManuscriptHomeScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -27,7 +26,7 @@ class ManuscriptHomeScreen extends StatelessWidget {
                 snap: true,
                 toolbarHeight: 64,
                 expandedHeight: 0,
-                backgroundColor: CustomColorConfig.backgroundColor,
+                backgroundColor: ColorConfig.backgroundColor,
                 elevation: 0,
                 leading: Container(),
                 flexibleSpace: _appbar(context),
@@ -81,24 +80,11 @@ class ManuscriptHomeScreen extends StatelessWidget {
           ),
           RippleIconButton(
             Icons.search,
-            onPressed: () => Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    ManuscriptSearchScreen(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  return ZoomPageTransitionsBuilder().buildTransitions(
-                    MaterialPageRoute(
-                        builder: (context) => ManuscriptSearchScreen()),
-                    context,
-                    animation,
-                    secondaryAnimation,
-                    child,
-                  );
-                },
-              ),
-            ),
+            onPressed: () {
+              context
+                  .read<ManuscriptProvider>()
+                  .replaceState(ManuscriptState.search);
+            },
           ),
         ],
       ),
