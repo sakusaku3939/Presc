@@ -87,4 +87,14 @@ class ManuscriptManager {
     _helper.delete(TagMemoTable.name, trashId, idName: "memo_id");
     await _helper.delete(TrashTable.name, trashId);
   }
+
+  Future<void> deleteTrashAutomatically() async {
+    final trashTable = await getAllScript(trash: true);
+    trashTable.forEach((element) {
+      final difference = DateTime.now().difference(element.date);
+      if (difference.inDays >= 7) {
+        deleteTrash(trashId: element.id);
+      }
+    });
+  }
 }

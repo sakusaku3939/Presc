@@ -37,7 +37,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
                       child: Text(
-                        "ごみ箱の中身は7日以内に完全に削除されます",
+                        "ごみ箱の中身は7日後に完全に削除されます",
                         style: TextStyle(fontSize: 12),
                       ),
                     ),

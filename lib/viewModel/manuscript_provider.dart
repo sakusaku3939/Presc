@@ -27,6 +27,7 @@ class ManuscriptProvider with ChangeNotifier {
 
   ManuscriptProvider() {
     Future(() async {
+      _manager.deleteTrashAutomatically();
       _scriptTable = await _manager.getAllScript();
       final _listKeyMonitor = (Timer t) {
         if (listKey.currentState != null) {
