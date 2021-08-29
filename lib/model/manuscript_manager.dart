@@ -41,6 +41,13 @@ class ManuscriptManager {
     return tableList;
   }
 
+  Future<List<MemoTable>> searchScript({@required String keyword}) async {
+    final res = await _helper.search(keyword);
+    List<MemoTable> tableList = res.map((row) => MemoTable.fromMap(row)).toList();
+    tableList.sort((a, b) => b.date.compareTo(a.date));
+    return tableList;
+  }
+
   Future<List<MemoTable>> getScriptByTagId({@required int tagId}) async {
     final res = await _helper.queryMemoByTagId(tagId);
     List<MemoTable> tableList =

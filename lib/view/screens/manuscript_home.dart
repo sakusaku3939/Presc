@@ -9,7 +9,6 @@ import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'manuscript_edit.dart';
-import 'manuscript_search.dart';
 
 class ManuscriptHomeScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -81,24 +80,11 @@ class ManuscriptHomeScreen extends StatelessWidget {
           ),
           RippleIconButton(
             Icons.search,
-            onPressed: () => Navigator.push(
-              context,
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    ManuscriptSearchScreen(),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  return ZoomPageTransitionsBuilder().buildTransitions(
-                    MaterialPageRoute(
-                        builder: (context) => ManuscriptSearchScreen()),
-                    context,
-                    animation,
-                    secondaryAnimation,
-                    child,
-                  );
-                },
-              ),
-            ),
+            onPressed: () {
+              context
+                  .read<ManuscriptProvider>()
+                  .replaceState(ManuscriptState.search);
+            },
           ),
         ],
       ),

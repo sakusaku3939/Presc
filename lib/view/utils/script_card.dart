@@ -32,22 +32,42 @@ class ScriptCard extends StatelessWidget {
   Widget _placeholder() => Container();
 
   Widget _emptyView(ManuscriptProvider model) {
+    IconData icon;
+    String text;
+    switch (model.state) {
+      case ManuscriptState.home:
+      case ManuscriptState.tag:
+        icon = Icons.description_outlined;
+        text = "原稿がまだありません";
+        break;
+      case ManuscriptState.trash:
+        icon = Icons.delete_outline;
+        text = "ごみ箱は空です";
+        break;
+      case ManuscriptState.search:
+        return AnimatedList(
+          key: model.listKey,
+          shrinkWrap: true,
+          itemBuilder: (BuildContext context, int index, Animation animation) {
+            return Container();
+          },
+        );
+        break;
+    }
     return Container(
       height: SafeAreaSize.of(context).height -
-          (model.state != ManuscriptState.tag ? 30 : 0),
+          (model.state == ManuscriptState.tag ? 0 : 30),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(
-            model.state != ManuscriptState.trash
-                ? Icons.description_outlined
-                : Icons.delete_outline,
+            icon,
             color: Colors.grey[600],
             size: 64,
           ),
           SizedBox(height: 8),
           Text(
-            model.state != ManuscriptState.trash ? "原稿がまだありません" : "ごみ箱は空です",
+            text,
             style: TextStyle(color: Colors.grey[700]),
           ),
           AnimatedList(
@@ -65,7 +85,8 @@ class ScriptCard extends StatelessWidget {
 
   Widget _scriptListView(ManuscriptProvider model) {
     return Container(
-      margin: EdgeInsets.only(top: model.state == ManuscriptState.home ? 8 : 12),
+      margin:
+          EdgeInsets.only(top: model.state == ManuscriptState.home ? 8 : 12),
       child: AnimatedList(
         key: model.listKey,
         shrinkWrap: true,

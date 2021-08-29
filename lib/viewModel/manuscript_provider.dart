@@ -8,25 +8,9 @@ class ManuscriptProvider with ChangeNotifier {
   final listKey = GlobalKey<AnimatedListState>();
   final _manager = ManuscriptManager();
 
-  int _currentScriptLength = 0;
-
   ManuscriptState _state = ManuscriptState.home;
 
   ManuscriptState get state => _state;
-
-  ManuscriptProvider() {
-    Future(() async {
-      _scriptTable = await _manager.getAllScript();
-      final _listKeyMonitor = (Timer t) {
-        if (listKey.currentState != null) {
-          t.cancel();
-          replaceState(ManuscriptState.home);
-        }
-      };
-      Timer.periodic(Duration(milliseconds: 100), _listKeyMonitor);
-      notifyListeners();
-    });
-  }
 
   List<MemoTable> _scriptTable;
 
@@ -41,9 +25,24 @@ class ManuscriptProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  ManuscriptProvider() {
+    Future(() async {
+      _scriptTable = await _manager.getAllScript();
+      final _listKeyMonitor = (Timer t) {
+        if (listKey.currentState != null) {
+          t.cancel();
+          _state = ManuscriptState.home;
+          for (int i = 0; i < _scriptTable.length; i++) insertScriptItem(0);
+        }
+      };
+      Timer.periodic(Duration(milliseconds: 100), _listKeyMonitor);
+      notifyListeners();
+    });
+  }
+
   Future<void> replaceState(ManuscriptState state,
-      {int tagId, String tagName = ""}) async {
-    for (int i = 0; i < _currentScriptLength; i++) removeScriptItem(0);
+      {int tagId, String tagName = "", String searchWord = ""}) async {
+    for (int i = 0; i < _scriptTable.length; i++) removeScriptItem(0);
     switch (state) {
       case ManuscriptState.home:
         _scriptTable = await _manager.getAllScript();
@@ -55,11 +54,15 @@ class ManuscriptProvider with ChangeNotifier {
       case ManuscriptState.trash:
         _scriptTable = await _manager.getAllScript(trash: true);
         break;
+      case ManuscriptState.search:
+        _scriptTable = searchWord.isNotEmpty
+            ? await _manager.searchScript(keyword: searchWord)
+            : [];
+        break;
     }
     for (int i = 0; i < _scriptTable.length; i++) insertScriptItem(0);
 
     _state = state;
-    _currentScriptLength = _scriptTable.length;
     _currentTagTable = TagTable(id: tagId, tagName: tagName);
     notifyListeners();
   }
@@ -73,7 +76,8 @@ class ManuscriptProvider with ChangeNotifier {
   Future<int> addScript({
     String title,
     String content,
-  }) async => await _manager.addScript(title: title, content: content);
+  }) async =>
+      await _manager.addScript(title: title, content: content);
 
   Future<void> saveScript({
     @required int id,
@@ -94,7 +98,6 @@ class ManuscriptProvider with ChangeNotifier {
       trash: state == ManuscriptState.trash,
       sort: sort,
     );
-    _currentScriptLength = _scriptTable.length;
     notifyListeners();
   }
 
@@ -109,4 +112,4 @@ class ManuscriptProvider with ChangeNotifier {
   }
 }
 
-enum ManuscriptState { home, tag, trash }
+enum ManuscriptState { home, tag, trash, search }
