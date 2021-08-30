@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,81 +27,96 @@ class OnBoardingScreen extends StatelessWidget {
     });
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            Expanded(
-              child: PageView.builder(
-                controller: _controller,
-                itemCount: pages.length,
-                itemBuilder: (context, index) {
-                  return pages[index];
-                },
+            Center(
+              child: Opacity(
+                opacity: 0.1,
+                child: Image.asset("assets/images/icon2.png"),
               ),
             ),
-            Consumer<OnBoardingProvider>(
-              builder: (context, model, child) {
-                final isLastPage = model.position > pages.length - 1.5;
-                return Row(
-                  children: [
-                    Container(
-                      width: 80,
-                      margin: EdgeInsets.symmetric(horizontal: 8),
-                      child: !isLastPage
-                          ? TextButton(
-                              style: TextButton.styleFrom(
-                                primary: Colors.grey[800],
+            BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(color: Colors.black.withOpacity(0)),
+            ),
+            Column(
+              children: [
+                Expanded(
+                  child: PageView.builder(
+                    controller: _controller,
+                    itemCount: pages.length,
+                    itemBuilder: (context, index) {
+                      return pages[index];
+                    },
+                  ),
+                ),
+                Consumer<OnBoardingProvider>(
+                  builder: (context, model, child) {
+                    final isLastPage = model.position > pages.length - 1.5;
+                    return Row(
+                      children: [
+                        Container(
+                          width: 80,
+                          margin: EdgeInsets.symmetric(horizontal: 8),
+                          child: !isLastPage
+                              ? TextButton(
+                                  style: TextButton.styleFrom(
+                                    primary: Colors.grey[800],
+                                  ),
+                                  child: Text("スキップ"),
+                                  onPressed: () => _nextPage(pages.length - 1),
+                                )
+                              : Container(),
+                        ),
+                        Expanded(
+                          child: Container(
+                            height: 32,
+                            child: DotsIndicator(
+                              dotsCount: pages.length,
+                              position: model.position,
+                              decorator: DotsDecorator(
+                                size: const Size.square(9.0),
+                                activeColor: Theme.of(context).accentColor,
+                                activeSize: const Size(18.0, 9.0),
+                                activeShape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
                               ),
-                              child: Text("スキップ"),
-                              onPressed: () => _nextPage(pages.length - 1),
-                            )
-                          : Container(),
-                    ),
-                    Expanded(
-                      child: Container(
-                        height: 32,
-                        child: DotsIndicator(
-                          dotsCount: pages.length,
-                          position: model.position,
-                          decorator: DotsDecorator(
-                            size: const Size.square(9.0),
-                            activeColor: Theme.of(context).accentColor,
-                            activeSize: const Size(18.0, 9.0),
-                            activeShape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                    Container(
-                      width: 80,
-                      margin: EdgeInsets.symmetric(horizontal: 8),
-                      child: TextButton(
-                        style: TextButton.styleFrom(
-                          primary: Colors.grey[800],
+                        Container(
+                          width: 80,
+                          margin: EdgeInsets.symmetric(horizontal: 8),
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              primary: Colors.grey[800],
+                            ),
+                            child: Text(!isLastPage ? "次へ" : "始める"),
+                            onPressed: () async {
+                              if (isLastPage) {
+                                final prefs =
+                                    await SharedPreferences.getInstance();
+                                prefs.setBool("isFirstLaunch", false);
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ManuscriptScreen()),
+                                  (_) => false,
+                                );
+                              } else {
+                                _nextPage(model.position.round() + 1);
+                              }
+                            },
+                          ),
                         ),
-                        child: Text(!isLastPage ? "次へ" : "始める"),
-                        onPressed: () async {
-                          if (isLastPage) {
-                            final prefs = await SharedPreferences.getInstance();
-                            prefs.setBool("isFirstLaunch", false);
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ManuscriptScreen()),
-                              (_) => false,
-                            );
-                          } else {
-                            _nextPage(model.position.round() + 1);
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                );
-              },
+                      ],
+                    );
+                  },
+                ),
+                SizedBox(height: 8),
+              ],
             ),
-            SizedBox(height: 8),
           ],
         ),
       ),
