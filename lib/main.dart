@@ -2,14 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:presc/view/screens/manuscript.dart';
+import 'package:presc/view/screens/onboarding.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/manuscript_tag_provider.dart';
+import 'package:presc/viewModel/onboarding_provider.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
 import 'package:presc/viewModel/playback_visualizer_provider.dart';
 import 'package:presc/viewModel/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'config/color_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +24,7 @@ void main() async {
     runApp(
       MultiProvider(
         providers: [
+          ChangeNotifierProvider(create: (context) => OnBoardingProvider()),
           ChangeNotifierProvider(create: (context) => ManuscriptProvider()),
           ChangeNotifierProvider(
             create: (context) => EditableTagItemProvider(),
@@ -53,7 +59,23 @@ class MyApp extends StatelessWidget {
       supportedLocales: [
         Locale('ja', ''),
       ],
-      home: ManuscriptScreen(),
+      home: FutureBuilder(
+        future: _isFirstLaunch(),
+        builder: (context, snapshot) {
+          if (snapshot.data == null)
+            return Container(color: ColorConfig.backgroundColor);
+          if (snapshot.data) {
+            return OnBoardingScreen();
+          } else {
+            return ManuscriptScreen();
+          }
+        },
+      ),
     );
+  }
+
+  Future<bool> _isFirstLaunch() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool("isFirstLaunch") ?? true;
   }
 }
