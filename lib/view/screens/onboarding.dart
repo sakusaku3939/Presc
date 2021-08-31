@@ -31,7 +31,7 @@ class OnBoardingScreen extends StatelessWidget {
           children: [
             Center(
               child: Opacity(
-                opacity: 0.1,
+                opacity: 0.2,
                 child: Image.asset("assets/images/icon2.png"),
               ),
             ),
@@ -165,7 +165,7 @@ class OnBoardingScreen extends StatelessWidget {
 
   Widget _page2() {
     return _explanationPage(
-      imagePath: "assets/images/screenshot/edit.png",
+      imagePath: "assets/images/screenshot/home.png",
       title: "原稿を管理",
       content: "原稿を追加・編集・削除しましょう。作った原稿はタグを付けて整理することができます。",
     );
