@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_scale_tap/flutter_scale_tap.dart';
 import "package:intl/intl.dart";
+import 'package:presc/config/color_config.dart';
 import 'package:presc/config/safe_area_size.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/screens/manuscript_edit.dart';
@@ -55,6 +56,7 @@ class ScriptCard extends StatelessWidget {
         break;
     }
     return Container(
+      color: ColorConfig.backgroundColor,
       height: SafeAreaSize.of(context).height -
           (model.state == ManuscriptState.tag ? 0 : 30),
       child: Column(
