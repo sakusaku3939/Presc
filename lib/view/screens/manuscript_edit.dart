@@ -78,11 +78,14 @@ class ManuscriptEditScreen extends StatelessWidget {
           child: FloatingActionButton(
             onPressed: () async {
               if (_provider.state != ManuscriptState.trash) {
-                await _provider.updateScriptTable();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => PlaybackScreen(index)),
+                    builder: (context) => PlaybackScreen(
+                      title: _current.title ?? title,
+                      content: _current.content ?? content,
+                    ),
+                  ),
                 );
               }
             },
@@ -321,9 +324,7 @@ class ManuscriptEditScreen extends StatelessWidget {
         RippleIconButton(
           Icons.share,
           onPressed: () => Share.share(
-            (_current.title ?? title) +
-                "\n\n" +
-                (_current.content ?? content),
+            (_current.title ?? title) + "\n\n" + (_current.content ?? content),
           ),
         ),
         RippleIconButton(
