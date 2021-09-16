@@ -67,7 +67,12 @@ class ScriptModalBottomSheet {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PlaybackScreen(index)),
+                MaterialPageRoute(
+                  builder: (context) => PlaybackScreen(
+                    title: model.scriptTable[index].title,
+                    content: model.scriptTable[index].content,
+                  ),
+                ),
               );
             }),
         ListTile(

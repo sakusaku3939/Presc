@@ -3,7 +3,6 @@ import 'package:presc/view/screens/setting.dart';
 import 'package:presc/view/utils/playback_text_view.dart';
 import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
 import 'package:presc/view/utils/ripple_button.dart';
-import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
 import 'package:presc/viewModel/playback_visualizer_provider.dart';
@@ -11,9 +10,10 @@ import 'package:presc/viewModel/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
 
 class PlaybackScreen extends StatelessWidget {
-  const PlaybackScreen(this.index);
+  PlaybackScreen({@required this.title, @required this.content});
 
-  final int index;
+  final String title;
+  final String content;
 
   void _back(BuildContext context) {
     context.read<SpeechToTextProvider>().back(context);
@@ -22,9 +22,7 @@ class PlaybackScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final playbackTextView = PlaybackTextView(
-      context.read<ManuscriptProvider>().scriptTable[index].content,
-    );
+    final playbackTextView = PlaybackTextView(content);
     return WillPopScope(
       onWillPop: () {
         _back(context);
@@ -87,7 +85,7 @@ class PlaybackScreen extends StatelessWidget {
         onPressed: () => _back(context),
       ),
       title: Text(
-        context.read<ManuscriptProvider>().scriptTable[index].title,
+        title,
         style: TextStyle(
           fontSize: 20,
           fontWeight: FontWeight.bold,
