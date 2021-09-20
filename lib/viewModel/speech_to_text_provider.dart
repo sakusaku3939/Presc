@@ -73,13 +73,5 @@ class SpeechToTextProvider with ChangeNotifier {
     }
   }
 
-  int _countLine(String words) {
-    int count = 0;
-    String latestWord = "";
-    words.split('').forEach((word) {
-      if (latestWord == '\n' && word == '\n') count++;
-      latestWord = word;
-    });
-    return count;
-  }
+  int _countLine(String text) => text.split('\n').where((e) => e == '').length;
 }
