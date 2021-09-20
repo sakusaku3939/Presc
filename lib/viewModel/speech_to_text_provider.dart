@@ -61,14 +61,14 @@ class SpeechToTextProvider with ChangeNotifier {
         ? unrecognizedText.substring(0, 150)
         : unrecognizedText;
     int lastIndex = -1;
-    _ngram(lastWords, 4).forEach((t) {
+    _ngram(lastWords, 3).forEach((t) {
       lastIndex = max(rangeUnrecognizedText.indexOf(t), lastIndex);
     });
     if (lastIndex != -1) {
-      final latestRecognizedText = unrecognizedText.substring(0, lastIndex + 4);
+      final latestRecognizedText = unrecognizedText.substring(0, lastIndex + 3);
       recognizedLineCount += _countLine(latestRecognizedText);
       recognizedText += latestRecognizedText;
-      unrecognizedText = unrecognizedText.substring(lastIndex + 4);
+      unrecognizedText = unrecognizedText.substring(lastIndex + 3);
       notifyListeners();
     }
   }
