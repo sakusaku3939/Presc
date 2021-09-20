@@ -127,7 +127,12 @@ class SettingScreen extends StatelessWidget {
                     child: ListTile(
                       title: Text("オープンソースライセンス"),
                       contentPadding: EdgeInsets.only(left: 32),
-                      onTap: () => {},
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (BuildContext context) => LicensePage(),
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(height: 32),
