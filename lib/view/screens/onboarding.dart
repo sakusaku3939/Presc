@@ -140,7 +140,6 @@ class OnBoardingScreen extends StatelessWidget {
             child: Image.asset("assets/images/logo.png"),
           ),
         ),
-        // SizedBox(height: 80),
         Container(
           margin: EdgeInsets.symmetric(horizontal: 40),
           child: Text(

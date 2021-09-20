@@ -6,6 +6,7 @@ import 'package:presc/config/playback_style_config.dart';
 import 'package:presc/config/playback_text_style.dart';
 import 'package:presc/config/sample_text_config.dart';
 import 'package:presc/config/scroll_speed_config.dart';
+import 'package:presc/view/screens/about_app.dart';
 import 'package:presc/view/utils/dialog/color_dialog_manager.dart';
 import 'package:presc/view/utils/horizontal_text.dart';
 import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
@@ -119,7 +120,12 @@ class SettingScreen extends StatelessWidget {
                     child: ListTile(
                       title: Text("このアプリについて"),
                       contentPadding: EdgeInsets.only(left: 32),
-                      onTap: () => {},
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => AboutApp(),
+                        ),
+                      ),
                     ),
                   ),
                   Ink(
@@ -129,7 +135,7 @@ class SettingScreen extends StatelessWidget {
                       contentPadding: EdgeInsets.only(left: 32),
                       onTap: () => Navigator.push(
                         context,
-                        MaterialPageRoute<void>(
+                        MaterialPageRoute(
                           builder: (BuildContext context) => LicensePage(),
                         ),
                       ),
