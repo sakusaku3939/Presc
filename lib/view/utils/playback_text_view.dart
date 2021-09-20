@@ -38,6 +38,7 @@ class PlaybackTextView extends StatelessWidget {
     final provider = context.read<SpeechToTextProvider>();
     provider.recognizedText = "";
     provider.unrecognizedText = _content;
+    provider.recognizedLineCount = 0;
   }
 
   void scrollToStart() => _scrollController.animateTo(
@@ -178,7 +179,7 @@ class _RecognizedTextView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<SpeechToTextProvider>(
       builder: (context, model, child) {
-        _scrollRecognizedText(context, model.recognizedText);
+        _scrollRecognizedText(context, model);
         if (playbackProvider.scrollVertical)
           return Text.rich(
             TextSpan(
@@ -206,21 +207,31 @@ class _RecognizedTextView extends StatelessWidget {
     );
   }
 
-  void _scrollRecognizedText(BuildContext context, String recognizedText) {
-    if (recognizedText.isNotEmpty) {
+  void _scrollRecognizedText(BuildContext context, SpeechToTextProvider model) {
+    if (model.recognizedText.isNotEmpty) {
       final scroll = controller;
       final RenderBox box = playbackTextKey.currentContext?.findRenderObject();
-      if (context.read<PlaybackProvider>().scrollVertical)
+      if (playbackProvider.scrollVertical) {
+        final height = _textBoxSize(
+          model.recognizedText,
+          box?.size?.width,
+          model.recognizedLineCount,
+        );
         _scrollTo(
-          _textHeight(recognizedText, box?.size?.width) - 88,
+          height - 88,
           limit: scroll.offset < scroll.position.maxScrollExtent,
         );
-      else
+      } else {
+        final width = _textBoxSize(
+          model.recognizedText,
+          box?.size?.height,
+          model.recognizedLineCount,
+        );
         _scrollTo(
-          scroll.position.maxScrollExtent -
-              _textHeight(recognizedText, box?.size?.height),
+          scroll.position.maxScrollExtent - width,
           limit: scroll.offset > 0,
         );
+      }
     }
   }
 
@@ -233,7 +244,7 @@ class _RecognizedTextView extends StatelessWidget {
       );
   }
 
-  double _textHeight(String text, double textWidth) {
+  double _textBoxSize(String text, double textWidth, int recognizedLineCount) {
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
         text: text.replaceAll('\n', ''),
@@ -244,9 +255,8 @@ class _RecognizedTextView extends StatelessWidget {
     )..layout(minWidth: 0, maxWidth: double.infinity);
 
     textWidth ??= 1;
-    final lfCount = '\n'.allMatches(text).length * 0.5;
-    final countLines = (textPainter.size.width / textWidth + lfCount).ceil();
-    final height = countLines * textPainter.size.height;
-    return height;
+    final rowCount = (textPainter.size.width / textWidth).ceil();
+    final height = rowCount * textPainter.size.height;
+    return height + recognizedLineCount * 18;
   }
 }
