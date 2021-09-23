@@ -191,7 +191,9 @@ class _Card extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(12, 8, 4, 0),
                   child: Text(
-                    content.isNotEmpty ? content : "追加のテキストはありません",
+                    content.isNotEmpty
+                        ? _optimizeContent(content)
+                        : "追加のテキストはありません",
                     style: TextStyle(
                       color: Colors.grey[800],
                       height: 1.8,
@@ -220,5 +222,17 @@ class _Card extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _optimizeContent(String content) {
+    final rangeText = content.length > 200
+        ? content.substring(0, 200)
+        : content;
+    String text = "";
+    rangeText.split('\n').forEach((word) {
+      text += word;
+      if (word != '') text += '\n';
+    });
+    return text;
   }
 }

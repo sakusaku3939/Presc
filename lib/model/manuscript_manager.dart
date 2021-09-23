@@ -32,12 +32,12 @@ class ManuscriptManager {
     await _helper.update(table);
   }
 
-  Future<List<MemoTable>> getAllScript({trash = false, sort = false}) async {
+  Future<List<MemoTable>> getAllScript({trash = false}) async {
     final res =
         await _helper.queryAll(trash ? TrashTable.name : MemoTable.name);
     List<MemoTable> tableList =
         res.map((row) => MemoTable.fromMap(row)).toList();
-    if (sort) tableList.sort((a, b) => b.date.compareTo(a.date));
+    tableList.sort((a, b) => b.date.compareTo(a.date));
     return tableList;
   }
 
