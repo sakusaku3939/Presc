@@ -38,7 +38,6 @@ class PlaybackTextView extends StatelessWidget {
     final provider = context.read<SpeechToTextProvider>();
     provider.recognizedText = "";
     provider.unrecognizedText = _content;
-    provider.recognizedLineCount = 0;
   }
 
   void scrollToStart() => _scrollController.animateTo(
@@ -212,20 +211,18 @@ class _RecognizedTextView extends StatelessWidget {
       final scroll = controller;
       final RenderBox box = playbackTextKey.currentContext?.findRenderObject();
       if (playbackProvider.scrollVertical) {
-        final height = _textBoxSize(
+        final height = _textBoxHeight(
           model.recognizedText,
-          box?.size?.width,
-          model.recognizedLineCount,
+          textWidth: box?.size?.width,
         );
         _scrollTo(
-          height - 88,
+          height - 120,
           limit: scroll.offset < scroll.position.maxScrollExtent,
         );
       } else {
-        final width = _textBoxSize(
+        final width = _textBoxWidth(
           model.recognizedText,
-          box?.size?.height,
-          model.recognizedLineCount,
+          textHeight: box?.size?.height,
         );
         _scrollTo(
           scroll.position.maxScrollExtent - width,
@@ -244,19 +241,31 @@ class _RecognizedTextView extends StatelessWidget {
       );
   }
 
-  double _textBoxSize(String text, double textWidth, int recognizedLineCount) {
+  double _textBoxWidth(String recognizedText, {@required double textHeight}) {
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
-        text: text.replaceAll('\n', ''),
+        text: recognizedText.replaceAll('\n', ''),
         style: PlaybackTextStyle.of(playbackProvider).calculation,
       ),
       textDirection: TextDirection.ltr,
       maxLines: 1,
     )..layout(minWidth: 0, maxWidth: double.infinity);
 
-    textWidth ??= 1;
-    final rowCount = (textPainter.size.width / textWidth).ceil();
+    textHeight ??= 1;
+    final rowCount = (textPainter.size.width / textHeight).ceil();
     final height = rowCount * textPainter.size.height;
-    return height + recognizedLineCount * 18;
+    return height;
+  }
+
+  double _textBoxHeight(String recognizedText, {@required double textWidth}) {
+    final TextPainter textPainter = TextPainter(
+      text: TextSpan(
+        text: recognizedText,
+        style: PlaybackTextStyle.of(playbackProvider).calculation,
+      ),
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout(minWidth: 0, maxWidth: textWidth);
+    return textPainter.size.height;
   }
 }

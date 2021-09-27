@@ -11,7 +11,6 @@ class SpeechToTextProvider with ChangeNotifier {
 
   String unrecognizedText = "";
   String recognizedText = "";
-  int recognizedLineCount = 0;
 
   void start(BuildContext context) {
     final showSnackBar = (text) => ScaffoldMessenger.of(context).showSnackBar(
@@ -66,7 +65,6 @@ class SpeechToTextProvider with ChangeNotifier {
     });
     if (lastIndex != -1) {
       final latestRecognizedText = unrecognizedText.substring(0, lastIndex + 4);
-      recognizedLineCount += _countLine(latestRecognizedText);
       recognizedText += latestRecognizedText;
       unrecognizedText = unrecognizedText.substring(lastIndex + 4);
       notifyListeners();
