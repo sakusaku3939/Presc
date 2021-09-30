@@ -188,6 +188,25 @@ class _RecognizedTextView extends StatelessWidget {
       builder: (context, model, child) {
         _scrollRecognizedText(context, model);
         if (playbackProvider.scrollVertical)
+          //   return LayoutBuilder(builder: (_, constraints) {
+          //     final TextPainter textPainter = TextPainter(
+          //       text: TextSpan(
+          //         style: DefaultTextStyle.of(context).style,
+          //         children: [
+          //           TextSpan(
+          //             text: model.unrecognizedText,
+          //             style: PlaybackTextStyle.of(playbackProvider).unrecognized,
+          //           )
+          //         ],
+          //       ),
+          //       textDirection: TextDirection.ltr,
+          //     );
+          //     textPainter.layout(minWidth: 0, maxWidth: constraints.maxWidth);
+          //     return CustomPaint(
+          //       size: Size(constraints.maxWidth, 200),
+          //       painter: _MyPainter(textPainter),
+          //     );
+          //   });
           return Text.rich(
             TextSpan(
               style: DefaultTextStyle.of(context).style,
@@ -220,6 +239,7 @@ class _RecognizedTextView extends StatelessWidget {
       final RenderBox box = playbackTextKey.currentContext?.findRenderObject();
       if (playbackProvider.scrollVertical) {
         final height = _textBoxHeight(
+          context,
           model.recognizedText,
           textWidth: box?.size?.width,
         );
@@ -265,15 +285,38 @@ class _RecognizedTextView extends StatelessWidget {
     return height;
   }
 
-  double _textBoxHeight(String recognizedText, {@required double textWidth}) {
+  double _textBoxHeight(
+    BuildContext context,
+    String recognizedText, {
+    @required double textWidth,
+  }) {
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
-        text: recognizedText,
-        style: PlaybackTextStyle.of(playbackProvider).calculation,
+        style: DefaultTextStyle.of(context).style,
+        children: [
+          TextSpan(
+            text: recognizedText,
+            style: PlaybackTextStyle.of(playbackProvider).unrecognized,
+          )
+        ],
       ),
       textDirection: TextDirection.ltr,
     );
     textPainter.layout(minWidth: 0, maxWidth: textWidth);
     return textPainter.size.height;
   }
+}
+
+class _MyPainter extends CustomPainter {
+  _MyPainter(this.textPainter);
+
+  final TextPainter textPainter;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    textPainter.paint(canvas, Offset(0, 0));
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }

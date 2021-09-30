@@ -19,28 +19,29 @@ class SpeechToTextProvider with ChangeNotifier {
             duration: const Duration(seconds: 2),
           ),
         );
-    _manager.speak(
-      resultListener: _reflect,
-      errorListener: (error) {
-        context.read<PlaybackProvider>().playFabState = false;
-        context.read<PlaybackTimerProvider>().stop();
-        _manager.stop();
-        switch (error) {
-          case "not_available":
-            showSnackBar("音声認識を行うにはマイクの許可が必要です");
-            break;
-          case "error_network":
-            showSnackBar("ネットワークエラーが発生しました");
-            break;
-          case "error_busy":
-            showSnackBar("マイクがビジー状態です");
-            break;
-          default:
-            showSnackBar("エラー: $error");
-            break;
-        }
-      },
-    );
+    _testReflect();
+    // _manager.speak(
+    //   resultListener: _reflect,
+    //   errorListener: (error) {
+    //     context.read<PlaybackProvider>().playFabState = false;
+    //     context.read<PlaybackTimerProvider>().stop();
+    //     _manager.stop();
+    //     switch (error) {
+    //       case "not_available":
+    //         showSnackBar("音声認識を行うにはマイクの許可が必要です");
+    //         break;
+    //       case "error_network":
+    //         showSnackBar("ネットワークエラーが発生しました");
+    //         break;
+    //       case "error_busy":
+    //         showSnackBar("マイクがビジー状態です");
+    //         break;
+    //       default:
+    //         showSnackBar("エラー: $error");
+    //         break;
+    //     }
+    //   },
+    // );
     notifyListeners();
   }
 
@@ -72,4 +73,13 @@ class SpeechToTextProvider with ChangeNotifier {
   }
 
   int _countLine(String text) => text.split('\n').where((e) => e == '').length;
+
+  Future<void> _testReflect() async {
+    await Future.delayed(Duration(milliseconds: 500));
+    _reflect("かとんと");
+    await Future.delayed(Duration(milliseconds: 2000));
+    _reflect("しかもあとで");
+    await Future.delayed(Duration(milliseconds: 2000));
+    _reflect("ばかりである");
+  }
 }
