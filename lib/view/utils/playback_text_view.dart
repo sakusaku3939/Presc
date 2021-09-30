@@ -225,7 +225,7 @@ class _RecognizedTextView extends StatelessWidget {
           textWidth: box?.size?.width,
         );
         _scrollTo(
-          height - 120,
+          height - playbackProvider.fontSize * playbackProvider.fontHeight,
           limit: scroll.offset < scroll.position.maxScrollExtent,
         );
       } else {
