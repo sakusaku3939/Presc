@@ -62,12 +62,15 @@ class SpeechToTextManager {
     await stop(log: false);
     Timer(
       Duration(milliseconds: 600),
-      () => speak(
-        resultListener: this.resultListener,
-        errorListener: this.errorListener,
-        statusListener: this.statusListener,
-        log: false,
-      ),
+      () => {
+        if (!_isStopFlagValid)
+          speak(
+            resultListener: this.resultListener,
+            errorListener: this.errorListener,
+            statusListener: this.statusListener,
+            log: false,
+          )
+      },
     );
   }
 
@@ -96,7 +99,7 @@ class SpeechToTextManager {
 
   void _statusListener(String status) {
     lastStatus = status;
-    if (!_isStopFlagValid && lastStatus == "notListening") {
+    if (lastStatus == "notListening") {
       restart();
     } else {
       if (statusListener != null) statusListener(status);

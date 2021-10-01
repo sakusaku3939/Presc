@@ -69,10 +69,10 @@ class PlaybackTextView extends StatelessWidget {
         Widget playbackText;
         switch (model.scrollMode) {
           case ScrollMode.manual:
-            playbackText = _textView(model, autoScroll: false);
+            playbackText = _textView(context, model, autoScroll: false);
             break;
           case ScrollMode.auto:
-            playbackText = _textView(model, autoScroll: true);
+            playbackText = _textView(context, model, autoScroll: true);
             break;
           case ScrollMode.recognition:
             playbackText = _RecognizedTextView(
@@ -113,12 +113,20 @@ class PlaybackTextView extends StatelessWidget {
     scrollToInit(context);
   }
 
-  Widget _textView(PlaybackProvider model, {autoScroll = false}) {
+  Widget _textView(BuildContext context, PlaybackProvider model,
+      {autoScroll = false}) {
     if (autoScroll) _autoScroll(model);
     if (model.scrollVertical)
-      return Text(
-        _content,
-        style: PlaybackTextStyle.of(model).unrecognized,
+      return Text.rich(
+        TextSpan(
+          style: DefaultTextStyle.of(context).style,
+          children: [
+            TextSpan(
+              text: _content,
+              style: PlaybackTextStyle.of(model).unrecognized,
+            ),
+          ],
+        ),
         key: _playbackTextKey,
       );
     else
@@ -212,11 +220,12 @@ class _RecognizedTextView extends StatelessWidget {
       final RenderBox box = playbackTextKey.currentContext?.findRenderObject();
       if (playbackProvider.scrollVertical) {
         final height = _textBoxHeight(
+          context,
           model.recognizedText,
           textWidth: box?.size?.width,
         );
         _scrollTo(
-          height - 120,
+          height - playbackProvider.fontSize * playbackProvider.fontHeight,
           limit: scroll.offset < scroll.position.maxScrollExtent,
         );
       } else {
@@ -257,11 +266,20 @@ class _RecognizedTextView extends StatelessWidget {
     return height;
   }
 
-  double _textBoxHeight(String recognizedText, {@required double textWidth}) {
+  double _textBoxHeight(
+    BuildContext context,
+    String recognizedText, {
+    @required double textWidth,
+  }) {
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
-        text: recognizedText,
-        style: PlaybackTextStyle.of(playbackProvider).calculation,
+        style: DefaultTextStyle.of(context).style,
+        children: [
+          TextSpan(
+            text: recognizedText,
+            style: PlaybackTextStyle.of(playbackProvider).unrecognized,
+          )
+        ],
       ),
       textDirection: TextDirection.ltr,
     );

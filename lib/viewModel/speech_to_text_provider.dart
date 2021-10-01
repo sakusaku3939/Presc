@@ -72,4 +72,13 @@ class SpeechToTextProvider with ChangeNotifier {
   }
 
   int _countLine(String text) => text.split('\n').where((e) => e == '').length;
+
+  Future<void> _testReflect() async {
+    await Future.delayed(Duration(milliseconds: 500));
+    _reflect("かとんと");
+    await Future.delayed(Duration(milliseconds: 2000));
+    _reflect("しかもあとで");
+    await Future.delayed(Duration(milliseconds: 2000));
+    _reflect("ばかりである");
+  }
 }
