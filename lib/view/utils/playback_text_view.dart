@@ -38,6 +38,7 @@ class PlaybackTextView extends StatelessWidget {
     final provider = context.read<SpeechToTextProvider>();
     provider.recognizedText = "";
     provider.unrecognizedText = _content;
+    provider.lastOffset = 0;
   }
 
   void scrollToStart() => _scrollController.animateTo(
@@ -224,10 +225,13 @@ class _RecognizedTextView extends StatelessWidget {
           model.recognizedText,
           textWidth: box?.size?.width,
         );
+        final offset =
+            height - playbackProvider.fontSize * playbackProvider.fontHeight;
         _scrollTo(
-          height - playbackProvider.fontSize * playbackProvider.fontHeight,
+          scroll.offset - model.lastOffset + offset,
           limit: scroll.offset < scroll.position.maxScrollExtent,
         );
+        model.lastOffset = offset;
       } else {
         final width = _textBoxWidth(
           model.recognizedText,

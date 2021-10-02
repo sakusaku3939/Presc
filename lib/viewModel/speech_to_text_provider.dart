@@ -11,6 +11,7 @@ class SpeechToTextProvider with ChangeNotifier {
 
   String unrecognizedText = "";
   String recognizedText = "";
+  double lastOffset = 0;
 
   void start(BuildContext context) {
     final showSnackBar = (text) => ScaffoldMessenger.of(context).showSnackBar(
