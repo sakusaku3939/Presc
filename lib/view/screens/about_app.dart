@@ -71,19 +71,6 @@ class AboutApp extends StatelessWidget {
                   margin: EdgeInsets.symmetric(horizontal: 24),
                   width: double.infinity,
                   height: 40,
-                  child: TextButton(
-                    child: Text("Playストアで評価"),
-                    style: TextButton.styleFrom(
-                      primary: Colors.black,
-                    ),
-                    onPressed: () {},
-                  ),
-                ),
-                SizedBox(height: 4),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 24),
-                  width: double.infinity,
-                  height: 40,
                   child: ElevatedButton(
                     child: Text("フィードバックを送る"),
                     style: ElevatedButton.styleFrom(
