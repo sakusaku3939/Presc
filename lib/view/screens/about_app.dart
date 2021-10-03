@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:presc/view/utils/ripple_button.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class AboutApp extends StatelessWidget {
   @override
@@ -71,32 +72,38 @@ class AboutApp extends StatelessWidget {
                   margin: EdgeInsets.symmetric(horizontal: 24),
                   width: double.infinity,
                   height: 40,
-                  child: TextButton(
-                    child: Text("Playストアで評価"),
-                    style: TextButton.styleFrom(
-                      primary: Colors.black,
-                    ),
-                    onPressed: () {},
-                  ),
-                ),
-                SizedBox(height: 4),
-                Container(
-                  margin: EdgeInsets.symmetric(horizontal: 24),
-                  width: double.infinity,
-                  height: 40,
                   child: ElevatedButton(
                     child: Text("フィードバックを送る"),
                     style: ElevatedButton.styleFrom(
                       primary: Theme.of(context).accentColor,
                       onPrimary: Colors.white,
                     ),
-                    onPressed: () {},
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => _FeedbackWebView(),
+                      ),
+                    ),
                   ),
                 ),
                 SizedBox(height: 24),
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FeedbackWebView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: WebView(
+          initialUrl: 'https://form.run/@presc--1633289693',
+          javascriptMode: JavascriptMode.unrestricted,
         ),
       ),
     );

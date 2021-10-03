@@ -14,9 +14,9 @@ class PlaybackVisualizerProvider with ChangeNotifier {
 
   List<double> get height {
     _manager.soundLevelListener ??= (level) {
-      if (level < 2) level = 0;
+      if (level < 1) level = 0;
       for (int i = 0; i < barSize; i++) {
-        _height[i] = level +
+        _height[i] = 2 * level +
             Random().nextInt(_distributionHeight).toDouble() * level.sign;
       }
       notifyListeners();
