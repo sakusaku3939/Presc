@@ -100,6 +100,20 @@ class _FeedbackWebView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        toolbarHeight: 48,
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        actions: [
+          RippleIconButton(
+            Icons.close,
+            size: 32,
+            onPressed: () => Navigator.pop(context),
+          ),
+          SizedBox(width: 4),
+        ],
+      ),
       body: SafeArea(
         child: WebView(
           initialUrl: 'https://form.run/@presc--1633289693',
