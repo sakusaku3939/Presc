@@ -255,11 +255,13 @@ class PlaybackScreen extends StatelessWidget {
               Container(
                 width: model.width(context),
                 height: model.height[i],
-                color: Colors.red.withOpacity(min(model.level, 9) / 9),
+                color: Colors.red.withOpacity(_easeIn(model.level / 10)),
               )
           ],
         );
       },
     );
   }
+
+  double _easeIn(double x) => x * x;
 }
