@@ -357,20 +357,21 @@ class ManuscriptEditScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    CharCounter.includeSpace(_current.content ?? content)
+                    CharCounter.ignoreSpace(_current.content ?? content)
                         .toString(),
                   ),
                   SizedBox(height: 16),
                   Text(
-                    "空白を除いた文字数",
+                    "読み上げ時間の目安（1分300文字）",
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey[700],
                     ),
                   ),
                   Text(
-                    CharCounter.ignoreSpace(_current.content ?? content)
-                        .toString(),
+                    _calcReadTime(
+                      CharCounter.ignoreSpace(_current.content ?? content),
+                    ),
                   ),
                   SizedBox(height: 16),
                   Text(
@@ -398,6 +399,13 @@ class ManuscriptEditScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  String _calcReadTime(int count) {
+    final totalSecond = count / 5;
+    final minutes = totalSecond ~/ 60;
+    final second = (totalSecond % 60).floor();
+    return "$minutes分$second秒";
   }
 
   Widget _trashStateMenu() {

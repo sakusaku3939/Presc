@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:presc/view/screens/setting.dart';
 import 'package:presc/view/utils/playback_text_view.dart';
@@ -254,11 +255,13 @@ class PlaybackScreen extends StatelessWidget {
               Container(
                 width: model.width(context),
                 height: model.height[i],
-                color: Colors.red.withOpacity(.8),
-              ),
+                color: Colors.red.withOpacity(_easeIn(model.level / 10)),
+              )
           ],
         );
       },
     );
   }
+
+  double _easeIn(double x) => x * x;
 }
