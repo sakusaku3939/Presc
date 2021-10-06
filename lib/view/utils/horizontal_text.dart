@@ -54,11 +54,13 @@ class HorizontalText extends StatelessWidget {
   Widget build(BuildContext context) {
     final length = recognizedText.replaceAll('\n', '').length;
     final split = (recognizedText + unrecognizedText).split("\n");
-
     List<Widget> list = [];
     int totalSplitLength = 0;
+
     for (int i = 0; i < split.length; i++) {
-      list.add(_textWrap(context, split[i].runes, length - totalSplitLength));
+      list.add(
+        _textLineWidget(context, split[i].runes, length - totalSplitLength),
+      );
       totalSplitLength += split[i].length;
     }
 
@@ -69,15 +71,16 @@ class HorizontalText extends StatelessWidget {
     );
   }
 
-  Widget _textWrap(BuildContext context, Runes runes, int distance) {
+  Widget _textLineWidget(BuildContext context, Runes runes, int distance) {
     final provider = context.read<PlaybackProvider>();
     int i = 0;
     List<Widget> list = [];
+
     for (var rune in runes) {
       list.add(
         Row(
           children: [
-            _text(
+            _characterWidget(
               provider,
               String.fromCharCode(rune),
               recognized: i - distance < 0,
@@ -99,7 +102,7 @@ class HorizontalText extends StatelessWidget {
     );
   }
 
-  Widget _text(PlaybackProvider provider, String char,
+  Widget _characterWidget(PlaybackProvider provider, String char,
       {bool recognized = false}) {
     final config = PlaybackTextStyle.of(provider);
     final style = recognized ? config.recognized : config.unrecognized;
