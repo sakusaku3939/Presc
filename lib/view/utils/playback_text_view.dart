@@ -78,7 +78,7 @@ class PlaybackTextView extends StatelessWidget {
           case ScrollMode.recognition:
             playbackText = _RecognizedTextView(
               playbackProvider: model,
-              controller: _scrollController,
+              scroll: _scrollController,
               playbackTextKey: _playbackTextKey,
             );
             break;
@@ -175,20 +175,20 @@ class PlaybackTextView extends StatelessWidget {
 class _RecognizedTextView extends StatelessWidget {
   const _RecognizedTextView({
     @required this.playbackProvider,
-    @required this.controller,
+    @required this.scroll,
     @required this.playbackTextKey,
   });
 
   final PlaybackProvider playbackProvider;
-  final ScrollController controller;
+  final ScrollController scroll;
   final GlobalKey playbackTextKey;
 
   @override
   Widget build(BuildContext context) {
     return Consumer<SpeechToTextProvider>(
       builder: (context, model, child) {
-        _scrollRecognizedText(context, model);
-        if (playbackProvider.scrollVertical)
+        if (playbackProvider.scrollVertical) {
+          _scrollVerticalRecognizedText(context, model);
           return Text.rich(
             TextSpan(
               style: DefaultTextStyle.of(context).style,
@@ -205,69 +205,62 @@ class _RecognizedTextView extends StatelessWidget {
             ),
             key: playbackTextKey,
           );
-        else
+        } else {
           return HorizontalText(
             key: playbackTextKey,
             recognizedText: model.recognizedText,
             unrecognizedText: model.unrecognizedText,
+            horizontalRecognizedListener: (double width) =>
+                _scrollHorizontalRecognizedText(model, width),
           );
+        }
       },
     );
   }
 
-  void _scrollRecognizedText(BuildContext context, SpeechToTextProvider model) {
+  void _scrollVerticalRecognizedText(
+    BuildContext context,
+    SpeechToTextProvider model,
+  ) {
     if (model.recognizedText.isNotEmpty) {
-      final scroll = controller;
       final RenderBox box = playbackTextKey.currentContext?.findRenderObject();
-      if (playbackProvider.scrollVertical) {
-        final height = _textBoxHeight(
-          context,
-          model.recognizedText,
-          textWidth: box?.size?.width,
-        );
-        final offset =
-            height - playbackProvider.fontSize * playbackProvider.fontHeight;
-        _scrollTo(
-          scroll.offset - model.lastOffset + offset,
-          limit: scroll.offset < scroll.position.maxScrollExtent,
-        );
-        model.lastOffset = offset;
-      } else {
-        final width = _textBoxWidth(
-          model.recognizedText,
-          textHeight: box?.size?.height,
-        );
-        _scrollTo(
-          scroll.position.maxScrollExtent - width,
-          limit: scroll.offset > 0,
-        );
-      }
+      final height = _textBoxHeight(
+        context,
+        model.recognizedText,
+        textWidth: box?.size?.width,
+      );
+      final offset =
+          height - playbackProvider.fontSize * playbackProvider.fontHeight;
+      _scrollTo(
+        scroll.offset - model.lastOffset + offset,
+        limit: scroll.offset < scroll.position.maxScrollExtent,
+      );
+      model.lastOffset = offset;
+    }
+  }
+
+  void _scrollHorizontalRecognizedText(
+    SpeechToTextProvider model,
+    double width,
+  ) {
+    if (model.recognizedText.isNotEmpty) {
+      final offset =
+          width - playbackProvider.fontSize * playbackProvider.fontHeight;
+      _scrollTo(
+        scroll.offset + model.lastOffset - offset,
+        limit: scroll.offset > 0,
+      );
+      model.lastOffset = offset;
     }
   }
 
   void _scrollTo(double offset, {bool limit}) {
     if (limit)
-      controller.animateTo(
+      scroll.animateTo(
         offset,
         duration: Duration(milliseconds: 1000),
         curve: Curves.ease,
       );
-  }
-
-  double _textBoxWidth(String recognizedText, {@required double textHeight}) {
-    final TextPainter textPainter = TextPainter(
-      text: TextSpan(
-        text: recognizedText.replaceAll('\n', ''),
-        style: PlaybackTextStyle.of(playbackProvider).calculation,
-      ),
-      textDirection: TextDirection.ltr,
-      maxLines: 1,
-    )..layout(minWidth: 0, maxWidth: double.infinity);
-
-    textHeight ??= 1;
-    final rowCount = (textPainter.size.width / textHeight).ceil();
-    final height = rowCount * textPainter.size.height;
-    return height;
   }
 
   double _textBoxHeight(
