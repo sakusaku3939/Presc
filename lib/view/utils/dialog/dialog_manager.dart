@@ -11,10 +11,7 @@ class DialogManager {
   }) {
     List<Widget> _adjustActions;
     if (actions != null) {
-      _adjustActions = [
-        actions,
-        [SizedBox(width: 2)],
-      ].expand((_) => _).toList();
+      _adjustActions = actions + [SizedBox(width: 2)];
     }
     showDialog(
       context: context,

@@ -8,10 +8,12 @@ class HorizontalText extends StatelessWidget {
     Key key,
     @required this.recognizedText,
     @required this.unrecognizedText,
+    this.horizontalRecognizedListener,
   }) : super(key: key);
 
   final String recognizedText;
   final String unrecognizedText;
+  final void Function(double width) horizontalRecognizedListener;
 
   final _punctuation = [
     '。',
@@ -54,53 +56,67 @@ class HorizontalText extends StatelessWidget {
   Widget build(BuildContext context) {
     final length = recognizedText.replaceAll('\n', '').length;
     final split = (recognizedText + unrecognizedText).split("\n");
-
     List<Widget> list = [];
     int totalSplitLength = 0;
+
     for (int i = 0; i < split.length; i++) {
-      list.add(_textWrap(context, split[i].runes, length - totalSplitLength));
+      list.add(
+        _textBoxWidget(context, split[i].runes, length - totalSplitLength),
+      );
       totalSplitLength += split[i].length;
     }
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      textDirection: TextDirection.rtl,
-      children: list,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        _calcRecognizedWidth(context, constraints);
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          textDirection: TextDirection.rtl,
+          children: list,
+        );
+      },
     );
   }
 
-  Widget _textWrap(BuildContext context, Runes runes, int distance) {
+  Widget _textBoxWidget(BuildContext context, Runes runes, int distance) {
     final provider = context.read<PlaybackProvider>();
-    int i = 0;
-    List<Widget> list = [];
-    for (var rune in runes) {
-      list.add(
-        Row(
+    final textBox = (String char, bool recognized) => Row(
           children: [
-            _text(
+            _characterWidget(
               provider,
-              String.fromCharCode(rune),
-              recognized: i - distance < 0,
+              char,
+              recognized: recognized,
             ),
             SizedBox(
               width:
                   provider.fontHeight * provider.fontSize - provider.fontSize,
             ),
           ],
-        ),
-      );
+        );
+    int i = 0;
+    List<Widget> recognizedList = [];
+    List<Widget> unrecognizedList = [];
+
+    for (var rune in runes) {
+      if (i - distance < 0)
+        recognizedList.add(textBox(String.fromCharCode(rune), true));
+      else
+        unrecognizedList.add(textBox(String.fromCharCode(rune), false));
       i++;
     }
 
     return Wrap(
       textDirection: TextDirection.rtl,
       direction: Axis.vertical,
-      children: list,
+      children: recognizedList + unrecognizedList,
     );
   }
 
-  Widget _text(PlaybackProvider provider, String char,
-      {bool recognized = false}) {
+  Widget _characterWidget(
+    PlaybackProvider provider,
+    String char, {
+    bool recognized = false,
+  }) {
     final config = PlaybackTextStyle.of(provider);
     final style = recognized ? config.recognized : config.unrecognized;
     if (_punctuation.contains(char)) {
@@ -112,6 +128,18 @@ class HorizontalText extends StatelessWidget {
       return Text(_rotateList[char], style: style);
     } else {
       return Text(char, style: style);
+    }
+  }
+
+  void _calcRecognizedWidth(BuildContext context, BoxConstraints constraints) {
+    if (horizontalRecognizedListener != null) {
+      final provider = context.read<PlaybackProvider>();
+      final lineChar = constraints.maxHeight ~/ (provider.fontSize * 1.2);
+      final recognizedLine = (recognizedText.length / lineChar).ceil();
+      horizontalRecognizedListener(
+        recognizedLine * provider.fontHeight * provider.fontSize +
+            provider.fontSize,
+      );
     }
   }
 }
