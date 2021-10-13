@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
 import 'package:presc/view/utils/ripple_button.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AboutApp extends StatelessWidget {
   @override
@@ -78,46 +78,14 @@ class AboutApp extends StatelessWidget {
                       primary: Theme.of(context).accentColor,
                       onPrimary: Colors.white,
                     ),
-                    onPressed: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => _FeedbackWebView(),
-                      ),
-                    ),
+                    onPressed: () =>
+                        launch("https://form.run/@presc--1633289693"),
                   ),
                 ),
                 SizedBox(height: 24),
               ],
             ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _FeedbackWebView extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        toolbarHeight: 48,
-        backgroundColor: Colors.white,
-        automaticallyImplyLeading: false,
-        actions: [
-          RippleIconButton(
-            Icons.close,
-            size: 32,
-            onPressed: () => Navigator.pop(context),
-          ),
-          SizedBox(width: 4),
-        ],
-      ),
-      body: SafeArea(
-        child: WebView(
-          initialUrl: 'https://form.run/@presc--1633289693',
-          javascriptMode: JavascriptMode.unrestricted,
         ),
       ),
     );
