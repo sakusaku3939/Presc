@@ -43,9 +43,10 @@ dependencies:
   fading_edge_scrollview: ^2.0.0
   flutter_colorpicker: ^0.4.0
   share: ^2.0.4
+  receive_sharing_intent: ^1.4.5
   dots_indicator: ^2.0.0
   package_info: ^2.0.2
-  webview_flutter: ^2.0.8
+  url_launcher: ^6.0.10
 
 dev_dependencies:
   flutter_test:

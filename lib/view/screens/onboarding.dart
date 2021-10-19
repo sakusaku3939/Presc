@@ -174,7 +174,7 @@ class OnBoardingScreen extends StatelessWidget {
     return _explanationPage(
       imagePath: "assets/images/screenshot/playback.png",
       title: "原稿を再生",
-      content: "出来た原稿は再生できます。音声認識により、どこまで話したかが一目で分かります。",
+      content: "出来た原稿を再生できます。音声認識により、どこまで話したかが一目で分かります。",
     );
   }
 
