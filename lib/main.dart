@@ -21,29 +21,25 @@ import 'config/color_config.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-      .then((_) {
-    runApp(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (context) => OnBoardingProvider()),
-          ChangeNotifierProvider(create: (context) => ManuscriptProvider()),
-          ChangeNotifierProvider(
-            create: (context) => EditableTagItemProvider(),
-          ),
-          ChangeNotifierProvider(create: (context) => ManuscriptTagProvider()),
-          ChangeNotifierProvider(create: (context) => PlaybackProvider()),
-          ChangeNotifierProvider(create: (context) => SpeechToTextProvider()),
-          ChangeNotifierProvider(
-            create: (context) => PlaybackVisualizerProvider(),
-          ),
-          ChangeNotifierProvider(create: (context) => PlaybackTimerProvider()),
-        ],
-        child: MyApp(),
-      ),
-    );
-  });
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => OnBoardingProvider()),
+        ChangeNotifierProvider(create: (context) => ManuscriptProvider()),
+        ChangeNotifierProvider(
+          create: (context) => EditableTagItemProvider(),
+        ),
+        ChangeNotifierProvider(create: (context) => ManuscriptTagProvider()),
+        ChangeNotifierProvider(create: (context) => PlaybackProvider()),
+        ChangeNotifierProvider(create: (context) => SpeechToTextProvider()),
+        ChangeNotifierProvider(
+          create: (context) => PlaybackVisualizerProvider(),
+        ),
+        ChangeNotifierProvider(create: (context) => PlaybackTimerProvider()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
