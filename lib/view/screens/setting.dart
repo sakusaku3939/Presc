@@ -123,7 +123,7 @@ class SettingScreen extends StatelessWidget {
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (BuildContext context) => AboutApp(),
+                          builder: (BuildContext context) => AboutAppScreen(),
                         ),
                       ),
                     ),
