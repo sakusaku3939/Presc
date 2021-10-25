@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_scale_tap/flutter_scale_tap.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import "package:intl/intl.dart";
 import 'package:presc/config/color_config.dart';
 import 'package:presc/config/safe_area_size.dart';
@@ -15,6 +16,7 @@ class ScriptCard extends StatelessWidget {
   ScriptCard(this.context);
 
   final BuildContext context;
+  final double _height = 280;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +27,9 @@ class ScriptCard extends StatelessWidget {
         else if (model.scriptTable.isEmpty)
           return _emptyView(model);
         else
-          return _scriptListView(model);
+          return MediaQuery.of(context).size.width < 500
+              ? _mobileScriptView(model)
+              : _tabletScriptView(model);
       },
     );
   }
@@ -46,17 +50,12 @@ class ScriptCard extends StatelessWidget {
         text = "ごみ箱は空です";
         break;
       case ManuscriptState.search:
-        return AnimatedList(
-          key: model.listKey,
-          shrinkWrap: true,
-          itemBuilder: (BuildContext context, int index, Animation animation) {
-            return Container();
-          },
-        );
+        return _placeholder();
         break;
     }
     return Container(
       color: ColorConfig.backgroundColor,
+      width: MediaQuery.of(context).size.width,
       height: SafeAreaSize.of(context).height -
           (model.state == ManuscriptState.tag ? 0 : 30),
       child: Column(
@@ -72,35 +71,64 @@ class ScriptCard extends StatelessWidget {
             text,
             style: TextStyle(color: Colors.grey[700]),
           ),
-          AnimatedList(
-            key: model.listKey,
-            shrinkWrap: true,
-            itemBuilder:
-                (BuildContext context, int index, Animation animation) {
-              return Container();
-            },
-          ),
         ],
       ),
     );
   }
 
-  Widget _scriptListView(ManuscriptProvider model) {
-    return Container(
-      margin:
-          EdgeInsets.only(top: model.state == ManuscriptState.home ? 8 : 12),
-      child: AnimatedList(
-        key: model.listKey,
+  Widget _tabletScriptView(ManuscriptProvider model) {
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        final maxSize = orientation == Orientation.portrait
+            ? MediaQuery.of(context).size.width
+            : MediaQuery.of(context).size.height;
+        final isLarge = maxSize > 700;
+        final columnCount = isLarge ? 3 : 2;
+        return AnimationLimiter(
+          child: GridView.count(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            childAspectRatio: maxSize / columnCount / (_height + 48),
+            crossAxisCount: columnCount,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            children: List.generate(
+              model.scriptTable.length,
+              (int index) {
+                return Container(
+                  margin: const EdgeInsets.all(12),
+                  child: AnimationConfiguration.staggeredGrid(
+                    columnCount: columnCount,
+                    position: index,
+                    duration: const Duration(milliseconds: 300),
+                    child: FadeInAnimation(
+                      child: _Card(this.context, index),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _mobileScriptView(ManuscriptProvider model) {
+    return AnimationLimiter(
+      child: ListView.builder(
+        itemCount: model.scriptTable.length,
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        initialItemCount: 0,
-        itemBuilder: (BuildContext context, int index, Animation animation) {
-          return FadeTransition(
-            opacity: animation,
-            child: Container(
-              height: 280,
-              margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-              child: _Card(this.context, index),
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            margin: const EdgeInsets.all(12),
+            height: _height,
+            child: AnimationConfiguration.staggeredList(
+              position: index,
+              duration: const Duration(milliseconds: 300),
+              child: FadeInAnimation(
+                child: _Card(this.context, index),
+              ),
             ),
           );
         },
@@ -225,9 +253,8 @@ class _Card extends StatelessWidget {
   }
 
   String _optimizeContent(String content) {
-    final rangeText = content.length > 200
-        ? content.substring(0, 200)
-        : content;
+    final rangeText =
+        content.length > 200 ? content.substring(0, 200) : content;
     String text = "";
     rangeText.split('\n').forEach((word) {
       text += word;

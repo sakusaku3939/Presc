@@ -49,7 +49,6 @@ class ManuscriptHomeScreen extends StatelessWidget {
             final id = await provider.addScript(title: "", content: "");
             await provider.updateScriptTable();
             await context.read<ManuscriptTagProvider>().loadTag(memoId: id);
-            provider.insertScriptItem(0);
             Navigator.push(
               context,
               PageRouteBuilder(
