@@ -20,63 +20,69 @@ class ScriptCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ManuscriptProvider>(
-      builder: (context, model, child) {
-        if (model.scriptTable == null)
+    return Selector<ManuscriptProvider, List<MemoTable>>(
+      selector: (_, model) => model.scriptTable,
+      builder: (context, scriptTable, child) {
+        if (scriptTable == null)
           return _placeholder();
-        else if (model.scriptTable.isEmpty)
-          return _emptyView(model);
+        else if (scriptTable.isEmpty)
+          return _emptyView();
         else
           return MediaQuery.of(context).size.width < 500
-              ? _mobileScriptView(model)
-              : _tabletScriptView(model);
+              ? _mobileScriptView(scriptTable.length)
+              : _tabletScriptView(scriptTable.length);
       },
     );
   }
 
   Widget _placeholder() => Container();
 
-  Widget _emptyView(ManuscriptProvider model) {
-    IconData icon;
-    String text;
-    switch (model.state) {
-      case ManuscriptState.home:
-      case ManuscriptState.tag:
-        icon = Icons.description_outlined;
-        text = "原稿がまだありません";
-        break;
-      case ManuscriptState.trash:
-        icon = Icons.delete_outline;
-        text = "ごみ箱は空です";
-        break;
-      case ManuscriptState.search:
-        return _placeholder();
-        break;
-    }
-    return Container(
-      color: ColorConfig.backgroundColor,
-      width: MediaQuery.of(context).size.width,
-      height: SafeAreaSize.of(context).height -
-          (model.state == ManuscriptState.tag ? 0 : 30),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: Colors.grey[600],
-            size: 64,
+  Widget _emptyView() {
+    return Selector<ManuscriptProvider, ManuscriptState>(
+      selector: (_, model) => model.state,
+      builder: (context, state, child) {
+        IconData icon;
+        String text;
+        switch (state) {
+          case ManuscriptState.home:
+          case ManuscriptState.tag:
+            icon = Icons.description_outlined;
+            text = "原稿がまだありません";
+            break;
+          case ManuscriptState.trash:
+            icon = Icons.delete_outline;
+            text = "ごみ箱は空です";
+            break;
+          case ManuscriptState.search:
+            return _placeholder();
+            break;
+        }
+        return Container(
+          color: ColorConfig.backgroundColor,
+          width: MediaQuery.of(context).size.width,
+          height: SafeAreaSize.of(context).height -
+              (state == ManuscriptState.tag ? 0 : 30),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                color: Colors.grey[600],
+                size: 64,
+              ),
+              SizedBox(height: 8),
+              Text(
+                text,
+                style: TextStyle(color: Colors.grey[700]),
+              ),
+            ],
           ),
-          SizedBox(height: 8),
-          Text(
-            text,
-            style: TextStyle(color: Colors.grey[700]),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
-  Widget _tabletScriptView(ManuscriptProvider model) {
+  Widget _tabletScriptView(int length) {
     return OrientationBuilder(
       builder: (context, orientation) {
         final maxSize = orientation == Orientation.portrait
@@ -92,7 +98,7 @@ class ScriptCard extends StatelessWidget {
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             children: List.generate(
-              model.scriptTable.length,
+              length,
               (int index) {
                 return Container(
                   margin: const EdgeInsets.all(12),
@@ -113,10 +119,10 @@ class ScriptCard extends StatelessWidget {
     );
   }
 
-  Widget _mobileScriptView(ManuscriptProvider model) {
+  Widget _mobileScriptView(int length) {
     return AnimationLimiter(
       child: ListView.builder(
-        itemCount: model.scriptTable.length,
+        itemCount: length,
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
@@ -162,13 +168,16 @@ class _Card extends StatelessWidget {
     return Selector<ManuscriptProvider, List<MemoTable>>(
       selector: (_, model) => model.scriptTable,
       builder: (context, scriptTable, child) {
-        return Hero(
-          tag: scriptTable[index].id,
-          child: Material(
-            type: MaterialType.transparency,
-            child: _card(scriptTable),
-          ),
-        );
+        if (index < scriptTable.length)
+          return Hero(
+            tag: scriptTable[index].id,
+            child: Material(
+              type: MaterialType.transparency,
+              child: _card(scriptTable),
+            ),
+          );
+        else
+          return Container();
       },
     );
   }

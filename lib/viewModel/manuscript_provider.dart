@@ -25,10 +25,12 @@ class ManuscriptProvider with ChangeNotifier {
   }
 
   ManuscriptProvider() {
-    Future(() async {
-      _manager.deleteTrashAutomatically();
-      _scriptTable = await _manager.getAllScript();
-      notifyListeners();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future(() async {
+        _manager.deleteTrashAutomatically();
+        _scriptTable = await _manager.getAllScript();
+        notifyListeners();
+      });
     });
   }
 
