@@ -206,6 +206,7 @@ class _Card extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 title.isNotEmpty ? title : "タイトルなし",
+                textScaleFactor: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 24),
               ),
@@ -222,6 +223,7 @@ class _Card extends StatelessWidget {
                     content.isNotEmpty
                         ? _optimizeContent(content)
                         : "追加のテキストはありません",
+                    textScaleFactor: 1,
                     style: TextStyle(
                       color: Colors.grey[800],
                       height: 1.8,
