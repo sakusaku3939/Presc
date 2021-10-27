@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:presc/model/speech_to_text_manager.dart';
-import 'package:presc/view/utils/dialog/dialog_manager.dart';
+import 'package:presc/view/utils/dialog/silent_dialog_manager.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:presc/viewModel/playback_provider.dart';
@@ -27,7 +27,7 @@ class SpeechToTextProvider with ChangeNotifier {
             duration: const Duration(seconds: 2),
           ),
         );
-    if (!await _startSilentMode(context)) return;
+    if (await _startSilentMode(context)) return;
 
     timer.start();
     _manager.speak(
@@ -98,79 +98,21 @@ class SpeechToTextProvider with ChangeNotifier {
   Future<bool> _startSilentMode(BuildContext context) async {
     await SoundMode.setSoundMode(RingerModeStatus.unknown);
     final ringerModeStatus = await SoundMode.ringerModeStatus;
-    if (ringerModeStatus != RingerModeStatus.normal) return true;
+    if (ringerModeStatus != RingerModeStatus.normal) return false;
 
     final prefs = await SharedPreferences.getInstance();
     final isGranted = await PermissionHandler.permissionsGranted;
-    bool isChecked = false;
-    bool isLaunchSetting = false;
 
     if (isGranted) {
       prefs.setBool("isSilentHintVisible", true);
       _defaultRingerStatus = ringerModeStatus;
       await SoundMode.setSoundMode(RingerModeStatus.silent);
+      return false;
     } else if (prefs.getBool("isSilentHintVisible") ?? true) {
-      await showDialog(
-        context: context,
-        builder: (_) {
-          return StatefulBuilder(
-            builder: (context, setState) {
-              return AlertDialog(
-                content: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      "ヒント:",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      "再生中に音を鳴らしたくない場合",
-                      style: TextStyle(fontSize: 14),
-                    ),
-                    SizedBox(height: 12),
-                    Image.asset(
-                      'assets/images/screenshot/silent_mode.png',
-                      alignment: Alignment.center,
-                    ),
-                    SizedBox(height: 12),
-                    CheckboxListTile(
-                      dense: true,
-                      title: Text(
-                        "今後は表示しない",
-                        style: TextStyle(fontSize: 14),
-                      ),
-                      contentPadding: EdgeInsets.all(0),
-                      value: isChecked,
-                      onChanged: (value) => setState(() {
-                        isChecked = value;
-                      }),
-                    ),
-                  ],
-                ),
-                contentPadding: EdgeInsets.fromLTRB(24, 20, 24, 2),
-                actions: [
-                  DialogTextButton(
-                    "設定を開く",
-                    onPressed: () {
-                      isLaunchSetting = true;
-                      context.read<PlaybackProvider>().playFabState = false;
-                      Navigator.pop(context);
-                      PermissionHandler.openDoNotDisturbSetting();
-                    },
-                  ),
-                  SizedBox(width: 2),
-                ],
-              );
-            },
-          );
-        },
-      );
-      if (isLaunchSetting) return false;
-      if (isChecked) prefs.setBool("isSilentHintVisible", false);
+      return await SilentDialogManager.show(context);
+    } else {
+      return false;
     }
-    return true;
   }
 
   Future<void> _stopSilentMode() async {
