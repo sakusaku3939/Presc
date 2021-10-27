@@ -2,24 +2,34 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:presc/model/speech_to_text_manager.dart';
+import 'package:presc/view/utils/dialog/dialog_manager.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:presc/viewModel/playback_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sound_mode/permission_handler.dart';
+import 'package:sound_mode/sound_mode.dart';
+import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 
 class SpeechToTextProvider with ChangeNotifier {
   final _manager = SpeechToTextManager();
+  RingerModeStatus _defaultRingerStatus;
 
   String unrecognizedText = "";
   String recognizedText = "";
   double lastOffset = 0;
 
-  void start(BuildContext context) {
+  void start(BuildContext context) async {
+    final timer = context.read<PlaybackTimerProvider>();
     final showSnackBar = (text) => ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(text),
             duration: const Duration(seconds: 2),
           ),
         );
+    await _startSilentMode(context);
+
+    timer.start();
     _manager.speak(
       resultListener: _reflect,
       errorListener: (error) {
@@ -45,7 +55,11 @@ class SpeechToTextProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void stop() => _manager.stop();
+  void stop() async {
+    await _manager.stop();
+    await Future.delayed(Duration(milliseconds: 400));
+    _stopSilentMode();
+  }
 
   void back(BuildContext context) {
     stop();
@@ -79,5 +93,82 @@ class SpeechToTextProvider with ChangeNotifier {
     _reflect("しかもあとで");
     await Future.delayed(Duration(milliseconds: 2000));
     _reflect("ばかりである");
+  }
+
+  Future<void> _startSilentMode(BuildContext context) async {
+    await SoundMode.setSoundMode(RingerModeStatus.unknown);
+    final ringerModeStatus =  await SoundMode.ringerModeStatus;
+    if (ringerModeStatus != RingerModeStatus.normal) return;
+
+    final prefs = await SharedPreferences.getInstance();
+    final isGranted = await PermissionHandler.permissionsGranted;
+    bool isChecked = false;
+
+    if (isGranted) {
+      prefs.setBool("isSilentHintVisible", true);
+      _defaultRingerStatus = ringerModeStatus;
+      await SoundMode.setSoundMode(RingerModeStatus.silent);
+
+    } else if (prefs.getBool("isSilentHintVisible") ?? true){
+      await showDialog(
+        context: context,
+        builder: (_) {
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                content: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      "ヒント:",
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    SizedBox(height: 4),
+                    Text(
+                      "再生中に音を鳴らしたくない場合",
+                      style: TextStyle(fontSize: 14),
+                    ),
+                    SizedBox(height: 12),
+                    Image.asset(
+                      'assets/images/screenshot/silent_mode.png',
+                      alignment: Alignment.center,
+                    ),
+                    SizedBox(height: 12),
+                    CheckboxListTile(
+                      dense: true,
+                      title: Text(
+                        "今後は表示しない",
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      contentPadding: EdgeInsets.all(0),
+                      value: isChecked,
+                      onChanged: (value) => setState(() {
+                        isChecked = value;
+                      }),
+                    ),
+                  ],
+                ),
+                contentPadding: EdgeInsets.fromLTRB(24, 20, 24, 2),
+                actions: [
+                  DialogTextButton(
+                    "設定を開く",
+                    onPressed: () =>
+                        PermissionHandler.openDoNotDisturbSetting(),
+                  ),
+                  SizedBox(width: 2),
+                ],
+              );
+            },
+          );
+        },
+      );
+      if (isChecked) prefs.setBool("isSilentHintVisible", false);
+    }
+  }
+
+  Future<void> _stopSilentMode() async {
+    final isGranted = await PermissionHandler.permissionsGranted;
+    if (isGranted) await SoundMode.setSoundMode(_defaultRingerStatus);
   }
 }
