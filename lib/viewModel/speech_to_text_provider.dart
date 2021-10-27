@@ -98,18 +98,22 @@ class SpeechToTextProvider with ChangeNotifier {
   Future<bool> _startSilentMode(BuildContext context) async {
     await SoundMode.setSoundMode(RingerModeStatus.unknown);
     final ringerModeStatus = await SoundMode.ringerModeStatus;
-    if (ringerModeStatus != RingerModeStatus.normal) return false;
-
     final prefs = await SharedPreferences.getInstance();
     final isGranted = await PermissionHandler.permissionsGranted;
 
-    if (isGranted) {
+    if (ringerModeStatus != RingerModeStatus.normal) {
+      prefs.setBool("isSilentHintVisible", true);
+      return false;
+
+    } else if (isGranted) {
       prefs.setBool("isSilentHintVisible", true);
       _defaultRingerStatus = ringerModeStatus;
       await SoundMode.setSoundMode(RingerModeStatus.silent);
       return false;
+
     } else if (prefs.getBool("isSilentHintVisible") ?? true) {
       return await SilentDialogManager.show(context);
+
     } else {
       return false;
     }
