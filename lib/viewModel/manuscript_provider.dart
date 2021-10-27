@@ -5,7 +5,6 @@ import 'package:presc/model/manuscript_manager.dart';
 import 'package:presc/model/utils/database_table.dart';
 
 class ManuscriptProvider with ChangeNotifier {
-  final listKey = GlobalKey<AnimatedListState>();
   final _manager = ManuscriptManager();
 
   ManuscriptState _state = ManuscriptState.home;
@@ -26,24 +25,17 @@ class ManuscriptProvider with ChangeNotifier {
   }
 
   ManuscriptProvider() {
-    Future(() async {
-      _manager.deleteTrashAutomatically();
-      _scriptTable = await _manager.getAllScript();
-      final _listKeyMonitor = (Timer t) {
-        if (listKey.currentState != null) {
-          t.cancel();
-          _state = ManuscriptState.home;
-          for (int i = 0; i < _scriptTable.length; i++) insertScriptItem(0);
-        }
-      };
-      Timer.periodic(Duration(milliseconds: 100), _listKeyMonitor);
-      notifyListeners();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future(() async {
+        _manager.deleteTrashAutomatically();
+        _scriptTable = await _manager.getAllScript();
+        notifyListeners();
+      });
     });
   }
 
   Future<void> replaceState(ManuscriptState state,
       {int tagId, String tagName = "", String searchWord = ""}) async {
-    for (int i = 0; i < _scriptTable.length; i++) removeScriptItem(0);
     switch (state) {
       case ManuscriptState.home:
         _scriptTable = await _manager.getAllScript();
@@ -61,18 +53,10 @@ class ManuscriptProvider with ChangeNotifier {
             : [];
         break;
     }
-    for (int i = 0; i < _scriptTable.length; i++) insertScriptItem(0);
-
     _state = state;
     _currentTagTable = TagTable(id: tagId, tagName: tagName);
     notifyListeners();
   }
-
-  void removeScriptItem(int index) => listKey.currentState
-      ?.removeItem(index, (context, animation) => Container());
-
-  void insertScriptItem(int index) => listKey.currentState
-      ?.insertItem(index, duration: Duration(milliseconds: 300));
 
   Future<int> addScript({
     String title,

@@ -197,8 +197,9 @@ class PlaybackScreen extends StatelessWidget {
                   if (model.playFabState) {
                     if (model.scrollMode == ScrollMode.recognition) {
                       speech.start(context);
+                    } else {
+                      timer.start();
                     }
-                    timer.start();
                   } else {
                     playbackTextView.stop(context);
                   }

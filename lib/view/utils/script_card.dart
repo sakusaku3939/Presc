@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_scale_tap/flutter_scale_tap.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import "package:intl/intl.dart";
 import 'package:presc/config/color_config.dart';
 import 'package:presc/config/safe_area_size.dart';
@@ -15,92 +16,125 @@ class ScriptCard extends StatelessWidget {
   ScriptCard(this.context);
 
   final BuildContext context;
+  final double _height = 280;
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ManuscriptProvider>(
-      builder: (context, model, child) {
-        if (model.scriptTable == null)
+    return Selector<ManuscriptProvider, List<MemoTable>>(
+      selector: (_, model) => model.scriptTable,
+      builder: (context, scriptTable, child) {
+        if (scriptTable == null)
           return _placeholder();
-        else if (model.scriptTable.isEmpty)
-          return _emptyView(model);
+        else if (scriptTable.isEmpty)
+          return _emptyView();
         else
-          return _scriptListView(model);
+          return MediaQuery.of(context).size.width < 500
+              ? _mobileScriptView(scriptTable.length)
+              : _tabletScriptView(scriptTable.length);
       },
     );
   }
 
   Widget _placeholder() => Container();
 
-  Widget _emptyView(ManuscriptProvider model) {
-    IconData icon;
-    String text;
-    switch (model.state) {
-      case ManuscriptState.home:
-      case ManuscriptState.tag:
-        icon = Icons.description_outlined;
-        text = "原稿がまだありません";
-        break;
-      case ManuscriptState.trash:
-        icon = Icons.delete_outline;
-        text = "ごみ箱は空です";
-        break;
-      case ManuscriptState.search:
-        return AnimatedList(
-          key: model.listKey,
-          shrinkWrap: true,
-          itemBuilder: (BuildContext context, int index, Animation animation) {
-            return Container();
-          },
+  Widget _emptyView() {
+    return Selector<ManuscriptProvider, ManuscriptState>(
+      selector: (_, model) => model.state,
+      builder: (context, state, child) {
+        IconData icon;
+        String text;
+        switch (state) {
+          case ManuscriptState.home:
+          case ManuscriptState.tag:
+            icon = Icons.description_outlined;
+            text = "原稿がまだありません";
+            break;
+          case ManuscriptState.trash:
+            icon = Icons.delete_outline;
+            text = "ごみ箱は空です";
+            break;
+          case ManuscriptState.search:
+            return _placeholder();
+            break;
+        }
+        return Container(
+          color: ColorConfig.backgroundColor,
+          width: MediaQuery.of(context).size.width,
+          height: SafeAreaSize.of(context).height -
+              (state == ManuscriptState.tag ? 0 : 30),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                color: Colors.grey[600],
+                size: 64,
+              ),
+              SizedBox(height: 8),
+              Text(
+                text,
+                style: TextStyle(color: Colors.grey[700]),
+              ),
+            ],
+          ),
         );
-        break;
-    }
-    return Container(
-      color: ColorConfig.backgroundColor,
-      height: SafeAreaSize.of(context).height -
-          (model.state == ManuscriptState.tag ? 0 : 30),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            color: Colors.grey[600],
-            size: 64,
-          ),
-          SizedBox(height: 8),
-          Text(
-            text,
-            style: TextStyle(color: Colors.grey[700]),
-          ),
-          AnimatedList(
-            key: model.listKey,
-            shrinkWrap: true,
-            itemBuilder:
-                (BuildContext context, int index, Animation animation) {
-              return Container();
-            },
-          ),
-        ],
-      ),
+      },
     );
   }
 
-  Widget _scriptListView(ManuscriptProvider model) {
-    return Container(
-      margin:
-          EdgeInsets.only(top: model.state == ManuscriptState.home ? 8 : 12),
-      child: AnimatedList(
-        key: model.listKey,
+  Widget _tabletScriptView(int length) {
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        final maxSize = orientation == Orientation.portrait
+            ? MediaQuery.of(context).size.width
+            : MediaQuery.of(context).size.height;
+        final isLarge = maxSize > 700;
+        final columnCount = isLarge ? 3 : 2;
+        return AnimationLimiter(
+          child: GridView.count(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            childAspectRatio: maxSize / columnCount / (_height + 48),
+            crossAxisCount: columnCount,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            children: List.generate(
+              length,
+              (int index) {
+                return Container(
+                  margin: const EdgeInsets.all(12),
+                  child: AnimationConfiguration.staggeredGrid(
+                    columnCount: columnCount,
+                    position: index,
+                    duration: const Duration(milliseconds: 300),
+                    child: FadeInAnimation(
+                      child: _Card(this.context, index),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _mobileScriptView(int length) {
+    return AnimationLimiter(
+      child: ListView.builder(
+        itemCount: length,
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        initialItemCount: 0,
-        itemBuilder: (BuildContext context, int index, Animation animation) {
-          return FadeTransition(
-            opacity: animation,
-            child: Container(
-              height: 280,
-              margin: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-              child: _Card(this.context, index),
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            margin: const EdgeInsets.all(12),
+            height: _height,
+            child: AnimationConfiguration.staggeredList(
+              position: index,
+              duration: const Duration(milliseconds: 300),
+              child: FadeInAnimation(
+                child: _Card(this.context, index),
+              ),
             ),
           );
         },
@@ -134,13 +168,16 @@ class _Card extends StatelessWidget {
     return Selector<ManuscriptProvider, List<MemoTable>>(
       selector: (_, model) => model.scriptTable,
       builder: (context, scriptTable, child) {
-        return Hero(
-          tag: scriptTable[index].id,
-          child: Material(
-            type: MaterialType.transparency,
-            child: _card(scriptTable),
-          ),
-        );
+        if (index < scriptTable.length)
+          return Hero(
+            tag: scriptTable[index].id,
+            child: Material(
+              type: MaterialType.transparency,
+              child: _card(scriptTable),
+            ),
+          );
+        else
+          return Container();
       },
     );
   }
@@ -178,6 +215,7 @@ class _Card extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 title.isNotEmpty ? title : "タイトルなし",
+                textScaleFactor: 1,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 24),
               ),
@@ -194,6 +232,7 @@ class _Card extends StatelessWidget {
                     content.isNotEmpty
                         ? _optimizeContent(content)
                         : "追加のテキストはありません",
+                    textScaleFactor: 1,
                     style: TextStyle(
                       color: Colors.grey[800],
                       height: 1.8,
@@ -225,9 +264,8 @@ class _Card extends StatelessWidget {
   }
 
   String _optimizeContent(String content) {
-    final rangeText = content.length > 200
-        ? content.substring(0, 200)
-        : content;
+    final rangeText =
+        content.length > 200 ? content.substring(0, 200) : content;
     String text = "";
     rangeText.split('\n').forEach((word) {
       text += word;

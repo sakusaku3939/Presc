@@ -2,24 +2,34 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:presc/model/speech_to_text_manager.dart';
+import 'package:presc/view/utils/dialog/silent_dialog_manager.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:presc/viewModel/playback_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sound_mode/permission_handler.dart';
+import 'package:sound_mode/sound_mode.dart';
+import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 
 class SpeechToTextProvider with ChangeNotifier {
   final _manager = SpeechToTextManager();
+  RingerModeStatus _defaultRingerStatus;
 
   String unrecognizedText = "";
   String recognizedText = "";
   double lastOffset = 0;
 
-  void start(BuildContext context) {
+  void start(BuildContext context) async {
+    final timer = context.read<PlaybackTimerProvider>();
     final showSnackBar = (text) => ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(text),
             duration: const Duration(seconds: 2),
           ),
         );
+    if (await _startSilentMode(context)) return;
+
+    timer.start();
     _manager.speak(
       resultListener: _reflect,
       errorListener: (error) {
@@ -45,7 +55,11 @@ class SpeechToTextProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void stop() => _manager.stop();
+  void stop() async {
+    await _manager.stop();
+    await Future.delayed(Duration(milliseconds: 400));
+    _stopSilentMode();
+  }
 
   void back(BuildContext context) {
     stop();
@@ -79,5 +93,34 @@ class SpeechToTextProvider with ChangeNotifier {
     _reflect("しかもあとで");
     await Future.delayed(Duration(milliseconds: 2000));
     _reflect("ばかりである");
+  }
+
+  Future<bool> _startSilentMode(BuildContext context) async {
+    await SoundMode.setSoundMode(RingerModeStatus.unknown);
+    final ringerModeStatus = await SoundMode.ringerModeStatus;
+    final prefs = await SharedPreferences.getInstance();
+    final isGranted = await PermissionHandler.permissionsGranted;
+
+    if (ringerModeStatus != RingerModeStatus.normal) {
+      prefs.setBool("isSilentHintVisible", true);
+      return false;
+
+    } else if (isGranted) {
+      prefs.setBool("isSilentHintVisible", true);
+      _defaultRingerStatus = ringerModeStatus;
+      await SoundMode.setSoundMode(RingerModeStatus.silent);
+      return false;
+
+    } else if (prefs.getBool("isSilentHintVisible") ?? true) {
+      return await SilentDialogManager.show(context);
+
+    } else {
+      return false;
+    }
+  }
+
+  Future<void> _stopSilentMode() async {
+    final isGranted = await PermissionHandler.permissionsGranted;
+    if (isGranted) await SoundMode.setSoundMode(_defaultRingerStatus);
   }
 }

@@ -18,23 +18,26 @@ class ManuscriptHomeScreen extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       body: SafeArea(
-        child: Scrollbar(
-          child: CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                floating: true,
-                snap: true,
-                toolbarHeight: 64,
-                expandedHeight: 0,
-                backgroundColor: ColorConfig.backgroundColor,
-                elevation: 0,
-                leading: Container(),
-                flexibleSpace: _appbar(context),
-              ),
-              SliverList(
-                delegate: SliverChildListDelegate([ScriptCard(context)]),
-              )
-            ],
+        child: Container(
+          color: ColorConfig.backgroundColor,
+          child: Scrollbar(
+            child: CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  floating: true,
+                  snap: true,
+                  toolbarHeight: 64,
+                  expandedHeight: 0,
+                  backgroundColor: ColorConfig.backgroundColor,
+                  elevation: 0,
+                  leading: Container(),
+                  flexibleSpace: _appbar(context),
+                ),
+                SliverList(
+                  delegate: SliverChildListDelegate([ScriptCard(context)]),
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -46,7 +49,6 @@ class ManuscriptHomeScreen extends StatelessWidget {
             final id = await provider.addScript(title: "", content: "");
             await provider.updateScriptTable();
             await context.read<ManuscriptTagProvider>().loadTag(memoId: id);
-            provider.insertScriptItem(0);
             Navigator.push(
               context,
               PageRouteBuilder(

@@ -21,12 +21,10 @@ class TrashMoveManager {
           onPressed: () async {
             await provider.restoreFromTrash(trashId: newId);
             await provider.updateScriptTable();
-            provider.insertScriptItem(index);
           },
         ),
       ),
     );
-    provider.removeScriptItem(index);
     await provider.updateScriptTable();
   }
 
@@ -47,7 +45,6 @@ class TrashMoveManager {
         duration: const Duration(seconds: 3),
       ),
     );
-    provider.removeScriptItem(index);
     await provider.updateScriptTable();
   }
 
@@ -70,12 +67,10 @@ class TrashMoveManager {
           onPressed: () async {
             await provider.moveToTrash(memoId: newId);
             await provider.updateScriptTable();
-            provider.insertScriptItem(index);
           },
         ),
       ),
     );
-    provider.removeScriptItem(index);
     await provider.updateScriptTable();
   }
 
@@ -106,7 +101,6 @@ class TrashMoveManager {
               ),
             );
             await provider.updateScriptTable();
-            provider.removeScriptItem(index);
             Navigator.pop(context);
           },
         ),

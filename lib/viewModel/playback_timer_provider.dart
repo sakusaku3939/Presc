@@ -9,6 +9,7 @@ class PlaybackTimerProvider with ChangeNotifier {
   String get time => DateFormat("mm:ss").format(_time);
 
   void start() {
+    stop();
     _timer = Timer.periodic(
       Duration(seconds: 1),
       (Timer timer) {
