@@ -27,7 +27,7 @@ class SpeechToTextProvider with ChangeNotifier {
             duration: const Duration(seconds: 2),
           ),
         );
-    await _startSilentMode(context);
+    if (!await _startSilentMode(context)) return;
 
     timer.start();
     _manager.speak(
@@ -95,21 +95,21 @@ class SpeechToTextProvider with ChangeNotifier {
     _reflect("ばかりである");
   }
 
-  Future<void> _startSilentMode(BuildContext context) async {
+  Future<bool> _startSilentMode(BuildContext context) async {
     await SoundMode.setSoundMode(RingerModeStatus.unknown);
-    final ringerModeStatus =  await SoundMode.ringerModeStatus;
-    if (ringerModeStatus != RingerModeStatus.normal) return;
+    final ringerModeStatus = await SoundMode.ringerModeStatus;
+    if (ringerModeStatus != RingerModeStatus.normal) return true;
 
     final prefs = await SharedPreferences.getInstance();
     final isGranted = await PermissionHandler.permissionsGranted;
     bool isChecked = false;
+    bool isLaunchSetting = false;
 
     if (isGranted) {
       prefs.setBool("isSilentHintVisible", true);
       _defaultRingerStatus = ringerModeStatus;
       await SoundMode.setSoundMode(RingerModeStatus.silent);
-
-    } else if (prefs.getBool("isSilentHintVisible") ?? true){
+    } else if (prefs.getBool("isSilentHintVisible") ?? true) {
       await showDialog(
         context: context,
         builder: (_) {
@@ -153,8 +153,12 @@ class SpeechToTextProvider with ChangeNotifier {
                 actions: [
                   DialogTextButton(
                     "設定を開く",
-                    onPressed: () =>
-                        PermissionHandler.openDoNotDisturbSetting(),
+                    onPressed: () {
+                      isLaunchSetting = true;
+                      context.read<PlaybackProvider>().playFabState = false;
+                      Navigator.pop(context);
+                      PermissionHandler.openDoNotDisturbSetting();
+                    },
                   ),
                   SizedBox(width: 2),
                 ],
@@ -163,8 +167,10 @@ class SpeechToTextProvider with ChangeNotifier {
           );
         },
       );
+      if (isLaunchSetting) return false;
       if (isChecked) prefs.setBool("isSilentHintVisible", false);
     }
+    return true;
   }
 
   Future<void> _stopSilentMode() async {
