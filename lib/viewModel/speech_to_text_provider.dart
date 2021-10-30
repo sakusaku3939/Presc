@@ -15,9 +15,13 @@ class SpeechToTextProvider with ChangeNotifier {
   final _manager = SpeechToTextManager();
   RingerModeStatus _defaultRingerStatus;
 
-  String unrecognizedText = "";
-  String recognizedText = "";
+  String _unrecognizedText = "";
+  String _recognizedText = "";
   double lastOffset = 0;
+
+  String get unrecognizedText => _unrecognizedText;
+
+  String get recognizedText => _recognizedText;
 
   void start(BuildContext context) async {
     final timer = context.read<PlaybackTimerProvider>();
@@ -61,6 +65,12 @@ class SpeechToTextProvider with ChangeNotifier {
     _stopSilentMode();
   }
 
+  void reset(String content) {
+    _recognizedText = "";
+    _unrecognizedText = content;
+    lastOffset = 0;
+  }
+
   void back(BuildContext context) {
     stop();
     context.read<PlaybackProvider>().playFabState = false;
@@ -81,8 +91,8 @@ class SpeechToTextProvider with ChangeNotifier {
     });
     if (lastIndex != -1) {
       final latestRecognizedText = unrecognizedText.substring(0, lastIndex + 4);
-      recognizedText += latestRecognizedText;
-      unrecognizedText = unrecognizedText.substring(lastIndex + 4);
+      _recognizedText += latestRecognizedText;
+      _unrecognizedText = unrecognizedText.substring(lastIndex + 4);
       notifyListeners();
     }
   }
@@ -105,16 +115,13 @@ class SpeechToTextProvider with ChangeNotifier {
     if (ringerModeStatus != RingerModeStatus.normal) {
       prefs.setBool("isSilentHintVisible", true);
       return false;
-
     } else if (isGranted) {
       prefs.setBool("isSilentHintVisible", true);
       _defaultRingerStatus = ringerModeStatus;
       await SoundMode.setSoundMode(RingerModeStatus.silent);
       return false;
-
     } else if (prefs.getBool("isSilentHintVisible") ?? true) {
       return await SilentDialogManager.show(context);
-
     } else {
       return false;
     }
