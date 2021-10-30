@@ -64,6 +64,7 @@ class SpeechToTextProvider with ChangeNotifier {
   void back(BuildContext context) {
     stop();
     context.read<PlaybackProvider>().playFabState = false;
+    context.read<PlaybackTimerProvider>().reset();
     Navigator.pop(context);
   }
 
