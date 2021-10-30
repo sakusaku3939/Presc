@@ -87,7 +87,7 @@ class _TagEditScreenAppbar extends StatelessWidget
             ),
             title: Text(
               "タグの編集",
-              style: TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 20),
             ),
             actions: [
               Container(
@@ -109,7 +109,7 @@ class _TagEditScreenAppbar extends StatelessWidget
             ),
             title: Text(
               "タグを削除",
-              style: TextStyle(fontSize: 20, color: Colors.white),
+              style: const TextStyle(fontSize: 20, color: Colors.white),
             ),
             actions: [
               Container(

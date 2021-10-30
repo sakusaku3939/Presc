@@ -23,12 +23,12 @@ class SilentDialogManager {
                 children: [
                   Text(
                     "ヒント:",
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 4),
                   Text(
                     "再生中に音を鳴らしたくない場合",
-                    style: TextStyle(fontSize: 14),
+                    style: const TextStyle(fontSize: 14),
                   ),
                   SizedBox(height: 12),
                   Image.asset(
@@ -40,9 +40,9 @@ class SilentDialogManager {
                     dense: true,
                     title: Text(
                       "今後は表示しない",
-                      style: TextStyle(fontSize: 14),
+                      style: const TextStyle(fontSize: 14),
                     ),
-                    contentPadding: EdgeInsets.all(0),
+                    contentPadding: const EdgeInsets.all(0),
                     value: isChecked,
                     onChanged: (value) => setState(() {
                       isChecked = value;
@@ -50,7 +50,7 @@ class SilentDialogManager {
                   ),
                 ],
               ),
-              contentPadding: EdgeInsets.fromLTRB(24, 20, 24, 2),
+              contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 2),
               actions: [
                 DialogTextButton(
                   "設定を開く",

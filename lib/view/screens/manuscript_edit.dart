@@ -144,7 +144,7 @@ class ManuscriptEditScreen extends StatelessWidget {
               border: InputBorder.none,
               contentPadding: const EdgeInsets.all(0),
             ),
-            style: TextStyle(fontSize: 24),
+            style: const TextStyle(fontSize: 24),
             onChanged: (text) {
               _current.title = text;
               _provider.saveScript(id: id, title: text);

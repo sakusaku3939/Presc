@@ -36,7 +36,7 @@ class SettingScreen extends StatelessWidget {
                     child: ListTile(
                       title: Text("書式の向き"),
                       subtitle: Text(model.scrollVertical ? "横書き" : "縦書き"),
-                      contentPadding: EdgeInsets.only(left: 32),
+                      contentPadding: const EdgeInsets.only(left: 32),
                       onTap: () => {
                         RadioDialogManager.show(
                           context,
@@ -67,7 +67,7 @@ class SettingScreen extends StatelessWidget {
                                 ? "自動スクロール"
                                 : "音声認識",
                       ),
-                      contentPadding: EdgeInsets.only(left: 32),
+                      contentPadding: const EdgeInsets.only(left: 32),
                       onTap: () => RadioDialogManager.show(
                         context,
                         groupValue: model.scrollMode,
@@ -97,7 +97,7 @@ class SettingScreen extends StatelessWidget {
                     child: ListTile(
                       title: Text("再生速度"),
                       subtitle: Text("x ${model.scrollSpeedMagnification}"),
-                      contentPadding: EdgeInsets.only(left: 32),
+                      contentPadding: const EdgeInsets.only(left: 32),
                       enabled: model.scrollMode == ScrollMode.auto,
                       onTap: () => RadioDialogManager.show(
                         context,
@@ -119,7 +119,7 @@ class SettingScreen extends StatelessWidget {
                     color: Colors.white,
                     child: ListTile(
                       title: Text("このアプリについて"),
-                      contentPadding: EdgeInsets.only(left: 32),
+                      contentPadding: const EdgeInsets.only(left: 32),
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -132,7 +132,7 @@ class SettingScreen extends StatelessWidget {
                     color: Colors.white,
                     child: ListTile(
                       title: Text("オープンソースライセンス"),
-                      contentPadding: EdgeInsets.only(left: 32),
+                      contentPadding: const EdgeInsets.only(left: 32),
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -161,7 +161,7 @@ class SettingScreen extends StatelessWidget {
       ),
       title: Text(
         "再生設定",
-        style: TextStyle(fontSize: 20),
+        style: const TextStyle(fontSize: 20),
       ),
     );
   }
@@ -173,7 +173,7 @@ class SettingScreen extends StatelessWidget {
     });
     return Container(
       height: 200,
-      padding: EdgeInsets.symmetric(horizontal: 32),
+      padding: const EdgeInsets.symmetric(horizontal: 32),
       color: model.backgroundColor,
       child: FadingEdgeScrollView.fromSingleChildScrollView(
         gradientFractionOnStart: 0.5,
@@ -200,7 +200,7 @@ class SettingScreen extends StatelessWidget {
     });
     return Container(
       height: 200,
-      padding: EdgeInsets.symmetric(vertical: 12),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       color: model.backgroundColor,
       child: FadingEdgeScrollView.fromSingleChildScrollView(
         gradientFractionOnStart: 0.3,
@@ -211,7 +211,7 @@ class SettingScreen extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Container(
             height: 200,
-            padding: EdgeInsets.symmetric(horizontal: 32),
+            padding: const EdgeInsets.symmetric(horizontal: 32),
             child: HorizontalText(
               unrecognizedText: SampleTextConfig.setting,
               recognizedText: "",

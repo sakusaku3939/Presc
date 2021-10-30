@@ -59,7 +59,7 @@ class EditableTagItem extends StatelessWidget {
                     border: InputBorder.none,
                     contentPadding: const EdgeInsets.all(0),
                   ),
-                  style: TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16),
                   onSubmitted: (text) {
                     if (text.trim().isNotEmpty) {
                       context
@@ -120,7 +120,7 @@ class EditableTagItem extends StatelessWidget {
                     Expanded(
                       child: Text(
                         tagTable.tagName,
-                        style: TextStyle(fontSize: 16),
+                        style: const TextStyle(fontSize: 16),
                       ),
                     ),
                   ],
