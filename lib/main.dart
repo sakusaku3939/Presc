@@ -75,6 +75,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primaryColor: Colors.white,
         accentColor: Colors.deepOrange[400],
+        appBarTheme: AppBarTheme(backgroundColor: Colors.white, titleTextStyle: TextStyle(color: Colors.black)),
       ),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
