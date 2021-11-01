@@ -41,7 +41,7 @@ dependencies:
   flutter_scale_tap: ^1.0.5
   flutter_keyboard_visibility: ^5.0.2
   fading_edge_scrollview: ^2.0.0
-  flutter_colorpicker: ^0.4.0
+  flutter_colorpicker: ^0.6.0
   share: ^2.0.4
   receive_sharing_intent: ^1.4.5
   dots_indicator: ^2.0.0

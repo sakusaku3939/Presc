@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presc/config/color_config.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/utils/dialog/dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
@@ -91,6 +92,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
               value: "delete",
             ),
           ],
+          icon: Icon(Icons.more_vert, color: ColorConfig.iconColor),
           onSelected: (value) {
             switch (value) {
               case "change":
