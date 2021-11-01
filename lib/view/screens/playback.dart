@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:presc/view/screens/setting.dart';
 import 'package:presc/view/utils/playback_text_view.dart';
@@ -16,17 +15,12 @@ class PlaybackScreen extends StatelessWidget {
   final String title;
   final String content;
 
-  void _back(BuildContext context) {
-    context.read<SpeechToTextProvider>().back(context);
-    context.read<PlaybackTimerProvider>().reset();
-  }
-
   @override
   Widget build(BuildContext context) {
     final playbackTextView = PlaybackTextView(content);
     return WillPopScope(
       onWillPop: () {
-        _back(context);
+        context.read<SpeechToTextProvider>().back(context);
         return Future.value(false);
       },
       child: Consumer<PlaybackProvider>(
@@ -83,7 +77,7 @@ class PlaybackScreen extends StatelessWidget {
         Icons.navigate_before,
         color: model.textColor,
         size: 32,
-        onPressed: () => _back(context),
+        onPressed: () => context.read<SpeechToTextProvider>().back(context),
       ),
       title: Text(
         title,

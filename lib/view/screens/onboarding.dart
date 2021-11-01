@@ -57,7 +57,7 @@ class OnBoardingScreen extends StatelessWidget {
                       children: [
                         Container(
                           width: 80,
-                          margin: EdgeInsets.symmetric(horizontal: 8),
+                          margin: const EdgeInsets.symmetric(horizontal: 8),
                           child: !isLastPage
                               ? TextButton(
                                   style: TextButton.styleFrom(
@@ -87,7 +87,7 @@ class OnBoardingScreen extends StatelessWidget {
                         ),
                         Container(
                           width: 80,
-                          margin: EdgeInsets.symmetric(horizontal: 8),
+                          margin: const EdgeInsets.symmetric(horizontal: 8),
                           child: TextButton(
                             style: TextButton.styleFrom(
                               primary: Colors.grey[800],
@@ -135,22 +135,22 @@ class OnBoardingScreen extends StatelessWidget {
       children: [
         Expanded(
           child: Container(
-            padding: EdgeInsets.only(top: 80),
+            padding: const EdgeInsets.only(top: 80),
             width: MediaQuery.of(context).size.width * 0.5,
             child: Image.asset("assets/images/logo.png"),
           ),
         ),
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 40),
+          margin: const EdgeInsets.symmetric(horizontal: 40),
           child: Text(
             "Prescへようこそ",
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 24),
+            style: const TextStyle(fontSize: 24),
           ),
         ),
         Container(height: 12),
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 40),
+          margin: const EdgeInsets.symmetric(horizontal: 40),
           child: Text(
             "Prescはプレゼンテーション、講演会、スピーチなどで使用できる原稿表示アプリです。",
             textAlign: TextAlign.center,
@@ -199,16 +199,16 @@ class OnBoardingScreen extends StatelessWidget {
         ),
         SizedBox(height: 12),
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 40),
+          margin: const EdgeInsets.symmetric(horizontal: 40),
           child: Text(
             title,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 24),
+            style: const TextStyle(fontSize: 24),
           ),
         ),
         SizedBox(height: 8),
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 40),
+          margin: const EdgeInsets.symmetric(horizontal: 40),
           child: Text(
             content,
             textAlign: TextAlign.center,

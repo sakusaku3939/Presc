@@ -29,7 +29,7 @@ class AboutAppScreen extends StatelessWidget {
                 Container(
                   alignment: Alignment.centerRight,
                   height: 48,
-                  margin: EdgeInsets.only(right: 4),
+                  margin: const EdgeInsets.only(right: 4),
                   child: RippleIconButton(
                     Icons.close,
                     size: 32,
@@ -38,7 +38,7 @@ class AboutAppScreen extends StatelessWidget {
                 ),
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.only(top: 64),
+                    padding: const EdgeInsets.only(top: 64),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -62,14 +62,14 @@ class AboutAppScreen extends StatelessWidget {
                         SizedBox(height: 16),
                         Text(
                           "© sakusaku3939",
-                          style: TextStyle(color: Colors.grey),
+                          style: const TextStyle(color: Colors.grey),
                         ),
                       ],
                     ),
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 24),
+                  margin: const EdgeInsets.symmetric(horizontal: 24),
                   width: double.infinity,
                   height: 40,
                   child: ElevatedButton(

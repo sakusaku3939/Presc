@@ -217,13 +217,13 @@ class _Card extends StatelessWidget {
                 title.isNotEmpty ? title : "タイトルなし",
                 textScaleFactor: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 24),
+                style: const TextStyle(fontSize: 24),
               ),
             ),
             Container(
               alignment: Alignment.centerLeft,
               child: DefaultTextStyle(
-                style: TextStyle(color: Colors.black),
+                style: const TextStyle(color: Colors.black),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 6,
                 child: Padding(
@@ -250,7 +250,7 @@ class _Card extends StatelessWidget {
                   DateFormat('yyyy/MM/dd(E) HH:mm', "ja_JP").format(
                     scriptTable[index].date,
                   ),
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 12,
                     color: Colors.grey,
                   ),

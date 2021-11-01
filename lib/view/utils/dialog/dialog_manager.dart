@@ -39,7 +39,7 @@ class DialogTextButton extends StatelessWidget {
       child: Text(text, style: TextStyle(color: Theme.of(context).accentColor)),
       style: ButtonStyle(
         padding: MaterialStateProperty.all(
-          EdgeInsets.symmetric(
+          const EdgeInsets.symmetric(
             horizontal: 8,
             vertical: 8,
           ),

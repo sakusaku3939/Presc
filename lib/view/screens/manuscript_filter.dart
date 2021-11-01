@@ -39,7 +39,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
                       child: Text(
                         "ごみ箱の中身は7日後に完全に削除されます",
-                        style: TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: 12),
                       ),
                     ),
                   ScriptCard(context),
@@ -65,7 +65,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
         builder: (context, currentTagTable, child) {
           return Text(
             state == ManuscriptState.tag ? currentTagTable.tagName : "ごみ箱",
-            style: TextStyle(fontSize: 20),
+            style: const TextStyle(fontSize: 20),
           );
         },
       ),

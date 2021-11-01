@@ -35,10 +35,7 @@ class PlaybackTextView extends StatelessWidget {
 
   void reset(BuildContext context) {
     stop(context);
-    final provider = context.read<SpeechToTextProvider>();
-    provider.recognizedText = "";
-    provider.unrecognizedText = _content;
-    provider.lastOffset = 0;
+    context.read<SpeechToTextProvider>().reset(_content);
   }
 
   void scrollToStart() => _scrollController.animateTo(

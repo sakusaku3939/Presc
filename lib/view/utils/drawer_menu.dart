@@ -44,7 +44,7 @@ class DrawerMenu extends StatelessWidget {
                 builder: (context, model, child) {
                   return ListTile(
                     leading: Icon(Icons.delete_outline),
-                    title: Text('ごみ箱', style: TextStyle(fontSize: 14)),
+                    title: Text('ごみ箱', style: const TextStyle(fontSize: 14)),
                     dense: true,
                     onTap: () {
                       model.replaceState(ManuscriptState.trash);
@@ -56,7 +56,7 @@ class DrawerMenu extends StatelessWidget {
               ),
               ListTile(
                 leading: Icon(Icons.settings),
-                title: Text('設定', style: TextStyle(fontSize: 14)),
+                title: Text('設定', style: const TextStyle(fontSize: 14)),
                 dense: true,
                 onTap: () => Navigator.push(
                   context,
@@ -126,7 +126,7 @@ class DrawerMenu extends StatelessWidget {
               ListTile(
                 leading: Icon(Icons.tag),
                 title:
-                    Text(tagTable.tagName, style: TextStyle(fontSize: 14)),
+                    Text(tagTable.tagName, style: const TextStyle(fontSize: 14)),
                 dense: true,
                 onLongPress: () {
                   model.loadTag();

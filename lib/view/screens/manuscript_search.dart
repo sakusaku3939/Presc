@@ -53,7 +53,7 @@ class ManuscriptSearchScreen extends StatelessWidget {
           isDense: true,
           border: InputBorder.none,
           contentPadding: const EdgeInsets.all(0),
-          hintStyle: TextStyle(fontSize: 16, color: Colors.grey),
+          hintStyle: const TextStyle(fontSize: 16, color: Colors.grey),
           hintText: '原稿を検索',
         ),
         onChanged: (text) async {
