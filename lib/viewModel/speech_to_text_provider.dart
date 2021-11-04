@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class SpeechToTextProvider with ChangeNotifier {
             duration: const Duration(seconds: 2),
           ),
         );
-    if (await _startSilentMode(context)) return;
+    if (Platform.isAndroid && await _startSilentMode(context)) return;
 
     timer.start();
     _manager.speak(

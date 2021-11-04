@@ -42,8 +42,8 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSSpeechRecognitionUsageDescription</key>
-    <string>This app requires to speech recognition/<string>
+    <string>音声認識により、話した分だけ自動でスクロールしてくれます。</string>
     <key>NSMicrophoneUsageDescription</key>
-    <string>This app requires to add file to your photo library your microphone </string>
+    <string>音声認識を行うにはマイクの許可が必要です。</string>
 </dict>
 </plist>
