@@ -1,6 +1,7 @@
 import 'package:presc/viewModel/playback_provider.dart';
 
 class InitConfig {
+  static const ngramNum = 4;
   static const scrollMode = ScrollMode.recognition;
   static const scrollVertical = true;
   static const scrollSpeedMagnification = 1.0;
