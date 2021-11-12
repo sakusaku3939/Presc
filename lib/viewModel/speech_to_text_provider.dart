@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:presc/config/init_config.dart';
 import 'package:presc/model/speech_to_text_manager.dart';
 import 'package:presc/view/utils/dialog/silent_dialog_manager.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
@@ -31,7 +33,7 @@ class SpeechToTextProvider with ChangeNotifier {
             duration: const Duration(seconds: 2),
           ),
         );
-    if (await _startSilentMode(context)) return;
+    if (Platform.isAndroid && await _startSilentMode(context)) return;
 
     timer.start();
     _manager.speak(
@@ -78,21 +80,26 @@ class SpeechToTextProvider with ChangeNotifier {
     Navigator.pop(context);
   }
 
-  List<String> _ngram(String target, int n) =>
-      List.generate(target.length - n + 1, (i) => target.substring(i, i + n));
+  List<String> _ngram(String target, int n) => List.generate(
+        target.length - n + 1,
+        (i) => target.substring(i, i + n),
+      );
 
   void _reflect(String lastWords) {
+    final N = InitConfig.ngramNum;
     final rangeUnrecognizedText = unrecognizedText.length > 150
         ? unrecognizedText.substring(0, 150)
         : unrecognizedText;
+
     int lastIndex = -1;
-    _ngram(lastWords, 4).forEach((t) {
+    _ngram(lastWords, N).forEach((t) {
       lastIndex = max(rangeUnrecognizedText.indexOf(t), lastIndex);
     });
+
     if (lastIndex != -1) {
-      final latestRecognizedText = unrecognizedText.substring(0, lastIndex + 4);
+      final latestRecognizedText = unrecognizedText.substring(0, lastIndex + N);
       _recognizedText += latestRecognizedText;
-      _unrecognizedText = unrecognizedText.substring(lastIndex + 4);
+      _unrecognizedText = unrecognizedText.substring(lastIndex + N);
       notifyListeners();
     }
   }

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:presc/view/screens/setting.dart';
 import 'package:presc/view/utils/playback_text_view.dart';
 import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
+import 'package:presc/view/utils/playback_visualizer.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
-import 'package:presc/viewModel/playback_visualizer_provider.dart';
 import 'package:presc/viewModel/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -35,7 +35,7 @@ class PlaybackScreen extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     child: IgnorePointer(
                       ignoring: true,
-                      child: _visualizer(),
+                      child: PlaybackVisualizer(),
                     ),
                   ),
                   Column(
@@ -238,25 +238,4 @@ class PlaybackScreen extends StatelessWidget {
       ),
     );
   }
-
-  Widget _visualizer() {
-    return Consumer<PlaybackVisualizerProvider>(
-      builder: (context, model, child) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            for (int i = 0; i < PlaybackVisualizerProvider.barSize; i++)
-              Container(
-                width: model.width(context),
-                height: model.height[i],
-                color: Colors.red.withOpacity(_easeIn(model.level / 10)),
-              )
-          ],
-        );
-      },
-    );
-  }
-
-  double _easeIn(double x) => x * x;
 }

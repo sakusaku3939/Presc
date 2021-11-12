@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:math';
 
+import 'package:presc/config/init_config.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
@@ -7,6 +10,7 @@ import 'package:speech_to_text/speech_to_text.dart' as stt;
 class SpeechToTextManager {
   static SpeechToTextManager _instance;
 
+  String words = "";
   String lastWords = "";
   String lastError = "";
   String lastStatus = "";
@@ -18,6 +22,7 @@ class SpeechToTextManager {
 
   stt.SpeechToText _speech = stt.SpeechToText();
   bool _isStopFlagValid = false;
+  Timer _timer;
 
   SpeechToTextManager._();
 
@@ -35,13 +40,18 @@ class SpeechToTextManager {
     this.resultListener = resultListener;
     this.errorListener = errorListener;
     this.statusListener = statusListener;
+
     bool available = await _speech.initialize(
-        onError: _errorListener, onStatus: _statusListener);
+      onError: _errorListener,
+      onStatus: _statusListener,
+    );
+    final systemLocale = await _speech.systemLocale();
     if (available) {
       _isStopFlagValid = false;
       await _speech.listen(
         onResult: _resultListener,
         onSoundLevelChange: _soundLevelListener,
+        localeId: systemLocale.localeId,
       );
       if (log) print("start recognition");
     } else {
@@ -52,6 +62,7 @@ class SpeechToTextManager {
 
   Future<void> stop() async {
     _isStopFlagValid = true;
+    lastWords = "";
     await _speech.stop();
     print("stop recognition");
   }
@@ -73,15 +84,56 @@ class SpeechToTextManager {
   }
 
   void _resultListener(SpeechRecognitionResult result) {
+    if (Platform.isAndroid) _resultAndroid(result);
+    if (Platform.isIOS) _resultIOS(result);
+  }
+
+  void _resultAndroid(SpeechRecognitionResult result) {
+    if (!result.finalResult) return;
+
     lastWords = result.recognizedWords;
-    if (result.finalResult && lastWords.isNotEmpty) {
-      print("result: ${result.recognizedWords}");
+    if (lastWords.isNotEmpty) {
+      print("lastWords: $lastWords");
       if (resultListener != null) resultListener(lastWords);
     }
   }
 
+  void _resultIOS(SpeechRecognitionResult result) {
+    if (result.finalResult) return;
+
+    final latestWordIndex = words.runes.map(
+      (rune) => result.recognizedWords.lastIndexOf(String.fromCharCode(rune)),
+    );
+    words = result.recognizedWords;
+    if (latestWordIndex.last != -1 && latestWordIndex.last <= words.length) {
+      final latestWord = words.substring(latestWordIndex.last + 1);
+      lastWords += latestWord;
+    }
+
+    if (_timer != null && _timer.isActive) _timer.cancel();
+    _timer = Timer(
+      Duration(milliseconds: 500),
+      () {
+        final N = InitConfig.ngramNum;
+        if (_speech.isNotListening || result.finalResult) return;
+        if (lastWords.length < N) lastWords.padRight(N - 1, ' ');
+
+        print("lastWords: $lastWords");
+        if (resultListener != null) resultListener(lastWords);
+        lastWords = "";
+      },
+    );
+  }
+
   void _soundLevelListener(double level) {
-    if (soundLevelListener != null) soundLevelListener(level);
+    double volume = Platform.isIOS ? _convertDbToVolume(level): level;
+    volume = max(0, min(10, volume));
+    if (soundLevelListener != null) soundLevelListener(volume);
+  }
+
+  double _convertDbToVolume(double dB) {
+    final max = 50, min = 20;
+    return (max - dB.abs()) / (max - min) * 10;
   }
 
   void _errorListener(SpeechRecognitionError error) {
