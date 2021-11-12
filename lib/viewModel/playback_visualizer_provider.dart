@@ -10,18 +10,17 @@ class PlaybackVisualizerProvider with ChangeNotifier {
   static const _spaceWidth = 2;
   static const barSize = 32;
 
-  double level = 0;
+  double volume = 0;
 
   List<double> _height = List.generate(barSize, (_) => 0);
 
   List<double> get height {
-    _manager.soundLevelListener ??= (level) {
-      if (level < 0) level = 0;
+    _manager.soundLevelListener ??= (volume) {
       for (int i = 0; i < barSize; i++) {
-        _height[i] = 2 * level +
-            Random().nextInt(_distributionHeight).toDouble() * level.sign;
+        _height[i] = 2 * volume +
+            Random().nextInt(_distributionHeight).toDouble() * volume.sign;
       }
-      this.level = level;
+      this.volume = volume;
       notifyListeners();
     };
     return _height;
