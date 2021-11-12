@@ -2,35 +2,30 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:presc/model/speech_to_text_manager.dart';
+import 'package:presc/model/visualizer.dart';
 
 class PlaybackVisualizerProvider with ChangeNotifier {
-  final _manager = SpeechToTextManager();
+  final _visualizer = Visualizer();
+  double _volume = 0;
 
-  static const _distributionHeight = 16;
-  static const _spaceWidth = 2;
-  static const barSize = 32;
+  int get barSize => _visualizer.barCount;
 
-  double volume = 0;
+  double get volume => _volume;
 
-  List<double> _height = List.generate(barSize, (_) => 0);
+  List<double> get barHeight => _visualizer.barHeight;
 
-  List<double> get height {
-    _manager.soundLevelListener ??= (volume) {
-      for (int i = 0; i < barSize; i++) {
-        _height[i] = 2 * volume +
-            Random().nextInt(_distributionHeight).toDouble() * volume.sign;
-      }
-      this.volume = volume;
+  double get barWidth => _visualizer.barWidth.toDouble();
+
+  void init(BuildContext context) {
+    _visualizer.init(context);
+    _visualizer.volumeChangeListener = (volume) {
+      _volume = volume;
       notifyListeners();
     };
-    return _height;
   }
 
-  double width(BuildContext context) =>
-      MediaQuery.of(context).size.width / barSize - _spaceWidth;
-
   void reset() {
-    _height = List.generate(barSize, (_) => 0);
+    _visualizer.reset();
     notifyListeners();
   }
 }
