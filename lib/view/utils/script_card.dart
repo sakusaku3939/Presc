@@ -4,7 +4,7 @@ import 'package:flutter_scale_tap/flutter_scale_tap.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import "package:intl/intl.dart";
 import 'package:presc/config/color_config.dart';
-import 'package:presc/config/safe_area_size.dart';
+import 'package:presc/config/display_size.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/screens/manuscript_edit.dart';
 import 'package:presc/view/utils/script_modal_bottom_sheet.dart';
@@ -58,7 +58,7 @@ class ScriptCard extends StatelessWidget {
         return Container(
           color: ColorConfig.backgroundColor,
           width: MediaQuery.of(context).size.width,
-          height: SafeAreaSize.of(context).height -
+          height: DisplaySize.safeArea(context).height -
               (state == ManuscriptState.tag ? 0 : 30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

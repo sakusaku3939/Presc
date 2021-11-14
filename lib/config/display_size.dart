@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 
-class SafeAreaSize {
-  static SafeAreaSize _instance;
+class DisplaySize {
+  static _SafeAreaSize safeArea(BuildContext context) =>
+      _SafeAreaSize.of(context);
+
+  static bool get isLarge =>
+      WidgetsBinding.instance.window.physicalSize.width < 600;
+}
+
+class _SafeAreaSize {
+  static _SafeAreaSize _instance;
   static BuildContext _context;
 
-  SafeAreaSize._();
+  _SafeAreaSize._();
 
-  factory SafeAreaSize.of(BuildContext context) {
+  factory _SafeAreaSize.of(BuildContext context) {
     _context = context;
-    _instance ??= SafeAreaSize._();
+    _instance ??= _SafeAreaSize._();
     return _instance;
   }
 
