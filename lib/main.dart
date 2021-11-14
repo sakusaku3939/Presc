@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:presc/view/screens/manuscript.dart';
 import 'package:presc/view/screens/onboarding.dart';
@@ -14,7 +13,7 @@ import 'package:presc/viewModel/playback_timer_provider.dart';
 import 'package:presc/viewModel/playback_visualizer_provider.dart';
 import 'package:presc/viewModel/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
-// import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config/color_config.dart';
@@ -53,13 +52,13 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    // _intentDataStreamSubscription = ReceiveSharingIntent.getTextStream().listen(
-    //   receiveShareText,
-    //   onError: (err) {
-    //     print("getLinkStream error: $err");
-    //   },
-    // );
-    // ReceiveSharingIntent.getInitialText().then(receiveShareText);
+    _intentDataStreamSubscription = ReceiveSharingIntent.getTextStream().listen(
+      receiveShareText,
+      onError: (err) {
+        print("getLinkStream error: $err");
+      },
+    );
+    ReceiveSharingIntent.getInitialText().then(receiveShareText);
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:presc/config/init_config.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
@@ -125,7 +126,14 @@ class SpeechToTextManager {
   }
 
   void _soundLevelListener(double level) {
-    if (soundLevelListener != null) soundLevelListener(level);
+    double volume = Platform.isIOS ? _convertDbToVolume(level): level;
+    volume = max(0, min(10, volume));
+    if (soundLevelListener != null) soundLevelListener(volume);
+  }
+
+  double _convertDbToVolume(double dB) {
+    final max = 50, min = 20;
+    return (max - dB.abs()) / (max - min) * 10;
   }
 
   void _errorListener(SpeechRecognitionError error) {

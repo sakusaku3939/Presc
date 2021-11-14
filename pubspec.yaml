@@ -37,13 +37,13 @@ dependencies:
   path_provider: ^2.0.2
   shared_preferences: ^2.0.7
 
-  speech_to_text: ^4.2.1
+  speech_to_text: ^5.2.0
   flutter_scale_tap: ^1.0.5
   flutter_keyboard_visibility: ^5.0.2
   fading_edge_scrollview: ^2.0.0
   flutter_colorpicker: ^0.6.0
   share: ^2.0.4
-#  receive_sharing_intent: ^1.4.5
+  receive_sharing_intent: ^1.4.5
   dots_indicator: ^2.0.0
   package_info: ^2.0.2
   url_launcher: ^6.0.10
