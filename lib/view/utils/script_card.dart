@@ -153,7 +153,7 @@ BoxDecoration cardShadow(double radius) {
     color: Colors.white,
     boxShadow: [
       BoxShadow(
-        color: Colors.grey[300],
+        color: Colors.grey[200],
         offset: const Offset(0, 2),
         blurRadius: 20,
       ),
