@@ -28,9 +28,7 @@ class ScriptCard extends StatelessWidget {
         else if (scriptTable.isEmpty)
           return _emptyView();
         else
-          return MediaQuery.of(context).size.width < 500
-              ? _mobileScriptView(scriptTable.length)
-              : _tabletScriptView(scriptTable.length);
+          return _scriptView(scriptTable.length);
       },
     );
   }
@@ -82,39 +80,16 @@ class ScriptCard extends StatelessWidget {
     );
   }
 
-  Widget _tabletScriptView(int length) {
+  Widget _scriptView(int length) {
     return OrientationBuilder(
       builder: (context, orientation) {
-        final maxSize = orientation == Orientation.portrait
-            ? MediaQuery.of(context).size.width
-            : MediaQuery.of(context).size.height;
-        final isLarge = maxSize > 700;
-        final columnCount = isLarge ? 3 : 2;
-        return AnimationLimiter(
-          child: GridView.count(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            childAspectRatio: maxSize / columnCount / (_height + 48),
-            crossAxisCount: columnCount,
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            children: List.generate(
-              length,
-              (int index) {
-                return Container(
-                  margin: const EdgeInsets.all(12),
-                  child: AnimationConfiguration.staggeredGrid(
-                    columnCount: columnCount,
-                    position: index,
-                    duration: const Duration(milliseconds: 300),
-                    child: FadeInAnimation(
-                      child: _Card(this.context, index),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-        );
+        final width = MediaQuery.of(context).size.width;
+        if (width < 500)
+          return _mobileScriptView(length);
+        else if (width < 700)
+          return _tabletScriptView(length, 2);
+        else
+          return _tabletScriptView(length, 3);
       },
     );
   }
@@ -138,6 +113,35 @@ class ScriptCard extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _tabletScriptView(int length, int columnCount) {
+    return AnimationLimiter(
+      child: GridView.count(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        childAspectRatio:
+            MediaQuery.of(context).size.width / columnCount / (_height + 48),
+        crossAxisCount: columnCount,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        children: List.generate(
+          length,
+          (int index) {
+            return Container(
+              margin: const EdgeInsets.all(12),
+              child: AnimationConfiguration.staggeredGrid(
+                columnCount: columnCount,
+                position: index,
+                duration: const Duration(milliseconds: 300),
+                child: FadeInAnimation(
+                  child: _Card(this.context, index),
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
