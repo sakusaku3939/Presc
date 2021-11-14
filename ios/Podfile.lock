@@ -10,6 +10,8 @@ PODS:
     - Flutter
   - path_provider (0.0.1):
     - Flutter
+  - receive_sharing_intent (0.0.1):
+    - Flutter
   - share (0.0.1):
     - Flutter
   - shared_preferences (0.0.1):
@@ -32,6 +34,7 @@ DEPENDENCIES:
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - receive_sharing_intent (from `.symlinks/plugins/receive_sharing_intent/ios`)
   - share (from `.symlinks/plugins/share/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - sound_mode (from `.symlinks/plugins/sound_mode/ios`)
@@ -54,6 +57,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/package_info/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
+  receive_sharing_intent:
+    :path: ".symlinks/plugins/receive_sharing_intent/ios"
   share:
     :path: ".symlinks/plugins/share/ios"
   shared_preferences:
@@ -74,6 +79,7 @@ SPEC CHECKSUMS:
   Mute: 66213d0aced6a074c7ab88b45ec20a9d54b1b7fb
   package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
   path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
+  receive_sharing_intent: c0d87310754e74c0f9542947e7cbdf3a0335a3b1
   share: 0b2c3e82132f5888bccca3351c504d0003b3b410
   shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
   sound_mode: ef0072f20e7306c1c371984a443156e39be092d5

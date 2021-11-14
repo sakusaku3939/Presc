@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:presc/config/color_config.dart';
+import 'package:presc/config/display_size.dart';
 import 'package:presc/config/init_config.dart';
 import 'package:presc/model/utils/enum_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -74,10 +75,11 @@ class PlaybackProvider with ChangeNotifier {
   /*
   *  フォントサイズ
   */
+  final initFontSize =
+      DisplaySize.isLarge ? InitConfig.tabletFontSize : InitConfig.fontSize;
   int _fontSize;
 
-  int get fontSize =>
-      _fontSize ?? _prefs?.getInt("fontSize") ?? InitConfig.fontSize;
+  int get fontSize => _fontSize ?? _prefs?.getInt("fontSize") ?? initFontSize;
 
   set fontSize(int size) {
     _fontSize = size;
