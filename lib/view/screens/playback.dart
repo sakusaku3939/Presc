@@ -121,120 +121,125 @@ class PlaybackScreen extends StatelessWidget {
         break;
     }
 
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(32, 12, 32, 24),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Container(
-            width: 48,
-            child: RippleIconButton(
-              scrollModeIcon,
-              size: 28,
-              color: model.textColor,
-              onPressed: () => {
-                RadioDialogManager.show(
-                  context,
-                  groupValue: model.scrollMode,
-                  itemList: [
-                    RadioDialogItem(
-                      title: "手動スクロール",
-                      subtitle: "スクロールを行いません",
-                      value: ScrollMode.manual,
-                    ),
-                    RadioDialogItem(
-                      title: "自動スクロール",
-                      subtitle: "一定の速度でスクロールします",
-                      value: ScrollMode.auto,
-                    ),
-                    RadioDialogItem(
-                      title: "音声認識",
-                      subtitle: "認識した文字分だけスクロールします",
-                      value: ScrollMode.recognition,
-                    ),
-                  ],
-                  onChanged: (value) {
-                    model.scrollMode = value;
-                    model.playFabState = false;
-                    playbackTextView.reset(context);
-                  },
-                )
-              },
-            ),
-          ),
-          Container(
-            width: 48,
-            child: RippleIconButton(
-              Icons.skip_previous_outlined,
-              size: 32,
-              color: model.textColor,
-              onPressed: () {
-                playbackTextView.reset(context);
-                playbackTextView.scrollToStart();
-                if (model.scrollVertical) timer.reset();
-                Future.delayed(
-                  Duration(milliseconds: 300),
-                  () => model.playFabState = false,
-                );
-              },
-            ),
-          ),
-          Container(
-            width: 64,
-            child: FittedBox(
-              child: FloatingActionButton(
-                child: model.playFabState
-                    ? Icon(Icons.pause)
-                    : Icon(Icons.play_arrow),
-                onPressed: () {
-                  model.playFabState = !model.playFabState;
-                  if (model.playFabState) {
-                    if (model.scrollMode == ScrollMode.recognition) {
-                      speech.start(context);
-                    } else {
-                      timer.start();
-                    }
-                  } else {
-                    playbackTextView.stop(context);
-                  }
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: 700,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(32, 12, 32, 24),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Container(
+              width: 48,
+              child: RippleIconButton(
+                scrollModeIcon,
+                size: 28,
+                color: model.textColor,
+                onPressed: () => {
+                  RadioDialogManager.show(
+                    context,
+                    groupValue: model.scrollMode,
+                    itemList: [
+                      RadioDialogItem(
+                        title: "手動スクロール",
+                        subtitle: "スクロールを行いません",
+                        value: ScrollMode.manual,
+                      ),
+                      RadioDialogItem(
+                        title: "自動スクロール",
+                        subtitle: "一定の速度でスクロールします",
+                        value: ScrollMode.auto,
+                      ),
+                      RadioDialogItem(
+                        title: "音声認識",
+                        subtitle: "認識した文字分だけスクロールします",
+                        value: ScrollMode.recognition,
+                      ),
+                    ],
+                    onChanged: (value) {
+                      model.scrollMode = value;
+                      model.playFabState = false;
+                      playbackTextView.reset(context);
+                    },
+                  )
                 },
               ),
             ),
-          ),
-          Container(
-            width: 48,
-            child: RippleIconButton(
-              Icons.skip_next_outlined,
-              size: 32,
-              color: model.textColor,
-              onPressed: () {
-                playbackTextView.reset(context);
-                playbackTextView.scrollToEnd();
-                if (!model.scrollVertical) timer.reset();
-                Future.delayed(
-                  Duration(milliseconds: 300),
-                  () => model.playFabState = false,
-                );
-              },
+            Container(
+              width: 48,
+              child: RippleIconButton(
+                Icons.skip_previous_outlined,
+                size: 32,
+                color: model.textColor,
+                onPressed: () {
+                  playbackTextView.reset(context);
+                  playbackTextView.scrollToStart();
+                  if (model.scrollVertical) timer.reset();
+                  Future.delayed(
+                    Duration(milliseconds: 300),
+                    () => model.playFabState = false,
+                  );
+                },
+              ),
             ),
-          ),
-          Container(
-            width: 48,
-            child: RippleIconButton(
-              model.scrollVertical
-                  ? Icons.text_rotate_vertical
-                  : Icons.text_rotation_none,
-              size: 28,
-              color: model.textColor,
-              onPressed: () {
-                model.scrollVertical = !model.scrollVertical;
-                model.playFabState = false;
-                playbackTextView.stop(context);
-                playbackTextView.scrollToInit(context);
-              },
+            Container(
+              width: 64,
+              child: FittedBox(
+                child: FloatingActionButton(
+                  child: model.playFabState
+                      ? Icon(Icons.pause)
+                      : Icon(Icons.play_arrow),
+                  onPressed: () {
+                    model.playFabState = !model.playFabState;
+                    if (model.playFabState) {
+                      if (model.scrollMode == ScrollMode.recognition) {
+                        speech.start(context);
+                      } else {
+                        timer.start();
+                      }
+                    } else {
+                      playbackTextView.stop(context);
+                    }
+                  },
+                ),
+              ),
             ),
-          ),
-        ],
+            Container(
+              width: 48,
+              child: RippleIconButton(
+                Icons.skip_next_outlined,
+                size: 32,
+                color: model.textColor,
+                onPressed: () {
+                  playbackTextView.reset(context);
+                  playbackTextView.scrollToEnd();
+                  if (!model.scrollVertical) timer.reset();
+                  Future.delayed(
+                    Duration(milliseconds: 300),
+                    () => model.playFabState = false,
+                  );
+                },
+              ),
+            ),
+            Container(
+              width: 48,
+              child: RippleIconButton(
+                model.scrollVertical
+                    ? Icons.text_rotate_vertical
+                    : Icons.text_rotation_none,
+                size: 28,
+                color: model.textColor,
+                onPressed: () {
+                  model.scrollVertical = !model.scrollVertical;
+                  model.playFabState = false;
+                  playbackTextView.stop(context);
+                  playbackTextView.scrollToInit(context);
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

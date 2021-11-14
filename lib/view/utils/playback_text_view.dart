@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
+import 'package:presc/config/display_size.dart';
 import 'package:presc/config/playback_text_style.dart';
 import 'package:presc/config/scroll_speed_config.dart';
 import 'package:presc/view/utils/horizontal_text.dart';
@@ -95,7 +96,7 @@ class PlaybackTextView extends StatelessWidget {
               physics: const BouncingScrollPhysics(),
               controller: _scrollController,
               child: Padding(
-                padding: const EdgeInsets.all(32),
+                padding: EdgeInsets.all(DisplaySize.isLarge ? 40 : 32),
                 child: playbackText,
               ),
             ),
