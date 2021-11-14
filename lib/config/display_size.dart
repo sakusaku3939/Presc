@@ -4,8 +4,10 @@ class DisplaySize {
   static _SafeAreaSize safeArea(BuildContext context) =>
       _SafeAreaSize.of(context);
 
-  static bool get isLarge =>
-      WidgetsBinding.instance.window.physicalSize.width < 600;
+  static bool get isLarge {
+    final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
+    return data.size.shortestSide > 600;
+  }
 }
 
 class _SafeAreaSize {

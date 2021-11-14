@@ -76,7 +76,7 @@ class PlaybackProvider with ChangeNotifier {
   *  フォントサイズ
   */
   final initFontSize =
-      DisplaySize.isLarge ? InitConfig.fontSize : InitConfig.tabletFontSize;
+      DisplaySize.isLarge ? InitConfig.tabletFontSize : InitConfig.fontSize;
   int _fontSize;
 
   int get fontSize => _fontSize ?? _prefs?.getInt("fontSize") ?? initFontSize;
