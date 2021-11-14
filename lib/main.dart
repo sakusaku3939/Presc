@@ -72,9 +72,12 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Presc',
       theme: ThemeData(
-        primaryColor: Colors.white,
         accentColor: Colors.deepOrange[400],
-        appBarTheme: AppBarTheme(backgroundColor: Colors.white, titleTextStyle: TextStyle(color: Colors.black)),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.white,
+          iconTheme: IconThemeData(color: ColorConfig.iconColor),
+          titleTextStyle: TextStyle(color: Colors.black, fontSize: 20),
+        ),
       ),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
