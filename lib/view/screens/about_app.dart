@@ -42,9 +42,14 @@ class AboutAppScreen extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset(
-                          "assets/images/logo.png",
-                          width: MediaQuery.of(context).size.width * 0.5,
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: 400,
+                          ),
+                          child: Image.asset(
+                            "assets/images/logo.png",
+                            width: MediaQuery.of(context).size.width * 0.5,
+                          ),
                         ),
                         SizedBox(height: 16),
                         FutureBuilder(

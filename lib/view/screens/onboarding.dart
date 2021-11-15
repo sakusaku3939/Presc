@@ -134,10 +134,15 @@ class OnBoardingScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Expanded(
-          child: Container(
-            padding: const EdgeInsets.only(top: 80),
-            width: MediaQuery.of(context).size.width * 0.5,
-            child: Image.asset("assets/images/logo.png"),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: 400,
+            ),
+            child: Container(
+              padding: const EdgeInsets.only(top: 80),
+              width: MediaQuery.of(context).size.width * 0.5,
+              child: Image.asset("assets/images/logo.png"),
+            ),
           ),
         ),
         Container(
