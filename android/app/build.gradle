@@ -55,7 +55,7 @@ android {
             storePassword keystoreProperties['storePassword']
         }
         debug {
-            storeFile rootProject.file("debug.keystore")
+            storeFile file("${System.properties['user.home']}/.android/debug.keystore")
         }
     }
 
