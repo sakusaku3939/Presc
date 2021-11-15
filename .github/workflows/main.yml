@@ -41,7 +41,7 @@ jobs:
         run: |
           curl \
             -H "Authorization: token ${{secrets.DEPLOYGATE_API_KEY}}" \
-            -F "file=@build\app\outputs\flutter-apk\app-beta-release.apk" \
+            -F "file=@build/app/outputs/flutter-apk/app-beta-release.apk" \
             -F "message=git:`git rev-parse --short $GITHUB_SHA`" \
             -F "distribution_name=`git rev-parse --abbrev-ref $GITHUB_SHA`" \
             -F "release_note=new build" \
