@@ -77,14 +77,30 @@ class AboutAppScreen extends StatelessWidget {
                   margin: const EdgeInsets.symmetric(horizontal: 24),
                   width: double.infinity,
                   height: 40,
+                  child: TextButton(
+                    child: Text("プライバシーポリシー"),
+                    style: TextButton.styleFrom(
+                      primary: Colors.grey[800],
+                    ),
+                    onPressed: () => launch(
+                      "https://github.com/sakusaku3939/Presc/blob/master/Privacy-Policy.md",
+                    ),
+                  ),
+                ),
+                SizedBox(height: 4),
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 24),
+                  width: double.infinity,
+                  height: 40,
                   child: ElevatedButton(
                     child: Text("フィードバックを送る"),
                     style: ElevatedButton.styleFrom(
                       primary: Theme.of(context).accentColor,
                       onPrimary: Colors.white,
                     ),
-                    onPressed: () =>
-                        launch("https://form.run/@presc--1633289693"),
+                    onPressed: () => launch(
+                      "https://form.run/@presc--1633289693",
+                    ),
                   ),
                 ),
                 SizedBox(height: 24),
