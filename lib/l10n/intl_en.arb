@@ -1,0 +1,14 @@
+{
+  "@@locale": "en",
+  "onboardingNext": "Next",
+  "onboardingSkip": "Skip",
+  "onboardingStart": "Start",
+  "onboardingWelcomePresc": "Welcome to Presc",
+  "onboardingWelcomePrescDescription": "Presc is a script display application that can be used for presentations, lectures, speeches, etc.",
+  "onboardingManageScript": "Manage your manuscript",
+  "onboardingManageScriptDescription": "Add, edit, and delete manuscripts. You can organize your created manuscripts by tagging them." ,
+  "onboardingPlayScript": "Play the script",
+  "onboardingPlayScriptDescription": "You can play back your completed manuscript. With speech recognition, you can see at a glance how far you have spoken." ,
+  "onboardingCustomize": "Customize as you like",
+  "onboardingCustomizeDescription": "You can customize the orientation of the formatting (vertical or horizontal), the color of the text, the font size, etc."
+}

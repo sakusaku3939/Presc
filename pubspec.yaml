@@ -110,3 +110,6 @@ flutter_icons:
 flutter_native_splash:
   image: "assets/images/splash.png"
   color: "#FF6E42"
+
+flutter_intl:
+  enabled: true

@@ -17,6 +17,7 @@ import 'package:receive_sharing_intent/receive_sharing_intent.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config/color_config.dart';
+import 'generated/l10n.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -80,12 +81,11 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       localizationsDelegates: [
+        S.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-      supportedLocales: [
-        Locale('ja', ''),
-      ],
+      supportedLocales: S.delegate.supportedLocales,
       home: FutureBuilder(
         future: _isFirstLaunch(),
         builder: (context, snapshot) {
