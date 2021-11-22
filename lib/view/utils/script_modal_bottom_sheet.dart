@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/screens/playback.dart';
 import 'package:presc/view/utils/trash_move_manager.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
@@ -58,29 +59,30 @@ class ScriptModalBottomSheet {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         ListTile(
-            leading: Transform.translate(
-              offset: Offset(8, 0),
-              child: Icon(Icons.play_arrow_outlined),
-            ),
-            title: Text('原稿を再生'),
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => PlaybackScreen(
-                    title: model.scriptTable[index].title,
-                    content: model.scriptTable[index].content,
-                  ),
+          leading: Transform.translate(
+            offset: Offset(8, 0),
+            child: Icon(Icons.play_arrow_outlined),
+          ),
+          title: Text(S.current.onboardingPlayScript),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PlaybackScreen(
+                  title: model.scriptTable[index].title,
+                  content: model.scriptTable[index].content,
                 ),
-              );
-            }),
+              ),
+            );
+          },
+        ),
         ListTile(
           leading: Transform.translate(
             offset: Offset(8, 0),
             child: Icon(Icons.delete_outline),
           ),
-          title: Text('ごみ箱に移動'),
+          title: Text(S.current.moveTrash),
           onTap: () {
             TrashMoveManager.move(
               context: context,
@@ -107,7 +109,7 @@ class ScriptModalBottomSheet {
             offset: Offset(8, 0),
             child: Icon(Icons.restore_outlined),
           ),
-          title: Text('復元する'),
+          title: Text(S.current.restore),
           onTap: () {
             TrashMoveManager.restore(
               context: context,
@@ -122,7 +124,7 @@ class ScriptModalBottomSheet {
             offset: Offset(8, 0),
             child: Icon(Icons.delete_outlined),
           ),
-          title: Text('完全に削除'),
+          title: Text(S.current.permanentlyDeleted),
           onTap: () {
             Navigator.pop(context);
             TrashMoveManager.delete(

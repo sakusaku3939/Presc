@@ -36,20 +36,60 @@ class S {
   }
 
   /// `Next`
-  String get onboardingNext {
+  String get next {
     return Intl.message(
       'Next',
-      name: 'onboardingNext',
+      name: 'next',
       desc: '',
       args: [],
     );
   }
 
   /// `Skip`
-  String get onboardingSkip {
+  String get skip {
     return Intl.message(
       'Skip',
-      name: 'onboardingSkip',
+      name: 'skip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `close`
+  String get close {
+    return Intl.message(
+      'close',
+      name: 'close',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `cancel`
+  String get cancel {
+    return Intl.message(
+      'cancel',
+      name: 'cancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `remove`
+  String get remove {
+    return Intl.message(
+      'remove',
+      name: 'remove',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `change`
+  String get change {
+    return Intl.message(
+      'change',
+      name: 'change',
       desc: '',
       args: [],
     );
@@ -85,20 +125,20 @@ class S {
     );
   }
 
-  /// `Manage your manuscript`
+  /// `Manage your script`
   String get onboardingManageScript {
     return Intl.message(
-      'Manage your manuscript',
+      'Manage your script',
       name: 'onboardingManageScript',
       desc: '',
       args: [],
     );
   }
 
-  /// `Add, edit, and delete manuscripts. You can organize your created manuscripts by tagging them.`
+  /// `Add, edit, and delete scripts. You can organize your created scripts by tagging them.`
   String get onboardingManageScriptDescription {
     return Intl.message(
-      'Add, edit, and delete manuscripts. You can organize your created manuscripts by tagging them.',
+      'Add, edit, and delete scripts. You can organize your created scripts by tagging them.',
       name: 'onboardingManageScriptDescription',
       desc: '',
       args: [],
@@ -115,10 +155,10 @@ class S {
     );
   }
 
-  /// `You can play back your completed manuscript. With speech recognition, you can see at a glance how far you have spoken.`
+  /// `You can play back your completed script. With speech recognition, you can see at a glance how far you have spoken.`
   String get onboardingPlayScriptDescription {
     return Intl.message(
-      'You can play back your completed manuscript. With speech recognition, you can see at a glance how far you have spoken.',
+      'You can play back your completed script. With speech recognition, you can see at a glance how far you have spoken.',
       name: 'onboardingPlayScriptDescription',
       desc: '',
       args: [],
@@ -140,6 +180,356 @@ class S {
     return Intl.message(
       'You can customize the orientation of the formatting (vertical or horizontal), the color of the text, the font size, etc.',
       name: 'onboardingCustomizeDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `There is no script yet`
+  String get noScriptYet {
+    return Intl.message(
+      'There is no script yet',
+      name: 'noScriptYet',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The trash can is empty`
+  String get trashEmpty {
+    return Intl.message(
+      'The trash can is empty',
+      name: 'trashEmpty',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No title`
+  String get noTitle {
+    return Intl.message(
+      'No title',
+      name: 'noTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No additional text`
+  String get noAdditionalText {
+    return Intl.message(
+      'No additional text',
+      name: 'noAdditionalText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Title`
+  String get placeholderTitle {
+    return Intl.message(
+      'Title',
+      name: 'placeholderTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter here`
+  String get placeholderContent {
+    return Intl.message(
+      'Enter here',
+      name: 'placeholderContent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add new tag`
+  String get addNewTag {
+    return Intl.message(
+      'Add new tag',
+      name: 'addNewTag',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Added a new tag`
+  String get addedNewTag {
+    return Intl.message(
+      'Added a new tag',
+      name: 'addedNewTag',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Number of characters`
+  String get wordCount {
+    return Intl.message(
+      'Number of characters',
+      name: 'wordCount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Estimated presentation time (300 characters per minute)`
+  String get estimatedReadingTime {
+    return Intl.message(
+      'Estimated presentation time (300 characters per minute)',
+      name: 'estimatedReadingTime',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Last modified`
+  String get lastModified {
+    return Intl.message(
+      'Last modified',
+      name: 'lastModified',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{minutes}m {second}s`
+  String time(Object minutes, Object second) {
+    return Intl.message(
+      '${minutes}m ${second}s',
+      name: 'time',
+      desc: '',
+      args: [minutes, second],
+    );
+  }
+
+  /// `Permanently deleted`
+  String get permanentlyDeleted {
+    return Intl.message(
+      'Permanently deleted',
+      name: 'permanentlyDeleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restore`
+  String get restore {
+    return Intl.message(
+      'Restore',
+      name: 'restore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Move to trash`
+  String get moveTrash {
+    return Intl.message(
+      'Move to trash',
+      name: 'moveTrash',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search the script`
+  String get searchScript {
+    return Intl.message(
+      'Search the script',
+      name: 'searchScript',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit tag`
+  String get editTag {
+    return Intl.message(
+      'Edit tag',
+      name: 'editTag',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove tag`
+  String get removeTag {
+    return Intl.message(
+      'Remove tag',
+      name: 'removeTag',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove {count} tags`
+  String removeTags(Object count) {
+    return Intl.message(
+      'Remove $count tags',
+      name: 'removeTags',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `Do you want to remove the tag {name}? This operation cannot be undone.`
+  String removeTagAlert(Object name) {
+    return Intl.message(
+      'Do you want to remove the tag $name? This operation cannot be undone.',
+      name: 'removeTagAlert',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `Do you want to remove all selected tags? This operation cannot be undone.`
+  String get removeTagsAlert {
+    return Intl.message(
+      'Do you want to remove all selected tags? This operation cannot be undone.',
+      name: 'removeTagsAlert',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Removed tag.`
+  String get tagRemoved {
+    return Intl.message(
+      'Removed tag.',
+      name: 'tagRemoved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{count} tags removed.`
+  String tagsRemoved(Object count) {
+    return Intl.message(
+      '$count tags removed.',
+      name: 'tagsRemoved',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `The contents of the trash will be completely removed after 7 days.`
+  String get trashHint {
+    return Intl.message(
+      'The contents of the trash will be completely removed after 7 days.',
+      name: 'trashHint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `trash`
+  String get trash {
+    return Intl.message(
+      'trash',
+      name: 'trash',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `tag`
+  String get tag {
+    return Intl.message(
+      'tag',
+      name: 'tag',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `change tag name`
+  String get changeTagName {
+    return Intl.message(
+      'change tag name',
+      name: 'changeTagName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Enter a name here`
+  String get placeholderTagName {
+    return Intl.message(
+      'Enter a name here',
+      name: 'placeholderTagName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Updated tags`
+  String get updatedTags {
+    return Intl.message(
+      'Updated tags',
+      name: 'updatedTags',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Do you want to empty the trash?`
+  String get isEmptyTrash {
+    return Intl.message(
+      'Do you want to empty the trash?',
+      name: 'isEmptyTrash',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `delete all`
+  String get deleteAll {
+    return Intl.message(
+      'delete all',
+      name: 'deleteAll',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Emptied the trash.`
+  String get emptiedTrash {
+    return Intl.message(
+      'Emptied the trash.',
+      name: 'emptiedTrash',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `setting`
+  String get setting {
+    return Intl.message(
+      'setting',
+      name: 'setting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tag list`
+  String get tagList {
+    return Intl.message(
+      'Tag list',
+      name: 'tagList',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `edit`
+  String get edit {
+    return Intl.message(
+      'edit',
+      name: 'edit',
       desc: '',
       args: [],
     );

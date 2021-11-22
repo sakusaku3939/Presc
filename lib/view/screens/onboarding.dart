@@ -64,7 +64,7 @@ class OnBoardingScreen extends StatelessWidget {
                                   style: TextButton.styleFrom(
                                     primary: Colors.grey[800],
                                   ),
-                                  child: Text(S.current.onboardingSkip),
+                                  child: Text(S.current.skip),
                                   onPressed: () => _nextPage(pages.length - 1),
                                 )
                               : Container(),
@@ -95,7 +95,7 @@ class OnBoardingScreen extends StatelessWidget {
                             ),
                             child: Text(
                               !isLastPage
-                                  ? S.current.onboardingNext
+                                  ? S.current.next
                                   : S.current.onboardingStart,
                             ),
                             onPressed: () async {

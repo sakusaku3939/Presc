@@ -19,18 +19,65 @@ typedef String MessageIfAbsent(String messageStr, List<dynamic> args);
 class MessageLookup extends MessageLookupByLibrary {
   String get localeName => 'ja';
 
+  static m0(name) => "タグ ${name}を削除しますか？この操作は元に戻せません。";
+
+  static m1(count) => "${count}件のタグを削除";
+
+  static m2(count) => "${count}件のタグを削除しました";
+
+  static m3(minutes, second) => "${minutes}分${second}秒";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "addNewTag" : MessageLookupByLibrary.simpleMessage("新しいタグを追加"),
+    "addedNewTag" : MessageLookupByLibrary.simpleMessage("新しいタグを追加しました"),
+    "cancel" : MessageLookupByLibrary.simpleMessage("キャンセル"),
+    "change" : MessageLookupByLibrary.simpleMessage("変更"),
+    "changeTagName" : MessageLookupByLibrary.simpleMessage("タグ名を変更"),
+    "close" : MessageLookupByLibrary.simpleMessage("戻る"),
+    "deleteAll" : MessageLookupByLibrary.simpleMessage("全て削除"),
+    "edit" : MessageLookupByLibrary.simpleMessage("編集"),
+    "editTag" : MessageLookupByLibrary.simpleMessage("タグの編集"),
+    "emptiedTrash" : MessageLookupByLibrary.simpleMessage("ごみ箱を空にしました"),
+    "estimatedReadingTime" : MessageLookupByLibrary.simpleMessage("読み上げ時間の目安（1分300文字）"),
+    "isEmptyTrash" : MessageLookupByLibrary.simpleMessage("ごみ箱の中身を空にしますか？"),
+    "lastModified" : MessageLookupByLibrary.simpleMessage("最終更新日時"),
+    "moveTrash" : MessageLookupByLibrary.simpleMessage("ごみ箱に移動"),
+    "next" : MessageLookupByLibrary.simpleMessage("次へ"),
+    "noAdditionalText" : MessageLookupByLibrary.simpleMessage("追加のテキストはありません"),
+    "noScriptYet" : MessageLookupByLibrary.simpleMessage("原稿がまだありません"),
+    "noTitle" : MessageLookupByLibrary.simpleMessage("タイトルなし"),
     "onboardingCustomize" : MessageLookupByLibrary.simpleMessage("自由にカスタマイズ"),
     "onboardingCustomizeDescription" : MessageLookupByLibrary.simpleMessage("書式の向き（縦書き、横書き）や文字の色、フォントサイズ等は自由にカスタマイズ可能です。"),
     "onboardingManageScript" : MessageLookupByLibrary.simpleMessage("原稿を管理"),
     "onboardingManageScriptDescription" : MessageLookupByLibrary.simpleMessage("原稿を追加・編集・削除しましょう。作った原稿はタグを付けて整理することができます。"),
-    "onboardingNext" : MessageLookupByLibrary.simpleMessage("次へ"),
     "onboardingPlayScript" : MessageLookupByLibrary.simpleMessage("原稿を再生"),
     "onboardingPlayScriptDescription" : MessageLookupByLibrary.simpleMessage("出来た原稿を再生できます。音声認識により、どこまで話したかが一目で分かります。"),
-    "onboardingSkip" : MessageLookupByLibrary.simpleMessage("スキップ"),
     "onboardingStart" : MessageLookupByLibrary.simpleMessage("始める"),
     "onboardingWelcomePresc" : MessageLookupByLibrary.simpleMessage("Prescへようこそ"),
-    "onboardingWelcomePrescDescription" : MessageLookupByLibrary.simpleMessage("Prescはプレゼンテーション、講演会、スピーチなどで使用できる原稿表示アプリです。")
+    "onboardingWelcomePrescDescription" : MessageLookupByLibrary.simpleMessage("Prescはプレゼンテーション、講演会、スピーチなどで使用できる原稿表示アプリです。"),
+    "permanentlyDeleted" : MessageLookupByLibrary.simpleMessage("完全に削除"),
+    "placeholderContent" : MessageLookupByLibrary.simpleMessage("ここに入力"),
+    "placeholderTagName" : MessageLookupByLibrary.simpleMessage("ここに名前を入力"),
+    "placeholderTitle" : MessageLookupByLibrary.simpleMessage("タイトル"),
+    "remove" : MessageLookupByLibrary.simpleMessage("削除"),
+    "removeTag" : MessageLookupByLibrary.simpleMessage("タグを削除"),
+    "removeTagAlert" : m0,
+    "removeTags" : m1,
+    "removeTagsAlert" : MessageLookupByLibrary.simpleMessage("選択したタグを全て削除しますか？この操作は元に戻せません。"),
+    "restore" : MessageLookupByLibrary.simpleMessage("復元する"),
+    "searchScript" : MessageLookupByLibrary.simpleMessage("原稿を検索"),
+    "setting" : MessageLookupByLibrary.simpleMessage("設定"),
+    "skip" : MessageLookupByLibrary.simpleMessage("スキップ"),
+    "tag" : MessageLookupByLibrary.simpleMessage("タグ"),
+    "tagList" : MessageLookupByLibrary.simpleMessage("タグ一覧"),
+    "tagRemoved" : MessageLookupByLibrary.simpleMessage("タグを削除しました"),
+    "tagsRemoved" : m2,
+    "time" : m3,
+    "trash" : MessageLookupByLibrary.simpleMessage("ごみ箱"),
+    "trashEmpty" : MessageLookupByLibrary.simpleMessage("ごみ箱は空です"),
+    "trashHint" : MessageLookupByLibrary.simpleMessage("ごみ箱の中身は7日後に完全に削除されます"),
+    "updatedTags" : MessageLookupByLibrary.simpleMessage("タグを更新しました"),
+    "wordCount" : MessageLookupByLibrary.simpleMessage("文字数")
   };
 }

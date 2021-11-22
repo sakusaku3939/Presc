@@ -5,6 +5,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import "package:intl/intl.dart";
 import 'package:presc/config/color_config.dart';
 import 'package:presc/config/display_size.dart';
+import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/screens/manuscript_edit.dart';
 import 'package:presc/view/utils/script_modal_bottom_sheet.dart';
@@ -45,11 +46,11 @@ class ScriptCard extends StatelessWidget {
           case ManuscriptState.home:
           case ManuscriptState.tag:
             icon = Icons.description_outlined;
-            text = "原稿がまだありません";
+            text = S.current.noScriptYet;
             break;
           case ManuscriptState.trash:
             icon = Icons.delete_outline;
-            text = "ごみ箱は空です";
+            text = S.current.noAdditionalText;
             break;
           case ManuscriptState.search:
             return _placeholder();
@@ -218,7 +219,7 @@ class _Card extends StatelessWidget {
               margin: const EdgeInsets.only(left: 12),
               alignment: Alignment.centerLeft,
               child: Text(
-                title.isNotEmpty ? title : "タイトルなし",
+                title.isNotEmpty ? title : S.current.noTitle,
                 textScaleFactor: 1,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontSize: 24),
@@ -235,7 +236,7 @@ class _Card extends StatelessWidget {
                   child: Text(
                     content.isNotEmpty
                         ? _optimizeContent(content)
-                        : "追加のテキストはありません",
+                        : S.current.noAdditionalText,
                     textScaleFactor: 1,
                     style: TextStyle(
                       color: Colors.grey[800],
@@ -251,7 +252,10 @@ class _Card extends StatelessWidget {
               child: Align(
                 alignment: Alignment.topRight,
                 child: Text(
-                  DateFormat('yyyy/MM/dd(E) HH:mm', "ja_JP").format(
+                  DateFormat(
+                    'yyyy/MM/dd(E) HH:mm',
+                    Intl.getCurrentLocale(),
+                  ).format(
                     scriptTable[index].date,
                   ),
                   style: const TextStyle(
