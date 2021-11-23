@@ -47,7 +47,10 @@ class DrawerMenu extends StatelessWidget {
                     leading: Icon(Icons.delete_outline),
                     title: Text(
                       S.current.trash,
-                      style: const TextStyle(fontSize: 14),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                      ),
                     ),
                     dense: true,
                     onTap: () {
@@ -62,7 +65,10 @@ class DrawerMenu extends StatelessWidget {
                 leading: Icon(Icons.settings),
                 title: Text(
                   S.current.setting,
-                  style: const TextStyle(fontSize: 14),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
                 dense: true,
                 onTap: () => Navigator.push(
@@ -103,7 +109,9 @@ class DrawerMenu extends StatelessWidget {
                         overlayColor: MaterialStateProperty.all(Colors.black12),
                         padding: MaterialStateProperty.all(
                           const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 4),
+                            horizontal: 12,
+                            vertical: 4,
+                          ),
                         ),
                         minimumSize: MaterialStateProperty.all(Size.zero),
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -132,8 +140,10 @@ class DrawerMenu extends StatelessWidget {
             for (var tagTable in model.allTagTable)
               ListTile(
                 leading: Icon(Icons.tag),
-                title: Text(tagTable.tagName,
-                    style: const TextStyle(fontSize: 14)),
+                title: Text(
+                  tagTable.tagName,
+                  style: const TextStyle(fontSize: 14),
+                ),
                 dense: true,
                 onLongPress: () {
                   model.loadTag();

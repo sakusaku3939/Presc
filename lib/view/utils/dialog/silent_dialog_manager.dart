@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presc/generated/l10n.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sound_mode/permission_handler.dart';
@@ -22,12 +23,12 @@ class SilentDialogManager {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "ヒント:",
+                    S.current.hint + ":",
                     style: const TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 4),
                   Text(
-                    "再生中に音を鳴らしたくない場合",
+                    S.current.hintContent,
                     style: const TextStyle(fontSize: 14),
                   ),
                   SizedBox(height: 12),
@@ -39,7 +40,7 @@ class SilentDialogManager {
                   CheckboxListTile(
                     dense: true,
                     title: Text(
-                      "今後は表示しない",
+                      S.current.notShowAgain,
                       style: const TextStyle(fontSize: 14),
                     ),
                     contentPadding: const EdgeInsets.all(0),
@@ -53,7 +54,7 @@ class SilentDialogManager {
               contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 2),
               actions: [
                 DialogTextButton(
-                  "設定を開く",
+                  S.current.openSetting,
                   onPressed: () {
                     isClose = true;
                     context.read<PlaybackProvider>().playFabState = false;

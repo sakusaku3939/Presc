@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:presc/generated/l10n.dart';
 
 class ColorDialogManager {
   static void show(
@@ -25,13 +26,13 @@ class ColorDialogManager {
               contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
               actions: [
                 TextButton(
-                  child: const Text("初期値に戻す"),
+                  child: Text(S.current.resetInitValue),
                   onPressed: () => setState(() {
                     pickerColor = initialColor;
                   }),
                 ),
                 TextButton(
-                  child: const Text("完了"),
+                  child: Text(S.current.done),
                   onPressed: () {
                     onSubmitted(pickerColor);
                     Navigator.of(context).pop();

@@ -55,41 +55,51 @@ class S {
     );
   }
 
-  /// `Close`
+  /// `CLOSE`
   String get close {
     return Intl.message(
-      'Close',
+      'CLOSE',
       name: 'close',
       desc: '',
       args: [],
     );
   }
 
-  /// `Cancel`
+  /// `CANCEL`
   String get cancel {
     return Intl.message(
-      'Cancel',
+      'CANCEL',
       name: 'cancel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Remove`
+  /// `REMOVE`
   String get remove {
     return Intl.message(
-      'Remove',
+      'REMOVE',
       name: 'remove',
       desc: '',
       args: [],
     );
   }
 
-  /// `Change`
+  /// `CHANGE`
   String get change {
     return Intl.message(
-      'Change',
+      'CHANGE',
       name: 'change',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `DONE`
+  String get done {
+    return Intl.message(
+      'DONE',
+      name: 'done',
       desc: '',
       args: [],
     );
@@ -485,10 +495,10 @@ class S {
     );
   }
 
-  /// `Delete all`
+  /// `DELETE ALL`
   String get deleteAll {
     return Intl.message(
-      'Delete all',
+      'DELETE ALL',
       name: 'deleteAll',
       desc: '',
       args: [],
@@ -530,6 +540,256 @@ class S {
     return Intl.message(
       'Edit',
       name: 'edit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Format orientation`
+  String get formatOrientation {
+    return Intl.message(
+      'Format orientation',
+      name: 'formatOrientation',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Horizontal`
+  String get horizontal {
+    return Intl.message(
+      'Horizontal',
+      name: 'horizontal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vertical`
+  String get vertical {
+    return Intl.message(
+      'Vertical',
+      name: 'vertical',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Play mode`
+  String get playMode {
+    return Intl.message(
+      'Play mode',
+      name: 'playMode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Manual scroll`
+  String get manualScroll {
+    return Intl.message(
+      'Manual scroll',
+      name: 'manualScroll',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Auto scroll`
+  String get autoScroll {
+    return Intl.message(
+      'Auto scroll',
+      name: 'autoScroll',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Speech recognition`
+  String get speechRecognition {
+    return Intl.message(
+      'Speech recognition',
+      name: 'speechRecognition',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Does not scroll automatically.`
+  String get manualScrollDescription {
+    return Intl.message(
+      'Does not scroll automatically.',
+      name: 'manualScrollDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scroll at a constant speed.`
+  String get autoScrollDescription {
+    return Intl.message(
+      'Scroll at a constant speed.',
+      name: 'autoScrollDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scrolls by the amount of speech recognized text.`
+  String get speechRecognitionDescription {
+    return Intl.message(
+      'Scrolls by the amount of speech recognized text.',
+      name: 'speechRecognitionDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Play speed`
+  String get playSpeed {
+    return Intl.message(
+      'Play speed',
+      name: 'playSpeed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `About this app`
+  String get aboutApp {
+    return Intl.message(
+      'About this app',
+      name: 'aboutApp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Open Source License`
+  String get ossLicence {
+    return Intl.message(
+      'Open Source License',
+      name: 'ossLicence',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Play Settings`
+  String get playSetting {
+    return Intl.message(
+      'Play Settings',
+      name: 'playSetting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Privacy Policy`
+  String get privacyPolicy {
+    return Intl.message(
+      'Privacy Policy',
+      name: 'privacyPolicy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send feedback`
+  String get sendFeedback {
+    return Intl.message(
+      'Send feedback',
+      name: 'sendFeedback',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Microphone permission is required for speech recognition.`
+  String get requirePermission {
+    return Intl.message(
+      'Microphone permission is required for speech recognition.',
+      name: 'requirePermission',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `A network error has occurred.`
+  String get networkError {
+    return Intl.message(
+      'A network error has occurred.',
+      name: 'networkError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The microphone is busy.`
+  String get micBusy {
+    return Intl.message(
+      'The microphone is busy.',
+      name: 'micBusy',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error: {error}`
+  String error(Object error) {
+    return Intl.message(
+      'Error: $error',
+      name: 'error',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `RESET`
+  String get resetInitValue {
+    return Intl.message(
+      'RESET',
+      name: 'resetInitValue',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `HINT`
+  String get hint {
+    return Intl.message(
+      'HINT',
+      name: 'hint',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If you don't want to play a sound during playback.`
+  String get hintContent {
+    return Intl.message(
+      'If you don\'t want to play a sound during playback.',
+      name: 'hintContent',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Don't show again.`
+  String get notShowAgain {
+    return Intl.message(
+      'Don\'t show again.',
+      name: 'notShowAgain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `OPEN SETTINGS`
+  String get openSetting {
+    return Intl.message(
+      'OPEN SETTINGS',
+      name: 'openSetting',
       desc: '',
       args: [],
     );
