@@ -157,7 +157,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text(S.current.updatedTags),
+                              content: Text(S.current.tagUpdated),
                               duration: const Duration(seconds: 2),
                             ),
                           );
@@ -171,7 +171,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
                 DialogManager.show(
                   context,
                   content: Text(
-                    S.current.removeTagAlert(model.currentTagTable.tagName),
+                    S.current.alertRemoveTag(model.currentTagTable.tagName),
                   ),
                   actions: [
                     DialogTextButton(
@@ -208,7 +208,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
       onPressed: () {
         DialogManager.show(
           context,
-          content: Text(S.current.isEmptyTrash),
+          content: Text(S.current.doEmptyTrash),
           actions: [
             DialogTextButton(
               S.current.cancel,
@@ -221,7 +221,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
                 await provider.clearTrash();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(S.current.emptiedTrash),
+                    content: Text(S.current.trashEmptied),
                     duration: const Duration(seconds: 2),
                   ),
                 );

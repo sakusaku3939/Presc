@@ -253,7 +253,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                                 .addTag(memoId: id, name: text);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(S.current.addedNewTag),
+                                content: Text(S.current.newTagAdded),
                                 duration: const Duration(seconds: 2),
                               ),
                             );
@@ -349,7 +349,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    S.current.wordCount,
+                    S.current.characterCount,
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey[700],

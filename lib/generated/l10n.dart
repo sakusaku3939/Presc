@@ -55,40 +55,40 @@ class S {
     );
   }
 
-  /// `close`
+  /// `Close`
   String get close {
     return Intl.message(
-      'close',
+      'Close',
       name: 'close',
       desc: '',
       args: [],
     );
   }
 
-  /// `cancel`
+  /// `Cancel`
   String get cancel {
     return Intl.message(
-      'cancel',
+      'Cancel',
       name: 'cancel',
       desc: '',
       args: [],
     );
   }
 
-  /// `remove`
+  /// `Remove`
   String get remove {
     return Intl.message(
-      'remove',
+      'Remove',
       name: 'remove',
       desc: '',
       args: [],
     );
   }
 
-  /// `change`
+  /// `Change`
   String get change {
     return Intl.message(
-      'change',
+      'Change',
       name: 'change',
       desc: '',
       args: [],
@@ -256,20 +256,20 @@ class S {
   }
 
   /// `Added a new tag`
-  String get addedNewTag {
+  String get newTagAdded {
     return Intl.message(
       'Added a new tag',
-      name: 'addedNewTag',
+      name: 'newTagAdded',
       desc: '',
       args: [],
     );
   }
 
   /// `Number of characters`
-  String get wordCount {
+  String get characterCount {
     return Intl.message(
       'Number of characters',
-      name: 'wordCount',
+      name: 'characterCount',
       desc: '',
       args: [],
     );
@@ -366,30 +366,30 @@ class S {
   }
 
   /// `Remove {count} tags`
-  String removeTags(Object count) {
+  String removeSelectTags(Object count) {
     return Intl.message(
       'Remove $count tags',
-      name: 'removeTags',
+      name: 'removeSelectTags',
       desc: '',
       args: [count],
     );
   }
 
   /// `Do you want to remove the tag {name}? This operation cannot be undone.`
-  String removeTagAlert(Object name) {
+  String alertRemoveTag(Object name) {
     return Intl.message(
       'Do you want to remove the tag $name? This operation cannot be undone.',
-      name: 'removeTagAlert',
+      name: 'alertRemoveTag',
       desc: '',
       args: [name],
     );
   }
 
   /// `Do you want to remove all selected tags? This operation cannot be undone.`
-  String get removeTagsAlert {
+  String get alertRemoveSelectTags {
     return Intl.message(
       'Do you want to remove all selected tags? This operation cannot be undone.',
-      name: 'removeTagsAlert',
+      name: 'alertRemoveSelectTags',
       desc: '',
       args: [],
     );
@@ -406,10 +406,10 @@ class S {
   }
 
   /// `{count} tags removed.`
-  String tagsRemoved(Object count) {
+  String selectTagsRemoved(Object count) {
     return Intl.message(
       '$count tags removed.',
-      name: 'tagsRemoved',
+      name: 'selectTagsRemoved',
       desc: '',
       args: [count],
     );
@@ -425,30 +425,30 @@ class S {
     );
   }
 
-  /// `trash`
+  /// `Trash`
   String get trash {
     return Intl.message(
-      'trash',
+      'Trash',
       name: 'trash',
       desc: '',
       args: [],
     );
   }
 
-  /// `tag`
+  /// `Tag`
   String get tag {
     return Intl.message(
-      'tag',
+      'Tag',
       name: 'tag',
       desc: '',
       args: [],
     );
   }
 
-  /// `change tag name`
+  /// `Change tag name`
   String get changeTagName {
     return Intl.message(
-      'change tag name',
+      'Change tag name',
       name: 'changeTagName',
       desc: '',
       args: [],
@@ -465,30 +465,30 @@ class S {
     );
   }
 
-  /// `Updated tags`
-  String get updatedTags {
+  /// `Updated tag`
+  String get tagUpdated {
     return Intl.message(
-      'Updated tags',
-      name: 'updatedTags',
+      'Updated tag',
+      name: 'tagUpdated',
       desc: '',
       args: [],
     );
   }
 
   /// `Do you want to empty the trash?`
-  String get isEmptyTrash {
+  String get doEmptyTrash {
     return Intl.message(
       'Do you want to empty the trash?',
-      name: 'isEmptyTrash',
+      name: 'doEmptyTrash',
       desc: '',
       args: [],
     );
   }
 
-  /// `delete all`
+  /// `Delete all`
   String get deleteAll {
     return Intl.message(
-      'delete all',
+      'Delete all',
       name: 'deleteAll',
       desc: '',
       args: [],
@@ -496,39 +496,39 @@ class S {
   }
 
   /// `Emptied the trash.`
-  String get emptiedTrash {
+  String get trashEmptied {
     return Intl.message(
       'Emptied the trash.',
-      name: 'emptiedTrash',
+      name: 'trashEmptied',
       desc: '',
       args: [],
     );
   }
 
-  /// `setting`
+  /// `Settings`
   String get setting {
     return Intl.message(
-      'setting',
+      'Settings',
       name: 'setting',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tag list`
+  /// `Tags`
   String get tagList {
     return Intl.message(
-      'Tag list',
+      'Tags',
       name: 'tagList',
       desc: '',
       args: [],
     );
   }
 
-  /// `edit`
+  /// `Edit`
   String get edit {
     return Intl.message(
-      'edit',
+      'Edit',
       name: 'edit',
       desc: '',
       args: [],

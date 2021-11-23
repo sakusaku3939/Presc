@@ -52,7 +52,7 @@ class TagEditScreen extends StatelessWidget {
                 builder: (context, isDeleteSelectionMode, child) {
                   return isDeleteSelectionMode
                       ? Text(
-                          S.current.addedNewTag,
+                          S.current.addNewTag,
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.black.withOpacity(0.6),
@@ -125,8 +125,8 @@ class _TagEditScreenAppbar extends StatelessWidget
                         context,
                         contentPadding:
                             const EdgeInsets.fromLTRB(24, 20, 24, 24),
-                        title: Text(S.current.removeTags(count)),
-                        content: Text(S.current.removeTagsAlert),
+                        title: Text(S.current.removeSelectTags(count)),
+                        content: Text(S.current.alertRemoveSelectTags),
                         actions: [
                           DialogTextButton(
                             S.current.cancel,
@@ -143,7 +143,7 @@ class _TagEditScreenAppbar extends StatelessWidget
                               model.isDeleteSelectionMode = false;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(S.current.tagsRemoved(count)),
+                                  content: Text(S.current.selectTagsRemoved(count)),
                                   duration: const Duration(seconds: 2),
                                 ),
                               );

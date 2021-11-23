@@ -28,7 +28,7 @@ class AddNewTag extends StatelessWidget {
           context.read<EditableTagItemProvider>().addTag(text);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(S.current.addedNewTag),
+              content: Text(S.current.newTagAdded),
               duration: const Duration(seconds: 2),
             ),
           );
