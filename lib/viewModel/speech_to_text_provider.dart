@@ -114,6 +114,15 @@ class SpeechToTextProvider with ChangeNotifier {
     _reflect("ばかりである");
   }
 
+  Future<void> _testReflectEn() async {
+    await Future.delayed(Duration(milliseconds: 500));
+    _reflect("they");
+    await Future.delayed(Duration(milliseconds: 2000));
+    _reflect("internet");
+    await Future.delayed(Duration(milliseconds: 2000));
+    _reflect("keyboards");
+  }
+
   Future<bool> _startSilentMode(BuildContext context) async {
     await SoundMode.setSoundMode(RingerModeStatus.unknown);
     final ringerModeStatus = await SoundMode.ringerModeStatus;
