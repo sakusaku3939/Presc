@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presc/view/screens/setting.dart';
+import 'package:presc/view/utils/dialog/scroll_mode_dialog_manager.dart';
 import 'package:presc/view/utils/playback_text_view.dart';
-import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
 import 'package:presc/view/utils/playback_visualizer.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/viewModel/playback_provider.dart';
@@ -103,8 +103,11 @@ class PlaybackScreen extends StatelessWidget {
     );
   }
 
-  Widget _operationMenu(BuildContext context, PlaybackProvider model,
-      PlaybackTextView playbackTextView) {
+  Widget _operationMenu(
+    BuildContext context,
+    PlaybackProvider model,
+    PlaybackTextView playbackTextView,
+  ) {
     final speech = context.read<SpeechToTextProvider>();
     final timer = context.read<PlaybackTimerProvider>();
 
@@ -136,34 +139,13 @@ class PlaybackScreen extends StatelessWidget {
                 scrollModeIcon,
                 size: 28,
                 color: model.textColor,
-                onPressed: () => {
-                  RadioDialogManager.show(
-                    context,
-                    groupValue: model.scrollMode,
-                    itemList: [
-                      RadioDialogItem(
-                        title: "手動スクロール",
-                        subtitle: "スクロールを行いません",
-                        value: ScrollMode.manual,
-                      ),
-                      RadioDialogItem(
-                        title: "自動スクロール",
-                        subtitle: "一定の速度でスクロールします",
-                        value: ScrollMode.auto,
-                      ),
-                      RadioDialogItem(
-                        title: "音声認識",
-                        subtitle: "認識した文字分だけスクロールします",
-                        value: ScrollMode.recognition,
-                      ),
-                    ],
-                    onChanged: (value) {
-                      model.scrollMode = value;
-                      model.playFabState = false;
-                      playbackTextView.reset(context);
-                    },
-                  )
-                },
+                onPressed: () => ScrollModeDialogManager.show(
+                  context,
+                  onChanged: (_) {
+                    model.playFabState = false;
+                    playbackTextView.reset(context);
+                  },
+                ),
               ),
             ),
             Container(

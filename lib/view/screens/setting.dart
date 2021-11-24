@@ -9,6 +9,7 @@ import 'package:presc/config/scroll_speed_config.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/screens/about_app.dart';
 import 'package:presc/view/utils/dialog/color_dialog_manager.dart';
+import 'package:presc/view/utils/dialog/scroll_mode_dialog_manager.dart';
 import 'package:presc/view/utils/horizontal_text.dart';
 import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
 import 'package:presc/view/utils/ripple_button.dart';
@@ -79,28 +80,7 @@ class SettingScreen extends StatelessWidget {
                       title: Text(S.current.playMode),
                       subtitle: Text(scrollModeText),
                       contentPadding: const EdgeInsets.only(left: 32),
-                      onTap: () => RadioDialogManager.show(
-                        context,
-                        groupValue: model.scrollMode,
-                        itemList: [
-                          RadioDialogItem(
-                            title: S.current.manualScroll,
-                            subtitle: S.current.manualScrollDescription,
-                            value: ScrollMode.manual,
-                          ),
-                          RadioDialogItem(
-                            title: S.current.autoScroll,
-                            subtitle: S.current.autoScrollDescription,
-                            value: ScrollMode.auto,
-                          ),
-                          RadioDialogItem(
-                            title: S.current.speechRecognition,
-                            subtitle: S.current.speechRecognitionDescription,
-                            value: ScrollMode.recognition,
-                          ),
-                        ],
-                        onChanged: (value) => model.scrollMode = value,
-                      ),
+                      onTap: () => ScrollModeDialogManager.show(context),
                     ),
                   ),
                   Ink(
