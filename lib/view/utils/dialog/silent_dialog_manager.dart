@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
+import 'package:presc/model/locale_image.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sound_mode/permission_handler.dart';
@@ -32,9 +33,8 @@ class SilentDialogManager {
                     style: const TextStyle(fontSize: 14),
                   ),
                   SizedBox(height: 12),
-                  Image.asset(
+                  LocaleImage.asset(
                     'assets/images/screenshot/silent_mode.png',
-                    alignment: Alignment.center,
                   ),
                   SizedBox(height: 12),
                   CheckboxListTile(
