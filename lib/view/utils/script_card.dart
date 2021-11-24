@@ -273,7 +273,7 @@ class _Card extends StatelessWidget {
 
   String _optimizeContent(String content) {
     final rangeText =
-        content.length > 200 ? content.substring(0, 200) : content;
+        content.length > 400 ? content.substring(0, 400) : content;
     String text = "";
     rangeText.split('\n').forEach((word) {
       text += word;

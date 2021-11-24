@@ -175,7 +175,7 @@ class SettingScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 32),
             child: Text(
-              SampleTextConfig.setting,
+              SampleTextConfig().setting,
               style: PlaybackTextStyle.of(model).unrecognized,
             ),
           ),
@@ -204,7 +204,7 @@ class SettingScreen extends StatelessWidget {
             height: 200,
             padding: const EdgeInsets.symmetric(horizontal: 32),
             child: HorizontalText(
-              unrecognizedText: SampleTextConfig.setting,
+              unrecognizedText: SampleTextConfig().setting,
               recognizedText: "",
             ),
           ),

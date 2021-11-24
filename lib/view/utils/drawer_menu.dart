@@ -142,7 +142,10 @@ class DrawerMenu extends StatelessWidget {
                 leading: Icon(Icons.tag),
                 title: Text(
                   tagTable.tagName,
-                  style: const TextStyle(fontSize: 14),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                  ),
                 ),
                 dense: true,
                 onLongPress: () {

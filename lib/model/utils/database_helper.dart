@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:intl/intl.dart';
 import 'package:collection/collection.dart';
 import 'package:path/path.dart';
 import 'package:presc/config/sample_text_config.dart';
@@ -157,37 +158,52 @@ class DatabaseHelper {
   }
 
   Future<void> _init(Database db) async {
-    await Future.wait([
+    final futureList = [
       db.insert(
         MemoTable.name,
         MemoTable(
           id: 1,
-          title: SampleTextConfig.sampleTitle,
-          content: SampleTextConfig.sampleContent,
+          title: SampleTextConfig().sampleTitle,
+          content: SampleTextConfig().sampleContent,
           date: DateTime.now(),
         ).toMap(),
-      ),
-      db.insert(
-        TagTable.name,
-        TagTable(
-          id: 1,
-          tagName: "夏目漱石",
-        ).toMap(),
-      ),
-      db.insert(
-        TagTable.name,
-        TagTable(
-          id: 2,
-          tagName: "練習用",
-        ).toMap(),
-      ),
-      db.insert(
-        TagMemoTable.name,
-        TagMemoTable(
-          memoId: 1,
-          tagId: 1,
-        ).toMap(),
-      ),
-    ]);
+      )
+    ];
+    if (Intl.getCurrentLocale() == "ja") {
+      futureList.addAll([
+        db.insert(
+          TagTable.name,
+          TagTable(
+            id: 1,
+            tagName: "夏目漱石",
+          ).toMap(),
+        ),
+        db.insert(
+          TagTable.name,
+          TagTable(
+            id: 2,
+            tagName: "練習用",
+          ).toMap(),
+        ),
+        db.insert(
+          TagMemoTable.name,
+          TagMemoTable(
+            memoId: 1,
+            tagId: 1,
+          ).toMap(),
+        ),
+      ]);
+    } else {
+      futureList.addAll([
+        db.insert(
+          TagTable.name,
+          TagTable(
+            id: 1,
+            tagName: "Practice",
+          ).toMap(),
+        ),
+      ]);
+    }
+    await Future.wait(futureList);
   }
 }
