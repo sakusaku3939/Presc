@@ -85,6 +85,16 @@ class S {
     );
   }
 
+  /// `DELETE`
+  String get delete {
+    return Intl.message(
+      'DELETE',
+      name: 'delete',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `CHANGE`
   String get change {
     return Intl.message(
@@ -265,10 +275,10 @@ class S {
     );
   }
 
-  /// `Added a new tag`
+  /// `Added a new tag.`
   String get newTagAdded {
     return Intl.message(
-      'Added a new tag',
+      'Added a new tag.',
       name: 'newTagAdded',
       desc: '',
       args: [],
@@ -315,13 +325,33 @@ class S {
     );
   }
 
-  /// `Permanently deleted`
+  /// `Permanently delete`
+  String get deletePermanently {
+    return Intl.message(
+      'Permanently delete',
+      name: 'deletePermanently',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `The script has been permanently deleted.`
   String get permanentlyDeleted {
     return Intl.message(
-      'Permanently deleted',
+      'The script has been permanently deleted.',
       name: 'permanentlyDeleted',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Do you want to delete {title} permanently?`
+  String doDeletePermanently(Object title) {
+    return Intl.message(
+      'Do you want to delete $title permanently?',
+      name: 'doDeletePermanently',
+      desc: '',
+      args: [title],
     );
   }
 
@@ -475,10 +505,10 @@ class S {
     );
   }
 
-  /// `Updated tag`
+  /// `Updated tag.`
   String get tagUpdated {
     return Intl.message(
-      'Updated tag',
+      'Updated tag.',
       name: 'tagUpdated',
       desc: '',
       args: [],
@@ -790,6 +820,46 @@ class S {
     return Intl.message(
       'OPEN SETTINGS',
       name: 'openSetting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Moved to the trash.`
+  String get trashMoved {
+    return Intl.message(
+      'Moved to the trash.',
+      name: 'trashMoved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `UNDO`
+  String get undo {
+    return Intl.message(
+      'UNDO',
+      name: 'undo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Deleted an empty script.`
+  String get emptyScriptDeleted {
+    return Intl.message(
+      'Deleted an empty script.',
+      name: 'emptyScriptDeleted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restored from the trash.`
+  String get trashRestored {
+    return Intl.message(
+      'Restored from the trash.',
+      name: 'trashRestored',
       desc: '',
       args: [],
     );

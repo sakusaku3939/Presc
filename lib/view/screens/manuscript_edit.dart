@@ -428,7 +428,7 @@ class ManuscriptEditScreen extends StatelessWidget {
         PopupMenu(
           [
             PopupMenuItem(
-              child: Text(S.current.permanentlyDeleted),
+              child: Text(S.current.deletePermanently),
               value: "delete",
             )
           ],

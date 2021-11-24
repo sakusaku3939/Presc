@@ -5,6 +5,7 @@
   "close": "CLOSE",
   "cancel": "CANCEL",
   "remove": "REMOVE",
+  "delete": "DELETE",
   "change": "CHANGE",
   "done": "DONE",
   "onboardingStart": "Start",
@@ -23,7 +24,7 @@
   "placeholderTitle": "Title",
   "placeholderContent": "Enter here",
   "addNewTag": "Add new tag",
-  "newTagAdded": "Added a new tag",
+  "newTagAdded": "Added a new tag.",
   "characterCount": "Number of characters",
   "estimatedReadingTime": "Estimated presentation time (300 characters per minute)",
   "lastModified": "Last modified",
@@ -34,7 +35,9 @@
       "second": {}
     }
   },
-  "permanentlyDeleted": "Permanently deleted",
+  "deletePermanently": "Permanently delete",
+  "permanentlyDeleted": "The script has been permanently deleted.",
+  "doDeletePermanently": "Do you want to delete {title} permanently?",
   "restore": "Restore",
   "moveTrash": "Move to trash",
   "searchScript": "Search the script",
@@ -50,7 +53,7 @@
   "tag": "Tag",
   "changeTagName": "Change tag name",
   "placeholderTagName": "Enter a name here",
-  "tagUpdated": "Updated tag",
+  "tagUpdated": "Updated tag.",
   "doEmptyTrash": "Do you want to empty the trash?" ,
   "deleteAll": "DELETE ALL",
   "trashEmptied": "Emptied the trash.",
@@ -81,5 +84,9 @@
   "hint": "HINT",
   "hintContent": "If you don't want to play a sound during playback.",
   "notShowAgain": "Don't show again.",
-  "openSetting": "OPEN SETTINGS"
+  "openSetting": "OPEN SETTINGS",
+  "trashMoved": "Moved to the trash.",
+  "undo": "UNDO",
+  "emptyScriptDeleted": "Deleted an empty script.",
+  "trashRestored": "Restored from the trash."
 }

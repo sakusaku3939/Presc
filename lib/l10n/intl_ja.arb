@@ -5,6 +5,7 @@
   "close": "戻る",
   "cancel": "キャンセル",
   "remove": "削除",
+  "delete": "削除",
   "change": "変更",
   "done": "完了",
   "onboardingStart": "始める",
@@ -34,7 +35,9 @@
       "second": {}
     }
   },
-  "permanentlyDeleted": "完全に削除",
+  "deletePermanently": "完全に削除",
+  "permanentlyDeleted": "完全に削除しました",
+  "doDeletePermanently": "{title}を完全に削除しますか？",
   "restore": "復元する",
   "moveTrash": "ごみ箱に移動",
   "searchScript": "原稿を検索",
@@ -81,5 +84,9 @@
   "hint": "ヒント",
   "hintContent": "再生中に音を鳴らしたくない場合",
   "notShowAgain": "今後は表示しない",
-  "openSetting": "設定を開く"
+  "openSetting": "設定を開く",
+  "trashMoved": "ごみ箱に移動しました",
+  "undo": "元に戻す",
+  "emptyScriptDeleted": "空の原稿を削除しました",
+  "trashRestored": "ごみ箱から復元しました"
 }

@@ -124,7 +124,7 @@ class ScriptModalBottomSheet {
             offset: Offset(8, 0),
             child: Icon(Icons.delete_outlined),
           ),
-          title: Text(S.current.permanentlyDeleted),
+          title: Text(S.current.deletePermanently),
           onTap: () {
             Navigator.pop(context);
             TrashMoveManager.delete(

@@ -21,13 +21,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m0(name) => "Do you want to remove the tag ${name}? This operation cannot be undone.";
 
-  static m1(error) => "Error: ${error}";
+  static m1(title) => "Do you want to delete ${title} permanently?";
 
-  static m2(count) => "Remove ${count} tags";
+  static m2(error) => "Error: ${error}";
 
-  static m3(count) => "${count} tags removed.";
+  static m3(count) => "Remove ${count} tags";
 
-  static m4(minutes, second) => "${minutes}m ${second}s";
+  static m4(count) => "${count} tags removed.";
+
+  static m5(minutes, second) => "${minutes}m ${second}s";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -42,12 +44,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "changeTagName" : MessageLookupByLibrary.simpleMessage("Change tag name"),
     "characterCount" : MessageLookupByLibrary.simpleMessage("Number of characters"),
     "close" : MessageLookupByLibrary.simpleMessage("CLOSE"),
+    "delete" : MessageLookupByLibrary.simpleMessage("DELETE"),
     "deleteAll" : MessageLookupByLibrary.simpleMessage("DELETE ALL"),
+    "deletePermanently" : MessageLookupByLibrary.simpleMessage("Permanently delete"),
+    "doDeletePermanently" : m1,
     "doEmptyTrash" : MessageLookupByLibrary.simpleMessage("Do you want to empty the trash?"),
     "done" : MessageLookupByLibrary.simpleMessage("DONE"),
     "edit" : MessageLookupByLibrary.simpleMessage("Edit"),
     "editTag" : MessageLookupByLibrary.simpleMessage("Edit tag"),
-    "error" : m1,
+    "emptyScriptDeleted" : MessageLookupByLibrary.simpleMessage("Deleted an empty script."),
+    "error" : m2,
     "estimatedReadingTime" : MessageLookupByLibrary.simpleMessage("Estimated presentation time (300 characters per minute)"),
     "formatOrientation" : MessageLookupByLibrary.simpleMessage("Format orientation"),
     "hint" : MessageLookupByLibrary.simpleMessage("HINT"),
@@ -59,7 +65,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "micBusy" : MessageLookupByLibrary.simpleMessage("The microphone is busy."),
     "moveTrash" : MessageLookupByLibrary.simpleMessage("Move to trash"),
     "networkError" : MessageLookupByLibrary.simpleMessage("A network error has occurred."),
-    "newTagAdded" : MessageLookupByLibrary.simpleMessage("Added a new tag"),
+    "newTagAdded" : MessageLookupByLibrary.simpleMessage("Added a new tag."),
     "next" : MessageLookupByLibrary.simpleMessage("Next"),
     "noAdditionalText" : MessageLookupByLibrary.simpleMessage("No additional text"),
     "noScriptYet" : MessageLookupByLibrary.simpleMessage("There is no script yet"),
@@ -76,7 +82,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "onboardingWelcomePrescDescription" : MessageLookupByLibrary.simpleMessage("Presc is a script display application that can be used for presentations, lectures, speeches, etc."),
     "openSetting" : MessageLookupByLibrary.simpleMessage("OPEN SETTINGS"),
     "ossLicence" : MessageLookupByLibrary.simpleMessage("Open Source License"),
-    "permanentlyDeleted" : MessageLookupByLibrary.simpleMessage("Permanently deleted"),
+    "permanentlyDeleted" : MessageLookupByLibrary.simpleMessage("The script has been permanently deleted."),
     "placeholderContent" : MessageLookupByLibrary.simpleMessage("Enter here"),
     "placeholderTagName" : MessageLookupByLibrary.simpleMessage("Enter a name here"),
     "placeholderTitle" : MessageLookupByLibrary.simpleMessage("Title"),
@@ -85,13 +91,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "playSpeed" : MessageLookupByLibrary.simpleMessage("Play speed"),
     "privacyPolicy" : MessageLookupByLibrary.simpleMessage("Privacy Policy"),
     "remove" : MessageLookupByLibrary.simpleMessage("REMOVE"),
-    "removeSelectTags" : m2,
+    "removeSelectTags" : m3,
     "removeTag" : MessageLookupByLibrary.simpleMessage("Remove tag"),
     "requirePermission" : MessageLookupByLibrary.simpleMessage("Microphone permission is required for speech recognition."),
     "resetInitValue" : MessageLookupByLibrary.simpleMessage("RESET"),
     "restore" : MessageLookupByLibrary.simpleMessage("Restore"),
     "searchScript" : MessageLookupByLibrary.simpleMessage("Search the script"),
-    "selectTagsRemoved" : m3,
+    "selectTagsRemoved" : m4,
     "sendFeedback" : MessageLookupByLibrary.simpleMessage("Send feedback"),
     "setting" : MessageLookupByLibrary.simpleMessage("Settings"),
     "skip" : MessageLookupByLibrary.simpleMessage("Skip"),
@@ -100,12 +106,15 @@ class MessageLookup extends MessageLookupByLibrary {
     "tag" : MessageLookupByLibrary.simpleMessage("Tag"),
     "tagList" : MessageLookupByLibrary.simpleMessage("Tags"),
     "tagRemoved" : MessageLookupByLibrary.simpleMessage("Removed tag."),
-    "tagUpdated" : MessageLookupByLibrary.simpleMessage("Updated tag"),
-    "time" : m4,
+    "tagUpdated" : MessageLookupByLibrary.simpleMessage("Updated tag."),
+    "time" : m5,
     "trash" : MessageLookupByLibrary.simpleMessage("Trash"),
     "trashEmptied" : MessageLookupByLibrary.simpleMessage("Emptied the trash."),
     "trashEmpty" : MessageLookupByLibrary.simpleMessage("The trash can is empty"),
     "trashHint" : MessageLookupByLibrary.simpleMessage("The contents of the trash will be completely removed after 7 days."),
+    "trashMoved" : MessageLookupByLibrary.simpleMessage("Moved to the trash."),
+    "trashRestored" : MessageLookupByLibrary.simpleMessage("Restored from the trash."),
+    "undo" : MessageLookupByLibrary.simpleMessage("UNDO"),
     "vertical" : MessageLookupByLibrary.simpleMessage("Vertical")
   };
 }

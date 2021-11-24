@@ -21,13 +21,15 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m0(name) => "タグ ${name}を削除しますか？この操作は元に戻せません。";
 
-  static m1(error) => "エラー: ${error}";
+  static m1(title) => "${title}を完全に削除しますか？";
 
-  static m2(count) => "${count}件のタグを削除";
+  static m2(error) => "エラー: ${error}";
 
-  static m3(count) => "${count}件のタグを削除しました";
+  static m3(count) => "${count}件のタグを削除";
 
-  static m4(minutes, second) => "${minutes}分${second}秒";
+  static m4(count) => "${count}件のタグを削除しました";
+
+  static m5(minutes, second) => "${minutes}分${second}秒";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -42,12 +44,16 @@ class MessageLookup extends MessageLookupByLibrary {
     "changeTagName" : MessageLookupByLibrary.simpleMessage("タグ名を変更"),
     "characterCount" : MessageLookupByLibrary.simpleMessage("文字数"),
     "close" : MessageLookupByLibrary.simpleMessage("戻る"),
+    "delete" : MessageLookupByLibrary.simpleMessage("削除"),
     "deleteAll" : MessageLookupByLibrary.simpleMessage("全て削除"),
+    "deletePermanently" : MessageLookupByLibrary.simpleMessage("完全に削除"),
+    "doDeletePermanently" : m1,
     "doEmptyTrash" : MessageLookupByLibrary.simpleMessage("ごみ箱の中身を空にしますか？"),
     "done" : MessageLookupByLibrary.simpleMessage("完了"),
     "edit" : MessageLookupByLibrary.simpleMessage("編集"),
     "editTag" : MessageLookupByLibrary.simpleMessage("タグの編集"),
-    "error" : m1,
+    "emptyScriptDeleted" : MessageLookupByLibrary.simpleMessage("空の原稿を削除しました"),
+    "error" : m2,
     "estimatedReadingTime" : MessageLookupByLibrary.simpleMessage("読み上げ時間の目安（1分300文字）"),
     "formatOrientation" : MessageLookupByLibrary.simpleMessage("書式の向き"),
     "hint" : MessageLookupByLibrary.simpleMessage("ヒント"),
@@ -76,7 +82,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "onboardingWelcomePrescDescription" : MessageLookupByLibrary.simpleMessage("Prescはプレゼンテーション、講演会、スピーチなどで使用できる原稿表示アプリです。"),
     "openSetting" : MessageLookupByLibrary.simpleMessage("設定を開く"),
     "ossLicence" : MessageLookupByLibrary.simpleMessage("オープンソースライセンス"),
-    "permanentlyDeleted" : MessageLookupByLibrary.simpleMessage("完全に削除"),
+    "permanentlyDeleted" : MessageLookupByLibrary.simpleMessage("完全に削除しました"),
     "placeholderContent" : MessageLookupByLibrary.simpleMessage("ここに入力"),
     "placeholderTagName" : MessageLookupByLibrary.simpleMessage("ここに名前を入力"),
     "placeholderTitle" : MessageLookupByLibrary.simpleMessage("タイトル"),
@@ -85,13 +91,13 @@ class MessageLookup extends MessageLookupByLibrary {
     "playSpeed" : MessageLookupByLibrary.simpleMessage("再生速度"),
     "privacyPolicy" : MessageLookupByLibrary.simpleMessage("プライバシーポリシー"),
     "remove" : MessageLookupByLibrary.simpleMessage("削除"),
-    "removeSelectTags" : m2,
+    "removeSelectTags" : m3,
     "removeTag" : MessageLookupByLibrary.simpleMessage("タグを削除"),
     "requirePermission" : MessageLookupByLibrary.simpleMessage("音声認識を行うにはマイクの許可が必要です"),
     "resetInitValue" : MessageLookupByLibrary.simpleMessage("初期値に戻す"),
     "restore" : MessageLookupByLibrary.simpleMessage("復元する"),
     "searchScript" : MessageLookupByLibrary.simpleMessage("原稿を検索"),
-    "selectTagsRemoved" : m3,
+    "selectTagsRemoved" : m4,
     "sendFeedback" : MessageLookupByLibrary.simpleMessage("フィードバックを送る"),
     "setting" : MessageLookupByLibrary.simpleMessage("設定"),
     "skip" : MessageLookupByLibrary.simpleMessage("スキップ"),
@@ -101,11 +107,14 @@ class MessageLookup extends MessageLookupByLibrary {
     "tagList" : MessageLookupByLibrary.simpleMessage("タグ一覧"),
     "tagRemoved" : MessageLookupByLibrary.simpleMessage("タグを削除しました"),
     "tagUpdated" : MessageLookupByLibrary.simpleMessage("タグを更新しました"),
-    "time" : m4,
+    "time" : m5,
     "trash" : MessageLookupByLibrary.simpleMessage("ごみ箱"),
     "trashEmptied" : MessageLookupByLibrary.simpleMessage("ごみ箱を空にしました"),
     "trashEmpty" : MessageLookupByLibrary.simpleMessage("ごみ箱は空です"),
     "trashHint" : MessageLookupByLibrary.simpleMessage("ごみ箱の中身は7日後に完全に削除されます"),
+    "trashMoved" : MessageLookupByLibrary.simpleMessage("ごみ箱に移動しました"),
+    "trashRestored" : MessageLookupByLibrary.simpleMessage("ごみ箱から復元しました"),
+    "undo" : MessageLookupByLibrary.simpleMessage("元に戻す"),
     "vertical" : MessageLookupByLibrary.simpleMessage("縦書き")
   };
 }
