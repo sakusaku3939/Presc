@@ -37,6 +37,7 @@ class TagGrid extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
         ),
         label: Text(tagTable.tagName),
+        labelStyle: TextStyle(color: selected ? Colors.white : Colors.black),
         selectedColor: Theme.of(context).accentColor,
         backgroundColor: Colors.white,
         pressElevation: 2,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:presc/config/color_config.dart';
+import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/utils/dialog/dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
@@ -38,7 +39,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(24, 12, 24, 0),
                       child: Text(
-                        "ごみ箱の中身は7日後に完全に削除されます",
+                        S.current.trashHint,
                         style: const TextStyle(fontSize: 12),
                       ),
                     ),
@@ -64,7 +65,9 @@ class ManuscriptFilterScreen extends StatelessWidget {
         selector: (_, model) => model.currentTagTable,
         builder: (context, currentTagTable, child) {
           return Text(
-            state == ManuscriptState.tag ? currentTagTable.tagName : "ごみ箱",
+            state == ManuscriptState.tag
+                ? currentTagTable.tagName
+                : S.current.trash,
             style: const TextStyle(fontSize: 20),
           );
         },
@@ -84,11 +87,11 @@ class ManuscriptFilterScreen extends StatelessWidget {
         return PopupMenu(
           [
             PopupMenuItem(
-              child: Text("タグ名を変更"),
+              child: Text(S.current.changeTagName),
               value: "change",
             ),
             PopupMenuItem(
-              child: Text("タグを削除"),
+              child: Text(S.current.removeTag),
               value: "delete",
             ),
           ],
@@ -112,7 +115,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        "タグ",
+                        S.current.tag,
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[700],
@@ -120,7 +123,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
                       ),
                       TextField(
                         decoration: InputDecoration(
-                          hintText: "ここに名前を入力",
+                          hintText: S.current.placeholderTagName,
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
                               color: Theme.of(context).accentColor,
@@ -135,11 +138,11 @@ class ManuscriptFilterScreen extends StatelessWidget {
                   ),
                   actions: [
                     DialogTextButton(
-                      "キャンセル",
+                      S.current.cancel,
                       onPressed: () => Navigator.pop(context),
                     ),
                     DialogTextButton(
-                      "変更",
+                      S.current.change,
                       onPressed: () async {
                         final text = controller.text;
                         if (text.trim().isNotEmpty) {
@@ -154,9 +157,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text(
-                                "タグを更新しました",
-                              ),
+                              content: Text(S.current.tagUpdated),
                               duration: const Duration(seconds: 2),
                             ),
                           );
@@ -170,22 +171,20 @@ class ManuscriptFilterScreen extends StatelessWidget {
                 DialogManager.show(
                   context,
                   content: Text(
-                    "タグ ${model.currentTagTable.tagName}を削除しますか？この操作は元に戻せません。",
+                    S.current.alertRemoveTag(model.currentTagTable.tagName),
                   ),
                   actions: [
                     DialogTextButton(
-                      "キャンセル",
+                      S.current.cancel,
                       onPressed: () => Navigator.pop(context),
                     ),
                     DialogTextButton(
-                      "削除",
+                      S.current.remove,
                       onPressed: () async {
                         tagItemProvider.deleteTag(model.currentTagTable.id);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(
-                              "タグを削除しました",
-                            ),
+                            content: Text(S.current.tagRemoved),
                             duration: const Duration(seconds: 2),
                           ),
                         );
@@ -209,22 +208,20 @@ class ManuscriptFilterScreen extends StatelessWidget {
       onPressed: () {
         DialogManager.show(
           context,
-          content: Text("ごみ箱の中身を空にしますか？"),
+          content: Text(S.current.doEmptyTrash),
           actions: [
             DialogTextButton(
-              "キャンセル",
+              S.current.cancel,
               onPressed: () => Navigator.pop(context),
             ),
             DialogTextButton(
-              "全て削除",
+              S.current.deleteAll,
               onPressed: () async {
                 final provider = context.read<ManuscriptProvider>();
                 await provider.clearTrash();
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(
-                      "ごみ箱を空にしました",
-                    ),
+                    content: Text(S.current.trashEmptied),
                     duration: const Duration(seconds: 2),
                   ),
                 );

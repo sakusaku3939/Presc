@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presc/generated/l10n.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -20,16 +21,14 @@ class AddNewTag extends StatelessWidget {
         border: InputBorder.none,
         contentPadding: const EdgeInsets.all(0),
         hintStyle: TextStyle(fontSize: fontSize),
-        hintText: '新しいタグを追加',
+        hintText: S.current.addNewTag,
       ),
       onSubmitted: (text) {
         if (text.trim().isNotEmpty) {
           context.read<EditableTagItemProvider>().addTag(text);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(
-                "新しいタグを追加しました",
-              ),
+              content: Text(S.current.newTagAdded),
               duration: const Duration(seconds: 2),
             ),
           );

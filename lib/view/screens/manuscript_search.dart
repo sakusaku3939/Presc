@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script_card.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
@@ -54,7 +55,7 @@ class ManuscriptSearchScreen extends StatelessWidget {
           border: InputBorder.none,
           contentPadding: const EdgeInsets.all(0),
           hintStyle: const TextStyle(fontSize: 16, color: Colors.grey),
-          hintText: '原稿を検索',
+          hintText: S.current.searchScript,
         ),
         onChanged: (text) async {
           _timer?.cancel();

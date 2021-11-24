@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:presc/generated/l10n.dart';
+import 'package:presc/model/locale_image.dart';
 import 'package:presc/viewModel/onboarding_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -63,7 +65,7 @@ class OnBoardingScreen extends StatelessWidget {
                                   style: TextButton.styleFrom(
                                     primary: Colors.grey[800],
                                   ),
-                                  child: Text("スキップ"),
+                                  child: Text(S.current.skip),
                                   onPressed: () => _nextPage(pages.length - 1),
                                 )
                               : Container(),
@@ -92,7 +94,11 @@ class OnBoardingScreen extends StatelessWidget {
                             style: TextButton.styleFrom(
                               primary: Colors.grey[800],
                             ),
-                            child: Text(!isLastPage ? "次へ" : "始める"),
+                            child: Text(
+                              !isLastPage
+                                  ? S.current.next
+                                  : S.current.onboardingStart,
+                            ),
                             onPressed: () async {
                               if (isLastPage) {
                                 final prefs =
@@ -101,7 +107,8 @@ class OnBoardingScreen extends StatelessWidget {
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => ManuscriptScreen()),
+                                    builder: (context) => ManuscriptScreen(),
+                                  ),
                                   (_) => false,
                                 );
                               } else {
@@ -148,7 +155,7 @@ class OnBoardingScreen extends StatelessWidget {
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 40),
           child: Text(
-            "Prescへようこそ",
+            S.current.onboardingWelcomePresc,
             textAlign: TextAlign.center,
             style: const TextStyle(fontSize: 24),
           ),
@@ -157,7 +164,7 @@ class OnBoardingScreen extends StatelessWidget {
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 40),
           child: Text(
-            "Prescはプレゼンテーション、講演会、スピーチなどで使用できる原稿表示アプリです。",
+            S.current.onboardingWelcomePrescDescription,
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.grey[800]),
           ),
@@ -170,24 +177,24 @@ class OnBoardingScreen extends StatelessWidget {
   Widget _page2() {
     return _explanationPage(
       imagePath: "assets/images/screenshot/home.png",
-      title: "原稿を管理",
-      content: "原稿を追加・編集・削除しましょう。作った原稿はタグを付けて整理することができます。",
+      title: S.current.onboardingManageScript,
+      content: S.current.onboardingManageScriptDescription,
     );
   }
 
   Widget _page3() {
     return _explanationPage(
       imagePath: "assets/images/screenshot/playback.png",
-      title: "原稿を再生",
-      content: "出来た原稿を再生できます。音声認識により、どこまで話したかが一目で分かります。",
+      title: S.current.onboardingPlayScript,
+      content: S.current.onboardingPlayScriptDescription,
     );
   }
 
   Widget _page4() {
     return _explanationPage(
       imagePath: "assets/images/screenshot/setting.png",
-      title: "自由にカスタマイズ",
-      content: "書式の向き（縦書き、横書き）や文字の色、フォントサイズ等は自由にカスタマイズ可能です。",
+      title: S.current.onboardingCustomize,
+      content: S.current.onboardingCustomizeDescription,
     );
   }
 
@@ -200,7 +207,7 @@ class OnBoardingScreen extends StatelessWidget {
       children: [
         SizedBox(height: 4),
         Expanded(
-          child: Image.asset(imagePath),
+          child: LocaleImage.asset(imagePath),
         ),
         SizedBox(height: 12),
         Container(

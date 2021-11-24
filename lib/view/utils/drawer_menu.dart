@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/screens/setting.dart';
 import 'package:presc/view/screens/tag_edit.dart';
 import 'package:presc/view/utils/add_new_tag.dart';
@@ -44,7 +45,13 @@ class DrawerMenu extends StatelessWidget {
                 builder: (context, model, child) {
                   return ListTile(
                     leading: Icon(Icons.delete_outline),
-                    title: Text('ごみ箱', style: const TextStyle(fontSize: 14)),
+                    title: Text(
+                      S.current.trash,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
                     dense: true,
                     onTap: () {
                       model.replaceState(ManuscriptState.trash);
@@ -56,7 +63,13 @@ class DrawerMenu extends StatelessWidget {
               ),
               ListTile(
                 leading: Icon(Icons.settings),
-                title: Text('設定', style: const TextStyle(fontSize: 14)),
+                title: Text(
+                  S.current.setting,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
                 dense: true,
                 onTap: () => Navigator.push(
                   context,
@@ -82,7 +95,7 @@ class DrawerMenu extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "タグ一覧",
+                    S.current.tagList,
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       color: Colors.grey[600],
@@ -96,7 +109,9 @@ class DrawerMenu extends StatelessWidget {
                         overlayColor: MaterialStateProperty.all(Colors.black12),
                         padding: MaterialStateProperty.all(
                           const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 4),
+                            horizontal: 12,
+                            vertical: 4,
+                          ),
                         ),
                         minimumSize: MaterialStateProperty.all(Size.zero),
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -111,7 +126,7 @@ class DrawerMenu extends StatelessWidget {
                         );
                       },
                       child: Text(
-                        "編集",
+                        S.current.edit,
                         style: TextStyle(
                           color: Colors.grey[700],
                           fontSize: 12,
@@ -125,8 +140,13 @@ class DrawerMenu extends StatelessWidget {
             for (var tagTable in model.allTagTable)
               ListTile(
                 leading: Icon(Icons.tag),
-                title:
-                    Text(tagTable.tagName, style: const TextStyle(fontSize: 14)),
+                title: Text(
+                  tagTable.tagName,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
                 dense: true,
                 onLongPress: () {
                   model.loadTag();

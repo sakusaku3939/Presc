@@ -6,8 +6,10 @@ import 'package:presc/config/playback_style_config.dart';
 import 'package:presc/config/playback_text_style.dart';
 import 'package:presc/config/sample_text_config.dart';
 import 'package:presc/config/scroll_speed_config.dart';
+import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/screens/about_app.dart';
 import 'package:presc/view/utils/dialog/color_dialog_manager.dart';
+import 'package:presc/view/utils/dialog/scroll_mode_dialog_manager.dart';
 import 'package:presc/view/utils/horizontal_text.dart';
 import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
 import 'package:presc/view/utils/ripple_button.dart';
@@ -24,6 +26,18 @@ class SettingScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Consumer<PlaybackProvider>(
             builder: (context, model, child) {
+              String scrollModeText;
+              switch (model.scrollMode) {
+                case ScrollMode.manual:
+                  scrollModeText = S.current.manualScroll;
+                  break;
+                case ScrollMode.auto:
+                  scrollModeText = S.current.autoScroll;
+                  break;
+                case ScrollMode.recognition:
+                  scrollModeText = S.current.speechRecognition;
+                  break;
+              }
               return Column(
                 children: [
                   model.scrollVertical
@@ -34,8 +48,12 @@ class SettingScreen extends StatelessWidget {
                   Ink(
                     color: Colors.white,
                     child: ListTile(
-                      title: Text("書式の向き"),
-                      subtitle: Text(model.scrollVertical ? "横書き" : "縦書き"),
+                      title: Text(S.current.formatOrientation),
+                      subtitle: Text(
+                        model.scrollVertical
+                            ? S.current.horizontal
+                            : S.current.vertical,
+                      ),
                       contentPadding: const EdgeInsets.only(left: 32),
                       onTap: () => {
                         RadioDialogManager.show(
@@ -43,11 +61,11 @@ class SettingScreen extends StatelessWidget {
                           groupValue: model.scrollVertical,
                           itemList: [
                             RadioDialogItem(
-                              title: "横書き",
+                              title: S.current.horizontal,
                               value: true,
                             ),
                             RadioDialogItem(
-                              title: "縦書き",
+                              title: S.current.vertical,
                               value: false,
                             ),
                           ],
@@ -59,43 +77,16 @@ class SettingScreen extends StatelessWidget {
                   Ink(
                     color: Colors.white,
                     child: ListTile(
-                      title: Text("再生モード"),
-                      subtitle: Text(
-                        model.scrollMode == ScrollMode.manual
-                            ? "手動スクロール"
-                            : model.scrollMode == ScrollMode.auto
-                                ? "自動スクロール"
-                                : "音声認識",
-                      ),
+                      title: Text(S.current.playMode),
+                      subtitle: Text(scrollModeText),
                       contentPadding: const EdgeInsets.only(left: 32),
-                      onTap: () => RadioDialogManager.show(
-                        context,
-                        groupValue: model.scrollMode,
-                        itemList: [
-                          RadioDialogItem(
-                            title: "手動スクロール",
-                            subtitle: "スクロールを行いません",
-                            value: ScrollMode.manual,
-                          ),
-                          RadioDialogItem(
-                            title: "自動スクロール",
-                            subtitle: "一定の速度でスクロールします",
-                            value: ScrollMode.auto,
-                          ),
-                          RadioDialogItem(
-                            title: "音声認識",
-                            subtitle: "認識した文字分だけスクロールします",
-                            value: ScrollMode.recognition,
-                          ),
-                        ],
-                        onChanged: (value) => model.scrollMode = value,
-                      ),
+                      onTap: () => ScrollModeDialogManager.show(context),
                     ),
                   ),
                   Ink(
                     color: Colors.white,
                     child: ListTile(
-                      title: Text("再生速度"),
+                      title: Text(S.current.playSpeed),
                       subtitle: Text("x ${model.scrollSpeedMagnification}"),
                       contentPadding: const EdgeInsets.only(left: 32),
                       enabled: model.scrollMode == ScrollMode.auto,
@@ -118,7 +109,7 @@ class SettingScreen extends StatelessWidget {
                   Ink(
                     color: Colors.white,
                     child: ListTile(
-                      title: Text("このアプリについて"),
+                      title: Text(S.current.aboutApp),
                       contentPadding: const EdgeInsets.only(left: 32),
                       onTap: () => Navigator.push(
                         context,
@@ -131,7 +122,7 @@ class SettingScreen extends StatelessWidget {
                   Ink(
                     color: Colors.white,
                     child: ListTile(
-                      title: Text("オープンソースライセンス"),
+                      title: Text(S.current.ossLicence),
                       contentPadding: const EdgeInsets.only(left: 32),
                       onTap: () => Navigator.push(
                         context,
@@ -160,7 +151,7 @@ class SettingScreen extends StatelessWidget {
         onPressed: () => Navigator.pop(context),
       ),
       title: Text(
-        "再生設定",
+        S.current.playSetting,
         style: const TextStyle(fontSize: 20),
       ),
     );
@@ -184,7 +175,7 @@ class SettingScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 32),
             child: Text(
-              SampleTextConfig.setting,
+              SampleTextConfig().setting,
               style: PlaybackTextStyle.of(model).unrecognized,
             ),
           ),
@@ -213,7 +204,7 @@ class SettingScreen extends StatelessWidget {
             height: 200,
             padding: const EdgeInsets.symmetric(horizontal: 32),
             child: HorizontalText(
-              unrecognizedText: SampleTextConfig.setting,
+              unrecognizedText: SampleTextConfig().setting,
               recognizedText: "",
             ),
           ),
@@ -245,8 +236,9 @@ class SettingScreen extends StatelessWidget {
                     child: CupertinoPicker(
                       itemExtent: 32,
                       scrollController: FixedExtentScrollController(
-                        initialItem: PlaybackStyleConfig.fontSizeList
-                            .indexOf(model.fontSize),
+                        initialItem: PlaybackStyleConfig.fontSizeList.indexOf(
+                          model.fontSize,
+                        ),
                       ),
                       children: [
                         for (var fontSize in PlaybackStyleConfig.fontSizeList)
@@ -277,8 +269,9 @@ class SettingScreen extends StatelessWidget {
                     child: CupertinoPicker(
                       itemExtent: 32,
                       scrollController: FixedExtentScrollController(
-                        initialItem: PlaybackStyleConfig.fontHeightList
-                            .indexOf(model.fontHeight),
+                        initialItem: PlaybackStyleConfig.fontHeightList.indexOf(
+                          model.fontHeight,
+                        ),
                       ),
                       children: [
                         for (var fontHeight

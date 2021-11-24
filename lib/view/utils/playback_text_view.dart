@@ -65,6 +65,7 @@ class PlaybackTextView extends StatelessWidget {
     _init(context);
     return Consumer<PlaybackProvider>(
       builder: (context, model, child) {
+        _stopAutoScroll();
         Widget playbackText;
         switch (model.scrollMode) {
           case ScrollMode.manual:
@@ -147,18 +148,23 @@ class PlaybackTextView extends StatelessWidget {
       if (distance <= 0) return;
 
       if (model.playFabState)
-        _scrollController?.animateTo(
+        _scrollController.animateTo(
           model.scrollVertical ? maxExtent : 0,
           duration: Duration(seconds: durationDouble.toInt()),
           curve: Curves.linear,
         );
       else
-        _scrollController.animateTo(
-          offset,
-          duration: Duration(milliseconds: 1),
-          curve: Curves.linear,
-        );
+        _stopAutoScroll();
     }
+  }
+
+  void _stopAutoScroll() {
+    if (_scrollController.hasClients)
+      _scrollController.animateTo(
+        _scrollController.offset,
+        duration: Duration(milliseconds: 1),
+        curve: Curves.linear,
+      );
   }
 
   void _returnToScroll(Notification notification, PlaybackProvider model) {

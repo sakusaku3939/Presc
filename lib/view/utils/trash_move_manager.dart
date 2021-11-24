@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presc/generated/l10n.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 
 import 'dialog/dialog_manager.dart';
@@ -14,10 +15,10 @@ class TrashMoveManager {
     );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text("ごみ箱に移動しました"),
+        content: Text(S.current.trashMoved),
         duration: const Duration(seconds: 3),
         action: SnackBarAction(
-          label: "元に戻す",
+          label: S.current.undo,
           onPressed: () async {
             await provider.restoreFromTrash(trashId: newId);
             await provider.updateScriptTable();
@@ -39,9 +40,7 @@ class TrashMoveManager {
     await provider.deleteTrash(trashId: newId);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          "空の原稿を削除しました",
-        ),
+        content: Text(S.current.emptyScriptDeleted),
         duration: const Duration(seconds: 3),
       ),
     );
@@ -58,12 +57,10 @@ class TrashMoveManager {
     );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(
-          "ごみ箱から復元しました",
-        ),
+        content: Text(S.current.trashRestored),
         duration: const Duration(seconds: 3),
         action: SnackBarAction(
-          label: "元に戻す",
+          label: S.current.undo,
           onPressed: () async {
             await provider.moveToTrash(memoId: newId);
             await provider.updateScriptTable();
@@ -82,21 +79,20 @@ class TrashMoveManager {
     final title = provider.scriptTable[index].title;
     DialogManager.show(
       context,
-      content: Text("${title.isNotEmpty ? title : "(タイトルなし)"}を完全に削除しますか？"),
+      content: Text(S.current.doDeletePermanently(
+          title.isNotEmpty ? title : "(${S.current.noTitle})")),
       actions: [
         DialogTextButton(
-          "キャンセル",
+          S.current.cancel,
           onPressed: () => Navigator.pop(context),
         ),
         DialogTextButton(
-          "削除",
+          S.current.delete,
           onPressed: () async {
             await provider.deleteTrash(trashId: provider.scriptTable[index].id);
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(
-                  "完全に削除しました",
-                ),
+                content: Text(S.current.permanentlyDeleted),
                 duration: const Duration(seconds: 2),
               ),
             );

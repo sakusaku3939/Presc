@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/utils/add_new_tag.dart';
 import 'package:presc/view/utils/dialog/dialog_manager.dart';
@@ -51,7 +52,7 @@ class TagEditScreen extends StatelessWidget {
                 builder: (context, isDeleteSelectionMode, child) {
                   return isDeleteSelectionMode
                       ? Text(
-                          '新しいタグを追加',
+                          S.current.addNewTag,
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.black.withOpacity(0.6),
@@ -86,7 +87,7 @@ class _TagEditScreenAppbar extends StatelessWidget
               },
             ),
             title: Text(
-              "タグの編集",
+              S.current.editTag,
               style: const TextStyle(fontSize: 20),
             ),
             actions: [
@@ -108,7 +109,7 @@ class _TagEditScreenAppbar extends StatelessWidget
               onPressed: () => model.isDeleteSelectionMode = false,
             ),
             title: Text(
-              "タグを削除",
+              S.current.removeTag,
               style: const TextStyle(fontSize: 20, color: Colors.white),
             ),
             actions: [
@@ -122,16 +123,17 @@ class _TagEditScreenAppbar extends StatelessWidget
                     if (count > 0)
                       DialogManager.show(
                         context,
-                        contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
-                        title: Text("$count件のタグを削除"),
-                        content: Text("選択したタグを全て削除しますか？この操作は復元できません。"),
+                        contentPadding:
+                            const EdgeInsets.fromLTRB(24, 20, 24, 24),
+                        title: Text(S.current.removeSelectTags(count)),
+                        content: Text(S.current.alertRemoveSelectTags),
                         actions: [
                           DialogTextButton(
-                            "キャンセル",
+                            S.current.cancel,
                             onPressed: () => Navigator.pop(context),
                           ),
                           DialogTextButton(
-                            "削除",
+                            S.current.remove,
                             onPressed: () {
                               for (var i = 0; i < model.checkList.length; i++) {
                                 if (model.checkList[i])
@@ -141,9 +143,7 @@ class _TagEditScreenAppbar extends StatelessWidget
                               model.isDeleteSelectionMode = false;
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                  content: Text(
-                                    "$count件のタグを削除しました",
-                                  ),
+                                  content: Text(S.current.selectTagsRemoved(count)),
                                   duration: const Duration(seconds: 2),
                                 ),
                               );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import "package:intl/intl.dart";
+import 'package:intl/intl.dart';
 import 'package:presc/config/color_config.dart';
+import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/char_counter.dart';
 import 'package:presc/view/screens/playback.dart';
 import 'package:presc/view/utils/dialog/dialog_manager.dart';
@@ -140,7 +141,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             maxLines: null,
             decoration: InputDecoration(
               isDense: true,
-              hintText: "タイトル",
+              hintText: S.current.placeholderTitle,
               border: InputBorder.none,
               contentPadding: const EdgeInsets.all(0),
             ),
@@ -165,7 +166,7 @@ class ManuscriptEditScreen extends StatelessWidget {
               maxLines: null,
               decoration: InputDecoration(
                 isDense: true,
-                hintText: "ここに入力",
+                hintText: S.current.placeholderContent,
                 border: InputBorder.none,
                 contentPadding: const EdgeInsets.all(0),
               ),
@@ -194,7 +195,7 @@ class ManuscriptEditScreen extends StatelessWidget {
         children: [
           SizedBox(height: 4),
           Text(
-            title.isNotEmpty ? title : "タイトルなし",
+            title.isNotEmpty ? title : S.current.noTitle,
             style: TextStyle(
               color: title.isNotEmpty ? null : Theme.of(context).hintColor,
               fontSize: 24,
@@ -202,7 +203,7 @@ class ManuscriptEditScreen extends StatelessWidget {
           ),
           SizedBox(height: 16),
           Text(
-            content.isNotEmpty ? content : "追加のテキストはありません",
+            content.isNotEmpty ? content : S.current.noAdditionalText,
             style: TextStyle(
               color: content.isNotEmpty
                   ? Colors.grey[800]
@@ -236,7 +237,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                     children: [
                       TextField(
                         decoration: InputDecoration(
-                          hintText: "新しいタグを追加",
+                          hintText: S.current.addNewTag,
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
                               color: Theme.of(context).accentColor,
@@ -252,9 +253,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                                 .addTag(memoId: id, name: text);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(
-                                  "新しいタグを追加しました",
-                                ),
+                                content: Text(S.current.newTagAdded),
                                 duration: const Duration(seconds: 2),
                               ),
                             );
@@ -350,7 +349,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "文字数",
+                    S.current.characterCount,
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey[700],
@@ -362,7 +361,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 16),
                   Text(
-                    "読み上げ時間の目安（1分300文字）",
+                    S.current.estimatedReadingTime,
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey[700],
@@ -375,14 +374,17 @@ class ManuscriptEditScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 16),
                   Text(
-                    "最終更新日時",
+                    S.current.lastModified,
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey[700],
                     ),
                   ),
                   Text(
-                    DateFormat('yyyy/MM/dd(E) HH:mm', "ja_JP").format(
+                    DateFormat(
+                      'yyyy/MM/dd(E) HH:mm',
+                      Intl.getCurrentLocale(),
+                    ).format(
                       _provider.scriptTable[index].date,
                     ),
                   ),
@@ -390,7 +392,7 @@ class ManuscriptEditScreen extends StatelessWidget {
               ),
               actions: [
                 DialogTextButton(
-                  "戻る",
+                  S.current.close,
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
@@ -405,7 +407,7 @@ class ManuscriptEditScreen extends StatelessWidget {
     final totalSecond = count / 5;
     final minutes = totalSecond ~/ 60;
     final second = (totalSecond % 60).floor();
-    return "$minutes分$second秒";
+    return S.current.time(minutes, second);
   }
 
   Widget _trashStateMenu() {
@@ -426,7 +428,7 @@ class ManuscriptEditScreen extends StatelessWidget {
         PopupMenu(
           [
             PopupMenuItem(
-              child: Text("完全に削除"),
+              child: Text(S.current.deletePermanently),
               value: "delete",
             )
           ],

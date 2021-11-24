@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:presc/config/init_config.dart';
+import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/speech_to_text_manager.dart';
 import 'package:presc/view/utils/dialog/silent_dialog_manager.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
@@ -44,16 +45,16 @@ class SpeechToTextProvider with ChangeNotifier {
         _manager.stop();
         switch (error) {
           case "not_available":
-            showSnackBar("音声認識を行うにはマイクの許可が必要です");
+            showSnackBar(S.current.requirePermission);
             break;
           case "error_network":
-            showSnackBar("ネットワークエラーが発生しました");
+            showSnackBar(S.current.networkError);
             break;
           case "error_busy":
-            showSnackBar("マイクがビジー状態です");
+            showSnackBar(S.current.micBusy);
             break;
           default:
-            showSnackBar("エラー: $error");
+            showSnackBar(S.current.error(error));
             break;
         }
       },
@@ -111,6 +112,15 @@ class SpeechToTextProvider with ChangeNotifier {
     _reflect("しかもあとで");
     await Future.delayed(Duration(milliseconds: 2000));
     _reflect("ばかりである");
+  }
+
+  Future<void> _testReflectEn() async {
+    await Future.delayed(Duration(milliseconds: 500));
+    _reflect("they");
+    await Future.delayed(Duration(milliseconds: 2000));
+    _reflect("internet");
+    await Future.delayed(Duration(milliseconds: 2000));
+    _reflect("keyboards");
   }
 
   Future<bool> _startSilentMode(BuildContext context) async {

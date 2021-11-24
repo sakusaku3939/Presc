@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:package_info/package_info.dart';
+import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -78,7 +79,7 @@ class AboutAppScreen extends StatelessWidget {
                   width: double.infinity,
                   height: 40,
                   child: TextButton(
-                    child: Text("プライバシーポリシー"),
+                    child: Text(S.current.privacyPolicy),
                     style: TextButton.styleFrom(
                       primary: Colors.grey[800],
                     ),
@@ -87,13 +88,13 @@ class AboutAppScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 4),
+                SizedBox(height: 8),
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 24),
                   width: double.infinity,
                   height: 40,
                   child: ElevatedButton(
-                    child: Text("フィードバックを送る"),
+                    child: Text(S.current.sendFeedback),
                     style: ElevatedButton.styleFrom(
                       primary: Theme.of(context).accentColor,
                       onPrimary: Colors.white,
