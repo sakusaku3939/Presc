@@ -57,7 +57,6 @@ class ScriptCard extends StatelessWidget {
             break;
         }
         return Container(
-          color: ColorConfig.backgroundColor,
           width: MediaQuery.of(context).size.width,
           height: DisplaySize.safeArea(context).height -
               (state == ManuscriptState.tag ? 0 : 30),

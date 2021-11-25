@@ -45,9 +45,9 @@ class SpeechToTextManager {
       onError: _errorListener,
       onStatus: _statusListener,
     );
-    final systemLocale = await _speech.systemLocale();
     if (available) {
       _isStopFlagValid = false;
+      final systemLocale = await _speech.systemLocale();
       await _speech.listen(
         onResult: _resultListener,
         onSoundLevelChange: _soundLevelListener,

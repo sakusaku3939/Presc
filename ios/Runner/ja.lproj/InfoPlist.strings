@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  Runner
+
+  Created by 青木勇樹 on 2021/11/25.
+  
+*/
+NSMicrophoneUsageDescription = "音声認識を行うにはマイクの許可が必要です。";
+NSSpeechRecognitionUsageDescription = "音声認識により、話した分だけ自動でスクロールしてくれます。";
