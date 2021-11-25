@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  Runner
+
+  Created by 青木勇樹 on 2021/11/25.
+  
+*/
+NSMicrophoneUsageDescription = "You must have permission for the microphone to perform speech recognition.";
+NSSpeechRecognitionUsageDescription = "You allowing speech recognition, it can automatically scroll.";
