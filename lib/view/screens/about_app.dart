@@ -100,7 +100,7 @@ class AboutAppScreen extends StatelessWidget {
                       onPrimary: Colors.white,
                     ),
                     onPressed: () => launch(
-                      "https://form.run/@presc--1633289693",
+                      "https://docs.google.com/forms/d/e/1FAIpQLSdSCHlUDrT4x3W76huEVf0hqAsg-SvX3UJwvRtZXpQ5E2JpNA/viewform?usp=sf_link",
                     ),
                   ),
                 ),
