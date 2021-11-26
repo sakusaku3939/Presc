@@ -92,15 +92,22 @@ class SpeechToTextProvider with ChangeNotifier {
         ? unrecognizedText.substring(0, 150)
         : unrecognizedText;
 
+    final isEnglish = RegExp(r'^[ -~｡-ﾟ]+$').hasMatch(lastWords);
+    final splitWord = isEnglish ? lastWords.split(" ") : _ngram(lastWords, N);
+    final i = isEnglish ? splitWord.last.length : N;
+
     int lastIndex = -1;
-    _ngram(lastWords, N).forEach((t) {
-      lastIndex = max(rangeUnrecognizedText.indexOf(t), lastIndex);
+    splitWord.forEach((t) {
+      lastIndex = max(
+        rangeUnrecognizedText.toLowerCase().indexOf(t.toLowerCase()),
+        lastIndex,
+      );
     });
 
     if (lastIndex != -1) {
-      final latestRecognizedText = unrecognizedText.substring(0, lastIndex + N);
+      final latestRecognizedText = unrecognizedText.substring(0, lastIndex + i);
       _recognizedText += latestRecognizedText;
-      _unrecognizedText = unrecognizedText.substring(lastIndex + N);
+      _unrecognizedText = unrecognizedText.substring(lastIndex + i);
       notifyListeners();
     }
   }
