@@ -52,25 +52,27 @@ class ManuscriptEditScreen extends StatelessWidget {
         return Future.value(false);
       },
       child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Hero(
-          tag: id,
-          child: Material(
-            type: MaterialType.transparency,
-            child: Container(
-              color: Colors.white,
-              child: Column(
-                children: [
-                  Container(child: _menuBar(context)),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: _provider.state != ManuscriptState.trash
-                          ? _editableContent(context)
-                          : _uneditableContent(context),
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Hero(
+            tag: id,
+            child: Material(
+              type: MaterialType.transparency,
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    Container(child: _menuBar(context)),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: _provider.state != ManuscriptState.trash
+                            ? _editableContent(context)
+                            : _uneditableContent(context),
+                      ),
                     ),
-                  ),
-                  Container(child: _footer(context)),
-                ],
+                    Container(child: _footer(context)),
+                  ],
+                ),
               ),
             ),
           ),
@@ -98,25 +100,23 @@ class ManuscriptEditScreen extends StatelessWidget {
   }
 
   Widget _menuBar(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        color: Colors.white,
-        height: 56,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            RippleIconButton(
-              Icons.navigate_before,
-              size: 32,
-              onPressed: () async => await _back(),
-            ),
-            _provider.state != ManuscriptState.trash
-                ? _editStateMenu()
-                : _trashStateMenu()
-          ],
-        ),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      color: Colors.white,
+      height: 56,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          RippleIconButton(
+            Icons.navigate_before,
+            size: 32,
+            onPressed: () async => await _back(),
+          ),
+          _provider.state != ManuscriptState.trash
+              ? _editStateMenu()
+              : _trashStateMenu()
+        ],
       ),
     );
   }
