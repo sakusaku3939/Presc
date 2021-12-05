@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:presc/config/color_config.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/utils/database_table.dart';
-import 'package:presc/view/utils/dialog/dialog_manager.dart';
+import 'package:presc/view/utils/dialog/platform_dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script_card.dart';
@@ -96,103 +96,54 @@ class ManuscriptFilterScreen extends StatelessWidget {
             ),
           ],
           icon: Icon(Icons.more_vert, color: ColorConfig.iconColor),
-          onSelected: (value) {
+          onSelected: (value) async {
             switch (value) {
               case "change":
-                final controller = TextEditingController.fromValue(
-                  TextEditingValue(
-                    text: model.currentTagTable.tagName,
-                    selection: TextSelection.collapsed(
-                      offset: model.currentTagTable.tagName.length,
-                    ),
-                  ),
-                );
-                DialogManager.show(
+                PlatformDialogManager.showInputDialog(
                   context,
-                  contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
-                  content: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        S.current.tag,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[700],
+                  title: S.current.tag,
+                  content: model.currentTagTable.tagName,
+                  placeholder: S.current.placeholderTagName,
+                  okLabel: S.current.change,
+                  cancelLabel: S.current.cancel,
+                  onOkPressed: (String text) async {
+                    if (text.trim().isNotEmpty) {
+                      await tagItemProvider.updateTag(
+                        model.currentTagTable.id,
+                        text,
+                      );
+                      model.currentTagTable = TagTable(
+                        id: model.currentTagTable.id,
+                        tagName: text,
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(S.current.tagUpdated),
+                          duration: const Duration(seconds: 2),
                         ),
-                      ),
-                      TextField(
-                        decoration: InputDecoration(
-                          hintText: S.current.placeholderTagName,
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(
-                              color: Theme.of(context).accentColor,
-                            ),
-                          ),
-                        ),
-                        controller: controller,
-                        autofocus: true,
-                        cursorColor: Theme.of(context).accentColor,
-                      ),
-                    ],
-                  ),
-                  actions: [
-                    DialogTextButton(
-                      S.current.cancel,
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                    DialogTextButton(
-                      S.current.change,
-                      onPressed: () async {
-                        final text = controller.text;
-                        if (text.trim().isNotEmpty) {
-                          await tagItemProvider.updateTag(
-                            model.currentTagTable.id,
-                            text,
-                          );
-                          model.currentTagTable = TagTable(
-                            id: model.currentTagTable.id,
-                            tagName: text,
-                          );
-                          Navigator.pop(context);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(S.current.tagUpdated),
-                              duration: const Duration(seconds: 2),
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                  ],
+                      );
+                    }
+                  },
                 );
                 break;
               case "delete":
-                DialogManager.show(
+                PlatformDialogManager.showDeleteAlert(
                   context,
-                  content: Text(
-                    S.current.alertRemoveTag(model.currentTagTable.tagName),
+                  message: S.current.alertRemoveTag(
+                    model.currentTagTable.tagName,
                   ),
-                  actions: [
-                    DialogTextButton(
-                      S.current.cancel,
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                    DialogTextButton(
-                      S.current.remove,
-                      onPressed: () async {
-                        tagItemProvider.deleteTag(model.currentTagTable.id);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(S.current.tagRemoved),
-                            duration: const Duration(seconds: 2),
-                          ),
-                        );
-                        Navigator.pop(context);
-                        model.replaceState(ManuscriptState.home);
-                      },
-                    ),
-                  ],
+                  deleteLabel: S.current.remove,
+                  cancelLabel: S.current.cancel,
+                  onDeletePressed: () {
+                    tagItemProvider.deleteTag(model.currentTagTable.id);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(S.current.tagRemoved),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                    model.replaceState(ManuscriptState.home);
+                  },
                 );
                 break;
             }
@@ -206,30 +157,22 @@ class ManuscriptFilterScreen extends StatelessWidget {
     return RippleIconButton(
       Icons.clear_all,
       onPressed: () {
-        DialogManager.show(
+        PlatformDialogManager.showDeleteAlert(
           context,
-          content: Text(S.current.doEmptyTrash),
-          actions: [
-            DialogTextButton(
-              S.current.cancel,
-              onPressed: () => Navigator.pop(context),
-            ),
-            DialogTextButton(
-              S.current.deleteAll,
-              onPressed: () async {
-                final provider = context.read<ManuscriptProvider>();
-                await provider.clearTrash();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(S.current.trashEmptied),
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-                await provider.replaceState(state);
-                Navigator.pop(context);
-              },
-            ),
-          ],
+          message: S.current.doEmptyTrash,
+          deleteLabel: S.current.deleteAll,
+          cancelLabel: S.current.cancel,
+          onDeletePressed: () async {
+            final provider = context.read<ManuscriptProvider>();
+            await provider.clearTrash();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(S.current.trashEmptied),
+                duration: const Duration(seconds: 2),
+              ),
+            );
+            await provider.replaceState(state);
+          },
         );
       },
     );

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
+import 'package:presc/view/utils/dialog/platform_dialog_manager.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
-
-import 'dialog/dialog_manager.dart';
 
 class TrashMoveManager {
   static Future<void> move({
@@ -77,30 +76,23 @@ class TrashMoveManager {
     @required int index,
   }) async {
     final title = provider.scriptTable[index].title;
-    DialogManager.show(
+    await PlatformDialogManager.showDeleteAlert(
       context,
-      content: Text(S.current.doDeletePermanently(
-          title.isNotEmpty ? title : "(${S.current.noTitle})")),
-      actions: [
-        DialogTextButton(
-          S.current.cancel,
-          onPressed: () => Navigator.pop(context),
-        ),
-        DialogTextButton(
-          S.current.delete,
-          onPressed: () async {
-            await provider.deleteTrash(trashId: provider.scriptTable[index].id);
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(S.current.permanentlyDeleted),
-                duration: const Duration(seconds: 2),
-              ),
-            );
-            await provider.updateScriptTable();
-            Navigator.pop(context);
-          },
-        ),
-      ],
+      message: S.current.doDeletePermanently(
+        title.isNotEmpty ? title : "(${S.current.noTitle})",
+      ),
+      deleteLabel: S.current.delete,
+      cancelLabel: S.current.cancel,
+      onDeletePressed: () async {
+        await provider.deleteTrash(trashId: provider.scriptTable[index].id);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(S.current.permanentlyDeleted),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+        await provider.updateScriptTable();
+      },
     );
   }
 }

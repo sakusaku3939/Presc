@@ -3,7 +3,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/utils/add_new_tag.dart';
-import 'package:presc/view/utils/dialog/dialog_manager.dart';
+import 'package:presc/view/utils/dialog/platform_dialog_manager.dart';
 import 'package:presc/view/utils/editable_tag_item.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
@@ -120,37 +120,28 @@ class _TagEditScreenAppbar extends StatelessWidget
                   color: Colors.white,
                   onPressed: () {
                     final count = model.checkList.where((e) => e).length;
-                    if (count > 0)
-                      DialogManager.show(
+                    if (count > 0) {
+                      PlatformDialogManager.showDeleteAlert(
                         context,
-                        contentPadding:
-                            const EdgeInsets.fromLTRB(24, 20, 24, 24),
-                        title: Text(S.current.removeSelectTags(count)),
-                        content: Text(S.current.alertRemoveSelectTags),
-                        actions: [
-                          DialogTextButton(
-                            S.current.cancel,
-                            onPressed: () => Navigator.pop(context),
-                          ),
-                          DialogTextButton(
-                            S.current.remove,
-                            onPressed: () {
-                              for (var i = 0; i < model.checkList.length; i++) {
-                                if (model.checkList[i])
-                                  model.deleteTag(model.allTagTable[i].id);
-                              }
-                              Navigator.pop(context);
-                              model.isDeleteSelectionMode = false;
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(S.current.selectTagsRemoved(count)),
-                                  duration: const Duration(seconds: 2),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
+                        title: S.current.removeSelectTags(count),
+                        message: S.current.alertRemoveSelectTags,
+                        deleteLabel: S.current.remove,
+                        cancelLabel: S.current.cancel,
+                        onDeletePressed: () {
+                          for (var i = 0; i < model.checkList.length; i++) {
+                            if (model.checkList[i])
+                              model.deleteTag(model.allTagTable[i].id);
+                          }
+                          model.isDeleteSelectionMode = false;
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(S.current.selectTagsRemoved(count)),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        },
                       );
+                    }
                   },
                 ),
               ),
