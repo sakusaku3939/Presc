@@ -39,7 +39,9 @@ jobs:
         run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           touch ~/Library/MobileDevice/Provisioning\ Profiles/decoded.mobileprovision
+          touch ~/Library/MobileDevice/Provisioning\ Profiles/decoded-share-extension.mobileprovision
           echo -n '${{ secrets.PROVISIONING_PROFILE }}' | base64 -d -o ~/Library/MobileDevice/Provisioning\ Profiles/decoded.mobileprovision
+          echo -n '${{ secrets.SHARE_EXTENSION_PROVISIONING_PROFILE }}' | base64 -d -o ~/Library/MobileDevice/Provisioning\ Profiles/decoded-share-extension.mobileprovision
           
       - name: Import Code-Signing Certificates
         uses: Apple-Actions/import-codesign-certs@v1
@@ -55,7 +57,9 @@ jobs:
           project-path: ios/Runner.xcodeproj
           p12-base64: ${{ secrets.CERTIFICATES_P12 }}
           certificate-password: ${{ secrets.CERTIFICATE_PASSWORD }}
-          mobileprovision-base64: ${{ secrets.PROVISIONING_PROFILE }}
+          mobileprovision-base64: |
+            ${{ secrets.PROVISIONING_PROFILE }}
+            ${{ secrets.SHARE_EXTENSION_PROVISIONING_PROFILE }}
           code-signing-identity: ${{ secrets.CODE_SIGNING_IDENTITY }}
           team-id: ${{ secrets.TEAM_ID }}
           workspace-path: ios/Runner.xcworkspace 
@@ -66,7 +70,7 @@ jobs:
         run: |
           curl \
             -H "Authorization: token ${{secrets.DEPLOYGATE_API_KEY}}" \
-            -F "file=@/Users/runner/work/presc/presc/app-release.ipa" \
+            -F "file=@/Users/runner/work/Presc/Presc/app-release.ipa" \
             -F "message=git:$GIT_HASH" \
             -F "distribution_name=$GIT_BRANCH" \
             -F "release_note=new ios build" \
