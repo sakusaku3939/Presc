@@ -45,8 +45,11 @@ jobs:
         with:
           p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
           p12-password: ${{ secrets.CERTIFICATE_PASSWORD }}
+          
+      - name: Import Export Options
+        run: echo -n '${{ secrets.EXPORT_OPTIONS }}' >> ExportOptions.plist
       
-      - run: flutter build ipa
+      - run: flutter build ipa --export-options-plist=ExportOptions.plist
       
       - name: XCode Build Archive
         uses: yukiarrr/ios-build-action@v1.1.1
