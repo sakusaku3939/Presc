@@ -55,7 +55,7 @@ jobs:
         run: |
           curl \
             -H "Authorization: token ${{secrets.DEPLOYGATE_API_KEY}}" \
-            -F "file=@/Users/runner/work/Presc/Presc/build/ios/ipa" \
+            -F "file=@/Users/runner/work/Presc/Presc/build/ios/ipa/Presc.ipa" \
             -F "message=git:$GIT_HASH" \
             -F "distribution_name=$GIT_BRANCH" \
             -F "release_note=new ios build" \
