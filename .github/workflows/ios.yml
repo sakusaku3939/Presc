@@ -50,27 +50,12 @@ jobs:
         run: echo -n '${{ secrets.EXPORT_OPTIONS }}' >> ExportOptions.plist
       
       - run: flutter build ipa --export-options-plist=ExportOptions.plist
-      
-      - name: XCode Build Archive
-        uses: yukiarrr/ios-build-action@v1.1.1
-        with:
-          project-path: ios/Runner.xcodeproj
-          p12-base64: ${{ secrets.CERTIFICATES_P12 }}
-          certificate-password: ${{ secrets.CERTIFICATE_PASSWORD }}
-          mobileprovision-base64: |
-            ${{ secrets.PROVISIONING_PROFILE }}
-            ${{ secrets.SHARE_EXTENSION_PROVISIONING_PROFILE }}
-          code-signing-identity: ${{ secrets.CODE_SIGNING_IDENTITY }}
-          team-id: ${{ secrets.TEAM_ID }}
-          workspace-path: ios/Runner.xcworkspace 
-          output-path: app-release.ipa
-          export-method: ad-hoc
 
       - name: Distribute iOS app
         run: |
           curl \
             -H "Authorization: token ${{secrets.DEPLOYGATE_API_KEY}}" \
-            -F "file=@/Users/runner/work/Presc/Presc/app-release.ipa" \
+            -F "file=@/Users/runner/work/Presc/Presc/build/ios/ipa" \
             -F "message=git:$GIT_HASH" \
             -F "distribution_name=$GIT_BRANCH" \
             -F "release_note=new ios build" \
