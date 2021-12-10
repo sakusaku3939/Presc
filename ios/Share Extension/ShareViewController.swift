@@ -1,7 +1,6 @@
 import UIKit
 import Social
 import MobileCoreServices
-import Photos
 
 class ShareViewController: SLComposeServiceViewController {
     let hostAppBundleIdentifier = "com.sakusaku3939.presc"
