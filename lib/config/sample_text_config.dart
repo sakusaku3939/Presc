@@ -53,6 +53,7 @@ class _En implements _Locale {
       "This is what iPhone is.";
 
   final String setting =
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n"
-      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+      "The most advanced phones are called smart phones, so they say. "
+      "And they typically combine a phone plus some e-mail capability, plus they say it’s the Internet.\n"
+      "It’s sort of the baby Internet into one device, and they all have these little plastic keyboards on them. ";
 }
