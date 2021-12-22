@@ -16,13 +16,13 @@ class PlaybackTextStyle {
   TextStyle get recognized => TextStyle(
         color: _model.backgroundColor,
         backgroundColor: _model.textColor,
-        height: _model.scrollVertical ? _model.fontHeight : 1.2,
+        height: _model.fontHeight,
         fontSize: _model.fontSize.toDouble(),
       );
 
   TextStyle get unrecognized => TextStyle(
         color: _model.textColor,
-        height: _model.scrollVertical ? _model.fontHeight : 1.2,
+        height: _model.fontHeight,
         fontWeight: FontWeight.bold,
         fontSize: _model.fontSize.toDouble(),
       );

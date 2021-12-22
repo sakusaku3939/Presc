@@ -10,9 +10,9 @@ import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/screens/about_app.dart';
 import 'package:presc/view/utils/dialog/color_dialog_manager.dart';
 import 'package:presc/view/utils/dialog/scroll_mode_dialog_manager.dart';
-import 'package:presc/view/utils/horizontal_text.dart';
 import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
 import 'package:presc/view/utils/ripple_button.dart';
+import 'package:presc/view/utils/tategaki.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -203,9 +203,9 @@ class SettingScreen extends StatelessWidget {
           child: Container(
             height: 200,
             padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: HorizontalText(
-              unrecognizedText: SampleTextConfig().setting,
-              recognizedText: "",
+            child: Tategaki(
+              SampleTextConfig().setting,
+              style: PlaybackTextStyle.of(model).unrecognized,
             ),
           ),
         ),

@@ -6,6 +6,7 @@ import 'package:presc/config/display_size.dart';
 import 'package:presc/config/playback_text_style.dart';
 import 'package:presc/config/scroll_speed_config.dart';
 import 'package:presc/view/utils/horizontal_text.dart';
+import 'package:presc/view/utils/tategaki.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
 import 'package:presc/viewModel/playback_visualizer_provider.dart';
@@ -130,10 +131,9 @@ class PlaybackTextView extends StatelessWidget {
         key: _playbackTextKey,
       );
     else
-      return HorizontalText(
-        key: _playbackTextKey,
-        recognizedText: "",
-        unrecognizedText: _content,
+      return Tategaki(
+        _content,
+        style: PlaybackTextStyle.of(model).unrecognized,
       );
   }
 
