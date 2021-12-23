@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:presc/config/display_size.dart';
 import 'package:presc/config/playback_text_style.dart';
 import 'package:presc/config/scroll_speed_config.dart';
-import 'package:presc/view/utils/horizontal_text.dart';
 import 'package:presc/view/utils/tategaki.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
@@ -210,26 +209,14 @@ class _RecognizedTextView extends StatelessWidget {
             key: playbackTextKey,
           );
         } else {
+          _scrollHorizontalRecognizedText(context, model);
           return Tategaki(
-            null,
-            children: [
-              TextSpan(
-                text: model.recognizedText,
-                style: PlaybackTextStyle.of(playbackProvider).recognized,
-              ),
-              TextSpan(
-                text: model.unrecognizedText,
-                style: PlaybackTextStyle.of(playbackProvider).unrecognized,
-              ),
-            ],
+            model.recognizedText + model.unrecognizedText,
+            style: PlaybackTextStyle.of(playbackProvider).unrecognized,
+            recognizeStyle: PlaybackTextStyle.of(playbackProvider).recognized,
+            recognizeIndex: model.recognizedText.length,
+            key: playbackTextKey,
           );
-          // return HorizontalText(
-          //   key: playbackTextKey,
-          //   recognizedText: model.recognizedText,
-          //   unrecognizedText: model.unrecognizedText,
-          //   horizontalRecognizedListener: (double width) =>
-          //       _scrollHorizontalRecognizedText(model, width),
-          // );
         }
       },
     );
@@ -257,17 +244,19 @@ class _RecognizedTextView extends StatelessWidget {
   }
 
   void _scrollHorizontalRecognizedText(
+    BuildContext context,
     SpeechToTextProvider model,
-    double width,
   ) {
     if (model.recognizedText.isNotEmpty) {
-      final offset =
-          width - playbackProvider.fontSize * playbackProvider.fontHeight;
-      _scrollTo(
-        scroll.offset + model.lastOffset - offset,
-        limit: scroll.offset > 0,
-      );
-      model.lastOffset = offset;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final offset = model.verticalRecognizeWidth -
+            playbackProvider.fontSize * playbackProvider.fontHeight;
+        _scrollTo(
+          scroll.offset + model.lastOffset - offset,
+          limit: scroll.offset > 0,
+        );
+        model.lastOffset = offset;
+      });
     }
   }
 

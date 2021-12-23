@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:presc/viewModel/speech_to_text_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:presc/config/vertical_rotated.dart';
 
 class Tategaki extends StatelessWidget {
@@ -6,58 +8,40 @@ class Tategaki extends StatelessWidget {
     this.text, {
     Key key,
     this.style,
-    this.children,
+    this.recognizeStyle,
+    this.recognizeIndex = 0,
   }) : super(key: key);
 
   final String text;
   final TextStyle style;
-  final List<TextSpan> children;
+  final TextStyle recognizeStyle;
+  final int recognizeIndex;
 
   @override
   Widget build(BuildContext context) {
     final mergeStyle = DefaultTextStyle.of(context).style.merge(style);
-    // final mergeDefault = (s) => DefaultTextStyle.of(context).style.merge(s);
-    // List<TextStyle> styleList = [];
-
-    // final List<TextSpan> textLenList =
-    //     children != null ? children.map((e) => e.text.length).toList() : [];
-    // final List<TextStyle> styleList = children != null
-    //     ? children
-    //         .map((e) => DefaultTextStyle.of(context).style.merge(e.style))
-    //         .toList()
-    //     : [DefaultTextStyle.of(context).style.merge(style)];
-
-    // if (children != null) {
-    //   for (TextSpan child in children) {
-    //     styleList.add(child.style);
-    //   }
-    //   children.map((e) => e.text.length);
-    // }
-
-    final text =
-        children != null ? children.map((e) => e.text).join() : this.text;
-    final childrenStyle = getChildrenStyle(context);
-
     return LayoutBuilder(
       builder: (context, constraints) {
-        final squareCountList = calcSquareCount(
-          text,
-          childrenStyle.values.first,
-          Size(constraints.maxWidth, constraints.maxHeight),
-        );
+        final size = Size(constraints.maxWidth, constraints.maxHeight);
+        final charWidth = mergeStyle.fontSize * mergeStyle.height;
+        _reflectVerticalRecognizeWidth(context, size, charWidth);
+        final squareCountList = _calcSquareCount(text, size);
+
         return SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: CustomPaint(
-            size: Size(
-              squareCountList.length *
-                  childrenStyle.values.first.fontSize *
-                  childrenStyle.values.first.height,
-              constraints.maxHeight,
-            ),
-            painter: _TategakiPainter(
-              text,
-              childrenStyle,
-              squareCountList,
+          child: RepaintBoundary(
+            child: CustomPaint(
+              size: Size(
+                squareCountList.length * charWidth,
+                constraints.maxHeight,
+              ),
+              painter: _TategakiPainter(
+                text,
+                mergeStyle,
+                recognizeStyle,
+                recognizeIndex,
+                squareCountList,
+              ),
             ),
           ),
         );
@@ -65,28 +49,19 @@ class Tategaki extends StatelessWidget {
     );
   }
 
-  Map<int, TextStyle> getChildrenStyle(BuildContext context) {
-    final mergeDefault = (s) => DefaultTextStyle.of(context).style.merge(s);
-    Map<int, TextStyle> childrenStyle = {};
-    int i = 0;
-
-    if (children != null) {
-      for (TextSpan child in children) {
-        if (child.text.length != 0) {
-          childrenStyle[i] = mergeDefault(child.style);
-          i += child.text.length;
-        }
-      }
-    } else {
-      childrenStyle[text.length] = mergeDefault(style);
-    }
-
-    print(childrenStyle);
-    return childrenStyle;
+  void _reflectVerticalRecognizeWidth(
+    BuildContext context,
+    Size size,
+    double charWidth,
+  ) {
+    final provider = context.read<SpeechToTextProvider>();
+    final recognizeLineCount =
+        _calcSquareCount(text.substring(0, recognizeIndex), size).length;
+    provider.verticalRecognizeWidth = recognizeLineCount * charWidth;
   }
 
-  List<int> calcSquareCount(String text, TextStyle style, Size size) {
-    final columnSquareCount = (size.height / (style.fontSize * 1.2)).ceil();
+  List<int> _calcSquareCount(String text, Size size) {
+    final columnSquareCount = size.height ~/ style.fontSize;
     int i = 0;
     List<int> countList = [];
 
@@ -111,45 +86,70 @@ class Tategaki extends StatelessWidget {
 }
 
 class _TategakiPainter extends CustomPainter {
-  _TategakiPainter(this.text, this.childrenStyle, this.squareCountList);
+  _TategakiPainter(
+    this.text,
+    this.style,
+    this.recognizeStyle,
+    this.recognizeIndex,
+    this.squareCountList,
+  );
 
   final String text;
-  final Map<int, TextStyle> childrenStyle;
+  final TextStyle style;
+  final TextStyle recognizeStyle;
+  final int recognizeIndex;
   final List<int> squareCountList;
 
   int charIndex = 0;
-  TextStyle currentStyle;
 
   @override
   void paint(Canvas canvas, Size size) {
     canvas.save();
-    currentStyle = childrenStyle.values.first;
 
     for (int x = 0; x < squareCountList.length; x++) {
-      drawTextLine(canvas, size, x);
+      _drawTextLine(canvas, size, x);
     }
 
     canvas.restore();
   }
 
-  void drawTextLine(Canvas canvas, Size size, int x) {
+  void _drawTextLine(Canvas canvas, Size size, int x) {
     final runes = text.replaceAll('\n', '').runes;
-    final fontSize = currentStyle.fontSize;
-    final charWidth = fontSize * currentStyle.height;
+    final fontSize = style.fontSize;
+    final charWidth = fontSize * style.height;
 
     for (int y = 0; y < squareCountList[x]; y++) {
       if (runes.length <= charIndex) return;
-      if (childrenStyle[charIndex] != null) {
-        currentStyle = childrenStyle[charIndex];
-      }
 
       String char = String.fromCharCode(runes.elementAt(charIndex));
       if (VerticalRotated.map[char] != null) {
         char = VerticalRotated.map[char] ?? "";
       }
 
+      final offsetX = (size.width - (x + 1) * charWidth).toDouble();
+      final offsetY = (y * fontSize).toDouble();
+      TextStyle mergeStyle;
+
+      if (recognizeStyle != null && charIndex < recognizeIndex) {
+        final paint = Paint()..color = recognizeStyle.backgroundColor;
+        canvas.drawRect(
+          Rect.fromLTWH(
+            offsetX,
+            offsetY + 8,
+            fontSize,
+            fontSize,
+          ),
+          paint,
+        );
+        mergeStyle = recognizeStyle.merge(
+          TextStyle(backgroundColor: Colors.transparent, height: 1.6),
+        );
+      } else {
+        mergeStyle = TextStyle(height: 1.6);
+      }
+
       TextSpan span = TextSpan(
-        style: currentStyle.merge(TextStyle(height: 1.6)),
+        style: style.merge(mergeStyle),
         text: char,
       );
       TextPainter tp = TextPainter(
@@ -160,10 +160,7 @@ class _TategakiPainter extends CustomPainter {
       tp.layout();
       tp.paint(
         canvas,
-        Offset(
-          (size.width - (x + 1) * charWidth).toDouble(),
-          (y * fontSize * 1.2).toDouble(),
-        ),
+        Offset(offsetX, offsetY),
       );
       charIndex++;
     }

@@ -17,6 +17,7 @@ class PlaybackTextStyle {
         color: _model.backgroundColor,
         backgroundColor: _model.textColor,
         height: _model.fontHeight,
+        fontWeight: FontWeight.normal,
         fontSize: _model.fontSize.toDouble(),
       );
 
