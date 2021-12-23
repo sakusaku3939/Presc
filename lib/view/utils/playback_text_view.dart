@@ -210,13 +210,26 @@ class _RecognizedTextView extends StatelessWidget {
             key: playbackTextKey,
           );
         } else {
-          return HorizontalText(
-            key: playbackTextKey,
-            recognizedText: model.recognizedText,
-            unrecognizedText: model.unrecognizedText,
-            horizontalRecognizedListener: (double width) =>
-                _scrollHorizontalRecognizedText(model, width),
+          return Tategaki(
+            null,
+            children: [
+              TextSpan(
+                text: model.recognizedText,
+                style: PlaybackTextStyle.of(playbackProvider).recognized,
+              ),
+              TextSpan(
+                text: model.unrecognizedText,
+                style: PlaybackTextStyle.of(playbackProvider).unrecognized,
+              ),
+            ],
           );
+          // return HorizontalText(
+          //   key: playbackTextKey,
+          //   recognizedText: model.recognizedText,
+          //   unrecognizedText: model.unrecognizedText,
+          //   horizontalRecognizedListener: (double width) =>
+          //       _scrollHorizontalRecognizedText(model, width),
+          // );
         }
       },
     );
