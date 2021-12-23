@@ -190,6 +190,7 @@ class SettingScreen extends StatelessWidget {
       scrollController.jumpTo(scrollController.position.maxScrollExtent - 32);
     });
     return Container(
+      width: double.infinity,
       height: 200,
       padding: const EdgeInsets.symmetric(vertical: 12),
       color: model.backgroundColor,
