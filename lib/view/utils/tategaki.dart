@@ -27,21 +27,18 @@ class Tategaki extends StatelessWidget {
         _reflectVerticalRecognizeWidth(context, size, charWidth);
         final squareCountList = _calcSquareCount(text, size);
 
-        return SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: RepaintBoundary(
-            child: CustomPaint(
-              size: Size(
-                squareCountList.length * charWidth,
-                constraints.maxHeight,
-              ),
-              painter: _TategakiPainter(
-                text,
-                mergeStyle,
-                recognizeStyle,
-                recognizeIndex,
-                squareCountList,
-              ),
+        return RepaintBoundary(
+          child: CustomPaint(
+            size: Size(
+              squareCountList.length * charWidth,
+              constraints.maxHeight,
+            ),
+            painter: _TategakiPainter(
+              text,
+              mergeStyle,
+              recognizeStyle,
+              recognizeIndex,
+              squareCountList,
             ),
           ),
         );
