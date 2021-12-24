@@ -205,8 +205,8 @@ class SettingScreen extends StatelessWidget {
             height: 200,
             padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Tategaki(
-              SampleTextConfig().setting,
-              style: PlaybackTextStyle.of(model).unrecognized,
+              recognizedText: "",
+              unrecognizedText: SampleTextConfig().setting,
             ),
           ),
         ),

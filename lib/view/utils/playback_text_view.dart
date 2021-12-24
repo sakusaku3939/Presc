@@ -131,8 +131,8 @@ class PlaybackTextView extends StatelessWidget {
       );
     else
       return Tategaki(
-        _content,
-        style: PlaybackTextStyle.of(model).unrecognized,
+        recognizedText: "",
+        unrecognizedText: _content,
       );
   }
 
@@ -211,10 +211,8 @@ class _RecognizedTextView extends StatelessWidget {
         } else {
           _scrollVerticalRecognizedText(context, model);
           return Tategaki(
-            model.recognizedText + model.unrecognizedText,
-            style: PlaybackTextStyle.of(playbackProvider).unrecognized,
-            recognizeStyle: PlaybackTextStyle.of(playbackProvider).recognized,
-            recognizeIndex: model.recognizedText.length,
+            recognizedText: model.recognizedText,
+            unrecognizedText: model.unrecognizedText,
             key: playbackTextKey,
           );
         }
@@ -249,7 +247,7 @@ class _RecognizedTextView extends StatelessWidget {
   ) {
     if (model.recognizedText.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        final offset = model.verticalRecognizeWidth -
+        final offset = model.verticalRecognizedWidth -
             playbackProvider.fontSize * playbackProvider.fontHeight;
         _scrollTo(
           scroll.offset + model.lastOffset - offset,

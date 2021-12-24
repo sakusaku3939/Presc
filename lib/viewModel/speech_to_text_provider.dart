@@ -25,7 +25,7 @@ class SpeechToTextProvider with ChangeNotifier {
 
   String get recognizedText => _recognizedText;
 
-  double verticalRecognizeWidth = 0;
+  double verticalRecognizedWidth = 0;
   double lastOffset = 0;
 
   void start(BuildContext context) async {
@@ -37,6 +37,8 @@ class SpeechToTextProvider with ChangeNotifier {
           ),
         );
     if (Platform.isAndroid && await _startSilentMode(context)) return;
+
+    _testReflect();
 
     timer.start();
     _manager.speak(
