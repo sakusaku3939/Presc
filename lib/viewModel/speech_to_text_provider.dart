@@ -116,7 +116,7 @@ class SpeechToTextProvider with ChangeNotifier {
 
   Future<void> _testReflect() async {
     await Future.delayed(Duration(milliseconds: 500));
-    _reflect("かとんと");
+    _reflect("たかとんと");
     await Future.delayed(Duration(milliseconds: 2000));
     _reflect("しかもあとで");
     await Future.delayed(Duration(milliseconds: 2000));
