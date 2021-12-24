@@ -40,9 +40,9 @@ class SettingScreen extends StatelessWidget {
               }
               return Column(
                 children: [
-                  model.scrollVertical
-                      ? _verticalPreview(model)
-                      : _horizontalPreview(model),
+                  model.scrollHorizontal
+                      ? _horizontalPreview(model)
+                      : _verticalPreview(model),
                   _textMenu(context, model),
                   SizedBox(height: 8),
                   Ink(
@@ -50,7 +50,7 @@ class SettingScreen extends StatelessWidget {
                     child: ListTile(
                       title: Text(S.current.formatOrientation),
                       subtitle: Text(
-                        model.scrollVertical
+                        model.scrollHorizontal
                             ? S.current.horizontal
                             : S.current.vertical,
                       ),
@@ -58,7 +58,7 @@ class SettingScreen extends StatelessWidget {
                       onTap: () => {
                         RadioDialogManager.show(
                           context,
-                          groupValue: model.scrollVertical,
+                          groupValue: model.scrollHorizontal,
                           itemList: [
                             RadioDialogItem(
                               title: S.current.horizontal,
@@ -69,7 +69,7 @@ class SettingScreen extends StatelessWidget {
                               value: false,
                             ),
                           ],
-                          onChanged: (value) => model.scrollVertical = value,
+                          onChanged: (value) => model.scrollHorizontal = value,
                         )
                       },
                     ),
@@ -157,7 +157,7 @@ class SettingScreen extends StatelessWidget {
     );
   }
 
-  Widget _verticalPreview(PlaybackProvider model) {
+  Widget _horizontalPreview(PlaybackProvider model) {
     final ScrollController scrollController = ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       scrollController.jumpTo(32);
@@ -184,7 +184,7 @@ class SettingScreen extends StatelessWidget {
     );
   }
 
-  Widget _horizontalPreview(PlaybackProvider model) {
+  Widget _verticalPreview(PlaybackProvider model) {
     final ScrollController scrollController = ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       scrollController.jumpTo(scrollController.position.maxScrollExtent - 32);

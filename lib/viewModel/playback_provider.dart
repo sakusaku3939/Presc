@@ -43,16 +43,16 @@ class PlaybackProvider with ChangeNotifier {
   /*
   *  書式の向き（縦書き/横書き）
   */
-  bool _scrollVertical;
+  bool _scrollHorizontal;
 
-  bool get scrollVertical =>
-      _scrollVertical ??
-      _prefs?.getBool("scrollVertical") ??
-      InitConfig.scrollVertical;
+  bool get scrollHorizontal =>
+      _scrollHorizontal ??
+      _prefs?.getBool("scrollHorizontal") ??
+      InitConfig.scrollHorizontal;
 
-  set scrollVertical(bool vertical) {
-    _scrollVertical = vertical;
-    _prefs?.setBool("scrollVertical", vertical);
+  set scrollHorizontal(bool horizontal) {
+    _scrollHorizontal = horizontal;
+    _prefs?.setBool("scrollHorizontal", horizontal);
     notifyListeners();
   }
 

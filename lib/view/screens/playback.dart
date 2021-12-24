@@ -157,7 +157,7 @@ class PlaybackScreen extends StatelessWidget {
                 onPressed: () {
                   playbackTextView.reset(context);
                   playbackTextView.scrollToStart();
-                  if (model.scrollVertical) timer.reset();
+                  if (model.scrollHorizontal) timer.reset();
                   Future.delayed(
                     Duration(milliseconds: 300),
                     () => model.playFabState = false,
@@ -196,7 +196,7 @@ class PlaybackScreen extends StatelessWidget {
                 onPressed: () {
                   playbackTextView.reset(context);
                   playbackTextView.scrollToEnd();
-                  if (!model.scrollVertical) timer.reset();
+                  if (!model.scrollHorizontal) timer.reset();
                   Future.delayed(
                     Duration(milliseconds: 300),
                     () => model.playFabState = false,
@@ -207,13 +207,13 @@ class PlaybackScreen extends StatelessWidget {
             Container(
               width: 48,
               child: RippleIconButton(
-                model.scrollVertical
+                model.scrollHorizontal
                     ? Icons.text_rotate_vertical
                     : Icons.text_rotation_none,
                 size: 28,
                 color: model.textColor,
                 onPressed: () {
-                  model.scrollVertical = !model.scrollVertical;
+                  model.scrollHorizontal = !model.scrollHorizontal;
                   model.playFabState = false;
                   playbackTextView.stop(context);
                   playbackTextView.scrollToInit(context);
