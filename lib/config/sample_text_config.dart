@@ -32,7 +32,8 @@ class _Ja implements _Locale {
 
   final String setting = "吾輩は猫である。名前はまだ無い。\n"
       "どこで生れたかとんと見当がつかぬ。何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。"
-      "吾輩はここで始めて人間というものを見た。しかもあとで聞くとそれは書生という人間中で一番獰悪な種族であったそうだ。";
+      "吾輩はここで始めて人間というものを見た。しかもあとで聞くとそれは書生という人間中で一番獰悪な種族であったそうだ。"
+      "この書生というのは時々我々を捕えて煮て食うという話である。しかしその当時は何という考もなかったから別段恐しいとも思わなかった。";
 }
 
 class _En implements _Locale {
@@ -53,6 +54,7 @@ class _En implements _Locale {
       "This is what iPhone is.";
 
   final String setting =
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n"
-      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+      "The most advanced phones are called smart phones, so they say. "
+      "And they typically combine a phone plus some e-mail capability, plus they say it’s the Internet.\n"
+      "It’s sort of the baby Internet into one device, and they all have these little plastic keyboards on them. ";
 }

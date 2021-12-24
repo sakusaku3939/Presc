@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:presc/config/display_size.dart';
 import 'package:presc/config/playback_text_style.dart';
 import 'package:presc/config/scroll_speed_config.dart';
-import 'package:presc/view/utils/horizontal_text.dart';
+import 'package:presc/view/utils/tategaki.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
 import 'package:presc/viewModel/playback_visualizer_provider.dart';
@@ -54,7 +54,7 @@ class PlaybackTextView extends StatelessWidget {
   void scrollToInit(BuildContext context) =>
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final provider = context.read<PlaybackProvider>();
-        if (provider.scrollVertical)
+        if (provider.scrollHorizontal)
           _scrollController.jumpTo(0);
         else
           _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
@@ -93,7 +93,7 @@ class PlaybackTextView extends StatelessWidget {
             gradientFractionOnEnd: gradientFraction,
             child: SingleChildScrollView(
               scrollDirection:
-                  model.scrollVertical ? Axis.vertical : Axis.horizontal,
+                  model.scrollHorizontal ? Axis.vertical : Axis.horizontal,
               physics: const BouncingScrollPhysics(),
               controller: _scrollController,
               child: Padding(
@@ -116,7 +116,7 @@ class PlaybackTextView extends StatelessWidget {
   Widget _textView(BuildContext context, PlaybackProvider model,
       {autoScroll = false}) {
     if (autoScroll) _autoScroll(model);
-    if (model.scrollVertical)
+    if (model.scrollHorizontal)
       return Text.rich(
         TextSpan(
           style: DefaultTextStyle.of(context).style,
@@ -130,10 +130,9 @@ class PlaybackTextView extends StatelessWidget {
         key: _playbackTextKey,
       );
     else
-      return HorizontalText(
-        key: _playbackTextKey,
-        recognizedText: "",
-        unrecognizedText: _content,
+      return Tategaki(
+        _content,
+        style: PlaybackTextStyle.of(model).unrecognized,
       );
   }
 
@@ -142,14 +141,14 @@ class PlaybackTextView extends StatelessWidget {
       final speed = ScrollSpeedConfig.kSpeed * model.scrollSpeedMagnification;
       final offset = _scrollController.offset;
       final maxExtent = _scrollController.position.maxScrollExtent;
-      final distance = model.scrollVertical ? maxExtent - offset : offset;
+      final distance = model.scrollHorizontal ? maxExtent - offset : offset;
       final durationDouble = distance / speed;
 
       if (distance <= 0) return;
 
       if (model.playFabState)
         _scrollController.animateTo(
-          model.scrollVertical ? maxExtent : 0,
+          model.scrollHorizontal ? maxExtent : 0,
           duration: Duration(seconds: durationDouble.toInt()),
           curve: Curves.linear,
         );
@@ -191,8 +190,8 @@ class _RecognizedTextView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<SpeechToTextProvider>(
       builder: (context, model, child) {
-        if (playbackProvider.scrollVertical) {
-          _scrollVerticalRecognizedText(context, model);
+        if (playbackProvider.scrollHorizontal) {
+          _scrollHorizontalRecognizedText(context, model);
           return Text.rich(
             TextSpan(
               style: DefaultTextStyle.of(context).style,
@@ -210,19 +209,20 @@ class _RecognizedTextView extends StatelessWidget {
             key: playbackTextKey,
           );
         } else {
-          return HorizontalText(
+          _scrollVerticalRecognizedText(context, model);
+          return Tategaki(
+            model.recognizedText + model.unrecognizedText,
+            style: PlaybackTextStyle.of(playbackProvider).unrecognized,
+            recognizeStyle: PlaybackTextStyle.of(playbackProvider).recognized,
+            recognizeIndex: model.recognizedText.length,
             key: playbackTextKey,
-            recognizedText: model.recognizedText,
-            unrecognizedText: model.unrecognizedText,
-            horizontalRecognizedListener: (double width) =>
-                _scrollHorizontalRecognizedText(model, width),
           );
         }
       },
     );
   }
 
-  void _scrollVerticalRecognizedText(
+  void _scrollHorizontalRecognizedText(
     BuildContext context,
     SpeechToTextProvider model,
   ) {
@@ -243,18 +243,20 @@ class _RecognizedTextView extends StatelessWidget {
     }
   }
 
-  void _scrollHorizontalRecognizedText(
+  void _scrollVerticalRecognizedText(
+    BuildContext context,
     SpeechToTextProvider model,
-    double width,
   ) {
     if (model.recognizedText.isNotEmpty) {
-      final offset =
-          width - playbackProvider.fontSize * playbackProvider.fontHeight;
-      _scrollTo(
-        scroll.offset + model.lastOffset - offset,
-        limit: scroll.offset > 0,
-      );
-      model.lastOffset = offset;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final offset = model.verticalRecognizeWidth -
+            playbackProvider.fontSize * playbackProvider.fontHeight;
+        _scrollTo(
+          scroll.offset + model.lastOffset - offset,
+          limit: scroll.offset > 0,
+        );
+        model.lastOffset = offset;
+      });
     }
   }
 

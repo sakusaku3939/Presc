@@ -20,11 +20,13 @@ class SpeechToTextProvider with ChangeNotifier {
 
   String _unrecognizedText = "";
   String _recognizedText = "";
-  double lastOffset = 0;
 
   String get unrecognizedText => _unrecognizedText;
 
   String get recognizedText => _recognizedText;
+
+  double verticalRecognizeWidth = 0;
+  double lastOffset = 0;
 
   void start(BuildContext context) async {
     final timer = context.read<PlaybackTimerProvider>();
@@ -114,7 +116,7 @@ class SpeechToTextProvider with ChangeNotifier {
 
   Future<void> _testReflect() async {
     await Future.delayed(Duration(milliseconds: 500));
-    _reflect("かとんと");
+    _reflect("たかとんと");
     await Future.delayed(Duration(milliseconds: 2000));
     _reflect("しかもあとで");
     await Future.delayed(Duration(milliseconds: 2000));

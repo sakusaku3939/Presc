@@ -84,7 +84,7 @@ class AboutAppScreen extends StatelessWidget {
                       primary: Colors.grey[800],
                     ),
                     onPressed: () => launch(
-                      "https://github.com/sakusaku3939/Presc/blob/master/Privacy-Policy.md",
+                      "http://github.com/sakusaku3939/Presc/blob/master/Privacy-Policy.md",
                     ),
                   ),
                 ),
@@ -100,7 +100,7 @@ class AboutAppScreen extends StatelessWidget {
                       onPrimary: Colors.white,
                     ),
                     onPressed: () => launch(
-                      "https://docs.google.com/forms/d/e/1FAIpQLSdSCHlUDrT4x3W76huEVf0hqAsg-SvX3UJwvRtZXpQ5E2JpNA/viewform?usp=sf_link",
+                      "http://docs.google.com/forms/d/e/1FAIpQLSdSCHlUDrT4x3W76huEVf0hqAsg-SvX3UJwvRtZXpQ5E2JpNA/viewform?usp=sf_link",
                     ),
                   ),
                 ),

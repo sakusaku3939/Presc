@@ -10,9 +10,9 @@ import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/screens/about_app.dart';
 import 'package:presc/view/utils/dialog/color_dialog_manager.dart';
 import 'package:presc/view/utils/dialog/scroll_mode_dialog_manager.dart';
-import 'package:presc/view/utils/horizontal_text.dart';
 import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
 import 'package:presc/view/utils/ripple_button.dart';
+import 'package:presc/view/utils/tategaki.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -40,9 +40,9 @@ class SettingScreen extends StatelessWidget {
               }
               return Column(
                 children: [
-                  model.scrollVertical
-                      ? _verticalPreview(model)
-                      : _horizontalPreview(model),
+                  model.scrollHorizontal
+                      ? _horizontalPreview(model)
+                      : _verticalPreview(model),
                   _textMenu(context, model),
                   SizedBox(height: 8),
                   Ink(
@@ -50,7 +50,7 @@ class SettingScreen extends StatelessWidget {
                     child: ListTile(
                       title: Text(S.current.formatOrientation),
                       subtitle: Text(
-                        model.scrollVertical
+                        model.scrollHorizontal
                             ? S.current.horizontal
                             : S.current.vertical,
                       ),
@@ -58,7 +58,7 @@ class SettingScreen extends StatelessWidget {
                       onTap: () => {
                         RadioDialogManager.show(
                           context,
-                          groupValue: model.scrollVertical,
+                          groupValue: model.scrollHorizontal,
                           itemList: [
                             RadioDialogItem(
                               title: S.current.horizontal,
@@ -69,7 +69,7 @@ class SettingScreen extends StatelessWidget {
                               value: false,
                             ),
                           ],
-                          onChanged: (value) => model.scrollVertical = value,
+                          onChanged: (value) => model.scrollHorizontal = value,
                         )
                       },
                     ),
@@ -157,7 +157,7 @@ class SettingScreen extends StatelessWidget {
     );
   }
 
-  Widget _verticalPreview(PlaybackProvider model) {
+  Widget _horizontalPreview(PlaybackProvider model) {
     final ScrollController scrollController = ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       scrollController.jumpTo(32);
@@ -184,12 +184,13 @@ class SettingScreen extends StatelessWidget {
     );
   }
 
-  Widget _horizontalPreview(PlaybackProvider model) {
+  Widget _verticalPreview(PlaybackProvider model) {
     final ScrollController scrollController = ScrollController();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       scrollController.jumpTo(scrollController.position.maxScrollExtent - 32);
     });
     return Container(
+      width: double.infinity,
       height: 200,
       padding: const EdgeInsets.symmetric(vertical: 12),
       color: model.backgroundColor,
@@ -203,9 +204,9 @@ class SettingScreen extends StatelessWidget {
           child: Container(
             height: 200,
             padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: HorizontalText(
-              unrecognizedText: SampleTextConfig().setting,
-              recognizedText: "",
+            child: Tategaki(
+              SampleTextConfig().setting,
+              style: PlaybackTextStyle.of(model).unrecognized,
             ),
           ),
         ),
