@@ -38,8 +38,6 @@ class SpeechToTextProvider with ChangeNotifier {
         );
     if (Platform.isAndroid && await _startSilentMode(context)) return;
 
-    _testReflect();
-
     timer.start();
     _manager.speak(
       resultListener: _reflect,
