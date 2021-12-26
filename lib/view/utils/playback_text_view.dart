@@ -51,14 +51,17 @@ class PlaybackTextView extends StatelessWidget {
         curve: Curves.ease,
       );
 
-  void scrollToInit(BuildContext context) =>
+  void scrollToInit(BuildContext context) {
+    final provider = context.read<PlaybackProvider>();
+    provider.onLoadListener = () {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        final provider = context.read<PlaybackProvider>();
         if (provider.scrollHorizontal)
           _scrollController.jumpTo(0);
         else
           _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
       });
+    };
+  }
 
   @override
   Widget build(BuildContext context) {

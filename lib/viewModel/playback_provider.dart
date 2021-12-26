@@ -9,6 +9,16 @@ class PlaybackProvider with ChangeNotifier {
   SharedPreferences _prefs;
   _ScrollModeHelper _modeHelper = _ScrollModeHelper();
 
+  void Function() _onLoadListener;
+
+  set onLoadListener(Function listener) {
+    if (_prefs == null) {
+      _onLoadListener = listener;
+    } else {
+      listener();
+    }
+  }
+
   /*
   *  再生ボタン（再生/一時停止）
   */
@@ -139,6 +149,7 @@ class PlaybackProvider with ChangeNotifier {
     Future(() async {
       _prefs = await SharedPreferences.getInstance();
       notifyListeners();
+      if (_onLoadListener != null) _onLoadListener();
     });
   }
 }
