@@ -73,19 +73,31 @@ class PlaybackScreen extends StatelessWidget {
       backgroundColor: model.backgroundColor,
       centerTitle: true,
       elevation: 0,
+      titleSpacing: 0,
       leading: RippleIconButton(
         Icons.navigate_before,
         color: model.textColor,
         size: 32,
         onPressed: () => context.read<SpeechToTextProvider>().back(context),
       ),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: model.textColor,
-        ),
+      title: Row(
+        children: [
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 8),
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: model.textColor,
+                ),
+              ),
+            ),
+          ),
+          _undoRedoButton(context, model.textColor),
+        ],
       ),
       actions: [
         Container(
@@ -100,6 +112,38 @@ class PlaybackScreen extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _undoRedoButton(BuildContext context, Color textColor) {
+    final speech = context.read<SpeechToTextProvider>();
+    return Consumer<SpeechToTextProvider>(
+      builder: (context, model, child) {
+        return Row(
+          children: [
+            Container(
+              width: 40,
+              child: RippleIconButton(
+                Icons.undo,
+                size: 20,
+                color: textColor,
+                disabledColor: Colors.white30,
+                onPressed: model.canUndo ? () => speech.undo() : null,
+              ),
+            ),
+            Container(
+              width: 40,
+              child: RippleIconButton(
+                Icons.redo,
+                size: 20,
+                color: textColor,
+                disabledColor: Colors.white30,
+                onPressed: model.canRedo ? () => speech.redo() : null,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

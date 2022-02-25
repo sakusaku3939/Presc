@@ -6,12 +6,14 @@ class RippleIconButton extends StatelessWidget {
     this.icon, {
     this.size = 24,
     this.color = ColorConfig.iconColor,
+    this.disabledColor,
     this.onPressed,
   });
 
   final IconData icon;
   final double size;
   final Color color;
+  final Color disabledColor;
   final VoidCallback onPressed;
 
   @override
@@ -24,9 +26,10 @@ class RippleIconButton extends StatelessWidget {
           child: IconButton(
             icon: Icon(
               icon,
-              color: color,
               size: size,
             ),
+            color: color,
+            disabledColor: disabledColor,
             onPressed: onPressed,
           ),
         ),
