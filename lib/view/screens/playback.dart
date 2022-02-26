@@ -84,7 +84,7 @@ class PlaybackScreen extends StatelessWidget {
         children: [
           Expanded(
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 8),
+              margin: EdgeInsets.symmetric(horizontal: 12),
               child: Text(
                 title,
                 textAlign: TextAlign.center,
@@ -122,23 +122,23 @@ class PlaybackScreen extends StatelessWidget {
         return Row(
           children: [
             Container(
-              width: 40,
+              width: 36,
               child: RippleIconButton(
                 Icons.undo,
-                size: 20,
+                size: 18,
                 color: textColor,
                 disabledColor: Colors.white30,
-                onPressed: model.canUndo ? () => speech.undo() : null,
+                onPressed: !model.canUndo ? () => speech.undo() : null,
               ),
             ),
             Container(
-              width: 40,
+              width: 36,
               child: RippleIconButton(
                 Icons.redo,
-                size: 20,
+                size: 18,
                 color: textColor,
                 disabledColor: Colors.white30,
-                onPressed: model.canRedo ? () => speech.redo() : null,
+                onPressed: !model.canRedo ? () => speech.redo() : null,
               ),
             ),
           ],
