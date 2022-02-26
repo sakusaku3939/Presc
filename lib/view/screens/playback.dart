@@ -73,19 +73,31 @@ class PlaybackScreen extends StatelessWidget {
       backgroundColor: model.backgroundColor,
       centerTitle: true,
       elevation: 0,
+      titleSpacing: 0,
       leading: RippleIconButton(
         Icons.navigate_before,
         color: model.textColor,
         size: 32,
         onPressed: () => context.read<SpeechToTextProvider>().back(context),
       ),
-      title: Text(
-        title,
-        style: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: model.textColor,
-        ),
+      title: Row(
+        children: [
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 12),
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: model.textColor,
+                ),
+              ),
+            ),
+          ),
+          _undoRedoButton(context, model),
+        ],
       ),
       actions: [
         Container(
@@ -101,6 +113,40 @@ class PlaybackScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  Widget _undoRedoButton(BuildContext context, PlaybackProvider provider) {
+    if (provider.showUndoRedo)
+      return Consumer<SpeechToTextProvider>(
+        builder: (context, model, child) {
+          return Row(
+            children: [
+              Container(
+                width: 36,
+                child: RippleIconButton(
+                  Icons.undo,
+                  size: 18,
+                  color: provider.textColor,
+                  disabledColor: Colors.white30,
+                  onPressed: model.canUndo ? () => model.undo() : null,
+                ),
+              ),
+              Container(
+                width: 36,
+                child: RippleIconButton(
+                  Icons.redo,
+                  size: 18,
+                  color: provider.textColor,
+                  disabledColor: Colors.white30,
+                  onPressed: model.canRedo ? () => model.redo() : null,
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    else
+      return Container();
   }
 
   Widget _operationMenu(

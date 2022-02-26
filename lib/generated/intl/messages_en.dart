@@ -56,6 +56,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "error" : m2,
     "estimatedReadingTime" : MessageLookupByLibrary.simpleMessage("Estimated presentation time (300 characters per minute)"),
     "formatOrientation" : MessageLookupByLibrary.simpleMessage("Format orientation"),
+    "hide" : MessageLookupByLibrary.simpleMessage("Hide"),
     "hint" : MessageLookupByLibrary.simpleMessage("HINT"),
     "hintContent" : MessageLookupByLibrary.simpleMessage("If you don\'t want to play a sound during playback."),
     "horizontal" : MessageLookupByLibrary.simpleMessage("Horizontal"),
@@ -100,6 +101,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectTagsRemoved" : m4,
     "sendFeedback" : MessageLookupByLibrary.simpleMessage("Send feedback"),
     "setting" : MessageLookupByLibrary.simpleMessage("Settings"),
+    "show" : MessageLookupByLibrary.simpleMessage("Show"),
     "skip" : MessageLookupByLibrary.simpleMessage("Skip"),
     "speechRecognition" : MessageLookupByLibrary.simpleMessage("Speech recognition"),
     "speechRecognitionDescription" : MessageLookupByLibrary.simpleMessage("Scrolls by the amount of speech recognized text."),
@@ -115,6 +117,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "trashMoved" : MessageLookupByLibrary.simpleMessage("Moved to the trash."),
     "trashRestored" : MessageLookupByLibrary.simpleMessage("Restored from the trash."),
     "undo" : MessageLookupByLibrary.simpleMessage("UNDO"),
+    "undoRedoButton" : MessageLookupByLibrary.simpleMessage("Undo/Redo button"),
     "vertical" : MessageLookupByLibrary.simpleMessage("Vertical")
   };
 }

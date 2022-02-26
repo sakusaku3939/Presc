@@ -56,6 +56,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "error" : m2,
     "estimatedReadingTime" : MessageLookupByLibrary.simpleMessage("読み上げ時間の目安（1分300文字）"),
     "formatOrientation" : MessageLookupByLibrary.simpleMessage("書式の向き"),
+    "hide" : MessageLookupByLibrary.simpleMessage("非表示"),
     "hint" : MessageLookupByLibrary.simpleMessage("ヒント"),
     "hintContent" : MessageLookupByLibrary.simpleMessage("再生中に音を鳴らしたくない場合"),
     "horizontal" : MessageLookupByLibrary.simpleMessage("横書き"),
@@ -100,6 +101,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "selectTagsRemoved" : m4,
     "sendFeedback" : MessageLookupByLibrary.simpleMessage("フィードバックを送る"),
     "setting" : MessageLookupByLibrary.simpleMessage("設定"),
+    "show" : MessageLookupByLibrary.simpleMessage("表示"),
     "skip" : MessageLookupByLibrary.simpleMessage("スキップ"),
     "speechRecognition" : MessageLookupByLibrary.simpleMessage("音声認識"),
     "speechRecognitionDescription" : MessageLookupByLibrary.simpleMessage("認識した文字分だけスクロールします"),
@@ -115,6 +117,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "trashMoved" : MessageLookupByLibrary.simpleMessage("ごみ箱に移動しました"),
     "trashRestored" : MessageLookupByLibrary.simpleMessage("ごみ箱から復元しました"),
     "undo" : MessageLookupByLibrary.simpleMessage("元に戻す"),
+    "undoRedoButton" : MessageLookupByLibrary.simpleMessage("元に戻す／やり直しボタン"),
     "vertical" : MessageLookupByLibrary.simpleMessage("縦書き")
   };
 }

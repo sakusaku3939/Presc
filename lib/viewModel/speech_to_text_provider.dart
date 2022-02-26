@@ -16,6 +16,7 @@ import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 
 class SpeechToTextProvider with ChangeNotifier {
   final _manager = SpeechToTextManager();
+  _History _history = _History();
   RingerModeStatus _defaultRingerStatus;
 
   String _unrecognizedText = "";
@@ -24,6 +25,10 @@ class SpeechToTextProvider with ChangeNotifier {
   String get unrecognizedText => _unrecognizedText;
 
   String get recognizedText => _recognizedText;
+
+  bool get canUndo => _history.canUndo();
+
+  bool get canRedo => _history.canRedo();
 
   double verticalRecognizedWidth = 0;
   double lastOffset = 0;
@@ -74,13 +79,34 @@ class SpeechToTextProvider with ChangeNotifier {
     _recognizedText = "";
     _unrecognizedText = content;
     lastOffset = 0;
+    _history.clear();
   }
 
   void back(BuildContext context) {
     stop();
     context.read<PlaybackProvider>().playFabState = false;
     context.read<PlaybackTimerProvider>().reset();
+    _history.clear();
     Navigator.pop(context);
+  }
+
+  void undo() {
+    if (!_history.canUndo()) return;
+    _history.undo();
+    _reflectText();
+  }
+
+  void redo() {
+    if (!_history.canRedo()) return;
+    _history.redo();
+    _reflectText();
+  }
+
+  void _reflectText() {
+    final text = recognizedText + unrecognizedText;
+    _recognizedText = text.substring(0, _history.current);
+    _unrecognizedText = text.substring(_history.current);
+    notifyListeners();
   }
 
   List<String> _ngram(String target, int n) => List.generate(
@@ -110,6 +136,8 @@ class SpeechToTextProvider with ChangeNotifier {
       final latestRecognizedText = unrecognizedText.substring(0, lastIndex + i);
       _recognizedText += latestRecognizedText;
       _unrecognizedText = unrecognizedText.substring(lastIndex + i);
+
+      _history.add(recognizedText.length);
       notifyListeners();
     }
   }
@@ -156,5 +184,38 @@ class SpeechToTextProvider with ChangeNotifier {
   Future<void> _stopSilentMode() async {
     final isGranted = await PermissionHandler.permissionsGranted;
     if (isGranted) await SoundMode.setSoundMode(_defaultRingerStatus);
+  }
+}
+
+class _History {
+  List<int> _undoStack = [];
+  List<int> _redoStack = [];
+
+  int get current => canUndo() ? _undoStack.last : 0;
+
+  void undo() {
+    if (!canUndo()) return;
+    _redoStack.add(_undoStack.last);
+    _undoStack.removeLast();
+  }
+
+  bool canUndo() => _undoStack.length > 0;
+
+  void redo() {
+    if (!canRedo()) return;
+    _undoStack.add(_redoStack.last);
+    _redoStack.removeLast();
+  }
+
+  bool canRedo() => _redoStack.length > 0;
+
+  void add(int position) {
+    _undoStack.add(position);
+    _redoStack.clear();
+  }
+
+  void clear() {
+    _undoStack.clear();
+    _redoStack.clear();
   }
 }
