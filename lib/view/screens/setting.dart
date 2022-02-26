@@ -45,90 +45,92 @@ class SettingScreen extends StatelessWidget {
                       : _verticalPreview(model),
                   _textMenu(context, model),
                   SizedBox(height: 8),
-                  Ink(
-                    color: Colors.white,
-                    child: ListTile(
-                      title: Text(S.current.formatOrientation),
-                      subtitle: Text(
-                        model.scrollHorizontal
-                            ? S.current.horizontal
-                            : S.current.vertical,
-                      ),
-                      contentPadding: const EdgeInsets.only(left: 32),
-                      onTap: () => {
-                        RadioDialogManager.show(
-                          context,
-                          groupValue: model.scrollHorizontal,
-                          itemList: [
-                            RadioDialogItem(
-                              title: S.current.horizontal,
-                              value: true,
-                            ),
-                            RadioDialogItem(
-                              title: S.current.vertical,
-                              value: false,
-                            ),
-                          ],
-                          onChanged: (value) => model.scrollHorizontal = value,
-                        )
-                      },
-                    ),
-                  ),
-                  Ink(
-                    color: Colors.white,
-                    child: ListTile(
-                      title: Text(S.current.playMode),
-                      subtitle: Text(scrollModeText),
-                      contentPadding: const EdgeInsets.only(left: 32),
-                      onTap: () => ScrollModeDialogManager.show(context),
-                    ),
-                  ),
-                  Ink(
-                    color: Colors.white,
-                    child: ListTile(
-                      title: Text(S.current.playSpeed),
-                      subtitle: Text("x ${model.scrollSpeedMagnification}"),
-                      contentPadding: const EdgeInsets.only(left: 32),
-                      enabled: model.scrollMode == ScrollMode.auto,
-                      onTap: () => RadioDialogManager.show(
+                  _Item(
+                    title: S.current.formatOrientation,
+                    subtitle: model.scrollHorizontal
+                        ? S.current.horizontal
+                        : S.current.vertical,
+                    onTap: () => {
+                      RadioDialogManager.show(
                         context,
-                        groupValue: model.scrollSpeedMagnification,
+                        groupValue: model.scrollHorizontal,
                         itemList: [
-                          for (var speed in ScrollSpeedConfig.magnification)
-                            RadioDialogItem(
-                              title: "x $speed",
-                              value: speed,
-                            ),
+                          RadioDialogItem(
+                            title: S.current.horizontal,
+                            value: true,
+                          ),
+                          RadioDialogItem(
+                            title: S.current.vertical,
+                            value: false,
+                          ),
                         ],
-                        onChanged: (value) =>
-                            model.scrollSpeedMagnification = value,
-                      ),
+                        onChanged: (value) => model.scrollHorizontal = value,
+                      )
+                    },
+                  ),
+                  _Item(
+                    title: "元に戻す／やり直しボタン",
+                    subtitle: model.showUndoRedo
+                        ? "表示"
+                        : "非表示",
+                    onTap: () => {
+                      RadioDialogManager.show(
+                        context,
+                        groupValue: model.showUndoRedo,
+                        itemList: [
+                          RadioDialogItem(
+                            title: "表示",
+                            value: true,
+                          ),
+                          RadioDialogItem(
+                            title: "非表示",
+                            value: false,
+                          ),
+                        ],
+                        onChanged: (value) => model.showUndoRedo = value,
+                      )
+                    },
+                  ),
+                  _Item(
+                    title: S.current.playMode,
+                    subtitle: scrollModeText,
+                    onTap: () => ScrollModeDialogManager.show(context),
+                  ),
+                  _Item(
+                    title: S.current.playSpeed,
+                    subtitle: "x ${model.scrollSpeedMagnification}",
+                    enabled: model.scrollMode == ScrollMode.auto,
+                    onTap: () => RadioDialogManager.show(
+                      context,
+                      groupValue: model.scrollSpeedMagnification,
+                      itemList: [
+                        for (var speed in ScrollSpeedConfig.magnification)
+                          RadioDialogItem(
+                            title: "x $speed",
+                            value: speed,
+                          ),
+                      ],
+                      onChanged: (value) =>
+                          model.scrollSpeedMagnification = value,
                     ),
                   ),
+
                   SizedBox(height: 16),
-                  Ink(
-                    color: Colors.white,
-                    child: ListTile(
-                      title: Text(S.current.aboutApp),
-                      contentPadding: const EdgeInsets.only(left: 32),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => AboutAppScreen(),
-                        ),
+                  _Item(
+                    title: S.current.aboutApp,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => AboutAppScreen(),
                       ),
                     ),
                   ),
-                  Ink(
-                    color: Colors.white,
-                    child: ListTile(
-                      title: Text(S.current.ossLicence),
-                      contentPadding: const EdgeInsets.only(left: 32),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => LicensePage(),
-                        ),
+                  _Item(
+                    title: S.current.ossLicence,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => LicensePage(),
                       ),
                     ),
                   ),
@@ -323,4 +325,32 @@ class SettingScreen extends StatelessWidget {
   Text _selectColorSquare(Color color) => color == Colors.white
       ? Text("□")
       : Text("■", style: TextStyle(color: color));
+}
+
+class _Item extends StatelessWidget {
+  _Item({
+    this.title,
+    this.subtitle,
+    this.enabled = true,
+    this.onTap,
+  });
+
+  final String title;
+  final String subtitle;
+  final bool enabled;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Ink(
+      color: Colors.white,
+      child: ListTile(
+        title: Text(title),
+        subtitle: subtitle != null ? Text(subtitle) : null,
+        contentPadding: const EdgeInsets.only(left: 32),
+        enabled: enabled,
+        onTap: onTap,
+      ),
+    );
+  }
 }

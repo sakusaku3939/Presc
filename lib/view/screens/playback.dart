@@ -96,7 +96,7 @@ class PlaybackScreen extends StatelessWidget {
               ),
             ),
           ),
-          _undoRedoButton(context, model.textColor),
+          _undoRedoButton(context, model),
         ],
       ),
       actions: [
@@ -115,36 +115,38 @@ class PlaybackScreen extends StatelessWidget {
     );
   }
 
-  Widget _undoRedoButton(BuildContext context, Color textColor) {
-    final speech = context.read<SpeechToTextProvider>();
-    return Consumer<SpeechToTextProvider>(
-      builder: (context, model, child) {
-        return Row(
-          children: [
-            Container(
-              width: 36,
-              child: RippleIconButton(
-                Icons.undo,
-                size: 18,
-                color: textColor,
-                disabledColor: Colors.white30,
-                onPressed: model.canUndo ? () => speech.undo() : null,
+  Widget _undoRedoButton(BuildContext context, PlaybackProvider provider) {
+    if (provider.showUndoRedo)
+      return Consumer<SpeechToTextProvider>(
+        builder: (context, model, child) {
+          return Row(
+            children: [
+              Container(
+                width: 36,
+                child: RippleIconButton(
+                  Icons.undo,
+                  size: 18,
+                  color: provider.textColor,
+                  disabledColor: Colors.white30,
+                  onPressed: model.canUndo ? () => model.undo() : null,
+                ),
               ),
-            ),
-            Container(
-              width: 36,
-              child: RippleIconButton(
-                Icons.redo,
-                size: 18,
-                color: textColor,
-                disabledColor: Colors.white30,
-                onPressed: model.canRedo ? () => speech.redo() : null,
+              Container(
+                width: 36,
+                child: RippleIconButton(
+                  Icons.redo,
+                  size: 18,
+                  color: provider.textColor,
+                  disabledColor: Colors.white30,
+                  onPressed: model.canRedo ? () => model.redo() : null,
+                ),
               ),
-            ),
-          ],
-        );
-      },
-    );
+            ],
+          );
+        },
+      );
+    else
+      return Container();
   }
 
   Widget _operationMenu(

@@ -67,6 +67,22 @@ class PlaybackProvider with ChangeNotifier {
   }
 
   /*
+  *  元に戻す／やり直しボタン（表示/非表示）
+  */
+  bool _showUndoRedo;
+
+  bool get showUndoRedo =>
+      _showUndoRedo ??
+      _prefs?.getBool("showUndoRedo") ??
+      InitConfig.showUndoRedo;
+
+  set showUndoRedo(bool show) {
+    _showUndoRedo = show;
+    _prefs?.setBool("showUndoRedo", show);
+    notifyListeners();
+  }
+
+  /*
   *  原稿の再生速度
   */
   double _scrollSpeedMagnification;
