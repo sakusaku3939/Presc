@@ -69,21 +69,21 @@ class SettingScreen extends StatelessWidget {
                     },
                   ),
                   _Item(
-                    title: "元に戻す／やり直しボタン",
+                    title: S.current.undoRedoButton,
                     subtitle: model.showUndoRedo
-                        ? "表示"
-                        : "非表示",
+                        ? S.current.show
+                        : S.current.hide,
                     onTap: () => {
                       RadioDialogManager.show(
                         context,
                         groupValue: model.showUndoRedo,
                         itemList: [
                           RadioDialogItem(
-                            title: "表示",
+                            title: S.current.show,
                             value: true,
                           ),
                           RadioDialogItem(
-                            title: "非表示",
+                            title: S.current.hide,
                             value: false,
                           ),
                         ],

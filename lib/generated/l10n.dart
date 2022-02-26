@@ -605,6 +605,36 @@ class S {
     );
   }
 
+  /// `Undo/Redo button`
+  String get undoRedoButton {
+    return Intl.message(
+      'Undo/Redo button',
+      name: 'undoRedoButton',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show`
+  String get show {
+    return Intl.message(
+      'Show',
+      name: 'show',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hide`
+  String get hide {
+    return Intl.message(
+      'Hide',
+      name: 'hide',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Play mode`
   String get playMode {
     return Intl.message(
