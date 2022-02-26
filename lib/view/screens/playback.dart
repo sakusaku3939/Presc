@@ -128,7 +128,7 @@ class PlaybackScreen extends StatelessWidget {
                 size: 18,
                 color: textColor,
                 disabledColor: Colors.white30,
-                onPressed: !model.canUndo ? () => speech.undo() : null,
+                onPressed: model.canUndo ? () => speech.undo() : null,
               ),
             ),
             Container(
@@ -138,7 +138,7 @@ class PlaybackScreen extends StatelessWidget {
                 size: 18,
                 color: textColor,
                 disabledColor: Colors.white30,
-                onPressed: !model.canRedo ? () => speech.redo() : null,
+                onPressed: model.canRedo ? () => speech.redo() : null,
               ),
             ),
           ],
