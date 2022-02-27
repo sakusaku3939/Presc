@@ -49,6 +49,7 @@ dependencies:
   url_launcher: ^6.0.10
   flutter_staggered_animations: ^1.0.0
   sound_mode: ^2.0.1
+  in_app_review: ^2.0.4
 
 dev_dependencies:
   flutter_test:
