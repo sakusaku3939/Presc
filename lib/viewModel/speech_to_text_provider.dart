@@ -169,13 +169,16 @@ class SpeechToTextProvider with ChangeNotifier {
     if (ringerModeStatus != RingerModeStatus.normal) {
       prefs.setBool("isSilentHintVisible", true);
       return false;
+
     } else if (isGranted) {
       prefs.setBool("isSilentHintVisible", true);
       _defaultRingerStatus = ringerModeStatus;
       await SoundMode.setSoundMode(RingerModeStatus.silent);
       return false;
+
     } else if (prefs.getBool("isSilentHintVisible") ?? true) {
       return await SilentDialogManager.show(context);
+
     } else {
       return false;
     }
