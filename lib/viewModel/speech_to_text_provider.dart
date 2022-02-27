@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sound_mode/permission_handler.dart';
 import 'package:sound_mode/sound_mode.dart';
 import 'package:sound_mode/utils/ringer_mode_statuses.dart';
+import 'package:in_app_review/in_app_review.dart';
 
 class SpeechToTextProvider with ChangeNotifier {
   final _manager = SpeechToTextManager();
@@ -88,6 +89,7 @@ class SpeechToTextProvider with ChangeNotifier {
     context.read<PlaybackTimerProvider>().reset();
     _history.clear();
     Navigator.pop(context);
+    _requestInAppReview();
   }
 
   void undo() {
@@ -169,16 +171,13 @@ class SpeechToTextProvider with ChangeNotifier {
     if (ringerModeStatus != RingerModeStatus.normal) {
       prefs.setBool("isSilentHintVisible", true);
       return false;
-
     } else if (isGranted) {
       prefs.setBool("isSilentHintVisible", true);
       _defaultRingerStatus = ringerModeStatus;
       await SoundMode.setSoundMode(RingerModeStatus.silent);
       return false;
-
     } else if (prefs.getBool("isSilentHintVisible") ?? true) {
       return await SilentDialogManager.show(context);
-
     } else {
       return false;
     }
@@ -187,6 +186,33 @@ class SpeechToTextProvider with ChangeNotifier {
   Future<void> _stopSilentMode() async {
     final isGranted = await PermissionHandler.permissionsGranted;
     if (isGranted) await SoundMode.setSoundMode(_defaultRingerStatus);
+  }
+
+  Future<void> _requestInAppReview() async {
+    final prefs = await SharedPreferences.getInstance();
+    final now = DateTime.now();
+    final timestamp = now.millisecondsSinceEpoch;
+    final lastTimestamp = prefs.getInt("lastReviewRequest");
+    final totalSecond = prefs.getInt("totalSecond");
+
+    final isTimePassed = () {
+      if (lastTimestamp != null) {
+        final lastDate = DateTime.fromMillisecondsSinceEpoch(lastTimestamp);
+        final difference = now.difference(lastDate);
+        return difference.inDays >= 3 * 30;
+      } else {
+        return true;
+      }
+    };
+
+    if (isTimePassed() && totalSecond >= 10 * 60) {
+      prefs.setInt("lastReviewRequest", timestamp);
+      prefs.setInt("totalSecond", 0);
+      final inAppReview = InAppReview.instance;
+      if (await inAppReview.isAvailable()) {
+        inAppReview.requestReview();
+      }
+    }
   }
 }
 

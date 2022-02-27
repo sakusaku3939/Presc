@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PlaybackTimerProvider with ChangeNotifier {
   Timer _timer;
@@ -25,7 +26,12 @@ class PlaybackTimerProvider with ChangeNotifier {
 
   void reset() {
     stop();
+    final previousTime = _time;
     _time = DateTime.utc(0, 0, 0);
+    SharedPreferences.getInstance().then((prefs) {
+      final totalSecond = prefs.getInt("totalSecond") ?? 0;
+      prefs.setInt("totalSecond", totalSecond + previousTime.second);
+    });
     notifyListeners();
   }
 }
