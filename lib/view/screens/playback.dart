@@ -80,24 +80,29 @@ class PlaybackScreen extends StatelessWidget {
         size: 32,
         onPressed: () => context.read<SpeechToTextProvider>().back(context),
       ),
-      title: Row(
-        children: [
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 12),
-              child: Text(
-                title,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: model.textColor,
+      title: LayoutBuilder(
+        builder: (context, constraints) {
+          return Row(
+            children: [
+              SizedBox(width: constraints.maxWidth > 400 ? 72 : 0),
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 12),
+                  child: Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: model.textColor,
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          _undoRedoButton(context, model),
-        ],
+              _undoRedoButton(context, model),
+            ],
+          );
+        },
       ),
       actions: [
         Container(
