@@ -5,6 +5,7 @@ class InitConfig {
   static const scrollMode = ScrollMode.recognition;
   static const scrollHorizontal = true;
   static const showUndoRedo = true;
+  static const undoDoubleTap = false;
   static const scrollSpeedMagnification = 1.0;
   static const fontSize = 20;
   static const tabletFontSize = 28;

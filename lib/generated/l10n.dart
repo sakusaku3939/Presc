@@ -615,6 +615,16 @@ class S {
     );
   }
 
+  /// `Double tap to undo`
+  String get undoDoubleTap {
+    return Intl.message(
+      'Double tap to undo',
+      name: 'undoDoubleTap',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Show`
   String get show {
     return Intl.message(

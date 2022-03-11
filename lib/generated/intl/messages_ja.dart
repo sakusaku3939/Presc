@@ -117,6 +117,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "trashMoved" : MessageLookupByLibrary.simpleMessage("ごみ箱に移動しました"),
     "trashRestored" : MessageLookupByLibrary.simpleMessage("ごみ箱から復元しました"),
     "undo" : MessageLookupByLibrary.simpleMessage("元に戻す"),
+    "undoDoubleTap" : MessageLookupByLibrary.simpleMessage("2回タップで元に戻す"),
     "undoRedoButton" : MessageLookupByLibrary.simpleMessage("元に戻す／やり直しボタン"),
     "vertical" : MessageLookupByLibrary.simpleMessage("縦書き")
   };
