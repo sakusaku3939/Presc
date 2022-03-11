@@ -67,9 +67,8 @@ class PlaybackScreen extends StatelessWidget {
                             final speech = context.read<SpeechToTextProvider>();
                             if (speech.canUndo) {
                               speech.undo();
-                              if (await Vibration.hasVibrator()) {
-                                Vibration.vibrate();
-                              }
+                              if (await Vibration.hasCustomVibrationsSupport())
+                                Vibration.vibrate(duration: 10);
                             }
                           },
                         ),
