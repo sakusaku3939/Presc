@@ -65,7 +65,7 @@ class PlaybackScreen extends StatelessWidget {
                           ),
                           onDoubleTap: () async {
                             final speech = context.read<SpeechToTextProvider>();
-                            if (speech.canUndo) {
+                            if (model.undoDoubleTap && speech.canUndo) {
                               speech.undo();
                               if (await Vibration.hasCustomVibrationsSupport())
                                 Vibration.vibrate(duration: 10);

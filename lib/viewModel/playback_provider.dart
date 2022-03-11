@@ -83,6 +83,22 @@ class PlaybackProvider with ChangeNotifier {
   }
 
   /*
+  *  2回タップで元に戻す（ON/OFF）
+  */
+  bool _undoDoubleTap;
+
+  bool get undoDoubleTap =>
+      _undoDoubleTap ??
+      _prefs?.getBool("undoDoubleTap") ??
+      InitConfig.undoDoubleTap;
+
+  set undoDoubleTap(bool tap) {
+    _undoDoubleTap = tap;
+    _prefs?.setBool("undoDoubleTap", tap);
+    notifyListeners();
+  }
+
+  /*
   *  原稿の再生速度
   */
   double _scrollSpeedMagnification;

@@ -8,10 +8,12 @@ import 'package:presc/config/sample_text_config.dart';
 import 'package:presc/config/scroll_speed_config.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/screens/about_app.dart';
+import 'package:presc/view/screens/setting_undo_redo.dart';
 import 'package:presc/view/utils/dialog/color_dialog_manager.dart';
 import 'package:presc/view/utils/dialog/scroll_mode_dialog_manager.dart';
 import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
 import 'package:presc/view/utils/ripple_button.dart';
+import 'package:presc/view/utils/setting_item.dart';
 import 'package:presc/view/utils/tategaki.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +47,7 @@ class SettingScreen extends StatelessWidget {
                       : _verticalPreview(model),
                   _textMenu(context, model),
                   SizedBox(height: 8),
-                  _Item(
+                  SettingItem(
                     title: S.current.formatOrientation,
                     subtitle: model.scrollHorizontal
                         ? S.current.horizontal
@@ -68,35 +70,24 @@ class SettingScreen extends StatelessWidget {
                       )
                     },
                   ),
-                  _Item(
+                  SettingItem(
                     title: S.current.undoRedoButton,
-                    subtitle: model.showUndoRedo
-                        ? S.current.show
-                        : S.current.hide,
-                    onTap: () => {
-                      RadioDialogManager.show(
-                        context,
-                        groupValue: model.showUndoRedo,
-                        itemList: [
-                          RadioDialogItem(
-                            title: S.current.show,
-                            value: true,
-                          ),
-                          RadioDialogItem(
-                            title: S.current.hide,
-                            value: false,
-                          ),
-                        ],
-                        onChanged: (value) => model.showUndoRedo = value,
-                      )
-                    },
+                    subtitle:
+                        model.showUndoRedo ? S.current.show : S.current.hide,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            SettingUndoRedoScreen(),
+                      ),
+                    ),
                   ),
-                  _Item(
+                  SettingItem(
                     title: S.current.playMode,
                     subtitle: scrollModeText,
                     onTap: () => ScrollModeDialogManager.show(context),
                   ),
-                  _Item(
+                  SettingItem(
                     title: S.current.playSpeed,
                     subtitle: "x ${model.scrollSpeedMagnification}",
                     enabled: model.scrollMode == ScrollMode.auto,
@@ -114,9 +105,8 @@ class SettingScreen extends StatelessWidget {
                           model.scrollSpeedMagnification = value,
                     ),
                   ),
-
                   SizedBox(height: 16),
-                  _Item(
+                  SettingItem(
                     title: S.current.aboutApp,
                     onTap: () => Navigator.push(
                       context,
@@ -125,7 +115,7 @@ class SettingScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  _Item(
+                  SettingItem(
                     title: S.current.ossLicence,
                     onTap: () => Navigator.push(
                       context,
@@ -325,32 +315,4 @@ class SettingScreen extends StatelessWidget {
   Text _selectColorSquare(Color color) => color == Colors.white
       ? Text("□")
       : Text("■", style: TextStyle(color: color));
-}
-
-class _Item extends StatelessWidget {
-  _Item({
-    this.title,
-    this.subtitle,
-    this.enabled = true,
-    this.onTap,
-  });
-
-  final String title;
-  final String subtitle;
-  final bool enabled;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return Ink(
-      color: Colors.white,
-      child: ListTile(
-        title: Text(title),
-        subtitle: subtitle != null ? Text(subtitle) : null,
-        contentPadding: const EdgeInsets.only(left: 32),
-        enabled: enabled,
-        onTap: onTap,
-      ),
-    );
-  }
 }
