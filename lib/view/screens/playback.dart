@@ -8,6 +8,7 @@ import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
 import 'package:presc/viewModel/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:vibration/vibration.dart';
 
 class PlaybackScreen extends StatelessWidget {
   PlaybackScreen({@required this.title, @required this.content});
@@ -41,20 +42,37 @@ class PlaybackScreen extends StatelessWidget {
                   Column(
                     children: [
                       Expanded(
-                        child: playbackTextView,
-                      ),
-                      Selector<PlaybackTimerProvider, String>(
-                        selector: (_, model) => model.time,
-                        builder: (context, time, child) {
-                          return Text(
-                            time,
-                            style: TextStyle(
-                              color: model.textColor,
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          );
-                        },
+                        child: GestureDetector(
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: playbackTextView,
+                              ),
+                              Selector<PlaybackTimerProvider, String>(
+                                selector: (_, model) => model.time,
+                                builder: (context, time, child) {
+                                  return Text(
+                                    time,
+                                    style: TextStyle(
+                                      color: model.textColor,
+                                      fontSize: 40,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                          onDoubleTap: () async {
+                            final speech = context.read<SpeechToTextProvider>();
+                            if (speech.canUndo) {
+                              speech.undo();
+                              if (await Vibration.hasVibrator()) {
+                                Vibration.vibrate();
+                              }
+                            }
+                          },
+                        ),
                       ),
                       _operationMenu(context, model, playbackTextView),
                     ],
