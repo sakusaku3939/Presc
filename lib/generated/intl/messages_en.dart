@@ -117,6 +117,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "trashMoved" : MessageLookupByLibrary.simpleMessage("Moved to the trash."),
     "trashRestored" : MessageLookupByLibrary.simpleMessage("Restored from the trash."),
     "undo" : MessageLookupByLibrary.simpleMessage("UNDO"),
+    "undoDoubleTap" : MessageLookupByLibrary.simpleMessage("Double tap to undo"),
     "undoRedoButton" : MessageLookupByLibrary.simpleMessage("Undo/Redo button"),
     "vertical" : MessageLookupByLibrary.simpleMessage("Vertical")
   };

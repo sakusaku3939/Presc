@@ -64,6 +64,7 @@
   "horizontal": "横書き",
   "vertical": "縦書き",
   "undoRedoButton": "元に戻す／やり直しボタン",
+  "undoDoubleTap": "2回タップで元に戻す",
   "show": "表示",
   "hide": "非表示",
   "playMode": "再生モード",

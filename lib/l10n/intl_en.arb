@@ -64,6 +64,7 @@
   "horizontal": "Horizontal",
   "vertical": "Vertical",
   "undoRedoButton": "Undo/Redo button",
+  "undoDoubleTap": "Double tap to undo",
   "show": "Show",
   "hide": "Hide",
   "playMode": "Play mode",

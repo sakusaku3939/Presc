@@ -43,7 +43,7 @@ class SettingUndoRedoScreen extends StatelessWidget {
                   Ink(
                     color: Colors.white,
                     child: SwitchListTile(
-                      title: Text("2回タップで元に戻す"),
+                      title: Text(S.current.undoDoubleTap),
                       contentPadding: const EdgeInsets.fromLTRB(32, 2, 0, 2),
                       value: model.undoDoubleTap,
                       onChanged: (value) => model.undoDoubleTap = value,
