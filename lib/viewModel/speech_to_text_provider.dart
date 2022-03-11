@@ -118,8 +118,8 @@ class SpeechToTextProvider with ChangeNotifier {
 
   void _reflect(String lastWords) {
     final N = InitConfig.ngramNum;
-    final rangeUnrecognizedText = unrecognizedText.length > 150
-        ? unrecognizedText.substring(0, 150)
+    final rangeUnrecognizedText = unrecognizedText.length > 120
+        ? unrecognizedText.substring(0, 120)
         : unrecognizedText;
 
     final isEnglish = RegExp(r'^[ -~｡-ﾟ]+$').hasMatch(lastWords);
