@@ -4,26 +4,53 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Hiragana {
   /*
-  *  Convert by gooラボ ひらがな化API
-  *  https://labs.goo.ne.jp/api/jp/hiragana-translation/
+  *  Web Services by Yahoo! JAPAN （https://developer.yahoo.co.jp/sitemap/）
+  *
+  *  Convert by Yahoo! JAPAN ルビ振りv2
+  *  https://developer.yahoo.co.jp/webapi/jlp/furigana/v2/furigana.html
   * */
-  Future<String> convert(String text) async {
-    final url = Uri.parse("https://labs.goo.ne.jp/api/hiragana");
+  Future<HiraganaResult> convert(String text) async {
+    final url = "https://jlp.yahooapis.jp/FuriganaService/V2/furigana";
     final http.Response res = await http.post(
-      url,
-      headers: {"content-type": "application/json"},
+      Uri.parse(url),
+      headers: {
+        "Content-Type": "application/json",
+        "User-Agent": "Yahoo AppID: ${dotenv.env["YAHOO_APP_ID"]}",
+      },
       body: json.encode({
-        "app_id": dotenv.env["GOO_LABS_ID"],
-        "sentence": text,
-        "output_type": "hiragana",
+        "id": "1234-1",
+        "jsonrpc": "2.0",
+        "method": "jlp.furiganaservice.furigana",
+        "params": {"q": text, "grade": 1}
       }),
     );
+
     if (res.statusCode == 200) {
-      Map<String, dynamic> result = json.decode(res.body);
-      return result["converted"].toString();
+      final result = HiraganaResult();
+      Map<String, dynamic> body = json.decode(res.body);
+      List<dynamic> word = body["result"]["word"];
+
+      for (int i = 0; i < word.length; i++) {
+        String origin = word[i]["surface"];
+        String hiragana = word[i]["furigana"];
+
+        if (origin.length > 1 || result.origin.isEmpty) {
+          result.origin.add(origin);
+          result.hiragana.add(hiragana ?? origin);
+        } else {
+          result.origin.last += origin;
+          result.hiragana.last += hiragana ?? origin;
+        }
+      }
+      return result;
     } else {
-      print("Failed to post hiragana: ${res.statusCode}");
+      print("Failed to post hiragana ${res.statusCode}: ${res.body}");
       return null;
     }
   }
+}
+
+class HiraganaResult {
+  final List<String> origin = [];
+  final List<String> hiragana = [];
 }
