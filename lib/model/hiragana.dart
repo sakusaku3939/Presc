@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:presc/config/punctuation_config.dart';
 
 class Hiragana {
   /*
@@ -34,7 +35,11 @@ class Hiragana {
         String origin = word[i]["surface"];
         String hiragana = word[i]["furigana"];
 
-        if (origin.length > 1 || result.origin.isEmpty) {
+        final isEmpty = result.origin.isEmpty;
+        final isLong = origin.length > 1;
+        final isPunctuation = PunctuationConfig.list.contains(origin);
+
+        if (isEmpty || isLong || isPunctuation) {
           result.origin.add(origin);
           result.hiragana.add(hiragana ?? origin);
         } else {
