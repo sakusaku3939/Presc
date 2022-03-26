@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
+import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/setting_item.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:provider/provider.dart';
@@ -10,14 +11,14 @@ class SettingUndoRedoScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(),
+      appBar: _appbar(context),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Consumer<PlaybackProvider>(
             builder: (context, model, child) {
               return Column(
                 children: [
-                  SizedBox(height: 8),
+                  SizedBox(height: 4),
                   SettingItem(
                     title: S.current.undoRedoButton,
                     subtitle:
@@ -55,6 +56,17 @@ class SettingUndoRedoScreen extends StatelessWidget {
             },
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _appbar(BuildContext context) {
+    return AppBar(
+      elevation: 1,
+      leading: RippleIconButton(
+        Icons.navigate_before,
+        size: 32,
+        onPressed: () => Navigator.pop(context),
       ),
     );
   }
