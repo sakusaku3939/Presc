@@ -38,6 +38,8 @@ jobs:
       - name: flutter dependencies install
         run: flutter pub get
 
+      - run: flutter test
+
       - name: Import Provisioning Profile
         run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles

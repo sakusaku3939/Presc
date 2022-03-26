@@ -37,6 +37,8 @@ jobs:
       - name: flutter dependencies install
         run: flutter pub get
 
+      - run: flutter test
+
       - name: decode keystore
         run: echo ${{ secrets.ENCODED_DEBUG_KEYSTORE }} | base64 --decode > ~/.android/debug.keystore
 
