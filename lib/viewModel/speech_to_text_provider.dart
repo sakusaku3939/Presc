@@ -145,9 +145,11 @@ class SpeechToTextProvider with ChangeNotifier {
           lastWordsResult.hiragana,
           rangeTextResult.hiragana,
         );
+
         if (hiraganaLastIndex != -1) {
           final origin = rangeTextResult.origin;
           final rangeOrigin = origin.sublist(0, hiraganaLastIndex);
+
           textLen = rangeOrigin.join().length;
           i = origin[hiraganaLastIndex].length;
         } else {
