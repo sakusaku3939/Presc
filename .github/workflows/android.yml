@@ -31,6 +31,9 @@ jobs:
           flutter-version: '2.8.1'
           channel: 'stable'
 
+      - name: setup env file
+        run: echo -n 'YAHOO_APP_ID=${{ secrets.YAHOO_APP_ID }}' >> .env
+
       - name: flutter dependencies install
         run: flutter pub get
 
