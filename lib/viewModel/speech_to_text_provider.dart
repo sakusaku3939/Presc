@@ -177,16 +177,23 @@ class SpeechToTextProvider with ChangeNotifier {
     return lastIndex;
   }
 
-  int _findHiraganaLastIndex(
-    List<String> lastWordsHiragana,
-    List<String> rangeHiragana,
-  ) {
+  int _findHiraganaLastIndex(List<String> lastWords, List<String> rangeText) {
     int hiraganaLastIndex = -1;
-    for (int i = 0; i < lastWordsHiragana.length; i++) {
-      final index = rangeHiragana.lastIndexOf(lastWordsHiragana[i]);
-      final punctuation = PunctuationConfig.list;
-      if (index != -1 && !punctuation.contains(rangeHiragana[index])) {
-        hiraganaLastIndex = max(hiraganaLastIndex, index);
+    int excludeIndex = 0;
+
+    for (int i = 0; i < lastWords.length; i++) {
+      final index = rangeText.indexOf(lastWords[i]);
+      if (index == -1) continue;
+
+      final isHighIndex = hiraganaLastIndex < index + excludeIndex;
+      final isPunctuation = PunctuationConfig.list.contains(
+        rangeText[index],
+      );
+
+      if (isHighIndex && !isPunctuation) {
+        rangeText = rangeText.sublist(index + 1);
+        hiraganaLastIndex = index + excludeIndex;
+        excludeIndex = hiraganaLastIndex + 1;
       }
     }
     return hiraganaLastIndex;
