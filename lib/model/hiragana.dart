@@ -5,10 +5,10 @@ import 'package:presc/config/punctuation_config.dart';
 
 class Hiragana {
   /*
-  *  Web Services by Yahoo! JAPAN （https://developer.yahoo.co.jp/sitemap/）
-  *
   *  Convert by Yahoo! JAPAN ルビ振りv2
   *  https://developer.yahoo.co.jp/webapi/jlp/furigana/v2/furigana.html
+  *
+  *  Web Services by Yahoo! JAPAN （https://developer.yahoo.co.jp/sitemap/）
   * */
   Future<HiraganaResult> convert(String text) async {
     final url = "https://jlp.yahooapis.jp/FuriganaService/V2/furigana";
