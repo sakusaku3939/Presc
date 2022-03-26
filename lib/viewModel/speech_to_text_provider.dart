@@ -3,7 +3,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:presc/config/init_config.dart';
+import 'package:presc/config/punctuation_config.dart';
 import 'package:presc/generated/l10n.dart';
+import 'package:presc/model/hiragana.dart';
 import 'package:presc/model/speech_to_text_manager.dart';
 import 'package:presc/view/utils/dialog/silent_dialog_manager.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
@@ -17,7 +19,8 @@ import 'package:in_app_review/in_app_review.dart';
 
 class SpeechToTextProvider with ChangeNotifier {
   final _manager = SpeechToTextManager();
-  _History _history = _History();
+  final _history = _History();
+  final _hiragana = Hiragana();
   RingerModeStatus _defaultRingerStatus;
 
   String _unrecognizedText = "";
@@ -116,32 +119,86 @@ class SpeechToTextProvider with ChangeNotifier {
         (i) => target.substring(i, i + n),
       );
 
-  void _reflect(String lastWords) {
+  void _reflect(String lastWords) async {
     final N = InitConfig.ngramNum;
     final rangeUnrecognizedText = unrecognizedText.length > 120
         ? unrecognizedText.substring(0, 120)
         : unrecognizedText;
 
-    final isEnglish = RegExp(r'^[ -~｡-ﾟ]+$').hasMatch(lastWords);
-    final splitWord = isEnglish ? lastWords.split(" ") : _ngram(lastWords, N);
-    final i = isEnglish ? splitWord.last.length : N;
+    final isLatinAlphabet = RegExp(r'^[ -~｡-ﾟ]+$').hasMatch(lastWords);
+    int textLen, i;
 
-    int lastIndex = -1;
-    splitWord.forEach((t) {
-      lastIndex = max(
-        rangeUnrecognizedText.toLowerCase().indexOf(t.toLowerCase()),
-        lastIndex,
-      );
-    });
+    if (isLatinAlphabet) {
+      final splitWords = lastWords.split(" ");
+      textLen = _findTextLength(rangeUnrecognizedText, splitWords);
+      i = splitWords.last.length;
+    } else {
+      final res = await Future.wait([
+        _hiragana.convert(rangeUnrecognizedText),
+        _hiragana.convert(lastWords),
+      ]);
+      final rangeTextResult = res.first;
+      final lastWordsResult = res.last;
 
-    if (lastIndex != -1) {
-      final latestRecognizedText = unrecognizedText.substring(0, lastIndex + i);
+      if (lastWordsResult != null) {
+        final hiraganaLastIndex = _findHiraganaLastIndex(
+          lastWordsResult.hiragana,
+          rangeTextResult.hiragana,
+        );
+
+        if (hiraganaLastIndex != -1) {
+          final origin = rangeTextResult.origin;
+          final rangeOrigin = origin.sublist(0, hiraganaLastIndex);
+
+          textLen = rangeOrigin.join().length;
+          i = origin[hiraganaLastIndex].length;
+        } else {
+          textLen = -1;
+        }
+      } else {
+        textLen = _findTextLength(rangeUnrecognizedText, _ngram(lastWords, N));
+        i = N;
+      }
+    }
+
+    if (textLen != -1) {
+      final latestRecognizedText = unrecognizedText.substring(0, textLen + i);
       _recognizedText += latestRecognizedText;
-      _unrecognizedText = unrecognizedText.substring(lastIndex + i);
+      _unrecognizedText = unrecognizedText.substring(textLen + i);
 
       _history.add(recognizedText.length);
       notifyListeners();
     }
+  }
+
+  int _findTextLength(String text, List<String> splitWord) {
+    int lastIndex = -1;
+    splitWord.forEach((t) {
+      lastIndex = max(text.toLowerCase().indexOf(t.toLowerCase()), lastIndex);
+    });
+    return lastIndex;
+  }
+
+  int _findHiraganaLastIndex(List<String> lastWords, List<String> rangeText) {
+    int hiraganaLastIndex = -1;
+    int excludeIndex = 0;
+
+    for (int i = 0; i < lastWords.length; i++) {
+      final index = rangeText.indexOf(lastWords[i]);
+      if (index == -1) continue;
+
+      final isHighIndex = hiraganaLastIndex < index + excludeIndex;
+      final isPunctuation = PunctuationConfig.list.contains(
+        rangeText[index],
+      );
+
+      if (isHighIndex && !isPunctuation) {
+        rangeText = rangeText.sublist(index + 1);
+        hiraganaLastIndex = index + excludeIndex;
+        excludeIndex = hiraganaLastIndex + 1;
+      }
+    }
+    return hiraganaLastIndex;
   }
 
   Future<void> _testReflect() async {

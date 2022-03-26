@@ -36,6 +36,7 @@ dependencies:
   sqflite: ^2.0.0+3
   path_provider: ^2.0.2
   shared_preferences: ^2.0.7
+  flutter_dotenv: ^5.0.2
 
   speech_to_text: ^5.2.0
   flutter_scale_tap: ^1.0.5
@@ -51,6 +52,7 @@ dependencies:
   sound_mode: ^2.0.1
   in_app_review: ^2.0.4
   vibration: ^1.7.3
+  http: ^0.13.4
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +78,7 @@ flutter:
     - assets/images/screenshot/
     - assets/images/en/
     - assets/images/en/screenshot/
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
