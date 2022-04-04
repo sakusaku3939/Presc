@@ -45,22 +45,8 @@ class PlaybackScreen extends StatelessWidget {
                         child: GestureDetector(
                           child: Column(
                             children: [
-                              Expanded(
-                                child: playbackTextView,
-                              ),
-                              Selector<PlaybackTimerProvider, String>(
-                                selector: (_, model) => model.time,
-                                builder: (context, time, child) {
-                                  return Text(
-                                    time,
-                                    style: TextStyle(
-                                      color: model.textColor,
-                                      fontSize: 40,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  );
-                                },
-                              ),
+                              Expanded(child: playbackTextView),
+                              _timer(context, model),
                             ],
                           ),
                           onDoubleTap: () async {
@@ -169,6 +155,45 @@ class PlaybackScreen extends StatelessWidget {
       );
     else
       return Container();
+  }
+
+  Widget _timer(BuildContext context, PlaybackProvider playback) {
+    return Consumer<SpeechToTextProvider>(
+      builder: (context, model, child) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              margin: EdgeInsets.symmetric(
+                horizontal: model.isProcessing ? 16 : 0,
+              ),
+              child: Selector<PlaybackTimerProvider, String>(
+                selector: (_, model) => model.time,
+                builder: (context, time, child) {
+                  return Text(
+                    time,
+                    style: TextStyle(
+                      color: playback.textColor,
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                },
+              ),
+            ),
+            if (model.isProcessing)
+              Container(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 3,
+                  color: Theme.of(context).accentColor,
+                ),
+              ),
+          ],
+        );
+      },
+    );
   }
 
   Widget _operationMenu(

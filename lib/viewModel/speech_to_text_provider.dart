@@ -34,6 +34,15 @@ class SpeechToTextProvider with ChangeNotifier {
 
   bool get canRedo => _history.canRedo();
 
+  bool _isProcessing = false;
+
+  bool get isProcessing => _isProcessing;
+
+  set isProcessing(process) {
+    _isProcessing = process;
+    notifyListeners();
+  }
+
   double verticalRecognizedWidth = 0;
   double lastOffset = 0;
 
@@ -50,6 +59,9 @@ class SpeechToTextProvider with ChangeNotifier {
     timer.start();
     _manager.speak(
       resultListener: _reflect,
+      statusListener: (status) {
+        print(status);
+      },
       errorListener: (error) {
         context.read<PlaybackProvider>().playFabState = false;
         context.read<PlaybackTimerProvider>().stop();
@@ -83,6 +95,7 @@ class SpeechToTextProvider with ChangeNotifier {
     _recognizedText = "";
     _unrecognizedText = content;
     lastOffset = 0;
+    _isProcessing = false;
     _history.clear();
   }
 
@@ -120,6 +133,8 @@ class SpeechToTextProvider with ChangeNotifier {
       );
 
   void _reflect(String lastWords) async {
+    isProcessing = true;
+
     final N = InitConfig.ngramNum;
     final rangeUnrecognizedText = unrecognizedText.length > 120
         ? unrecognizedText.substring(0, 120)
@@ -167,8 +182,9 @@ class SpeechToTextProvider with ChangeNotifier {
       _unrecognizedText = unrecognizedText.substring(textLen + i);
 
       _history.add(recognizedText.length);
-      notifyListeners();
     }
+    _isProcessing = false;
+    notifyListeners();
   }
 
   int _findTextLength(String text, List<String> splitWord) {
