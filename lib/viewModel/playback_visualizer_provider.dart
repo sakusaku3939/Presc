@@ -1,7 +1,4 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:presc/model/speech_to_text_manager.dart';
 import 'package:presc/model/visualizer.dart';
 
 class PlaybackVisualizerProvider with ChangeNotifier {
