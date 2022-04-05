@@ -59,9 +59,6 @@ class SpeechToTextProvider with ChangeNotifier {
     timer.start();
     _manager.speak(
       resultListener: _reflect,
-      statusListener: (status) {
-        print(status);
-      },
       errorListener: (error) {
         context.read<PlaybackProvider>().playFabState = false;
         context.read<PlaybackTimerProvider>().stop();
