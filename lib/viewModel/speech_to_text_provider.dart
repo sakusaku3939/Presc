@@ -78,6 +78,10 @@ class SpeechToTextProvider with ChangeNotifier {
             break;
         }
       },
+      isEnglish: RegExp(
+        r'^(?:[a-zA-Z]|\P{L})+$',
+        unicode: true,
+      ).hasMatch(_unrecognizedText),
     );
     notifyListeners();
   }
@@ -141,9 +145,18 @@ class SpeechToTextProvider with ChangeNotifier {
     int textLen, i;
 
     if (isLatinAlphabet) {
+      final splitText = rangeUnrecognizedText.split(" ");
       final splitWords = lastWords.split(" ");
-      textLen = _findTextLength(rangeUnrecognizedText, splitWords);
-      i = splitWords.last.length;
+      final index = _findTextIndex(
+        splitText.map((e) => e.toLowerCase()).toList(),
+        splitWords,
+      );
+      if (index != -1) {
+        textLen = splitText.sublist(0, index).join().length + index;
+        i = splitText[index].length;
+      } else {
+        textLen = -1;
+      }
     } else {
       final res = await Future.wait([
         _hiragana.convert(rangeUnrecognizedText),
@@ -168,7 +181,10 @@ class SpeechToTextProvider with ChangeNotifier {
           textLen = -1;
         }
       } else {
-        textLen = _findTextLength(rangeUnrecognizedText, _ngram(lastWords, N));
+        textLen = _findTextIndex(
+          rangeUnrecognizedText.toLowerCase(),
+          _ngram(lastWords, N),
+        );
         i = N;
       }
     }
@@ -184,10 +200,10 @@ class SpeechToTextProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  int _findTextLength(String text, List<String> splitWord) {
+  int _findTextIndex(dynamic text, List<String> splitWord) {
     int lastIndex = -1;
     splitWord.forEach((t) {
-      lastIndex = max(text.toLowerCase().indexOf(t.toLowerCase()), lastIndex);
+      lastIndex = max(text.indexOf(t.toLowerCase()), lastIndex);
     });
     return lastIndex;
   }
