@@ -22,6 +22,7 @@ class SpeechToTextManager {
 
   stt.SpeechToText _speech = stt.SpeechToText();
   bool _isStopFlagValid = false;
+  bool _isCurrentEnglish = false;
   Timer _timer;
 
   SpeechToTextManager._();
@@ -36,6 +37,7 @@ class SpeechToTextManager {
     void Function(String error) errorListener,
     void Function(String status) statusListener,
     bool log = true,
+    bool isEnglish = false
   }) async {
     this.resultListener = resultListener;
     this.errorListener = errorListener;
@@ -47,11 +49,12 @@ class SpeechToTextManager {
     );
     if (available) {
       _isStopFlagValid = false;
+      _isCurrentEnglish = isEnglish;
       final systemLocale = await _speech.systemLocale();
       await _speech.listen(
         onResult: _resultListener,
         onSoundLevelChange: _soundLevelListener,
-        localeId: systemLocale.localeId,
+        localeId: isEnglish ? "en" : systemLocale.localeId,
       );
       if (log) print("start recognition");
     } else {
@@ -78,6 +81,7 @@ class SpeechToTextManager {
             errorListener: this.errorListener,
             statusListener: this.statusListener,
             log: false,
+            isEnglish: _isCurrentEnglish,
           )
       },
     );
