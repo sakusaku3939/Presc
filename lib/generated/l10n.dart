@@ -295,10 +295,10 @@ class S {
     );
   }
 
-  /// `Estimated presentation time (300 characters per minute)`
+  /// `Estimated presentation time (320 characters per minute)`
   String get estimatedReadingTime {
     return Intl.message(
-      'Estimated presentation time (300 characters per minute)',
+      'Estimated presentation time (320 characters per minute)',
       name: 'estimatedReadingTime',
       desc: '',
       args: [],

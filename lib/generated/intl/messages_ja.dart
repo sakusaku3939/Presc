@@ -54,7 +54,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "editTag" : MessageLookupByLibrary.simpleMessage("タグの編集"),
     "emptyScriptDeleted" : MessageLookupByLibrary.simpleMessage("空の原稿を削除しました"),
     "error" : m2,
-    "estimatedReadingTime" : MessageLookupByLibrary.simpleMessage("読み上げ時間の目安（1分300文字）"),
+    "estimatedReadingTime" : MessageLookupByLibrary.simpleMessage("読み上げ時間の目安（1分320文字）"),
     "formatOrientation" : MessageLookupByLibrary.simpleMessage("書式の向き"),
     "hide" : MessageLookupByLibrary.simpleMessage("非表示"),
     "hint" : MessageLookupByLibrary.simpleMessage("ヒント"),

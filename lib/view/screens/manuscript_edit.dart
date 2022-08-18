@@ -404,7 +404,8 @@ class ManuscriptEditScreen extends StatelessWidget {
   }
 
   String _calcReadTime(int count) {
-    final totalSecond = count / 5;
+    final char = 320;
+    final totalSecond = count / (char / 60);
     final minutes = totalSecond ~/ 60;
     final second = (totalSecond % 60).floor();
     return S.current.time(minutes, second);
