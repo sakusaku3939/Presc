@@ -54,7 +54,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "editTag" : MessageLookupByLibrary.simpleMessage("Edit tag"),
     "emptyScriptDeleted" : MessageLookupByLibrary.simpleMessage("Deleted an empty script."),
     "error" : m2,
-    "estimatedReadingTime" : MessageLookupByLibrary.simpleMessage("Estimated presentation time (300 characters per minute)"),
+    "estimatedReadingTime" : MessageLookupByLibrary.simpleMessage("Estimated presentation time (320 characters per minute)"),
     "formatOrientation" : MessageLookupByLibrary.simpleMessage("Format orientation"),
     "hide" : MessageLookupByLibrary.simpleMessage("Hide"),
     "hint" : MessageLookupByLibrary.simpleMessage("HINT"),

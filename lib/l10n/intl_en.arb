@@ -26,7 +26,7 @@
   "addNewTag": "Add new tag",
   "newTagAdded": "Added a new tag.",
   "characterCount": "Number of characters",
-  "estimatedReadingTime": "Estimated presentation time (300 characters per minute)",
+  "estimatedReadingTime": "Estimated presentation time (320 characters per minute)",
   "lastModified": "Last modified",
   "time":"{minutes}m {second}s",
   "@time": {
