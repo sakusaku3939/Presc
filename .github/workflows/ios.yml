@@ -33,7 +33,9 @@ jobs:
           channel: 'stable'
 
       - name: setup env file
-        run: echo -n 'YAHOO_APP_ID=${{ secrets.YAHOO_APP_ID }}' >> .env
+        env:
+          BASE64_ENV_FILE: ${{ secrets.BASE64_ENV_FILE }}
+        run: echo $BASE64_ENV_FILE | base64 --decode > .env
 
       - name: flutter dependencies install
         run: flutter pub get
@@ -48,8 +50,8 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           touch ~/Library/MobileDevice/Provisioning\ Profiles/decoded.mobileprovision
           touch ~/Library/MobileDevice/Provisioning\ Profiles/decoded-share-extension.mobileprovision
-          echo -n '$PROVISIONING_PROFILE' | base64 -d -o ~/Library/MobileDevice/Provisioning\ Profiles/decoded.mobileprovision
-          echo -n '$SHARE_EXTENSION_PROVISIONING_PROFILE' | base64 -d -o ~/Library/MobileDevice/Provisioning\ Profiles/decoded-share-extension.mobileprovision
+          echo -n $PROVISIONING_PROFILE | base64 -d -o ~/Library/MobileDevice/Provisioning\ Profiles/decoded.mobileprovision
+          echo -n $SHARE_EXTENSION_PROVISIONING_PROFILE | base64 -d -o ~/Library/MobileDevice/Provisioning\ Profiles/decoded-share-extension.mobileprovision
 
       - name: import Code-Signing Certificates
         uses: Apple-Actions/import-codesign-certs@v1
@@ -60,7 +62,7 @@ jobs:
       - name: import Export Options
         env:
           EXPORT_OPTIONS: EXPORT_OPTIONS
-        run: echo -n '$EXPORT_OPTIONS' >> ExportOptions.plist
+        run: echo -n $EXPORT_OPTIONS >> ExportOptions.plist
 
       - run: flutter build ipa --export-options-plist=ExportOptions.plist
 
