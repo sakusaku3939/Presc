@@ -32,9 +32,7 @@ jobs:
           channel: 'stable'
 
       - name: setup env file
-        env:
-          YAHOO_APP_ID: ${{ secrets.YAHOO_APP_ID }}
-        run: echo -n 'YAHOO_APP_ID=$YAHOO_APP_ID' >> .env
+        run: echo -n 'YAHOO_APP_ID=${{ secrets.YAHOO_APP_ID }}' >> .env
 
       - name: flutter dependencies install
         run: flutter pub get
