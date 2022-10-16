@@ -12,7 +12,7 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: install java 12.x
         uses: actions/setup-java@v1
@@ -32,7 +32,9 @@ jobs:
           channel: 'stable'
 
       - name: setup env file
-        run: echo -n 'YAHOO_APP_ID=${{ secrets.YAHOO_APP_ID }}' >> .env
+        env:
+          YAHOO_APP_ID: ${{ secrets.YAHOO_APP_ID }}
+        run: echo -n 'YAHOO_APP_ID=$YAHOO_APP_ID' >> .env
 
       - name: flutter dependencies install
         run: flutter pub get
@@ -40,18 +42,24 @@ jobs:
       - run: flutter test
 
       - name: decode keystore
-        run: echo ${{ secrets.ENCODED_DEBUG_KEYSTORE }} | base64 --decode > ~/.android/debug.keystore
+        env:
+          ENCODED_DEBUG_KEYSTORE: ${{ secrets.ENCODED_DEBUG_KEYSTORE }}
+        run: echo $ENCODED_DEBUG_KEYSTORE | base64 --decode > ~/.android/debug.keystore
 
       - name: build apk
         run: flutter build apk --flavor beta
 
-      - name: Distribute android apk
+      - name: distribute android apk
+        env:
+          DEPLOYGATE_API_KEY: ${{ secrets.DEPLOYGATE_API_KEY }}
+          ANDROID_DISTRIBUTION_HASH: ${{ secrets.ANDROID_DISTRIBUTION_HASH }}
+          DEPLOYGATE_USER: ${{ secrets.DEPLOYGATE_USER }}
         run: |
           curl \
-            -H "Authorization: token ${{secrets.DEPLOYGATE_API_KEY}}" \
+            -H "Authorization: token $DEPLOYGATE_API_KEY" \
             -F "file=@build/app/outputs/flutter-apk/app-beta-release.apk" \
             -F "message=git:`git rev-parse --short $GITHUB_SHA`" \
             -F "distribution_name=`git rev-parse --abbrev-ref $GITHUB_SHA`" \
             -F "release_note=new build" \
-            -F "distribution_key=${{secrets.ANDROID_DISTRIBUTION_HASH}}" \
-            "https://deploygate.com/api/users/${{secrets.DEPLOYGATE_USER}}/apps"
+            -F "distribution_key=$ANDROID_DISTRIBUTION_HASH" \
+            "https://deploygate.com/api/users/$DEPLOYGATE_USER/apps"
