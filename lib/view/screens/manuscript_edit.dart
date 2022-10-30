@@ -12,7 +12,7 @@ import 'package:presc/view/utils/trash_move_manager.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 class ManuscriptEditScreen extends StatelessWidget {
   ManuscriptEditScreen(this.context, this.index, {this.autofocus = false});
