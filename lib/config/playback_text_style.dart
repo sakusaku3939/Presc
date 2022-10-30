@@ -16,7 +16,6 @@ class PlaybackTextStyle {
   TextStyle get recognized => TextStyle(
         color: _model.backgroundColor,
         backgroundColor: _model.textColor,
-        height: _model.scrollHorizontal ? _model.fontHeight : 1.2,
         fontWeight: FontWeight.normal,
         fontSize: _model.fontSize.toDouble(),
       );
