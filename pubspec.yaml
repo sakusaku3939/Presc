@@ -33,7 +33,7 @@ dependencies:
   flutter_native_splash: ^1.2.1
   provider: ^5.0.0
 
-  sqflite: ^2.0.0+3
+  sqflite: ^2.2.0+2
   path_provider: ^2.0.2
   shared_preferences: ^2.0.7
   flutter_dotenv: ^5.0.2
@@ -49,9 +49,10 @@ dependencies:
   package_info: ^2.0.2
   url_launcher: ^6.0.10
   flutter_staggered_animations: ^1.0.0
-  sound_mode: ^2.0.1
+  sound_mode: ^2.0.2
   in_app_review: ^2.0.4
-  vibration: ^1.7.3
+  vibration: ^1.7.6
+  vibration_web: ^1.6.5
   http: ^0.13.4
 
 dev_dependencies:
