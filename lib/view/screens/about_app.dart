@@ -83,8 +83,11 @@ class AboutAppScreen extends StatelessWidget {
                     style: TextButton.styleFrom(
                       primary: Colors.grey[800],
                     ),
-                    onPressed: () => launch(
-                      "http://github.com/sakusaku3939/Presc/blob/master/Privacy-Policy.md",
+                    onPressed: () => launchUrl(
+                      Uri.parse(
+                        "https://github.com/sakusaku3939/Presc/blob/master/Privacy-Policy.md",
+                      ),
+                      mode: LaunchMode.externalApplication,
                     ),
                   ),
                 ),
@@ -99,8 +102,11 @@ class AboutAppScreen extends StatelessWidget {
                       primary: Theme.of(context).accentColor,
                       onPrimary: Colors.white,
                     ),
-                    onPressed: () => launch(
-                      "http://docs.google.com/forms/d/e/1FAIpQLSdSCHlUDrT4x3W76huEVf0hqAsg-SvX3UJwvRtZXpQ5E2JpNA/viewform?usp=sf_link",
+                    onPressed: () => launchUrl(
+                      Uri.parse(
+                        "https://docs.google.com/forms/d/e/1FAIpQLSdSCHlUDrT4x3W76huEVf0hqAsg-SvX3UJwvRtZXpQ5E2JpNA/viewform?usp=sf_link",
+                      ),
+                      mode: LaunchMode.externalApplication,
                     ),
                   ),
                 ),
