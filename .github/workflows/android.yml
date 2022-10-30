@@ -22,7 +22,7 @@ jobs:
       - name: install flutter
         uses: subosito/flutter-action@v1
         with:
-          flutter-version: '2.8.1'
+          flutter-version: '3.3.6'
           channel: 'stable'
 
       - name: setup cache
