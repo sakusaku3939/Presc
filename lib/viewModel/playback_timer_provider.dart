@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PlaybackTimerProvider with ChangeNotifier {
-  Timer _timer;
+  Timer? _timer;
   DateTime _time = DateTime.utc(0, 0, 0);
 
   String get time => DateFormat("mm:ss").format(_time);
@@ -21,7 +21,7 @@ class PlaybackTimerProvider with ChangeNotifier {
   }
 
   void stop() {
-    if (_timer != null && _timer.isActive) _timer.cancel();
+    if (_timer != null && _timer!.isActive) _timer!.cancel();
   }
 
   void reset() {

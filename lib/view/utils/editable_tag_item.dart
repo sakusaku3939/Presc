@@ -112,7 +112,7 @@ class EditableTagItem extends StatelessWidget {
                           activeColor: Theme.of(context).accentColor,
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
-                          onChanged: (bool value) => model.toggleChecked(index),
+                          onChanged: (_) => model.toggleChecked(index),
                         ),
                       ),
                     ),

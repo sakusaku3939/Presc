@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 class SettingItem extends StatelessWidget {
   SettingItem({
-    this.title,
+    required this.title,
     this.subtitle,
     this.enabled = true,
-    this.onTap,
+    required this.onTap,
   });
 
   final String title;
-  final String subtitle;
+  final String? subtitle;
   final bool enabled;
   final VoidCallback onTap;
 
@@ -19,7 +19,7 @@ class SettingItem extends StatelessWidget {
       color: Colors.white,
       child: ListTile(
         title: Text(title),
-        subtitle: subtitle != null ? Text(subtitle) : null,
+        subtitle: subtitle != null ? Text(subtitle!) : null,
         contentPadding: const EdgeInsets.only(left: 32),
         enabled: enabled,
         onTap: onTap,

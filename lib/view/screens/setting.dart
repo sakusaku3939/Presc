@@ -134,7 +134,7 @@ class SettingScreen extends StatelessWidget {
     );
   }
 
-  Widget _appbar(BuildContext context) {
+  AppBar _appbar(BuildContext context) {
     return AppBar(
       elevation: 0,
       leading: RippleIconButton(

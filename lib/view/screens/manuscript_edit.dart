@@ -26,9 +26,9 @@ class ManuscriptEditScreen extends StatelessWidget {
 
   int get id => _provider.scriptTable[index].id;
 
-  String get title => _provider.scriptTable[index].title;
+  String get title => _provider.scriptTable[index].title ?? "";
 
-  String get content => _provider.scriptTable[index].content;
+  String get content => _provider.scriptTable[index].content ?? "";
 
   DateTime get date => _provider.scriptTable[index].date;
 
@@ -284,7 +284,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                             child: Chip(
                               shape: RoundedRectangleBorder(
                                 side: BorderSide(
-                                    color: Colors.grey[300], width: 1),
+                                    color: Colors.grey[300]!, width: 1),
                                 borderRadius: BorderRadius.circular(24),
                               ),
                               deleteIcon: Icon(
@@ -449,6 +449,6 @@ class ManuscriptEditScreen extends StatelessWidget {
 }
 
 class _CurrentScript {
-  String title;
-  String content;
+  String? title;
+  String? content;
 }

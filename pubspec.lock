@@ -206,7 +206,7 @@ packages:
       name: flutter_native_splash
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.13"
+    version: "2.2.14"
   flutter_scale_tap:
     dependency: "direct main"
     description:
@@ -363,7 +363,7 @@ packages:
       name: path_provider_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.20"
+    version: "2.0.21"
   path_provider_ios:
     dependency: transitive
     description:
@@ -454,7 +454,7 @@ packages:
       name: share_plus
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.1.0"
+    version: "6.2.0"
   share_plus_platform_interface:
     dependency: transitive
     description:
@@ -564,7 +564,7 @@ packages:
       name: sqflite
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.0+2"
+    version: "2.2.0+3"
   sqflite_common:
     dependency: transitive
     description:
@@ -718,7 +718,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.1"
+    version: "3.1.1"
   xdg_directories:
     dependency: transitive
     description:

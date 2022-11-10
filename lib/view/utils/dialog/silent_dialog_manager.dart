@@ -46,7 +46,7 @@ class SilentDialogManager {
                     contentPadding: const EdgeInsets.all(0),
                     value: isChecked,
                     onChanged: (value) => setState(() {
-                      isChecked = value;
+                      if (value != null) isChecked = value;
                     }),
                   ),
                 ],

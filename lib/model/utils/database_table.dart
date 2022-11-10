@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
-
 abstract class DatabaseTable {
-  DatabaseTable(this.tableName, {@required this.id});
+  DatabaseTable(this.tableName, {required this.id});
 
   final String tableName;
   final int id;
@@ -11,14 +9,14 @@ abstract class DatabaseTable {
 
 class MemoTable extends DatabaseTable {
   MemoTable({
-    @required id,
+    required id,
     this.title = "",
     this.content = "",
-    this.date,
+    required this.date,
   }) : super(name, id: id);
 
-  final String title;
-  final String content;
+  final String? title;
+  final String? content;
   final DateTime date;
 
   static final String name = 'memo_table';
@@ -42,7 +40,7 @@ class MemoTable extends DatabaseTable {
 
 class TagTable extends DatabaseTable {
   TagTable({
-    @required id,
+    required int id,
     this.tagName = "",
   }) : super(name, id: id);
 
@@ -65,8 +63,8 @@ class TagTable extends DatabaseTable {
 
 class TagMemoTable extends DatabaseTable {
   TagMemoTable({
-    @required this.memoId,
-    @required this.tagId,
+    required this.memoId,
+    required this.tagId,
   }) : super(name, id: memoId);
 
   final int memoId;
@@ -89,10 +87,10 @@ class TagMemoTable extends DatabaseTable {
 
 class TrashTable extends DatabaseTable {
   TrashTable({
-    @required id,
+    required id,
     this.title = "",
     this.content = "",
-    this.date,
+    required this.date,
   }) : super(name, id: id);
 
   final String title;

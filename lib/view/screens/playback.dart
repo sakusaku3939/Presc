@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
 
 class PlaybackScreen extends StatelessWidget {
-  PlaybackScreen({@required this.title, @required this.content});
+  PlaybackScreen({required this.title, required this.content});
 
   final String title;
   final String content;
@@ -53,8 +53,11 @@ class PlaybackScreen extends StatelessWidget {
                             final speech = context.read<SpeechToTextProvider>();
                             if (model.undoDoubleTap && speech.canUndo) {
                               speech.undo();
-                              if (await Vibration.hasCustomVibrationsSupport())
+                              final hasCustomVibrations =
+                                  await Vibration.hasCustomVibrationsSupport();
+                              if (hasCustomVibrations == true) {
                                 Vibration.vibrate(duration: 10);
+                              }
                             }
                           },
                         ),
@@ -71,7 +74,7 @@ class PlaybackScreen extends StatelessWidget {
     );
   }
 
-  Widget _appbar(BuildContext context, PlaybackProvider model) {
+  AppBar _appbar(BuildContext context, PlaybackProvider model) {
     return AppBar(
       backgroundColor: model.backgroundColor,
       centerTitle: true,

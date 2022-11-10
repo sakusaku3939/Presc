@@ -8,13 +8,13 @@ import 'dialog_manager.dart';
 class PlatformDialogManager {
   static Future<void> showDeleteAlert(
     BuildContext context, {
-    String title,
-    String message,
-    @required String deleteLabel,
-    @required String cancelLabel,
-    @required VoidCallback onDeletePressed,
+    String? title,
+    String? message,
+    required String deleteLabel,
+    required String cancelLabel,
+    required VoidCallback onDeletePressed,
   }) async {
-    final text = (String t) => t != null ? Text(t) : null;
+    final text = (String? t) => t != null ? Text(t) : null;
     if (Platform.isIOS) {
       showCupertinoModalPopup(
         context: context,
@@ -72,14 +72,13 @@ class PlatformDialogManager {
 
   static Future<void> showInputDialog(
     BuildContext context, {
-    @required String title,
-    @required String content,
-    @required String placeholder,
-    @required String okLabel,
-    @required String cancelLabel,
-    @required Function(String text) onOkPressed,
+    required String title,
+    required String content,
+    required String placeholder,
+    required String okLabel,
+    required String cancelLabel,
+    required Function(String text) onOkPressed,
   }) async {
-    final text = (String t) => t != null ? Text(t) : null;
     final controller = TextEditingController.fromValue(
       TextEditingValue(
         text: content,

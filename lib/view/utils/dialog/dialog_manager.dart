@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class DialogManager {
   static void show(
     BuildContext context, {
-    Widget title,
-    Widget content,
+    Widget? title,
+    Widget? content,
     EdgeInsetsGeometry contentPadding =
         const EdgeInsets.fromLTRB(24, 20, 24, 16),
-    List<Widget> actions,
+    List<Widget>? actions,
   }) {
-    List<Widget> _adjustActions;
+    List<Widget>? _adjustActions;
     if (actions != null) {
       _adjustActions = actions + [SizedBox(width: 2)];
     }
@@ -28,7 +28,7 @@ class DialogManager {
 }
 
 class DialogTextButton extends StatelessWidget {
-  DialogTextButton(this.text, {@required this.onPressed});
+  DialogTextButton(this.text, {required this.onPressed});
 
   final String text;
   final VoidCallback onPressed;

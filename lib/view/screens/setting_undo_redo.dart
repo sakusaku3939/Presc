@@ -60,7 +60,7 @@ class SettingUndoRedoScreen extends StatelessWidget {
     );
   }
 
-  Widget _appbar(BuildContext context) {
+  AppBar _appbar(BuildContext context) {
     return AppBar(
       elevation: 1,
       leading: RippleIconButton(

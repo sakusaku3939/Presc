@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 class ScrollModeDialogManager {
   static void show(
     BuildContext context, {
-    Function(dynamic value) onChanged,
+    Function(dynamic value)? onChanged,
   }) {
     final provider = context.read<PlaybackProvider>();
     RadioDialogManager.show(

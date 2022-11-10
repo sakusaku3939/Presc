@@ -17,7 +17,7 @@ class ManuscriptTagProvider with ChangeNotifier {
 
   List<bool> get checkList => _checkList;
 
-  Future<void> loadTag({@required int memoId}) async {
+  Future<void> loadTag({required int memoId}) async {
     final res = await Future.wait([
       _manager.getAllTag(),
       _manager.getLinkTagById(memoId: memoId),
@@ -35,9 +35,9 @@ class ManuscriptTagProvider with ChangeNotifier {
   }
 
   Future<void> changeChecked({
-    @required int memoId,
-    @required int tagId,
-    @required bool newValue,
+    required int memoId,
+    required int tagId,
+    required bool newValue,
   }) async {
     if (newValue) {
       await _manager.linkTag(memoId: memoId, tagId: tagId);
@@ -47,7 +47,7 @@ class ManuscriptTagProvider with ChangeNotifier {
     loadTag(memoId: memoId);
   }
 
-  Future<void> addTag({@required int memoId, String name = ""}) async {
+  Future<void> addTag({required int memoId, String name = ""}) async {
     final id = await _manager.addTag(name: name);
     changeChecked(memoId: memoId, tagId: id, newValue: true);
     loadTag(memoId: memoId);

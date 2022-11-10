@@ -5,8 +5,8 @@ import 'package:presc/model/speech_to_text_manager.dart';
 
 class Visualizer {
   final _manager = SpeechToTextManager();
-  static Visualizer _instance;
-  double _mediaWidth;
+  static Visualizer? _instance;
+  double? _mediaWidth;
 
   final distributionHeight = 16;
   final spaceWidth = 2;
@@ -18,16 +18,16 @@ class Visualizer {
 
   Visualizer._();
 
-  void Function(double volume) volumeChangeListener;
+  void Function(double volume)? volumeChangeListener;
 
   factory Visualizer() {
     _instance ??= Visualizer._();
-    return _instance;
+    return _instance!;
   }
 
   void init(BuildContext context) {
     _mediaWidth = MediaQuery.of(context).size.width;
-    barCount = _mediaWidth ~/ (barWidth + spaceWidth);
+    barCount = _mediaWidth! ~/ (barWidth + spaceWidth);
     barHeight = List.generate(barCount, (_) => 0);
 
     _manager.soundLevelListener = (volume) {
@@ -36,7 +36,7 @@ class Visualizer {
             Random().nextInt(distributionHeight).toDouble() * volume.sign;
       }
       this.volume = volume;
-      volumeChangeListener(volume);
+      if (volumeChangeListener != null) volumeChangeListener!(volume);
     };
   }
 

@@ -8,16 +8,16 @@ class EditableTagItemProvider with ChangeNotifier {
 
   List<TagTable> get allTagTable => _allTagTable;
 
-  List<bool> _checkList;
+  List<bool>? _checkList;
 
   List<bool> get checkList {
     if (_checkList == null) _initializeCheckList();
-    return _checkList;
+    return _checkList!;
   }
 
   bool _isDeleteSelectionMode = false;
 
-  get isDeleteSelectionMode => _isDeleteSelectionMode;
+  bool get isDeleteSelectionMode => _isDeleteSelectionMode;
 
   set isDeleteSelectionMode(bool mode) {
     _initializeCheckList();

@@ -13,8 +13,8 @@ class RippleIconButton extends StatelessWidget {
   final IconData icon;
   final double size;
   final Color color;
-  final Color disabledColor;
-  final VoidCallback onPressed;
+  final Color? disabledColor;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {

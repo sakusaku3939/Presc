@@ -4,7 +4,7 @@ import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
 
 class TagGrid extends StatelessWidget {
-  TagGrid({this.memoId});
+  TagGrid({required this.memoId});
 
   final int memoId;
 
@@ -24,14 +24,18 @@ class TagGrid extends StatelessWidget {
     );
   }
 
-  Widget _tag(BuildContext context, ManuscriptTagProvider model,
-      {bool selected, TagTable tagTable}) {
+  Widget _tag(
+    BuildContext context,
+    ManuscriptTagProvider model, {
+    required bool selected,
+    required TagTable tagTable,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(right: 8),
       child: ChoiceChip(
         shape: RoundedRectangleBorder(
           side: BorderSide(
-            color: selected ? Theme.of(context).accentColor : Colors.grey[300],
+            color: selected ? Theme.of(context).accentColor : Colors.grey[300]!,
             width: 1,
           ),
           borderRadius: BorderRadius.circular(24),

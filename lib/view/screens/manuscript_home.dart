@@ -70,7 +70,7 @@ class ManuscriptHomeScreen extends StatelessWidget {
             Icons.menu,
             onPressed: () {
               context.read<EditableTagItemProvider>().loadTag();
-              _scaffoldKey.currentState.openDrawer();
+              _scaffoldKey.currentState?.openDrawer();
             },
           ),
           Container(

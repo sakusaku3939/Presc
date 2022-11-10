@@ -10,7 +10,7 @@ class Hiragana {
   *
   *  Web Services by Yahoo! JAPAN （https://developer.yahoo.co.jp/sitemap/）
   * */
-  Future<HiraganaResult> convert(String text) async {
+  Future<HiraganaResult?> convert(String text) async {
     final url = "https://jlp.yahooapis.jp/FuriganaService/V2/furigana";
     final http.Response res = await http.post(
       Uri.parse(url),
@@ -33,7 +33,7 @@ class Hiragana {
 
       for (int i = 0; i < word.length; i++) {
         String origin = word[i]["surface"];
-        String hiragana = word[i]["furigana"];
+        String? hiragana = word[i]["furigana"];
 
         final isEmpty = result.origin.isEmpty;
         final isLong = origin.length > 1;

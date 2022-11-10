@@ -5,9 +5,9 @@ import 'package:presc/viewModel/manuscript_provider.dart';
 
 class TrashMoveManager {
   static Future<void> move({
-    @required BuildContext context,
-    @required ManuscriptProvider provider,
-    @required int index,
+    required BuildContext context,
+    required ManuscriptProvider provider,
+    required int index,
   }) async {
     final newId = await provider.moveToTrash(
       memoId: provider.scriptTable[index].id,
@@ -29,9 +29,9 @@ class TrashMoveManager {
   }
 
   static Future<void> deleteEmpty({
-    @required BuildContext context,
-    @required ManuscriptProvider provider,
-    @required int index,
+    required BuildContext context,
+    required ManuscriptProvider provider,
+    required int index,
   }) async {
     final newId = await provider.moveToTrash(
       memoId: provider.scriptTable[index].id,
@@ -47,9 +47,9 @@ class TrashMoveManager {
   }
 
   static Future<void> restore({
-    @required BuildContext context,
-    @required ManuscriptProvider provider,
-    @required int index,
+    required BuildContext context,
+    required ManuscriptProvider provider,
+    required int index,
   }) async {
     final newId = await provider.restoreFromTrash(
       trashId: provider.scriptTable[index].id,
@@ -71,15 +71,15 @@ class TrashMoveManager {
   }
 
   static Future<void> delete({
-    @required BuildContext context,
-    @required ManuscriptProvider provider,
-    @required int index,
+    required BuildContext context,
+    required ManuscriptProvider provider,
+    required int index,
   }) async {
     final title = provider.scriptTable[index].title;
     await PlatformDialogManager.showDeleteAlert(
       context,
       message: S.current.doDeletePermanently(
-        title.isNotEmpty ? title : "(${S.current.noTitle})",
+        (title != null && title.isNotEmpty) ? title : "(${S.current.noTitle})",
       ),
       deleteLabel: S.current.delete,
       cancelLabel: S.current.cancel,
