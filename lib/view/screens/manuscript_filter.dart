@@ -53,7 +53,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
     );
   }
 
-  Widget _appbar(BuildContext context) {
+  AppBar _appbar(BuildContext context) {
     return AppBar(
       elevation: 0,
       leading: RippleIconButton(
@@ -61,12 +61,12 @@ class ManuscriptFilterScreen extends StatelessWidget {
         size: 32,
         onPressed: () => _back(context),
       ),
-      title: Selector<ManuscriptProvider, TagTable>(
+      title: Selector<ManuscriptProvider, TagTable?>(
         selector: (_, model) => model.currentTagTable,
         builder: (context, currentTagTable, child) {
           return Text(
             state == ManuscriptState.tag
-                ? currentTagTable.tagName
+                ? currentTagTable?.tagName ?? ""
                 : S.current.trash,
             style: const TextStyle(fontSize: 20),
           );
@@ -97,55 +97,57 @@ class ManuscriptFilterScreen extends StatelessWidget {
           ],
           icon: Icon(Icons.more_vert, color: ColorConfig.iconColor),
           onSelected: (value) async {
-            switch (value) {
-              case "change":
-                PlatformDialogManager.showInputDialog(
-                  context,
-                  title: S.current.tag,
-                  content: model.currentTagTable.tagName,
-                  placeholder: S.current.placeholderTagName,
-                  okLabel: S.current.change,
-                  cancelLabel: S.current.cancel,
-                  onOkPressed: (String text) async {
-                    if (text.trim().isNotEmpty) {
-                      await tagItemProvider.updateTag(
-                        model.currentTagTable.id,
-                        text,
-                      );
-                      model.currentTagTable = TagTable(
-                        id: model.currentTagTable.id,
-                        tagName: text,
-                      );
+            if (model.currentTagTable != null) {
+              switch (value) {
+                case "change":
+                  PlatformDialogManager.showInputDialog(
+                    context,
+                    title: S.current.tag,
+                    content: model.currentTagTable!.tagName,
+                    placeholder: S.current.placeholderTagName,
+                    okLabel: S.current.change,
+                    cancelLabel: S.current.cancel,
+                    onOkPressed: (String text) async {
+                      if (text.trim().isNotEmpty) {
+                        await tagItemProvider.updateTag(
+                          model.currentTagTable!.id,
+                          text,
+                        );
+                        model.currentTagTable = TagTable(
+                          id: model.currentTagTable!.id,
+                          tagName: text,
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(S.current.tagUpdated),
+                            duration: const Duration(seconds: 2),
+                          ),
+                        );
+                      }
+                    },
+                  );
+                  break;
+                case "delete":
+                  PlatformDialogManager.showDeleteAlert(
+                    context,
+                    message: S.current.alertRemoveTag(
+                      model.currentTagTable!.tagName,
+                    ),
+                    deleteLabel: S.current.remove,
+                    cancelLabel: S.current.cancel,
+                    onDeletePressed: () {
+                      tagItemProvider.deleteTag(model.currentTagTable!.id);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(S.current.tagUpdated),
+                          content: Text(S.current.tagRemoved),
                           duration: const Duration(seconds: 2),
                         ),
                       );
-                    }
-                  },
-                );
-                break;
-              case "delete":
-                PlatformDialogManager.showDeleteAlert(
-                  context,
-                  message: S.current.alertRemoveTag(
-                    model.currentTagTable.tagName,
-                  ),
-                  deleteLabel: S.current.remove,
-                  cancelLabel: S.current.cancel,
-                  onDeletePressed: () {
-                    tagItemProvider.deleteTag(model.currentTagTable.id);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(S.current.tagRemoved),
-                        duration: const Duration(seconds: 2),
-                      ),
-                    );
-                    model.replaceState(ManuscriptState.home);
-                  },
-                );
-                break;
+                      model.replaceState(ManuscriptState.home);
+                    },
+                  );
+                  break;
+              }
             }
           },
         );

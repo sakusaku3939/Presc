@@ -36,8 +36,8 @@ class ManuscriptSearchScreen extends StatelessWidget {
     );
   }
 
-  Widget _appbar(BuildContext context) {
-    Timer _timer;
+  AppBar _appbar(BuildContext context) {
+    Timer? _timer;
     return AppBar(
       elevation: 1,
       leading: RippleIconButton(
