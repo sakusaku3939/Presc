@@ -47,16 +47,17 @@ class SpeechToTextProvider with ChangeNotifier {
   double lastOffset = 0;
 
   void start(BuildContext context) async {
-    final timer = context.read<PlaybackTimerProvider>();
+    if (Platform.isAndroid && await _startSilentMode(context)) return;
+
     final showSnackBar = (text) => ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(text),
             duration: const Duration(seconds: 2),
           ),
         );
-    if (Platform.isAndroid && await _startSilentMode(context)) return;
-
+    final timer = context.read<PlaybackTimerProvider>();
     timer.start();
+
     _manager.speak(
       resultListener: _reflect,
       errorListener: (error) {
@@ -92,39 +93,74 @@ class SpeechToTextProvider with ChangeNotifier {
     _stopSilentMode();
   }
 
-  void reset(String content) {
-    _recognizedText = "";
-    _unrecognizedText = content;
-    lastOffset = 0;
+  void _reflect(String lastWords) async {
+    isProcessing = true;
+
+    final N = InitConfig.ngramNum;
+    final isLatinAlphabet = RegExp(r'^[ -~｡-ﾟ]+$').hasMatch(lastWords);
+    int textLen, odd = 0;
+
+    final range = !isLatinAlphabet ? 120 : 240;
+    final rangeUnrecognizedText = unrecognizedText.length > range
+        ? unrecognizedText.substring(0, range)
+        : unrecognizedText;
+
+    if (isLatinAlphabet) {
+      // アルファベットの場合は空白で区切る
+      final splitText = rangeUnrecognizedText.split(" ");
+      final index = _findTextIndex(
+        splitText.map((e) => e.toLowerCase()).toList(),
+        splitWords: lastWords.split(" "),
+      );
+      if (index != -1) {
+        textLen = splitText.sublist(0, index).join().length + index;
+        odd = splitText[index].length;
+      } else {
+        textLen = -1;
+      }
+    } else {
+      // 音声認識された文章と、現在の場所から120文字以内の文章をひらがなに変換
+      final res = await Future.wait([
+        _hiragana.convert(lastWords),
+        _hiragana.convert(rangeUnrecognizedText),
+      ]);
+      final lastWordsResult = res.first;
+      final rangeTextResult = res.last;
+
+      if (lastWordsResult != null && rangeTextResult != null) {
+        // 形態素解析されたひらがな文章から、最後に一致したindexを取得
+        final hiraganaLastIndex = _findHiraganaLastIndex(
+          lastWords: lastWordsResult.hiragana,
+          rangeText: rangeTextResult.hiragana,
+        );
+        if (hiraganaLastIndex != -1) {
+          final origin = rangeTextResult.origin;
+          final rangeOrigin = origin.sublist(0, hiraganaLastIndex);
+
+          textLen = rangeOrigin.join().length;
+          odd = origin[hiraganaLastIndex].length;
+        } else {
+          textLen = -1;
+        }
+      } else {
+        // ひらがなへの変換に失敗した場合はN-gramで分割
+        textLen = _findTextIndex(
+          rangeUnrecognizedText.toLowerCase(),
+          splitWords: _ngram(lastWords, N),
+        );
+        odd = N;
+      }
+    }
+
+    // 認識結果を画面に反映する
+    if (textLen != -1) {
+      final latestRecognizedText = unrecognizedText.substring(0, textLen + odd);
+      _recognizedText += latestRecognizedText;
+      _unrecognizedText = unrecognizedText.substring(textLen + odd);
+
+      _history.add(recognizedText.length);
+    }
     _isProcessing = false;
-    _history.clear();
-  }
-
-  void back(BuildContext context) {
-    stop();
-    context.read<PlaybackProvider>().playFabState = false;
-    context.read<PlaybackTimerProvider>().reset();
-    _history.clear();
-    Navigator.pop(context);
-    _requestInAppReview();
-  }
-
-  void undo() {
-    if (!_history.canUndo()) return;
-    _history.undo();
-    _reflectText();
-  }
-
-  void redo() {
-    if (!_history.canRedo()) return;
-    _history.redo();
-    _reflectText();
-  }
-
-  void _reflectText() {
-    final text = recognizedText + unrecognizedText;
-    _recognizedText = text.substring(0, _history.current);
-    _unrecognizedText = text.substring(_history.current);
     notifyListeners();
   }
 
@@ -133,82 +169,21 @@ class SpeechToTextProvider with ChangeNotifier {
         (i) => target.substring(i, i + n),
       );
 
-  void _reflect(String lastWords) async {
-    isProcessing = true;
-
-    final N = InitConfig.ngramNum;
-    final rangeUnrecognizedText = unrecognizedText.length > 120
-        ? unrecognizedText.substring(0, 120)
-        : unrecognizedText;
-
-    final isLatinAlphabet = RegExp(r'^[ -~｡-ﾟ]+$').hasMatch(lastWords);
-    int textLen, i = 0;
-
-    if (isLatinAlphabet) {
-      final splitText = rangeUnrecognizedText.split(" ");
-      final splitWords = lastWords.split(" ");
-      final index = _findTextIndex(
-        splitText.map((e) => e.toLowerCase()).toList(),
-        splitWords,
-      );
-      if (index != -1) {
-        textLen = splitText.sublist(0, index).join().length + index;
-        i = splitText[index].length;
-      } else {
-        textLen = -1;
-      }
-    } else {
-      final res = await Future.wait([
-        _hiragana.convert(rangeUnrecognizedText),
-        _hiragana.convert(lastWords),
-      ]);
-      final lastWordsResult = res.last;
-      final rangeTextResult = res.first;
-
-      if (lastWordsResult != null && rangeTextResult != null) {
-        final hiraganaLastIndex = _findHiraganaLastIndex(
-          lastWordsResult.hiragana,
-          rangeTextResult.hiragana,
-        );
-
-        if (hiraganaLastIndex != -1) {
-          final origin = rangeTextResult.origin;
-          final rangeOrigin = origin.sublist(0, hiraganaLastIndex);
-
-          textLen = rangeOrigin.join().length;
-          i = origin[hiraganaLastIndex].length;
-        } else {
-          textLen = -1;
-        }
-      } else {
-        textLen = _findTextIndex(
-          rangeUnrecognizedText.toLowerCase(),
-          _ngram(lastWords, N),
-        );
-        i = N;
-      }
-    }
-
-    if (textLen != -1) {
-      final latestRecognizedText = unrecognizedText.substring(0, textLen + i);
-      _recognizedText += latestRecognizedText;
-      _unrecognizedText = unrecognizedText.substring(textLen + i);
-
-      _history.add(recognizedText.length);
-    }
-    _isProcessing = false;
-    notifyListeners();
-  }
-
-  int _findTextIndex(dynamic text, List<String> splitWord) {
+  int _findTextIndex(
+    dynamic text, {
+    required List<String> splitWords,
+  }) {
     int lastIndex = -1;
-    splitWord.forEach((t) {
+    splitWords.forEach((t) {
       lastIndex = max(text.indexOf(t.toLowerCase()), lastIndex);
     });
     return lastIndex;
   }
 
-  int _findHiraganaLastIndex(List<String> lastWords, List<String> rangeText) {
+  int _findHiraganaLastIndex({
+    required List<String> lastWords,
+    required List<String> rangeText,
+  }) {
     int hiraganaLastIndex = -1;
     int excludeIndex = 0;
 
@@ -301,6 +276,43 @@ class SpeechToTextProvider with ChangeNotifier {
         inAppReview.requestReview();
       }
     }
+  }
+
+  void undo() {
+    if (!_history.canUndo()) return;
+    _history.undo();
+    _reflectText();
+  }
+
+  void redo() {
+    if (!_history.canRedo()) return;
+    _history.redo();
+    _reflectText();
+  }
+
+  void _reflectText() {
+    final text = recognizedText + unrecognizedText;
+    _recognizedText = text.substring(0, _history.current);
+    _unrecognizedText = text.substring(_history.current);
+    notifyListeners();
+  }
+
+  void reset(String content) {
+    _recognizedText = "";
+    _unrecognizedText = content;
+    lastOffset = 0;
+    _isProcessing = false;
+    _history.clear();
+  }
+
+  void back(BuildContext context) {
+    stop();
+    context.read<PlaybackProvider>().playFabState = false;
+    context.read<PlaybackTimerProvider>().reset();
+    _history.clear();
+
+    Navigator.pop(context);
+    _requestInAppReview();
   }
 }
 
