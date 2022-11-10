@@ -21,7 +21,7 @@ class PlaybackTextView extends StatelessWidget {
   final String text;
   final double gradientFraction;
 
-  static String _content;
+  static String? _content;
   final ScrollController _scrollController = ScrollController();
   final GlobalKey _playbackTextKey = GlobalKey();
 
@@ -36,7 +36,7 @@ class PlaybackTextView extends StatelessWidget {
 
   void reset(BuildContext context) {
     stop(context);
-    context.read<SpeechToTextProvider>().reset(_content);
+    if (_content != null) context.read<SpeechToTextProvider>().reset(_content!);
   }
 
   void scrollToStart() => _scrollController.animateTo(
@@ -135,7 +135,7 @@ class PlaybackTextView extends StatelessWidget {
     else
       return Tategaki(
         recognizedText: "",
-        unrecognizedText: _content,
+        unrecognizedText: _content!,
       );
   }
 
@@ -169,7 +169,7 @@ class PlaybackTextView extends StatelessWidget {
       );
   }
 
-  void _returnToScroll(Notification notification, PlaybackProvider model) {
+  void _returnToScroll(Object? notification, PlaybackProvider model) {
     if (notification is ScrollEndNotification && model.playFabState) {
       Timer(Duration(seconds: 1), () {
         _autoScroll(model);
@@ -180,9 +180,9 @@ class PlaybackTextView extends StatelessWidget {
 
 class _RecognizedTextView extends StatelessWidget {
   const _RecognizedTextView({
-    @required this.playbackProvider,
-    @required this.scroll,
-    @required this.playbackTextKey,
+    required this.playbackProvider,
+    required this.scroll,
+    required this.playbackTextKey,
   });
 
   final PlaybackProvider playbackProvider;
@@ -228,11 +228,11 @@ class _RecognizedTextView extends StatelessWidget {
     SpeechToTextProvider model,
   ) {
     if (model.recognizedText.isNotEmpty) {
-      final RenderBox box = playbackTextKey.currentContext?.findRenderObject();
+      final box = playbackTextKey.currentContext?.findRenderObject() as RenderBox;
       final height = _textBoxHeight(
         context,
         model.recognizedText,
-        textWidth: box?.size?.width,
+        textWidth: box.size.width,
       );
       final offset =
           height - playbackProvider.fontSize * playbackProvider.fontHeight;
@@ -261,8 +261,8 @@ class _RecognizedTextView extends StatelessWidget {
     }
   }
 
-  void _scrollTo(double offset, {bool limit}) {
-    if (limit)
+  void _scrollTo(double offset, {bool? limit}) {
+    if (limit == true)
       scroll.animateTo(
         offset,
         duration: Duration(milliseconds: 1000),
@@ -273,7 +273,7 @@ class _RecognizedTextView extends StatelessWidget {
   double _textBoxHeight(
     BuildContext context,
     String recognizedText, {
-    @required double textWidth,
+    required double textWidth,
   }) {
     final TextPainter textPainter = TextPainter(
       text: TextSpan(

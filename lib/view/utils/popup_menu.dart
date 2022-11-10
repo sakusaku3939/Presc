@@ -6,13 +6,13 @@ class PopupMenu extends StatelessWidget {
     this.offset = const Offset(0, 0),
     this.icon,
     this.size,
-    @required this.onSelected,
+    required this.onSelected,
   });
 
   final List<PopupMenuEntry<String>> menuItem;
   final Offset offset;
-  final Icon icon;
-  final double size;
+  final Icon? icon;
+  final double? size;
   final Function(String value) onSelected;
 
   @override

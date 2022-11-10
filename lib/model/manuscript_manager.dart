@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:presc/model/utils/database_helper.dart';
 import 'package:presc/model/utils/database_table.dart';
 
@@ -22,7 +21,7 @@ class ManuscriptManager {
   }
 
   Future<void> updateScript(
-      {@required int id, String title, String content}) async {
+      {required int id, String? title, String? content}) async {
     DatabaseTable table = MemoTable(
       id: id,
       title: title,
@@ -41,14 +40,14 @@ class ManuscriptManager {
     return tableList;
   }
 
-  Future<List<MemoTable>> searchScript({@required String keyword}) async {
+  Future<List<MemoTable>> searchScript({required String keyword}) async {
     final res = await _helper.search(keyword);
     List<MemoTable> tableList = res.map((row) => MemoTable.fromMap(row)).toList();
     tableList.sort((a, b) => b.date.compareTo(a.date));
     return tableList;
   }
 
-  Future<List<MemoTable>> getScriptByTagId({@required int tagId}) async {
+  Future<List<MemoTable>> getScriptByTagId({required int tagId}) async {
     final res = await _helper.queryMemoByTagId(tagId);
     List<MemoTable> tableList =
         res.map((row) => MemoTable.fromMap(row)).toList();
@@ -56,7 +55,7 @@ class ManuscriptManager {
     return tableList;
   }
 
-  Future<int> moveToTrash({@required int memoId}) async {
+  Future<int> moveToTrash({required int memoId}) async {
     await updateScript(id: memoId);
     final res = await _helper.queryById(MemoTable.name, memoId);
     DatabaseTable table = TrashTable.fromMap(res);
@@ -66,7 +65,7 @@ class ManuscriptManager {
     return trashId;
   }
 
-  Future<int> restoreFromTrash({@required int trashId}) async {
+  Future<int> restoreFromTrash({required int trashId}) async {
     final res = await _helper.queryById(TrashTable.name, trashId);
     DatabaseTable table = MemoTable.fromMap(res);
     final memoId = await _helper.insert(table);
@@ -83,7 +82,7 @@ class ManuscriptManager {
     await _helper.deleteAll(TrashTable.name);
   }
 
-  Future<void> deleteTrash({@required int trashId}) async {
+  Future<void> deleteTrash({required int trashId}) async {
     _helper.delete(TagMemoTable.name, trashId, idName: "memo_id");
     await _helper.delete(TrashTable.name, trashId);
   }

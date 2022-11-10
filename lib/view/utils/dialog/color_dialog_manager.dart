@@ -5,9 +5,9 @@ import 'package:presc/generated/l10n.dart';
 class ColorDialogManager {
   static void show(
     BuildContext context, {
-    @required Color pickerColor,
-    @required Color initialColor,
-    @required void Function(Color) onSubmitted,
+    required Color pickerColor,
+    required Color initialColor,
+    required void Function(Color) onSubmitted,
   }) {
     showDialog(
       context: context,

@@ -7,9 +7,9 @@ import 'package:presc/viewModel/playback_provider.dart';
 
 class Tategaki extends StatelessWidget {
   Tategaki({
-    Key key,
-    @required this.recognizedText,
-    @required this.unrecognizedText,
+    Key? key,
+    required this.recognizedText,
+    required this.unrecognizedText,
   }) : super(key: key);
 
   final String recognizedText;
@@ -83,7 +83,7 @@ class Tategaki extends StatelessWidget {
     final config = PlaybackTextStyle.of(provider);
     final style = recognized ? config.recognized : config.unrecognized;
     if (VerticalRotated.map[char] != null) {
-      return Text(VerticalRotated.map[char], style: style);
+      return Text(VerticalRotated.map[char]!, style: style);
     } else {
       return Text(char, style: style);
     }
