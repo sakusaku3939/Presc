@@ -11,22 +11,22 @@ class DisplaySize {
 }
 
 class _SafeAreaSize {
-  static _SafeAreaSize _instance;
-  static BuildContext _context;
+  static _SafeAreaSize? _instance;
+  static BuildContext? _context;
 
   _SafeAreaSize._();
 
   factory _SafeAreaSize.of(BuildContext context) {
     _context = context;
     _instance ??= _SafeAreaSize._();
-    return _instance;
+    return _instance!;
   }
 
   double get height {
-    final logicalPixel = MediaQuery.of(_context).size.height;
+    final logicalPixel = MediaQuery.of(_context!).size.height;
     final appBarSize = AppBar().preferredSize.height;
-    final padding = MediaQuery.of(_context).padding.top +
-        MediaQuery.of(_context).padding.bottom;
+    final padding = MediaQuery.of(_context!).padding.top +
+        MediaQuery.of(_context!).padding.bottom;
     return logicalPixel - appBarSize - padding;
   }
 }

@@ -11,15 +11,18 @@ class ManuscriptProvider with ChangeNotifier {
 
   ManuscriptState get state => _state;
 
-  List<MemoTable> _scriptTable;
+  List<MemoTable>? _scriptTable;
 
-  List<MemoTable> get scriptTable => _scriptTable;
+  List<MemoTable> get scriptTable {
+    if (_scriptTable == null) return [];
+    return _scriptTable!;
+  }
 
-  TagTable _currentTagTable;
+  TagTable? _currentTagTable;
 
-  TagTable get currentTagTable => _currentTagTable;
+  TagTable? get currentTagTable => _currentTagTable;
 
-  set currentTagTable(TagTable tagTable) {
+  set currentTagTable(TagTable? tagTable) {
     _currentTagTable = tagTable;
     notifyListeners();
   }
@@ -35,7 +38,7 @@ class ManuscriptProvider with ChangeNotifier {
   }
 
   Future<void> replaceState(ManuscriptState state,
-      {int tagId, String tagName = "", String searchWord = ""}) async {
+      {int? tagId, String tagName = "", String searchWord = ""}) async {
     switch (state) {
       case ManuscriptState.home:
         _scriptTable = await _manager.getAllScript();
@@ -43,6 +46,7 @@ class ManuscriptProvider with ChangeNotifier {
       case ManuscriptState.tag:
         if (tagId == null) return;
         _scriptTable = await _manager.getScriptByTagId(tagId: tagId);
+        _currentTagTable = TagTable(id: tagId, tagName: tagName);
         break;
       case ManuscriptState.trash:
         _scriptTable = await _manager.getAllScript(trash: true);
@@ -54,28 +58,27 @@ class ManuscriptProvider with ChangeNotifier {
         break;
     }
     _state = state;
-    _currentTagTable = TagTable(id: tagId, tagName: tagName);
     notifyListeners();
   }
 
   Future<int> addScript({
-    String title,
-    String content,
+    required String title,
+    required String content,
   }) async =>
       await _manager.addScript(title: title, content: content);
 
   Future<void> saveScript({
-    @required int id,
-    String title,
-    String content,
+    required int id,
+    String? title,
+    String? content,
   }) async {
     await _manager.updateScript(id: id, title: title, content: content);
   }
 
-  Future<int> moveToTrash({@required int memoId}) async =>
+  Future<int> moveToTrash({required int memoId}) async =>
       await _manager.moveToTrash(memoId: memoId);
 
-  Future<int> restoreFromTrash({@required int trashId}) async =>
+  Future<int> restoreFromTrash({required int trashId}) async =>
       await _manager.restoreFromTrash(trashId: trashId);
 
   Future<void> updateScriptTable() async {
@@ -87,7 +90,7 @@ class ManuscriptProvider with ChangeNotifier {
 
   Future<void> clearTrash() async => await _manager.clearTrash();
 
-  Future<void> deleteTrash({@required int trashId}) async =>
+  Future<void> deleteTrash({required int trashId}) async =>
       await _manager.deleteTrash(trashId: trashId);
 
   Future<void> notifyBack(BuildContext context) async {

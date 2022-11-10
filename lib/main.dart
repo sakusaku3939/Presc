@@ -50,7 +50,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  StreamSubscription _intentDataStreamSubscription;
+  StreamSubscription? _intentDataStreamSubscription;
 
   @override
   void initState() {
@@ -66,7 +66,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
-    _intentDataStreamSubscription.cancel();
+    _intentDataStreamSubscription?.cancel();
     super.dispose();
   }
 
@@ -95,7 +95,7 @@ class _MyAppState extends State<MyApp> {
         builder: (context, snapshot) {
           if (snapshot.data == null)
             return Container(color: ColorConfig.backgroundColor);
-          if (snapshot.data) {
+          if (snapshot.data == true) {
             return OnBoardingScreen();
           } else {
             return ManuscriptScreen();
@@ -110,7 +110,7 @@ class _MyAppState extends State<MyApp> {
     return prefs.getBool("isFirstLaunch") ?? true;
   }
 
-  Future<void> receiveShareText(String text) async {
+  Future<void> receiveShareText(String? text) async {
     if (text != null && text.isNotEmpty) {
       final provider = context.read<ManuscriptProvider>();
       final id = await provider.addScript(title: "", content: text);

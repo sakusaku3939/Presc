@@ -9,6 +9,6 @@ void main() {
     dotenv.testLoad(fileInput: File(".env").readAsStringSync());
     final hiragana = Hiragana();
     final result = await hiragana.convert("吾輩は猫である。名前はまだ無い。");
-    expect(result.hiragana, ['わがはいはねこである', '。', 'なまえは', 'まだ', 'ない', '。']);
+    expect(result?.hiragana, ['わがはいはねこである', '。', 'なまえは', 'まだ', 'ない', '。']);
   });
 }

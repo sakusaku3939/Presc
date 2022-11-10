@@ -21,7 +21,7 @@ class SpeechToTextProvider with ChangeNotifier {
   final _manager = SpeechToTextManager();
   final _history = _History();
   final _hiragana = Hiragana();
-  RingerModeStatus _defaultRingerStatus;
+  RingerModeStatus? _defaultRingerStatus;
 
   String _unrecognizedText = "";
   String _recognizedText = "";
@@ -142,7 +142,7 @@ class SpeechToTextProvider with ChangeNotifier {
         : unrecognizedText;
 
     final isLatinAlphabet = RegExp(r'^[ -~｡-ﾟ]+$').hasMatch(lastWords);
-    int textLen, i;
+    int textLen, i = 0;
 
     if (isLatinAlphabet) {
       final splitText = rangeUnrecognizedText.split(" ");
@@ -162,10 +162,10 @@ class SpeechToTextProvider with ChangeNotifier {
         _hiragana.convert(rangeUnrecognizedText),
         _hiragana.convert(lastWords),
       ]);
-      final rangeTextResult = res.first;
       final lastWordsResult = res.last;
+      final rangeTextResult = res.first;
 
-      if (lastWordsResult != null) {
+      if (lastWordsResult != null && rangeTextResult != null) {
         final hiraganaLastIndex = _findHiraganaLastIndex(
           lastWordsResult.hiragana,
           rangeTextResult.hiragana,
@@ -252,12 +252,12 @@ class SpeechToTextProvider with ChangeNotifier {
     await SoundMode.setSoundMode(RingerModeStatus.unknown);
     final ringerModeStatus = await SoundMode.ringerModeStatus;
     final prefs = await SharedPreferences.getInstance();
-    final isGranted = await PermissionHandler.permissionsGranted;
+    final permission = await PermissionHandler.permissionsGranted;
 
     if (ringerModeStatus != RingerModeStatus.normal) {
       prefs.setBool("isSilentHintVisible", true);
       return false;
-    } else if (isGranted) {
+    } else if (permission == true) {
       prefs.setBool("isSilentHintVisible", true);
       _defaultRingerStatus = ringerModeStatus;
       await SoundMode.setSoundMode(RingerModeStatus.silent);
@@ -270,8 +270,10 @@ class SpeechToTextProvider with ChangeNotifier {
   }
 
   Future<void> _stopSilentMode() async {
-    final isGranted = await PermissionHandler.permissionsGranted;
-    if (isGranted) await SoundMode.setSoundMode(_defaultRingerStatus);
+    final permission = await PermissionHandler.permissionsGranted;
+    if (permission == true && _defaultRingerStatus != null) {
+      await SoundMode.setSoundMode(_defaultRingerStatus!);
+    }
   }
 
   Future<void> _requestInAppReview() async {
@@ -291,7 +293,7 @@ class SpeechToTextProvider with ChangeNotifier {
       }
     };
 
-    if (isTimePassed() && totalSecond >= 10 * 60) {
+    if (isTimePassed() && totalSecond != null && totalSecond >= 10 * 60) {
       prefs.setInt("lastReviewRequest", timestamp);
       prefs.setInt("totalSecond", 0);
       final inAppReview = InAppReview.instance;

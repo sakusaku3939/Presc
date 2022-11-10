@@ -3,7 +3,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_scale_tap/flutter_scale_tap.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import "package:intl/intl.dart";
-import 'package:presc/config/color_config.dart';
 import 'package:presc/config/display_size.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/utils/database_table.dart';
@@ -24,7 +23,7 @@ class ScriptCard extends StatelessWidget {
     return Selector<ManuscriptProvider, List<MemoTable>>(
       selector: (_, model) => model.scriptTable,
       builder: (context, scriptTable, child) {
-        if (scriptTable == null)
+        if (scriptTable.length <= 0)
           return _placeholder();
         else if (scriptTable.isEmpty)
           return _emptyView();
@@ -54,7 +53,6 @@ class ScriptCard extends StatelessWidget {
             break;
           case ManuscriptState.search:
             return _placeholder();
-            break;
         }
         return Container(
           width: MediaQuery.of(context).size.width,
@@ -153,7 +151,7 @@ BoxDecoration cardShadow(double radius) {
     color: Colors.white,
     boxShadow: [
       BoxShadow(
-        color: Colors.grey[200],
+        color: Colors.grey[200]!,
         offset: const Offset(0, 2),
         blurRadius: 20,
       ),
@@ -218,7 +216,7 @@ class _Card extends StatelessWidget {
               margin: const EdgeInsets.only(left: 12),
               alignment: Alignment.centerLeft,
               child: Text(
-                title.isNotEmpty ? title : S.current.noTitle,
+                (title != null && title.isNotEmpty) ? title : S.current.noTitle,
                 textScaleFactor: 1,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontSize: 24),
@@ -233,7 +231,7 @@ class _Card extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(12, 8, 4, 0),
                   child: Text(
-                    content.isNotEmpty
+                    (content != null && content.isNotEmpty)
                         ? _optimizeContent(content)
                         : S.current.noAdditionalText,
                     textScaleFactor: 1,

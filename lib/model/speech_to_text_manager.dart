@@ -8,34 +8,34 @@ import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class SpeechToTextManager {
-  static SpeechToTextManager _instance;
+  static SpeechToTextManager? _instance;
 
   String words = "";
   String lastWords = "";
   String lastError = "";
   String lastStatus = "";
 
-  void Function(String lastWords) resultListener;
-  void Function(String error) errorListener;
-  void Function(String status) statusListener;
-  void Function(double level) soundLevelListener;
+  void Function(String lastWords)? resultListener;
+  void Function(String error)? errorListener;
+  void Function(String status)? statusListener;
+  void Function(double level)? soundLevelListener;
 
   stt.SpeechToText _speech = stt.SpeechToText();
   bool _isStopFlagValid = false;
   bool _isCurrentEnglish = false;
-  Timer _timer;
+  Timer? _timer;
 
   SpeechToTextManager._();
 
   factory SpeechToTextManager() {
     _instance ??= SpeechToTextManager._();
-    return _instance;
+    return _instance!;
   }
 
   Future<void> speak({
-    void Function(String lastWords) resultListener,
-    void Function(String error) errorListener,
-    void Function(String status) statusListener,
+    void Function(String lastWords)? resultListener,
+    void Function(String error)? errorListener,
+    void Function(String status)? statusListener,
     bool log = true,
     bool isEnglish = false
   }) async {
@@ -54,12 +54,12 @@ class SpeechToTextManager {
       await _speech.listen(
         onResult: _resultListener,
         onSoundLevelChange: _soundLevelListener,
-        localeId: isEnglish ? "en" : systemLocale.localeId,
+        localeId: isEnglish ? "en" : systemLocale?.localeId,
       );
       if (log) print("start recognition");
     } else {
       if (log) print("speech recognition not available.");
-      this.errorListener("not_available");
+      if (this.errorListener != null) this.errorListener!("not_available");
     }
   }
 
@@ -98,7 +98,7 @@ class SpeechToTextManager {
     lastWords = result.recognizedWords;
     if (lastWords.isNotEmpty) {
       print("lastWords: $lastWords");
-      if (resultListener != null) resultListener(lastWords);
+      if (resultListener != null) resultListener!(lastWords);
     }
   }
 
@@ -114,7 +114,7 @@ class SpeechToTextManager {
       lastWords += latestWord;
     }
 
-    if (_timer != null && _timer.isActive) _timer.cancel();
+    if (_timer != null && _timer!.isActive) _timer!.cancel();
     _timer = Timer(
       Duration(milliseconds: 500),
       () {
@@ -123,7 +123,7 @@ class SpeechToTextManager {
         if (lastWords.length < N) lastWords.padRight(N - 1, ' ');
 
         print("lastWords: $lastWords");
-        if (resultListener != null) resultListener(lastWords);
+        if (resultListener != null) resultListener!(lastWords);
         lastWords = "";
       },
     );
@@ -132,7 +132,7 @@ class SpeechToTextManager {
   void _soundLevelListener(double level) {
     double volume = Platform.isIOS ? _convertDbToVolume(level): level;
     volume = max(0, min(10, volume));
-    if (soundLevelListener != null) soundLevelListener(volume);
+    if (soundLevelListener != null) soundLevelListener!(volume);
   }
 
   double _convertDbToVolume(double dB) {
@@ -147,7 +147,7 @@ class SpeechToTextManager {
       restart();
     } else {
       print(lastError);
-      if (errorListener != null) errorListener(error.errorMsg);
+      if (errorListener != null) errorListener!(error.errorMsg);
     }
   }
 
@@ -156,7 +156,7 @@ class SpeechToTextManager {
     if (lastStatus == "notListening") {
       restart();
     } else {
-      if (statusListener != null) statusListener(status);
+      if (statusListener != null) statusListener!(status);
     }
   }
 }

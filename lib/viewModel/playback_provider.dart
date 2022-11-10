@@ -6,12 +6,12 @@ import 'package:presc/model/utils/enum_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PlaybackProvider with ChangeNotifier {
-  SharedPreferences _prefs;
+  SharedPreferences? _prefs;
   _ScrollModeHelper _modeHelper = _ScrollModeHelper();
 
-  void Function() _onLoadListener;
+  void Function()? _onLoadListener;
 
-  set onLoadListener(Function listener) {
+  set onLoadListener(void Function() listener) {
     if (_prefs == null) {
       _onLoadListener = listener;
     } else {
@@ -34,7 +34,7 @@ class PlaybackProvider with ChangeNotifier {
   /*
   *  再生モード（手動スクロール/自動スクロール/音声認識）
   */
-  ScrollMode _scrollMode;
+  ScrollMode? _scrollMode;
 
   ScrollMode get scrollMode =>
       _scrollMode ??
@@ -47,13 +47,13 @@ class PlaybackProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  ScrollMode _scrollModeFromVal(String value) =>
+  ScrollMode? _scrollModeFromVal(String? value) =>
       value != null ? _modeHelper.valueOf(value) : null;
 
   /*
   *  書式の向き（縦書き/横書き）
   */
-  bool _scrollHorizontal;
+  bool? _scrollHorizontal;
 
   bool get scrollHorizontal =>
       _scrollHorizontal ??
@@ -69,7 +69,7 @@ class PlaybackProvider with ChangeNotifier {
   /*
   *  元に戻す／やり直しボタン（表示/非表示）
   */
-  bool _showUndoRedo;
+  bool? _showUndoRedo;
 
   bool get showUndoRedo =>
       _showUndoRedo ??
@@ -85,7 +85,7 @@ class PlaybackProvider with ChangeNotifier {
   /*
   *  2回タップで元に戻す（ON/OFF）
   */
-  bool _undoDoubleTap;
+  bool? _undoDoubleTap;
 
   bool get undoDoubleTap =>
       _undoDoubleTap ??
@@ -101,7 +101,7 @@ class PlaybackProvider with ChangeNotifier {
   /*
   *  原稿の再生速度
   */
-  double _scrollSpeedMagnification;
+  double? _scrollSpeedMagnification;
 
   double get scrollSpeedMagnification =>
       _scrollSpeedMagnification ??
@@ -117,9 +117,9 @@ class PlaybackProvider with ChangeNotifier {
   /*
   *  フォントサイズ
   */
+  int? _fontSize;
   final initFontSize =
       DisplaySize.isLarge ? InitConfig.tabletFontSize : InitConfig.fontSize;
-  int _fontSize;
 
   int get fontSize => _fontSize ?? _prefs?.getInt("fontSize") ?? initFontSize;
 
@@ -132,7 +132,7 @@ class PlaybackProvider with ChangeNotifier {
   /*
   *  フォントの高さ
   */
-  double _fontHeight;
+  double? _fontHeight;
 
   double get fontHeight =>
       _fontHeight ?? _prefs?.getDouble("fontHeight") ?? InitConfig.fontHeight;
@@ -146,7 +146,7 @@ class PlaybackProvider with ChangeNotifier {
   /*
   *  背景色
   */
-  Color _backgroundColor;
+  Color? _backgroundColor;
 
   Color get backgroundColor =>
       _backgroundColor ??
@@ -162,7 +162,7 @@ class PlaybackProvider with ChangeNotifier {
   /*
   *  文字色
   */
-  Color _textColor;
+  Color? _textColor;
 
   Color get textColor =>
       _textColor ??
@@ -175,13 +175,13 @@ class PlaybackProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Color _colorFromVal(int value) => value != null ? Color(value) : null;
+  Color? _colorFromVal(int? value) => value != null ? Color(value) : null;
 
   PlaybackProvider() {
     Future(() async {
       _prefs = await SharedPreferences.getInstance();
       notifyListeners();
-      if (_onLoadListener != null) _onLoadListener();
+      if (_onLoadListener != null) _onLoadListener!();
     });
   }
 }

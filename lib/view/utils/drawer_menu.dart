@@ -56,7 +56,7 @@ class DrawerMenu extends StatelessWidget {
                     onTap: () {
                       model.replaceState(ManuscriptState.trash);
                       ScaffoldMessenger.of(context).clearSnackBars();
-                      _scaffoldKey.currentState.openEndDrawer();
+                      _scaffoldKey.currentState?.openEndDrawer();
                     },
                   );
                 },
@@ -164,7 +164,7 @@ class DrawerMenu extends StatelessWidget {
                         tagName: tagTable.tagName,
                       );
                   ScaffoldMessenger.of(context).clearSnackBars();
-                  _scaffoldKey.currentState.openEndDrawer();
+                  _scaffoldKey.currentState?.openEndDrawer();
                 },
               ),
             Container(

@@ -13,20 +13,20 @@ class DatabaseHelper {
   static final _databaseName = "ManuscriptDatabase.db";
   static final _databaseVersion = 1;
 
-  static DatabaseHelper _instance;
-  static Database _database;
+  static DatabaseHelper? _instance;
+  static Database? _database;
 
   DatabaseHelper._();
 
   factory DatabaseHelper() {
     _instance ??= DatabaseHelper._();
-    return _instance;
+    return _instance!;
   }
 
   Future<Database> get database async {
-    if (_database != null) return _database;
+    if (_database != null) return _database!;
     _database = await _initDatabase();
-    return _database;
+    return _database!;
   }
 
   _initDatabase() async {
@@ -75,23 +75,23 @@ class DatabaseHelper {
   }
 
   Future<int> insert(DatabaseTable table) async {
-    Database db = await _instance.database;
+    Database db = await _instance!.database;
     return await db.insert(table.tableName, table.toMap());
   }
 
   Future<List<Map<String, dynamic>>> queryAll(String tableName) async {
-    Database db = await _instance.database;
+    Database db = await _instance!.database;
     return await db.query(tableName);
   }
 
   Future<Map<String, dynamic>> queryById(String tableName, int id) async {
-    Database db = await _instance.database;
+    Database db = await _instance!.database;
     final res = await db.query(tableName, where: 'id = ?', whereArgs: [id]);
     return res.first;
   }
 
-  Future<int> queryMaxId(String tableName, {String compareTableName}) async {
-    Database db = await _instance.database;
+  Future<int> queryMaxId(String tableName, {String? compareTableName}) async {
+    Database db = await _instance!.database;
     final res = await db.rawQuery('SELECT MAX(id) FROM $tableName');
     if (compareTableName == null) {
       return Sqflite.firstIntValue(res) ?? 0;
@@ -106,7 +106,7 @@ class DatabaseHelper {
   }
 
   Future<List<Map<String, dynamic>>> search(String keyword) async {
-    Database db = await _instance.database;
+    Database db = await _instance!.database;
     return await db.query(
       MemoTable.name,
       where: 'title LIKE ? or content LIKE ?',
@@ -115,23 +115,23 @@ class DatabaseHelper {
   }
 
   Future<int> update(DatabaseTable table) async {
-    Database db = await _instance.database;
+    Database db = await _instance!.database;
     return await db.update(table.tableName, table.toMap(),
         where: 'id = ?', whereArgs: [table.id]);
   }
 
   Future<int> deleteAll(String tableName) async {
-    Database db = await _instance.database;
+    Database db = await _instance!.database;
     return await db.delete(tableName);
   }
 
   Future<int> delete(String tableName, int id, {String idName = "id"}) async {
-    Database db = await _instance.database;
+    Database db = await _instance!.database;
     return await db.delete(tableName, where: '$idName = ?', whereArgs: [id]);
   }
 
   Future<List<Map<String, dynamic>>> queryTagByMemoId(int memoId) async {
-    Database db = await _instance.database;
+    Database db = await _instance!.database;
     final cross = TagMemoTable.name;
     final tag = TagTable.name;
     return await db.rawQuery('''
@@ -142,7 +142,7 @@ class DatabaseHelper {
   }
 
   Future<List<Map<String, dynamic>>> queryMemoByTagId(int tagId) async {
-    Database db = await _instance.database;
+    Database db = await _instance!.database;
     final cross = TagMemoTable.name;
     final memo = MemoTable.name;
     return await db.rawQuery('''
@@ -153,7 +153,7 @@ class DatabaseHelper {
   }
 
   Future<void> execute(String sql, List<Object> arguments) async {
-    Database db = await _instance.database;
+    Database db = await _instance!.database;
     await db.execute(sql, arguments);
   }
 

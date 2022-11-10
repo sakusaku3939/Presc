@@ -34,7 +34,7 @@ class ScriptModalBottomSheet {
             margin: const EdgeInsets.only(top: 6, bottom: 4),
             decoration: BoxDecoration(
               color: Colors.grey[300],
-              border: Border.all(color: Colors.grey[300]),
+              border: Border.all(color: Colors.grey[300]!),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -70,8 +70,8 @@ class ScriptModalBottomSheet {
               context,
               MaterialPageRoute(
                 builder: (context) => PlaybackScreen(
-                  title: model.scriptTable[index].title,
-                  content: model.scriptTable[index].content,
+                  title: model.scriptTable[index].title ?? "",
+                  content: model.scriptTable[index].content ?? "",
                 ),
               ),
             );

@@ -24,7 +24,7 @@ class OnBoardingScreen extends StatelessWidget {
     ];
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _controller.addListener(() {
-        context.read<OnBoardingProvider>().position = _controller.page;
+        context.read<OnBoardingProvider>().position = _controller.page!;
       });
     });
     return Scaffold(
@@ -198,10 +198,11 @@ class OnBoardingScreen extends StatelessWidget {
     );
   }
 
-  Widget _explanationPage(
-      {@required String imagePath,
-      @required String title,
-      @required String content}) {
+  Widget _explanationPage({
+    required String imagePath,
+    required String title,
+    required String content,
+  }) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
