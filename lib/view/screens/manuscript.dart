@@ -19,17 +19,16 @@ class ManuscriptScreen extends StatelessWidget {
         switch (state) {
           case ManuscriptState.home:
             return ManuscriptHomeScreen();
-            break;
+
           case ManuscriptState.tag:
           case ManuscriptState.trash:
             return ManuscriptFilterScreen(state);
-            break;
+
           case ManuscriptState.search:
             return ManuscriptSearchScreen();
-            break;
+
           default:
             return Container();
-            break;
         }
       },
     );
