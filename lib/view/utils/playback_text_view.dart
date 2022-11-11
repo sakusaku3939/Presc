@@ -116,10 +116,13 @@ class PlaybackTextView extends StatelessWidget {
     scrollToInit(context);
   }
 
-  Widget _textView(BuildContext context, PlaybackProvider model,
-      {autoScroll = false}) {
+  Widget _textView(
+    BuildContext context,
+    PlaybackProvider model, {
+    autoScroll = false,
+  }) {
     if (autoScroll) _autoScroll(model);
-    if (model.scrollHorizontal)
+    if (model.scrollHorizontal) {
       return Text.rich(
         TextSpan(
           style: DefaultTextStyle.of(context).style,
@@ -132,11 +135,12 @@ class PlaybackTextView extends StatelessWidget {
         ),
         key: _playbackTextKey,
       );
-    else
+    } else {
       return Tategaki(
         recognizedText: "",
         unrecognizedText: _content!,
       );
+    }
   }
 
   void _autoScroll(PlaybackProvider model) {
