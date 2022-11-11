@@ -195,6 +195,7 @@ class _RecognizedTextView extends StatelessWidget {
       builder: (context, model, child) {
         if (playbackProvider.scrollHorizontal) {
           _scrollHorizontalRecognizedText(context, model);
+
           return Text.rich(
             TextSpan(
               style: DefaultTextStyle.of(context).style,
@@ -210,9 +211,11 @@ class _RecognizedTextView extends StatelessWidget {
               ],
             ),
             key: playbackTextKey,
+            strutStyle: PlaybackTextStyle.of(playbackProvider).strutStyle,
           );
         } else {
           _scrollVerticalRecognizedText(context, model);
+
           return Tategaki(
             recognizedText: model.recognizedText,
             unrecognizedText: model.unrecognizedText,
@@ -228,7 +231,8 @@ class _RecognizedTextView extends StatelessWidget {
     SpeechToTextProvider model,
   ) {
     if (model.recognizedText.isNotEmpty) {
-      final box = playbackTextKey.currentContext?.findRenderObject() as RenderBox;
+      final box =
+          playbackTextKey.currentContext?.findRenderObject() as RenderBox;
       final height = _textBoxHeight(
         context,
         model.recognizedText,
