@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:presc/config/color_config.dart';
+import 'package:presc/config/init_config.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/char_counter.dart';
+import 'package:presc/model/language.dart';
 import 'package:presc/view/screens/playback.dart';
 import 'package:presc/view/utils/dialog/dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
@@ -349,28 +351,29 @@ class ManuscriptEditScreen extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    S.current.characterCount,
+                    S.current.characterCount(
+                      Language.unit(_current.content ?? content),
+                    ),
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey[700],
                     ),
                   ),
                   Text(
-                    CharCounter.ignoreSpace(_current.content ?? content)
-                        .toString(),
+                    CharCounter.count(_current.content ?? content).toString(),
                   ),
                   SizedBox(height: 16),
                   Text(
-                    S.current.estimatedReadingTime,
+                    S.current.presentationTime(
+                      Language.perMinute(_current.content ?? content),
+                    ),
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.grey[700],
                     ),
                   ),
                   Text(
-                    _calcReadTime(
-                      CharCounter.ignoreSpace(_current.content ?? content),
-                    ),
+                    _calcReadTime(_current.content ?? content),
                   ),
                   SizedBox(height: 16),
                   Text(
@@ -403,11 +406,16 @@ class ManuscriptEditScreen extends StatelessWidget {
     );
   }
 
-  String _calcReadTime(int count) {
-    final char = 320;
+  String _calcReadTime(String text) {
+    final char = Language.isEnglish(text)
+        ? InitConfig.wordsPerMinute
+        : InitConfig.charactersPerMinute;
+    final count = CharCounter.count(text);
+
     final totalSecond = count / (char / 60);
     final minutes = totalSecond ~/ 60;
     final second = (totalSecond % 60).floor();
+
     return S.current.time(minutes, second);
   }
 

@@ -22,15 +22,19 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m0(name) => "タグ ${name}を削除しますか？この操作は元に戻せません。";
 
-  static String m1(title) => "${title}を完全に削除しますか？";
+  static String m1(unit) => "文字数${unit}";
 
-  static String m2(error) => "エラー: ${error}";
+  static String m2(title) => "${title}を完全に削除しますか？";
 
-  static String m3(count) => "${count}件のタグを削除";
+  static String m3(error) => "エラー: ${error}";
 
-  static String m4(count) => "${count}件のタグを削除しました";
+  static String m4(perMinute) => "読み上げ時間の目安（${perMinute}）";
 
-  static String m5(minutes, second) => "${minutes}分${second}秒";
+  static String m5(count) => "${count}件のタグを削除";
+
+  static String m6(count) => "${count}件のタグを削除しました";
+
+  static String m7(minutes, second) => "${minutes}分${second}秒";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -45,21 +49,19 @@ class MessageLookup extends MessageLookupByLibrary {
         "cancel": MessageLookupByLibrary.simpleMessage("キャンセル"),
         "change": MessageLookupByLibrary.simpleMessage("変更"),
         "changeTagName": MessageLookupByLibrary.simpleMessage("タグ名を変更"),
-        "characterCount": MessageLookupByLibrary.simpleMessage("文字数"),
+        "characterCount": m1,
         "close": MessageLookupByLibrary.simpleMessage("戻る"),
         "delete": MessageLookupByLibrary.simpleMessage("削除"),
         "deleteAll": MessageLookupByLibrary.simpleMessage("全て削除"),
         "deletePermanently": MessageLookupByLibrary.simpleMessage("完全に削除"),
-        "doDeletePermanently": m1,
+        "doDeletePermanently": m2,
         "doEmptyTrash": MessageLookupByLibrary.simpleMessage("ごみ箱の中身を空にしますか？"),
         "done": MessageLookupByLibrary.simpleMessage("完了"),
         "edit": MessageLookupByLibrary.simpleMessage("編集"),
         "editTag": MessageLookupByLibrary.simpleMessage("タグの編集"),
         "emptyScriptDeleted":
             MessageLookupByLibrary.simpleMessage("空の原稿を削除しました"),
-        "error": m2,
-        "estimatedReadingTime":
-            MessageLookupByLibrary.simpleMessage("読み上げ時間の目安（1分320文字）"),
+        "error": m3,
         "formatOrientation": MessageLookupByLibrary.simpleMessage("書式の向き"),
         "hide": MessageLookupByLibrary.simpleMessage("非表示"),
         "hint": MessageLookupByLibrary.simpleMessage("ヒント"),
@@ -106,16 +108,17 @@ class MessageLookup extends MessageLookupByLibrary {
         "playMode": MessageLookupByLibrary.simpleMessage("再生モード"),
         "playSetting": MessageLookupByLibrary.simpleMessage("再生設定"),
         "playSpeed": MessageLookupByLibrary.simpleMessage("再生速度"),
+        "presentationTime": m4,
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("プライバシーポリシー"),
         "remove": MessageLookupByLibrary.simpleMessage("削除"),
-        "removeSelectTags": m3,
+        "removeSelectTags": m5,
         "removeTag": MessageLookupByLibrary.simpleMessage("タグを削除"),
         "requirePermission":
             MessageLookupByLibrary.simpleMessage("音声認識を行うにはマイクの許可が必要です"),
         "resetInitValue": MessageLookupByLibrary.simpleMessage("初期値に戻す"),
         "restore": MessageLookupByLibrary.simpleMessage("復元する"),
         "searchScript": MessageLookupByLibrary.simpleMessage("原稿を検索"),
-        "selectTagsRemoved": m4,
+        "selectTagsRemoved": m6,
         "sendFeedback": MessageLookupByLibrary.simpleMessage("フィードバックを送る"),
         "setting": MessageLookupByLibrary.simpleMessage("設定"),
         "show": MessageLookupByLibrary.simpleMessage("表示"),
@@ -127,7 +130,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "tagList": MessageLookupByLibrary.simpleMessage("タグ一覧"),
         "tagRemoved": MessageLookupByLibrary.simpleMessage("タグを削除しました"),
         "tagUpdated": MessageLookupByLibrary.simpleMessage("タグを更新しました"),
-        "time": m5,
+        "time": m7,
         "trash": MessageLookupByLibrary.simpleMessage("ごみ箱"),
         "trashEmptied": MessageLookupByLibrary.simpleMessage("ごみ箱を空にしました"),
         "trashEmpty": MessageLookupByLibrary.simpleMessage("ごみ箱は空です"),

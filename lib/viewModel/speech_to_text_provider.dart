@@ -6,6 +6,7 @@ import 'package:presc/config/init_config.dart';
 import 'package:presc/config/punctuation_config.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/hiragana.dart';
+import 'package:presc/model/language.dart';
 import 'package:presc/model/speech_to_text_manager.dart';
 import 'package:presc/view/utils/dialog/silent_dialog_manager.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
@@ -79,10 +80,7 @@ class SpeechToTextProvider with ChangeNotifier {
             break;
         }
       },
-      isEnglish: RegExp(
-        r'^(?:[a-zA-Z]|\P{L})+$',
-        unicode: true,
-      ).hasMatch(_unrecognizedText),
+      isEnglish: Language.isEnglish(_unrecognizedText),
     );
     notifyListeners();
   }
@@ -97,7 +95,7 @@ class SpeechToTextProvider with ChangeNotifier {
     isProcessing = true;
 
     final N = InitConfig.ngramNum;
-    final isLatinAlphabet = RegExp(r'^[ -~｡-ﾟ]+$').hasMatch(lastWords);
+    final isLatinAlphabet = Language.isLatinAlphabet(lastWords);
     int textLen, odd = 0;
 
     final range = !isLatinAlphabet ? 120 : 240;

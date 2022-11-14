@@ -10,4 +10,6 @@ class InitConfig {
   static const fontSize = 20;
   static const tabletFontSize = 28;
   static const fontHeight = 2.4;
+  static const charactersPerMinute = 320;
+  static const wordsPerMinute = 140;
 }

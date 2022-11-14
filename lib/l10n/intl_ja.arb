@@ -25,8 +25,8 @@
   "placeholderContent": "ここに入力",
   "addNewTag": "新しいタグを追加",
   "newTagAdded": "新しいタグを追加しました",
-  "characterCount": "文字数",
-  "estimatedReadingTime": "読み上げ時間の目安（1分320文字）",
+  "characterCount": "文字数{unit}",
+  "presentationTime": "読み上げ時間の目安（{perMinute}）",
   "lastModified": "最終更新日時",
   "time": "{minutes}分{second}秒",
   "@time": {
