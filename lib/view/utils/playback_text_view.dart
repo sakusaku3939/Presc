@@ -116,10 +116,13 @@ class PlaybackTextView extends StatelessWidget {
     scrollToInit(context);
   }
 
-  Widget _textView(BuildContext context, PlaybackProvider model,
-      {autoScroll = false}) {
+  Widget _textView(
+    BuildContext context,
+    PlaybackProvider model, {
+    autoScroll = false,
+  }) {
     if (autoScroll) _autoScroll(model);
-    if (model.scrollHorizontal)
+    if (model.scrollHorizontal) {
       return Text.rich(
         TextSpan(
           style: DefaultTextStyle.of(context).style,
@@ -132,11 +135,12 @@ class PlaybackTextView extends StatelessWidget {
         ),
         key: _playbackTextKey,
       );
-    else
+    } else {
       return Tategaki(
         recognizedText: "",
         unrecognizedText: _content!,
       );
+    }
   }
 
   void _autoScroll(PlaybackProvider model) {
@@ -195,6 +199,7 @@ class _RecognizedTextView extends StatelessWidget {
       builder: (context, model, child) {
         if (playbackProvider.scrollHorizontal) {
           _scrollHorizontalRecognizedText(context, model);
+
           return Text.rich(
             TextSpan(
               style: DefaultTextStyle.of(context).style,
@@ -210,9 +215,11 @@ class _RecognizedTextView extends StatelessWidget {
               ],
             ),
             key: playbackTextKey,
+            strutStyle: PlaybackTextStyle.of(playbackProvider).strutStyle,
           );
         } else {
           _scrollVerticalRecognizedText(context, model);
+
           return Tategaki(
             recognizedText: model.recognizedText,
             unrecognizedText: model.unrecognizedText,
@@ -228,7 +235,8 @@ class _RecognizedTextView extends StatelessWidget {
     SpeechToTextProvider model,
   ) {
     if (model.recognizedText.isNotEmpty) {
-      final box = playbackTextKey.currentContext?.findRenderObject() as RenderBox;
+      final box =
+          playbackTextKey.currentContext?.findRenderObject() as RenderBox;
       final height = _textBoxHeight(
         context,
         model.recognizedText,

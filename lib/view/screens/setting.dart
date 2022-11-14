@@ -169,6 +169,7 @@ class SettingScreen extends StatelessWidget {
             child: Text(
               SampleTextConfig().setting,
               style: PlaybackTextStyle.of(model).unrecognized,
+              strutStyle: PlaybackTextStyle.of(model).strutStyle,
             ),
           ),
         ),
