@@ -24,23 +24,23 @@ class ManuscriptEditScreen extends StatelessWidget {
   final bool autofocus;
   final _current = _CurrentScript();
 
-  ManuscriptProvider get _provider => context.read<ManuscriptProvider>();
+  ManuscriptProvider get _script => context.read<ManuscriptProvider>();
 
-  int get id => _provider.scriptTable[index].id;
+  int get id => _script.scriptTable[index].id;
 
-  String get title => _provider.scriptTable[index].title ?? "";
+  String get title => _script.scriptTable[index].title ?? "";
 
-  String get content => _provider.scriptTable[index].content ?? "";
+  String get content => _script.scriptTable[index].content ?? "";
 
-  DateTime get date => _provider.scriptTable[index].date;
+  DateTime get date => _script.scriptTable[index].date;
 
   Future<void> _back() async {
-    await _provider.notifyBack(context);
+    await _script.notifyBack(context);
     if (title.isEmpty && content.isEmpty) {
       await Future.delayed(Duration(milliseconds: 300));
       TrashMoveManager.deleteEmpty(
         context: context,
-        provider: _provider,
+        provider: _script,
         index: index,
       );
     }
@@ -67,7 +67,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                     Container(child: _menuBar(context)),
                     Expanded(
                       child: SingleChildScrollView(
-                        child: _provider.current.state != ManuscriptState.trash
+                        child: _script.current.state != ManuscriptState.trash
                             ? _editableContent(context)
                             : _uneditableContent(context),
                       ),
@@ -82,7 +82,7 @@ class ManuscriptEditScreen extends StatelessWidget {
         floatingActionButton: SafeArea(
           child: FloatingActionButton(
             onPressed: () async {
-              if (_provider.current.state != ManuscriptState.trash) {
+              if (_script.current.state != ManuscriptState.trash) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -115,7 +115,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             size: 32,
             onPressed: () async => await _back(),
           ),
-          _provider.current.state != ManuscriptState.trash
+          _script.current.state != ManuscriptState.trash
               ? _editStateMenu()
               : _trashStateMenu()
         ],
@@ -150,7 +150,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             style: const TextStyle(fontSize: 24),
             onChanged: (text) {
               _current.title = text;
-              _provider.saveScript(id: id, title: text);
+              _script.saveScript(id: id, title: text);
             },
           ),
           Container(
@@ -179,7 +179,7 @@ class ManuscriptEditScreen extends StatelessWidget {
               ),
               onChanged: (text) {
                 _current.content = text;
-                _provider.saveScript(id: id, content: text);
+                _script.saveScript(id: id, content: text);
               },
             ),
           ),
@@ -228,9 +228,11 @@ class ManuscriptEditScreen extends StatelessWidget {
           RippleIconButton(
             Icons.playlist_add,
             onPressed: () {
-              if (_provider.current.state != ManuscriptState.trash) {
-                context.read<ManuscriptTagProvider>().loadTag(memoId: id);
+              if (_script.current.state != ManuscriptState.trash) {
+                final tag = context.read<ManuscriptTagProvider>();
                 final controller = TextEditingController();
+                tag.loadTag(memoId: id);
+
                 DialogManager.show(
                   context,
                   content: Column(
@@ -297,7 +299,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                               label: Text(linkTagTable.tagName),
                               backgroundColor: Colors.transparent,
                               onDeleted: () {
-                                final state = _provider.current.state;
+                                final state = _script.current.state;
                                 if (state != ManuscriptState.trash) {
                                   model.changeChecked(
                                     memoId: id,
@@ -337,7 +339,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             await Future.delayed(Duration(milliseconds: 300));
             TrashMoveManager.move(
               context: context,
-              provider: _provider,
+              provider: _script,
               index: index,
             );
           },
@@ -390,7 +392,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                       'yyyy/MM/dd(E) HH:mm',
                       Intl.getCurrentLocale(),
                     ).format(
-                      _provider.scriptTable[index].date,
+                      _script.scriptTable[index].date,
                     ),
                   ),
                 ],
@@ -431,7 +433,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             await Future.delayed(Duration(milliseconds: 300));
             TrashMoveManager.restore(
               context: context,
-              provider: _provider,
+              provider: _script,
               index: index,
             );
           },
@@ -448,7 +450,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             await Future.delayed(Duration(milliseconds: 300));
             TrashMoveManager.delete(
               context: context,
-              provider: _provider,
+              provider: _script,
               index: index,
             );
           },

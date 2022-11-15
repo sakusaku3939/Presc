@@ -42,17 +42,17 @@ class Tategaki extends StatelessWidget {
   }
 
   Widget _textBoxWidget(BuildContext context, Runes runes, int distance) {
-    final provider = context.read<PlaybackProvider>();
+    final playback = context.read<PlaybackProvider>();
     final textBox = (String char, bool recognized) => Row(
           children: [
             _characterWidget(
-              provider,
+              playback,
               char,
               recognized: recognized,
             ),
             SizedBox(
               width:
-                  provider.fontHeight * provider.fontSize - provider.fontSize,
+                  playback.fontHeight * playback.fontSize - playback.fontSize,
             ),
           ],
         );
@@ -90,11 +90,13 @@ class Tategaki extends StatelessWidget {
   }
 
   void _calcRecognizedWidth(BuildContext context, BoxConstraints constraints) {
-    final provider = context.read<PlaybackProvider>();
-    final lineChar = constraints.maxHeight ~/ (provider.fontSize * 1.2);
+    final playback = context.read<PlaybackProvider>();
+    final speech = context.read<SpeechToTextProvider>();
+
+    final lineChar = constraints.maxHeight ~/ (playback.fontSize * 1.2);
     final recognizedLine = (recognizedText.length / lineChar).ceil();
-    final width = recognizedLine * provider.fontHeight * provider.fontSize +
-        provider.fontSize;
-    context.read<SpeechToTextProvider>().verticalRecognizedWidth = width;
+    final width = recognizedLine * playback.fontHeight * playback.fontSize +
+        playback.fontSize;
+    speech.verticalRecognizedWidth = width;
   }
 }

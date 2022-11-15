@@ -42,10 +42,13 @@ class ManuscriptHomeScreen extends StatelessWidget {
       floatingActionButton: SafeArea(
         child: FloatingActionButton(
           onPressed: () async {
-            final provider = context.read<ManuscriptProvider>();
-            final id = await provider.addScript(title: "", content: "");
-            await provider.updateScriptTable();
-            await context.read<ManuscriptTagProvider>().loadTag(memoId: id);
+            final script = context.read<ManuscriptProvider>();
+            final tag = context.read<ManuscriptTagProvider>();
+            final id = await script.addScript(title: "", content: "");
+
+            await script.updateScriptTable();
+            await tag.loadTag(memoId: id);
+
             Navigator.push(
               context,
               PageRouteBuilder(
@@ -69,7 +72,8 @@ class ManuscriptHomeScreen extends StatelessWidget {
           RippleIconButton(
             Icons.menu,
             onPressed: () {
-              context.read<EditableTagItemProvider>().loadTag();
+              final tagItem = context.read<EditableTagItemProvider>();
+              tagItem.loadTag();
               _scaffoldKey.currentState?.openDrawer();
             },
           ),

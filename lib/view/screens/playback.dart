@@ -21,7 +21,8 @@ class PlaybackScreen extends StatelessWidget {
     final playbackTextView = PlaybackTextView(content);
     return WillPopScope(
       onWillPop: () {
-        context.read<SpeechToTextProvider>().back(context);
+        final speech = context.read<SpeechToTextProvider>();
+        speech.back(context);
         return Future.value(false);
       },
       child: Consumer<PlaybackProvider>(

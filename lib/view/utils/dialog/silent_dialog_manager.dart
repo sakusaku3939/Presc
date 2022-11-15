@@ -56,8 +56,10 @@ class SilentDialogManager {
                 DialogTextButton(
                   S.current.openSetting,
                   onPressed: () {
+                    final playback = context.read<PlaybackProvider>();
                     isClose = true;
-                    context.read<PlaybackProvider>().playFabState = false;
+                    playback.playFabState = false;
+
                     Navigator.pop(context);
                     PermissionHandler.openDoNotDisturbSetting();
                   },

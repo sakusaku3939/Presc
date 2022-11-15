@@ -10,7 +10,8 @@ import 'package:provider/provider.dart';
 
 class ManuscriptSearchScreen extends StatelessWidget {
   void _back(BuildContext context) {
-    context.read<ManuscriptProvider>().replaceState(ManuscriptState.home);
+    final script = context.read<ManuscriptProvider>();
+    script.replaceState(ManuscriptState.home);
     ScaffoldMessenger.of(context).clearSnackBars();
   }
 

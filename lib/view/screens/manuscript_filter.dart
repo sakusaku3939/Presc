@@ -16,7 +16,8 @@ class ManuscriptFilterScreen extends StatelessWidget {
   final ManuscriptState state;
 
   void _back(BuildContext context) {
-    context.read<ManuscriptProvider>().replaceState(ManuscriptState.home);
+    final script = context.read<ManuscriptProvider>();
+    script.replaceState(ManuscriptState.home);
     ScaffoldMessenger.of(context).clearSnackBars();
   }
 
@@ -81,7 +82,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
   }
 
   Widget _tagActionsIcon(BuildContext context) {
-    final tagItemProvider = context.read<EditableTagItemProvider>();
+    final tagItem = context.read<EditableTagItemProvider>();
     return Consumer<ManuscriptProvider>(
       builder: (context, model, child) {
         return PopupMenu(
@@ -97,57 +98,58 @@ class ManuscriptFilterScreen extends StatelessWidget {
           ],
           icon: Icon(Icons.more_vert, color: ColorConfig.iconColor),
           onSelected: (value) async {
-            if (model.current.tagTable != null) {
-              switch (value) {
-                case "change":
-                  PlatformDialogManager.showInputDialog(
-                    context,
-                    title: S.current.tag,
-                    content: model.current.tagTable!.tagName,
-                    placeholder: S.current.placeholderTagName,
-                    okLabel: S.current.change,
-                    cancelLabel: S.current.cancel,
-                    onOkPressed: (String text) async {
-                      if (text.trim().isNotEmpty) {
-                        await tagItemProvider.updateTag(
-                          model.current.tagTable!.id,
-                          text,
-                        );
-                        model.current.tagTable = TagTable(
-                          id: model.current.tagTable!.id,
-                          tagName: text,
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(S.current.tagUpdated),
-                            duration: const Duration(seconds: 2),
-                          ),
-                        );
-                      }
-                    },
-                  );
-                  break;
-                case "delete":
-                  PlatformDialogManager.showDeleteAlert(
-                    context,
-                    message: S.current.alertRemoveTag(
-                      model.current.tagTable!.tagName,
-                    ),
-                    deleteLabel: S.current.remove,
-                    cancelLabel: S.current.cancel,
-                    onDeletePressed: () {
-                      tagItemProvider.deleteTag(model.current.tagTable!.id);
+            if (model.current.tagTable == null) return;
+
+            switch (value) {
+              case "change":
+                PlatformDialogManager.showInputDialog(
+                  context,
+                  title: S.current.tag,
+                  content: model.current.tagTable!.tagName,
+                  placeholder: S.current.placeholderTagName,
+                  okLabel: S.current.change,
+                  cancelLabel: S.current.cancel,
+                  onOkPressed: (String text) async {
+                    if (text.trim().isNotEmpty) {
+                      await tagItem.updateTag(
+                        model.current.tagTable!.id,
+                        text,
+                      );
+                      model.current.tagTable = TagTable(
+                        id: model.current.tagTable!.id,
+                        tagName: text,
+                      );
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(S.current.tagRemoved),
+                          content: Text(S.current.tagUpdated),
                           duration: const Duration(seconds: 2),
                         ),
                       );
-                      model.replaceState(ManuscriptState.home);
-                    },
-                  );
-                  break;
-              }
+                    }
+                  },
+                );
+                break;
+
+              case "delete":
+                PlatformDialogManager.showDeleteAlert(
+                  context,
+                  message: S.current.alertRemoveTag(
+                    model.current.tagTable!.tagName,
+                  ),
+                  deleteLabel: S.current.remove,
+                  cancelLabel: S.current.cancel,
+                  onDeletePressed: () {
+                    tagItem.deleteTag(model.current.tagTable!.id);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(S.current.tagRemoved),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                    model.replaceState(ManuscriptState.home);
+                  },
+                );
+                break;
             }
           },
         );
@@ -165,15 +167,15 @@ class ManuscriptFilterScreen extends StatelessWidget {
           deleteLabel: S.current.deleteAll,
           cancelLabel: S.current.cancel,
           onDeletePressed: () async {
-            final provider = context.read<ManuscriptProvider>();
-            await provider.clearTrash();
+            final script = context.read<ManuscriptProvider>();
+            await script.clearTrash();
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(S.current.trashEmptied),
                 duration: const Duration(seconds: 2),
               ),
             );
-            await provider.replaceState(state);
+            await script.replaceState(state);
           },
         );
       },

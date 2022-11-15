@@ -36,7 +36,10 @@ class PlaybackTextView extends StatelessWidget {
 
   void reset(BuildContext context) {
     stop(context);
-    if (_content != null) context.read<SpeechToTextProvider>().reset(_content!);
+    if (_content != null) {
+      final speech = context.read<SpeechToTextProvider>();
+      speech.reset(_content!);
+    }
   }
 
   void scrollToStart() => _scrollController.animateTo(
@@ -52,10 +55,10 @@ class PlaybackTextView extends StatelessWidget {
       );
 
   void scrollToInit(BuildContext context) {
-    final provider = context.read<PlaybackProvider>();
-    provider.onLoadListener = () {
+    final playback = context.read<PlaybackProvider>();
+    playback.onLoadListener = () {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (provider.scrollHorizontal)
+        if (playback.scrollHorizontal)
           _scrollController.jumpTo(0);
         else
           _scrollController.jumpTo(_scrollController.position.maxScrollExtent);

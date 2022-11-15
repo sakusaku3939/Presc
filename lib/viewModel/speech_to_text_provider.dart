@@ -62,9 +62,12 @@ class SpeechToTextProvider with ChangeNotifier {
     _manager.speak(
       resultListener: _reflect,
       errorListener: (error) {
-        context.read<PlaybackProvider>().playFabState = false;
-        context.read<PlaybackTimerProvider>().stop();
+        final playback = context.read<PlaybackProvider>();
+        playback.playFabState = false;
+
+        timer.stop();
         _manager.stop();
+
         switch (error) {
           case "not_available":
             showSnackBar(S.current.requirePermission);
@@ -304,9 +307,12 @@ class SpeechToTextProvider with ChangeNotifier {
   }
 
   void back(BuildContext context) {
+    final playback = context.read<PlaybackProvider>();
+    final timer = context.read<PlaybackTimerProvider>();
+
     stop();
-    context.read<PlaybackProvider>().playFabState = false;
-    context.read<PlaybackTimerProvider>().reset();
+    playback.playFabState = false;
+    timer.reset();
     _history.clear();
 
     Navigator.pop(context);
