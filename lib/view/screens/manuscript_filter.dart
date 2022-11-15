@@ -61,12 +61,12 @@ class ManuscriptFilterScreen extends StatelessWidget {
         size: 32,
         onPressed: () => _back(context),
       ),
-      title: Selector<ManuscriptProvider, TagTable?>(
-        selector: (_, model) => model.currentTagTable,
-        builder: (context, currentTagTable, child) {
+      title: Selector<ManuscriptProvider, Current>(
+        selector: (_, model) => model.current,
+        builder: (context, current, child) {
           return Text(
             state == ManuscriptState.tag
-                ? currentTagTable?.tagName ?? ""
+                ? current.tagTable?.tagName ?? ""
                 : S.current.trash,
             style: const TextStyle(fontSize: 20),
           );
@@ -97,24 +97,24 @@ class ManuscriptFilterScreen extends StatelessWidget {
           ],
           icon: Icon(Icons.more_vert, color: ColorConfig.iconColor),
           onSelected: (value) async {
-            if (model.currentTagTable != null) {
+            if (model.current.tagTable != null) {
               switch (value) {
                 case "change":
                   PlatformDialogManager.showInputDialog(
                     context,
                     title: S.current.tag,
-                    content: model.currentTagTable!.tagName,
+                    content: model.current.tagTable!.tagName,
                     placeholder: S.current.placeholderTagName,
                     okLabel: S.current.change,
                     cancelLabel: S.current.cancel,
                     onOkPressed: (String text) async {
                       if (text.trim().isNotEmpty) {
                         await tagItemProvider.updateTag(
-                          model.currentTagTable!.id,
+                          model.current.tagTable!.id,
                           text,
                         );
-                        model.currentTagTable = TagTable(
-                          id: model.currentTagTable!.id,
+                        model.current.tagTable = TagTable(
+                          id: model.current.tagTable!.id,
                           tagName: text,
                         );
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -131,12 +131,12 @@ class ManuscriptFilterScreen extends StatelessWidget {
                   PlatformDialogManager.showDeleteAlert(
                     context,
                     message: S.current.alertRemoveTag(
-                      model.currentTagTable!.tagName,
+                      model.current.tagTable!.tagName,
                     ),
                     deleteLabel: S.current.remove,
                     cancelLabel: S.current.cancel,
                     onDeletePressed: () {
-                      tagItemProvider.deleteTag(model.currentTagTable!.id);
+                      tagItemProvider.deleteTag(model.current.tagTable!.id);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(S.current.tagRemoved),

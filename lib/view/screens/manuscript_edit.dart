@@ -67,7 +67,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                     Container(child: _menuBar(context)),
                     Expanded(
                       child: SingleChildScrollView(
-                        child: _provider.state != ManuscriptState.trash
+                        child: _provider.current.state != ManuscriptState.trash
                             ? _editableContent(context)
                             : _uneditableContent(context),
                       ),
@@ -82,7 +82,7 @@ class ManuscriptEditScreen extends StatelessWidget {
         floatingActionButton: SafeArea(
           child: FloatingActionButton(
             onPressed: () async {
-              if (_provider.state != ManuscriptState.trash) {
+              if (_provider.current.state != ManuscriptState.trash) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -115,7 +115,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             size: 32,
             onPressed: () async => await _back(),
           ),
-          _provider.state != ManuscriptState.trash
+          _provider.current.state != ManuscriptState.trash
               ? _editStateMenu()
               : _trashStateMenu()
         ],
@@ -228,7 +228,7 @@ class ManuscriptEditScreen extends StatelessWidget {
           RippleIconButton(
             Icons.playlist_add,
             onPressed: () {
-              if (_provider.state != ManuscriptState.trash) {
+              if (_provider.current.state != ManuscriptState.trash) {
                 context.read<ManuscriptTagProvider>().loadTag(memoId: id);
                 final controller = TextEditingController();
                 DialogManager.show(
@@ -296,13 +296,15 @@ class ManuscriptEditScreen extends StatelessWidget {
                               ),
                               label: Text(linkTagTable.tagName),
                               backgroundColor: Colors.transparent,
-                              onDeleted: () => {
-                                if (_provider.state != ManuscriptState.trash)
+                              onDeleted: () {
+                                final state = _provider.current.state;
+                                if (state != ManuscriptState.trash) {
                                   model.changeChecked(
                                     memoId: id,
                                     tagId: linkTagTable.id,
                                     newValue: false,
-                                  )
+                                  );
+                                }
                               },
                             ),
                           ),

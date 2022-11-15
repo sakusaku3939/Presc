@@ -7,24 +7,15 @@ import 'package:presc/model/utils/database_table.dart';
 class ManuscriptProvider with ChangeNotifier {
   final _manager = ManuscriptManager();
 
-  ManuscriptState _state = ManuscriptState.home;
+  Current _current = Current();
 
-  ManuscriptState get state => _state;
+  Current get current => _current;
 
   List<MemoTable>? _scriptTable;
 
   List<MemoTable> get scriptTable {
     if (_scriptTable == null) return [];
     return _scriptTable!;
-  }
-
-  TagTable? _currentTagTable;
-
-  TagTable? get currentTagTable => _currentTagTable;
-
-  set currentTagTable(TagTable? tagTable) {
-    _currentTagTable = tagTable;
-    notifyListeners();
   }
 
   ManuscriptProvider() {
@@ -37,8 +28,13 @@ class ManuscriptProvider with ChangeNotifier {
     });
   }
 
-  Future<void> replaceState(ManuscriptState state,
-      {int? tagId, String tagName = "", String searchWord = ""}) async {
+  Future<void> replaceState(
+    ManuscriptState state, {
+    int? tagId,
+    String tagName = "",
+    String searchWord = "",
+  }) async {
+    _current = Current();
     switch (state) {
       case ManuscriptState.home:
         _scriptTable = await _manager.getAllScript();
@@ -46,7 +42,7 @@ class ManuscriptProvider with ChangeNotifier {
       case ManuscriptState.tag:
         if (tagId == null) return;
         _scriptTable = await _manager.getScriptByTagId(tagId: tagId);
-        _currentTagTable = TagTable(id: tagId, tagName: tagName);
+        _current.tagTable = TagTable(id: tagId, tagName: tagName);
         break;
       case ManuscriptState.trash:
         _scriptTable = await _manager.getAllScript(trash: true);
@@ -55,9 +51,10 @@ class ManuscriptProvider with ChangeNotifier {
         _scriptTable = searchWord.isNotEmpty
             ? await _manager.searchScript(keyword: searchWord)
             : [];
+        _current.searchWord = searchWord;
         break;
     }
-    _state = state;
+    _current.state = state;
     notifyListeners();
   }
 
@@ -82,8 +79,11 @@ class ManuscriptProvider with ChangeNotifier {
       await _manager.restoreFromTrash(trashId: trashId);
 
   Future<void> updateScriptTable() async {
-    _scriptTable = await _manager.getAllScript(
-      trash: state == ManuscriptState.trash,
+    replaceState(
+      _current.state,
+      tagId: _current.tagTable?.id,
+      tagName: _current.tagTable?.tagName ?? "",
+      searchWord: _current.searchWord,
     );
     notifyListeners();
   }
@@ -97,6 +97,14 @@ class ManuscriptProvider with ChangeNotifier {
     Navigator.pop(context);
     await updateScriptTable();
   }
+}
+
+class Current {
+  Current({this.tagTable, this.searchWord = ""});
+
+  ManuscriptState state = ManuscriptState.home;
+  TagTable? tagTable;
+  String searchWord;
 }
 
 enum ManuscriptState { home, tag, trash, search }
