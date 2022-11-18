@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:presc/model/manuscript_manager.dart';
 import 'package:presc/model/utils/database_table.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../model/tag_manager.dart';
 
 class ManuscriptProvider with ChangeNotifier {
   final _manager = ManuscriptManager();
@@ -22,8 +25,16 @@ class ManuscriptProvider with ChangeNotifier {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future(() async {
         _manager.deleteTrashAutomatically();
-        _scriptTable = await _manager.getAllScript();
-        notifyListeners();
+
+        final prefs = await SharedPreferences.getInstance();
+        final tagId = prefs.getInt("currentTagId") ?? -1;
+        if (tagId != -1) {
+          final _tagManager = TagManager();
+          _current.state = ManuscriptState.tag;
+          _current.tagTable = await _tagManager.getTagById(tagId);
+        }
+
+        await updateScriptTable();
       });
     });
   }
@@ -35,6 +46,8 @@ class ManuscriptProvider with ChangeNotifier {
     String searchWord = "",
   }) async {
     _current = Current();
+    _saveCurrentState(-1);
+
     switch (state) {
       case ManuscriptState.home:
         _scriptTable = await _manager.getAllScript();
@@ -43,6 +56,7 @@ class ManuscriptProvider with ChangeNotifier {
         if (tagId == null) return;
         _scriptTable = await _manager.getScriptByTagId(tagId: tagId);
         _current.tagTable = TagTable(id: tagId, tagName: tagName);
+        _saveCurrentState(tagId);
         break;
       case ManuscriptState.trash:
         _scriptTable = await _manager.getAllScript(trash: true);
@@ -85,7 +99,6 @@ class ManuscriptProvider with ChangeNotifier {
       tagName: _current.tagTable?.tagName ?? "",
       searchWord: _current.searchWord,
     );
-    notifyListeners();
   }
 
   Future<void> clearTrash() async => await _manager.clearTrash();
@@ -96,6 +109,11 @@ class ManuscriptProvider with ChangeNotifier {
   Future<void> notifyBack(BuildContext context) async {
     Navigator.pop(context);
     await updateScriptTable();
+  }
+
+  Future<void> _saveCurrentState(int tagId) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt("currentTagId", tagId);
   }
 }
 

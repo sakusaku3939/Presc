@@ -50,6 +50,12 @@ class TagManager {
     return tableList;
   }
 
+  Future<TagTable> getTagById(int id) async {
+    final res = await _helper.queryById(TagTable.name, id);
+    TagTable table = TagTable.fromMap(res);
+    return table;
+  }
+
   Future<List<TagTable>> getLinkTagById({required int memoId}) async {
     final res = await _helper.queryTagByMemoId(memoId);
     List<TagTable> tableList = res.map((row) => TagTable.fromMap(row)).toList();
