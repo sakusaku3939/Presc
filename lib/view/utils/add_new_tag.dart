@@ -25,7 +25,9 @@ class AddNewTag extends StatelessWidget {
       ),
       onSubmitted: (text) {
         if (text.trim().isNotEmpty) {
-          context.read<EditableTagItemProvider>().addTag(text);
+          final tagItem = context.read<EditableTagItemProvider>();
+          tagItem.addTag(text);
+
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(S.current.newTagAdded),

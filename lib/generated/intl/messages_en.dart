@@ -23,15 +23,19 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m0(name) =>
       "Do you want to remove the tag ${name}? This operation cannot be undone.";
 
-  static String m1(title) => "Do you want to delete ${title} permanently?";
+  static String m1(unit) => "Number of ${unit}";
 
-  static String m2(error) => "Error: ${error}";
+  static String m2(title) => "Do you want to delete ${title} permanently?";
 
-  static String m3(count) => "Remove ${count} tags";
+  static String m3(error) => "Error: ${error}";
 
-  static String m4(count) => "${count} tags removed.";
+  static String m4(perMinute) => "Estimated presentation time (${perMinute})";
 
-  static String m5(minutes, second) => "${minutes}m ${second}s";
+  static String m5(count) => "Remove ${count} tags";
+
+  static String m6(count) => "${count} tags removed.";
+
+  static String m7(minutes, second) => "${minutes}m ${second}s";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -47,14 +51,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "change": MessageLookupByLibrary.simpleMessage("CHANGE"),
         "changeTagName":
             MessageLookupByLibrary.simpleMessage("Change tag name"),
-        "characterCount":
-            MessageLookupByLibrary.simpleMessage("Number of characters"),
+        "characterCount": m1,
         "close": MessageLookupByLibrary.simpleMessage("CLOSE"),
         "delete": MessageLookupByLibrary.simpleMessage("DELETE"),
         "deleteAll": MessageLookupByLibrary.simpleMessage("DELETE ALL"),
         "deletePermanently":
             MessageLookupByLibrary.simpleMessage("Permanently delete"),
-        "doDeletePermanently": m1,
+        "doDeletePermanently": m2,
         "doEmptyTrash": MessageLookupByLibrary.simpleMessage(
             "Do you want to empty the trash?"),
         "done": MessageLookupByLibrary.simpleMessage("DONE"),
@@ -62,9 +65,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "editTag": MessageLookupByLibrary.simpleMessage("Edit tag"),
         "emptyScriptDeleted":
             MessageLookupByLibrary.simpleMessage("Deleted an empty script."),
-        "error": m2,
-        "estimatedReadingTime": MessageLookupByLibrary.simpleMessage(
-            "Estimated presentation time (320 characters per minute)"),
+        "error": m3,
         "formatOrientation":
             MessageLookupByLibrary.simpleMessage("Format orientation"),
         "hide": MessageLookupByLibrary.simpleMessage("Hide"),
@@ -120,9 +121,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "playMode": MessageLookupByLibrary.simpleMessage("Play mode"),
         "playSetting": MessageLookupByLibrary.simpleMessage("Play Settings"),
         "playSpeed": MessageLookupByLibrary.simpleMessage("Play speed"),
+        "presentationTime": m4,
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
         "remove": MessageLookupByLibrary.simpleMessage("REMOVE"),
-        "removeSelectTags": m3,
+        "removeSelectTags": m5,
         "removeTag": MessageLookupByLibrary.simpleMessage("Remove tag"),
         "requirePermission": MessageLookupByLibrary.simpleMessage(
             "Microphone permission is required for speech recognition."),
@@ -130,7 +132,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "restore": MessageLookupByLibrary.simpleMessage("Restore"),
         "searchScript":
             MessageLookupByLibrary.simpleMessage("Search the script"),
-        "selectTagsRemoved": m4,
+        "selectTagsRemoved": m6,
         "sendFeedback": MessageLookupByLibrary.simpleMessage("Send feedback"),
         "setting": MessageLookupByLibrary.simpleMessage("Settings"),
         "show": MessageLookupByLibrary.simpleMessage("Show"),
@@ -143,7 +145,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "tagList": MessageLookupByLibrary.simpleMessage("Tags"),
         "tagRemoved": MessageLookupByLibrary.simpleMessage("Removed tag."),
         "tagUpdated": MessageLookupByLibrary.simpleMessage("Updated tag."),
-        "time": m5,
+        "time": m7,
         "trash": MessageLookupByLibrary.simpleMessage("Trash"),
         "trashEmptied":
             MessageLookupByLibrary.simpleMessage("Emptied the trash."),

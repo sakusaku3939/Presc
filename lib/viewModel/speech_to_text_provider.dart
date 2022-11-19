@@ -6,6 +6,7 @@ import 'package:presc/config/init_config.dart';
 import 'package:presc/config/punctuation_config.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/hiragana.dart';
+import 'package:presc/model/language.dart';
 import 'package:presc/model/speech_to_text_manager.dart';
 import 'package:presc/view/utils/dialog/silent_dialog_manager.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
@@ -61,9 +62,12 @@ class SpeechToTextProvider with ChangeNotifier {
     _manager.speak(
       resultListener: _reflect,
       errorListener: (error) {
-        context.read<PlaybackProvider>().playFabState = false;
-        context.read<PlaybackTimerProvider>().stop();
+        final playback = context.read<PlaybackProvider>();
+        playback.playFabState = false;
+
+        timer.stop();
         _manager.stop();
+
         switch (error) {
           case "not_available":
             showSnackBar(S.current.requirePermission);
@@ -79,10 +83,7 @@ class SpeechToTextProvider with ChangeNotifier {
             break;
         }
       },
-      isEnglish: RegExp(
-        r'^(?:[a-zA-Z]|\P{L})+$',
-        unicode: true,
-      ).hasMatch(_unrecognizedText),
+      isEnglish: Language.isEnglish(_unrecognizedText),
     );
     notifyListeners();
   }
@@ -97,7 +98,7 @@ class SpeechToTextProvider with ChangeNotifier {
     isProcessing = true;
 
     final N = InitConfig.ngramNum;
-    final isLatinAlphabet = RegExp(r'^[ -~｡-ﾟ]+$').hasMatch(lastWords);
+    final isLatinAlphabet = Language.isLatinAlphabet(lastWords);
     int textLen, odd = 0;
 
     final range = !isLatinAlphabet ? 120 : 240;
@@ -306,9 +307,12 @@ class SpeechToTextProvider with ChangeNotifier {
   }
 
   void back(BuildContext context) {
+    final playback = context.read<PlaybackProvider>();
+    final timer = context.read<PlaybackTimerProvider>();
+
     stop();
-    context.read<PlaybackProvider>().playFabState = false;
-    context.read<PlaybackTimerProvider>().reset();
+    playback.playFabState = false;
+    timer.reset();
     _history.clear();
 
     Navigator.pop(context);

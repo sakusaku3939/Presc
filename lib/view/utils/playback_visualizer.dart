@@ -7,8 +7,8 @@ class PlaybackVisualizer extends StatelessWidget {
   Widget build(BuildContext context) {
     return OrientationBuilder(
       builder: (context, orientation) {
-        final provider = context.read<PlaybackVisualizerProvider>();
-        provider.init(context);
+        final playbackVisualizer = context.read<PlaybackVisualizerProvider>();
+        playbackVisualizer.init(context);
         return visualizer();
       },
     );

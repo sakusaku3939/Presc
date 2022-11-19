@@ -25,8 +25,8 @@
   "placeholderContent": "Enter here",
   "addNewTag": "Add new tag",
   "newTagAdded": "Added a new tag.",
-  "characterCount": "Number of characters",
-  "estimatedReadingTime": "Estimated presentation time (320 characters per minute)",
+  "characterCount": "Number of {unit}",
+  "presentationTime": "Estimated presentation time ({perMinute})",
   "lastModified": "Last modified",
   "time":"{minutes}m {second}s",
   "@time": {

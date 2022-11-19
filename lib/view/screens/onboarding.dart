@@ -24,7 +24,8 @@ class OnBoardingScreen extends StatelessWidget {
     ];
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _controller.addListener(() {
-        context.read<OnBoardingProvider>().position = _controller.page!;
+        final onBoarding = context.read<OnBoardingProvider>();
+        onBoarding.position = _controller.page!;
       });
     });
     return Scaffold(

@@ -9,10 +9,10 @@ class ScrollModeDialogManager {
     BuildContext context, {
     Function(dynamic value)? onChanged,
   }) {
-    final provider = context.read<PlaybackProvider>();
+    final playback = context.read<PlaybackProvider>();
     RadioDialogManager.show(
       context,
-      groupValue: provider.scrollMode,
+      groupValue: playback.scrollMode,
       itemList: [
         RadioDialogItem(
           title: S.current.manualScroll,
@@ -31,7 +31,7 @@ class ScrollModeDialogManager {
         ),
       ],
       onChanged: (value) {
-        provider.scrollMode = value;
+        playback.scrollMode = value;
         if (onChanged != null) onChanged(value);
       },
     );

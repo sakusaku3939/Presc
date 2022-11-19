@@ -158,11 +158,12 @@ class DrawerMenu extends StatelessWidget {
                   );
                 },
                 onTap: () {
-                  context.read<ManuscriptProvider>().replaceState(
-                        ManuscriptState.tag,
-                        tagId: tagTable.id,
-                        tagName: tagTable.tagName,
-                      );
+                  final script = context.read<ManuscriptProvider>();
+                  script.replaceState(
+                    ManuscriptState.tag,
+                    tagId: tagTable.id,
+                    tagName: tagTable.tagName,
+                  );
                   ScaffoldMessenger.of(context).clearSnackBars();
                   _scaffoldKey.currentState?.openEndDrawer();
                 },

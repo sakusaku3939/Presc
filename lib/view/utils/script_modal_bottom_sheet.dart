@@ -40,7 +40,7 @@ class ScriptModalBottomSheet {
           ),
           Consumer<ManuscriptProvider>(
             builder: (_, model, child) {
-              return model.state != ManuscriptState.trash
+              return model.current.state != ManuscriptState.trash
                   ? _defaultSheet(context, model, index)
                   : _trashSheet(context, model, index);
             },

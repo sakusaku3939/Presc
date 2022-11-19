@@ -35,28 +35,30 @@ class ScriptCard extends StatelessWidget {
   Widget _placeholder() => Container();
 
   Widget _emptyView() {
-    return Selector<ManuscriptProvider, ManuscriptState>(
-      selector: (_, model) => model.state,
-      builder: (context, state, child) {
+    return Selector<ManuscriptProvider, Current>(
+      selector: (_, model) => model.current,
+      builder: (context, current, child) {
         IconData icon;
         String text;
-        switch (state) {
+        switch (current.state) {
           case ManuscriptState.home:
           case ManuscriptState.tag:
             icon = Icons.description_outlined;
             text = S.current.noScriptYet;
             break;
+
           case ManuscriptState.trash:
             icon = Icons.delete_outline;
             text = S.current.noAdditionalText;
             break;
+
           case ManuscriptState.search:
             return _placeholder();
         }
         return Container(
           width: MediaQuery.of(context).size.width,
           height: DisplaySize.safeArea(context).height -
-              (state == ManuscriptState.tag ? 0 : 30),
+              (current.state == ManuscriptState.tag ? 0 : 30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

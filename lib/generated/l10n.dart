@@ -300,23 +300,23 @@ class S {
     );
   }
 
-  /// `Number of characters`
-  String get characterCount {
+  /// `Number of {unit}`
+  String characterCount(Object unit) {
     return Intl.message(
-      'Number of characters',
+      'Number of $unit',
       name: 'characterCount',
       desc: '',
-      args: [],
+      args: [unit],
     );
   }
 
-  /// `Estimated presentation time (320 characters per minute)`
-  String get estimatedReadingTime {
+  /// `Estimated presentation time ({perMinute})`
+  String presentationTime(Object perMinute) {
     return Intl.message(
-      'Estimated presentation time (320 characters per minute)',
-      name: 'estimatedReadingTime',
+      'Estimated presentation time ($perMinute)',
+      name: 'presentationTime',
       desc: '',
-      args: [],
+      args: [perMinute],
     );
   }
 

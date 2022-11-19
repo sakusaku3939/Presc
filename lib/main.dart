@@ -112,10 +112,12 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> receiveShareText(String? text) async {
     if (text != null && text.isNotEmpty) {
-      final provider = context.read<ManuscriptProvider>();
-      final id = await provider.addScript(title: "", content: text);
-      await provider.updateScriptTable();
-      await context.read<ManuscriptTagProvider>().loadTag(memoId: id);
+      final script = context.read<ManuscriptProvider>();
+      final tag = context.read<ManuscriptTagProvider>();
+      final id = await script.addScript(title: "", content: text);
+
+      await script.updateScriptTable();
+      await tag.loadTag(memoId: id);
     }
   }
 }
