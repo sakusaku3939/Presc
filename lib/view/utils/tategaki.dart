@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:presc/config/playback_text_style.dart';
+import 'package:presc/config/vertical_rotated.dart';
+import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:presc/config/vertical_rotated.dart';
-import 'package:presc/config/playback_text_style.dart';
-import 'package:presc/viewModel/playback_provider.dart';
 
 class Tategaki extends StatelessWidget {
   Tategaki({
