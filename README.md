@@ -17,5 +17,14 @@ https://sakusaku3939.com/?posts=presc
 
 ![presc](https://user-images.githubusercontent.com/53967490/139699408-2ef6dc85-83c4-4dcf-90b6-293bd9071d30.jpg)
 
+# Release build
+```
+flutter build appbundle --release --flavor stable
+```
+```
+flutter build ipa
+```
+
+
 # License
 GPL-3.0 License
