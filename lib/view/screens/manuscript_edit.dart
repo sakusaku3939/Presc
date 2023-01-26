@@ -36,7 +36,9 @@ class ManuscriptEditScreen extends StatelessWidget {
 
   Future<void> _back() async {
     await _script.notifyBack(context);
-    if (title.isEmpty && content.isEmpty) {
+    final currentTitle = _current.title ?? title;
+    final currentContent = _current.content ?? content;
+    if (currentTitle.isEmpty && currentContent.isEmpty) {
       await Future.delayed(Duration(milliseconds: 300));
       TrashMoveManager.deleteEmpty(
         context: context,
