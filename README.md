@@ -23,6 +23,7 @@ flutter build appbundle --release --flavor stable
 ```
 ```
 flutter build ipa
+open build/ios/archive/Runner.xcarchive
 ```
 
 
