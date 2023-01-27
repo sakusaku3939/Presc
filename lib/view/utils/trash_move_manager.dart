@@ -33,10 +33,9 @@ class TrashMoveManager {
     required ManuscriptProvider provider,
     required int index,
   }) async {
-    final newId = await provider.moveToTrash(
+    await provider.moveToTrash(
       memoId: provider.scriptTable[index].id,
     );
-    await provider.deleteTrash(trashId: newId);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(S.current.emptyScriptDeleted),
