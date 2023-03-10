@@ -3,7 +3,6 @@
 
 スマホに表示した原稿を、話した分だけ自動でスクロールしてくれる「プレゼンテーション用原稿表示アプリ」です。  
 話し手の音声をアプリが自動認識してくれ、どこまで読んだかが一目で分かります。  
-https://sakusaku3939.com/?posts=presc  
 
 <a href='https://play.google.com/store/apps/details?id=com.sakusaku3939.presc'>
   <img height=70 src='https://user-images.githubusercontent.com/53967490/160243927-463746b7-721a-4829-961b-ecf482d7dfca.png'/>
@@ -17,14 +16,15 @@ https://sakusaku3939.com/?posts=presc
 
 ![presc](https://user-images.githubusercontent.com/53967490/139699408-2ef6dc85-83c4-4dcf-90b6-293bd9071d30.jpg)
 
-# Debug
+# Usage
+### Debug
 ```
 fvm flutter pub get
 fvm flutter pub run intl_utils:generate
 fvm flutter run --flavor beta
 ```
 
-# Release
+### Release
 ```
 fvm flutter build appbundle --release --flavor stable
 ```
