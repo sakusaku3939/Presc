@@ -17,13 +17,19 @@ https://sakusaku3939.com/?posts=presc
 
 ![presc](https://user-images.githubusercontent.com/53967490/139699408-2ef6dc85-83c4-4dcf-90b6-293bd9071d30.jpg)
 
+# Debug build
+```
+fvm flutter pub get
+fvm flutter pub run intl_utils:generate
+fvm flutter run --flavor beta
+```
+
 # Release build
 ```
-flutter build appbundle --release --flavor stable
+fvm flutter build appbundle --release --flavor stable
 ```
 ```
-flutter build ipa
-open build/ios/archive/Runner.xcarchive
+fvm flutter build ipa open build/ios/archive/Runner.xcarchive
 ```
 
 
