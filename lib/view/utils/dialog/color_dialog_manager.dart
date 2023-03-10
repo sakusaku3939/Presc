@@ -15,6 +15,7 @@ class ColorDialogManager {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
+              surfaceTintColor: Colors.transparent,
               content: SingleChildScrollView(
                 child: ColorPicker(
                   pickerColor: pickerColor,
@@ -38,7 +39,6 @@ class ColorDialogManager {
                     Navigator.of(context).pop();
                   },
                 ),
-                SizedBox(width: 2),
               ],
             );
           },

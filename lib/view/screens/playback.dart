@@ -266,9 +266,11 @@ class PlaybackScreen extends StatelessWidget {
               width: 64,
               child: FittedBox(
                 child: FloatingActionButton(
+                  backgroundColor: Theme.of(context).accentColor,
+                  shape: const CircleBorder(),
                   child: model.playFabState
-                      ? Icon(Icons.pause)
-                      : Icon(Icons.play_arrow),
+                      ? Icon(Icons.pause, color: Colors.white)
+                      : Icon(Icons.play_arrow, color: Colors.white),
                   onPressed: () {
                     model.playFabState = !model.playFabState;
                     if (model.playFabState) {

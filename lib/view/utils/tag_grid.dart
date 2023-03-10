@@ -32,28 +32,30 @@ class TagGrid extends StatelessWidget {
   }) {
     return Padding(
       padding: const EdgeInsets.only(right: 8),
-      child: ChoiceChip(
-        shape: RoundedRectangleBorder(
-          side: BorderSide(
-            color: selected ? Theme.of(context).accentColor : Colors.grey[300]!,
-            width: 1,
-          ),
-          borderRadius: BorderRadius.circular(24),
-        ),
-        label: Text(tagTable.tagName),
-        labelStyle: TextStyle(color: selected ? Colors.white : Colors.black),
-        selectedColor: Theme.of(context).accentColor,
-        backgroundColor: Colors.white,
-        pressElevation: 2,
-        selected: selected,
-        onSelected: (value) async {
+      child: GestureDetector(
+        onTap: () {
           model.changeChecked(
             memoId: memoId,
             tagId: tagTable.id,
-            newValue: value,
+            newValue: !selected,
           );
           Navigator.pop(context);
         },
+        child: Container(
+          decoration: BoxDecoration(
+            color: selected ? Theme.of(context).accentColor : Colors.white,
+            border: Border.all(
+              color: selected ? Theme.of(context).accentColor : Colors.grey[300]!,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.circular(24),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Text(
+            tagTable.tagName,
+            style: TextStyle(color: selected ? Colors.white : Colors.black),
+          ),
+        ),
       ),
     );
   }

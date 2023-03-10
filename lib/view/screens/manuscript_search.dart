@@ -40,6 +40,7 @@ class ManuscriptSearchScreen extends StatelessWidget {
   AppBar _appbar(BuildContext context) {
     Timer? _timer;
     return AppBar(
+      surfaceTintColor: Colors.transparent,
       elevation: 1,
       leading: RippleIconButton(
         Icons.navigate_before,

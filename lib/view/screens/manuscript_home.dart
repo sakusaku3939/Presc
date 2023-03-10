@@ -17,6 +17,7 @@ class ManuscriptHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      backgroundColor: ColorConfig.backgroundColor,
       body: SafeArea(
         child: Scrollbar(
           child: CustomScrollView(
@@ -41,6 +42,8 @@ class ManuscriptHomeScreen extends StatelessWidget {
       drawer: DrawerMenu(_scaffoldKey),
       floatingActionButton: SafeArea(
         child: FloatingActionButton(
+          backgroundColor: Theme.of(context).accentColor,
+          shape: const CircleBorder(),
           onPressed: () async {
             final script = context.read<ManuscriptProvider>();
             final tag = context.read<ManuscriptTagProvider>();
@@ -58,7 +61,7 @@ class ManuscriptHomeScreen extends StatelessWidget {
               ),
             );
           },
-          child: Icon(Icons.add),
+          child: Icon(Icons.add, color: Colors.white),
         ),
       ),
     );

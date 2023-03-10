@@ -6,21 +6,18 @@ class DialogManager {
     Widget? title,
     Widget? content,
     EdgeInsetsGeometry contentPadding =
-        const EdgeInsets.fromLTRB(24, 20, 24, 16),
+        const EdgeInsets.fromLTRB(24, 32, 24, 16),
     List<Widget>? actions,
   }) {
-    List<Widget>? _adjustActions;
-    if (actions != null) {
-      _adjustActions = actions + [SizedBox(width: 2)];
-    }
     showDialog(
       context: context,
       builder: (_) {
         return AlertDialog(
+          surfaceTintColor: Colors.transparent,
           title: title,
           content: content,
           contentPadding: contentPadding,
-          actions: _adjustActions,
+          actions: actions,
         );
       },
     );

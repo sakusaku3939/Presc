@@ -83,6 +83,8 @@ class ManuscriptEditScreen extends StatelessWidget {
         ),
         floatingActionButton: SafeArea(
           child: FloatingActionButton(
+            backgroundColor: Theme.of(context).accentColor,
+            shape: const CircleBorder(),
             onPressed: () async {
               if (_script.current.state != ManuscriptState.trash) {
                 Navigator.push(
@@ -96,7 +98,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                 );
               }
             },
-            child: Icon(Icons.play_arrow),
+            child: Icon(Icons.play_arrow, color: Colors.white),
           ),
         ),
       ),
@@ -237,6 +239,7 @@ class ManuscriptEditScreen extends StatelessWidget {
 
                 DialogManager.show(
                   context,
+                  contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -288,9 +291,13 @@ class ManuscriptEditScreen extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(left: 8),
                             child: Chip(
+                              side: BorderSide(
+                                color: Colors.grey[300]!,
+                                width: 1,
+                              ),
+                              labelPadding: EdgeInsets.symmetric(vertical: 1),
+                              padding: EdgeInsets.only(left: 12),
                               shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                    color: Colors.grey[300]!, width: 1),
                                 borderRadius: BorderRadius.circular(24),
                               ),
                               deleteIcon: Icon(
@@ -351,7 +358,7 @@ class ManuscriptEditScreen extends StatelessWidget {
           onPressed: () => {
             DialogManager.show(
               context,
-              contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+              contentPadding: const EdgeInsets.fromLTRB(24, 28, 24, 0),
               content: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -367,6 +374,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                   ),
                   Text(
                     CharCounter.count(_current.content ?? content).toString(),
+                    style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 16),
                   Text(
@@ -380,6 +388,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                   ),
                   Text(
                     _calcReadTime(_current.content ?? content),
+                    style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 16),
                   Text(
@@ -396,6 +405,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                     ).format(
                       _script.scriptTable[index].date,
                     ),
+                    style: TextStyle(fontSize: 16),
                   ),
                 ],
               ),

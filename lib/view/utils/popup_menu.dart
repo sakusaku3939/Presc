@@ -23,6 +23,7 @@ class PopupMenu extends StatelessWidget {
         child: Material(
           type: MaterialType.transparency,
           child: PopupMenuButton<String>(
+            surfaceTintColor: Colors.transparent,
             offset: offset,
             icon: icon,
             iconSize: size,

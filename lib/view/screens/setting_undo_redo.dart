@@ -45,7 +45,7 @@ class SettingUndoRedoScreen extends StatelessWidget {
                     color: Colors.white,
                     child: SwitchListTile(
                       title: Text(S.current.undoDoubleTap),
-                      contentPadding: const EdgeInsets.fromLTRB(32, 2, 0, 2),
+                      contentPadding: const EdgeInsets.fromLTRB(32, 2, 12, 2),
                       value: model.undoDoubleTap,
                       onChanged: (value) => model.undoDoubleTap = value,
                     ),
@@ -62,6 +62,7 @@ class SettingUndoRedoScreen extends StatelessWidget {
 
   AppBar _appbar(BuildContext context) {
     return AppBar(
+      surfaceTintColor: Colors.transparent,
       elevation: 1,
       leading: RippleIconButton(
         Icons.navigate_before,

@@ -74,8 +74,10 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Presc',
-      // debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        useMaterial3: true,
+        colorSchemeSeed: Colors.deepOrange[400],
         accentColor: Colors.deepOrange[400],
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.white,

@@ -24,8 +24,6 @@ class ScriptCard extends StatelessWidget {
       builder: (context, scriptTable, child) {
         if (scriptTable.length <= 0)
           return _placeholder();
-        else if (scriptTable.isEmpty)
-          return _emptyView();
         else
           return _scriptView(scriptTable.length);
       },

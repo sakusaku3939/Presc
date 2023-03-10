@@ -17,26 +17,24 @@ class DrawerMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return KeyboardDismissOnTap(
       child: Drawer(
+        surfaceTintColor: Colors.transparent,
         child: SafeArea(
           child: ListView(
             children: <Widget>[
               Container(
                 height: 80,
-                child: DrawerHeader(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: Divider.createBorderSide(
-                        context,
-                        color: Colors.grey[300],
-                      ),
+                padding: const EdgeInsets.fromLTRB(16, 28, 16, 28),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: Divider.createBorderSide(
+                      context,
+                      color: Colors.grey[300],
                     ),
                   ),
-                  margin: const EdgeInsets.only(bottom: 0),
-                  padding: const EdgeInsets.fromLTRB(16, 28, 16, 30),
-                  child: Image.asset(
-                    'assets/images/logo.png',
-                    alignment: Alignment.centerLeft,
-                  ),
+                ),
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  alignment: Alignment.centerLeft,
                 ),
               ),
               _tagList(context),
