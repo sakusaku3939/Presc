@@ -17,7 +17,6 @@ class DrawerMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return KeyboardDismissOnTap(
       child: Drawer(
-        surfaceTintColor: Colors.transparent,
         child: SafeArea(
           child: ListView(
             children: <Widget>[

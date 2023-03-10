@@ -62,7 +62,6 @@ class SettingUndoRedoScreen extends StatelessWidget {
 
   AppBar _appbar(BuildContext context) {
     return AppBar(
-      surfaceTintColor: Colors.transparent,
       elevation: 1,
       leading: RippleIconButton(
         Icons.navigate_before,

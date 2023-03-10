@@ -81,9 +81,22 @@ class _MyAppState extends State<MyApp> {
         accentColor: Colors.deepOrange[400],
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.white,
+          surfaceTintColor: Colors.transparent,
           iconTheme: IconThemeData(color: ColorConfig.iconColor),
           titleTextStyle: TextStyle(color: Colors.black, fontSize: 20),
         ),
+        bottomSheetTheme: BottomSheetThemeData(
+          surfaceTintColor: Colors.transparent,
+        ),
+        dialogTheme: DialogTheme(
+          surfaceTintColor: Colors.transparent,
+        ),
+        drawerTheme: DrawerThemeData(
+          surfaceTintColor: Colors.transparent,
+        ),
+        popupMenuTheme: PopupMenuThemeData(
+          surfaceTintColor: Colors.transparent,
+        )
       ),
       localizationsDelegates: [
         S.delegate,

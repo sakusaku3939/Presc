@@ -13,7 +13,6 @@ class DialogManager {
       context: context,
       builder: (_) {
         return AlertDialog(
-          surfaceTintColor: Colors.transparent,
           title: title,
           content: content,
           contentPadding: contentPadding,

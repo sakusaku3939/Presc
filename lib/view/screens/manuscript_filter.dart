@@ -56,7 +56,6 @@ class ManuscriptFilterScreen extends StatelessWidget {
 
   AppBar _appbar(BuildContext context) {
     return AppBar(
-      surfaceTintColor: Colors.transparent,
       elevation: 0,
       leading: RippleIconButton(
         Icons.navigate_before,
