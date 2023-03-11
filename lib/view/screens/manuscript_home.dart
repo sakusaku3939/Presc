@@ -18,6 +18,10 @@ class ManuscriptHomeScreen extends StatelessWidget {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: ColorConfig.backgroundColor,
+      appBar: AppBar(
+        toolbarHeight: 0,
+        backgroundColor: ColorConfig.backgroundColor,
+      ),
       body: SafeArea(
         child: Scrollbar(
           child: CustomScrollView(
