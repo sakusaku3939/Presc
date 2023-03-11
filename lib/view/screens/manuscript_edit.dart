@@ -83,7 +83,7 @@ class ManuscriptEditScreen extends StatelessWidget {
         ),
         floatingActionButton: SafeArea(
           child: FloatingActionButton(
-            backgroundColor: Theme.of(context).accentColor,
+            backgroundColor: ColorConfig.mainColor,
             shape: const CircleBorder(),
             onPressed: () async {
               if (_script.current.state != ManuscriptState.trash) {
@@ -249,12 +249,12 @@ class ManuscriptEditScreen extends StatelessWidget {
                           hintText: S.current.addNewTag,
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
-                              color: Theme.of(context).accentColor,
+                              color: ColorConfig.mainColor,
                             ),
                           ),
                         ),
                         controller: controller,
-                        cursorColor: Theme.of(context).accentColor,
+                        cursorColor: ColorConfig.mainColor,
                         onSubmitted: (text) {
                           if (text.trim().isNotEmpty) {
                             context

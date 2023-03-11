@@ -42,7 +42,7 @@ class ManuscriptHomeScreen extends StatelessWidget {
       drawer: DrawerMenu(_scaffoldKey),
       floatingActionButton: SafeArea(
         child: FloatingActionButton(
-          backgroundColor: Theme.of(context).accentColor,
+          backgroundColor: ColorConfig.mainColor,
           shape: const CircleBorder(),
           onPressed: () async {
             final script = context.read<ManuscriptProvider>();

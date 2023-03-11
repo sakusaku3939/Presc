@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../config/color_config.dart';
+
 class DialogManager {
   static void show(
     BuildContext context, {
@@ -32,7 +34,10 @@ class DialogTextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      child: Text(text, style: TextStyle(color: Theme.of(context).accentColor)),
+      child: Text(
+        text,
+        style: TextStyle(color: ColorConfig.mainColor),
+      ),
       style: ButtonStyle(
         padding: MaterialStateProperty.all(
           const EdgeInsets.symmetric(

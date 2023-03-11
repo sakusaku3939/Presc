@@ -9,6 +9,8 @@ import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../config/color_config.dart';
+
 class TagEditScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -102,7 +104,7 @@ class _TagEditScreenAppbar extends StatelessWidget
           ),
           secondChild: AppBar(
             elevation: 0,
-            backgroundColor: Theme.of(context).accentColor,
+            backgroundColor: ColorConfig.mainColor,
             leading: RippleIconButton(
               Icons.clear,
               color: Colors.white,

@@ -3,6 +3,8 @@ import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../config/color_config.dart';
+
 class TagGrid extends StatelessWidget {
   TagGrid({required this.memoId});
 
@@ -43,9 +45,9 @@ class TagGrid extends StatelessWidget {
         },
         child: Container(
           decoration: BoxDecoration(
-            color: selected ? Theme.of(context).accentColor : Colors.white,
+            color: selected ? ColorConfig.mainColor : Colors.white,
             border: Border.all(
-              color: selected ? Theme.of(context).accentColor : Colors.grey[300]!,
+              color: selected ? ColorConfig.mainColor : Colors.grey[300]!,
               width: 1,
             ),
             borderRadius: BorderRadius.circular(24),

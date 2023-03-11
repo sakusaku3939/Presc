@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presc/config/color_config.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
@@ -90,7 +91,7 @@ class EditableTagItem extends StatelessWidget {
       builder: (context, model, child) {
         return Container(
           color: model.checkList[index]
-              ? Theme.of(context).accentColor.withOpacity(.1)
+              ? ColorConfig.mainColor.withOpacity(.1)
               : Colors.white,
           child: Material(
             color: Colors.transparent,
@@ -108,7 +109,7 @@ class EditableTagItem extends StatelessWidget {
                         child: Checkbox(
                           shape: CircleBorder(),
                           value: model.checkList[index],
-                          activeColor: Theme.of(context).accentColor,
+                          activeColor: ColorConfig.mainColor,
                           materialTapTargetSize:
                               MaterialTapTargetSize.shrinkWrap,
                           onChanged: (_) => model.toggleChecked(index),

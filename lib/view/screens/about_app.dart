@@ -6,6 +6,8 @@ import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../config/color_config.dart';
+
 class AboutAppScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -99,7 +101,7 @@ class AboutAppScreen extends StatelessWidget {
                   child: ElevatedButton(
                     child: Text(S.current.sendFeedback),
                     style: ElevatedButton.styleFrom(
-                      primary: Theme.of(context).accentColor,
+                      primary: ColorConfig.mainColor,
                       onPrimary: Colors.white,
                     ),
                     onPressed: () => launchUrl(

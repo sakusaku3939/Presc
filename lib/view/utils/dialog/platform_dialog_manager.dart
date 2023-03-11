@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../../config/color_config.dart';
 import 'dialog_manager.dart';
 
 class PlatformDialogManager {
@@ -106,7 +107,7 @@ class PlatformDialogManager {
               CupertinoTextField(
                 controller: controller,
                 autofocus: true,
-                cursorColor: Theme.of(context).accentColor,
+                cursorColor: ColorConfig.mainColor,
               ),
             ],
           ),
@@ -145,13 +146,13 @@ class PlatformDialogManager {
                 hintText: placeholder,
                 focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
-                    color: Theme.of(context).accentColor,
+                    color: ColorConfig.mainColor,
                   ),
                 ),
               ),
               controller: controller,
               autofocus: true,
-              cursorColor: Theme.of(context).accentColor,
+              cursorColor: ColorConfig.mainColor,
             ),
           ],
         ),

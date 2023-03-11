@@ -10,6 +10,8 @@ import 'package:presc/viewModel/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
 
+import '../../config/color_config.dart';
+
 class PlaybackScreen extends StatelessWidget {
   PlaybackScreen({required this.title, required this.content});
 
@@ -191,7 +193,7 @@ class PlaybackScreen extends StatelessWidget {
                 height: 16,
                 child: CircularProgressIndicator(
                   strokeWidth: 3,
-                  color: Theme.of(context).accentColor,
+                  color: ColorConfig.mainColor,
                 ),
               ),
           ],
@@ -266,7 +268,7 @@ class PlaybackScreen extends StatelessWidget {
               width: 64,
               child: FittedBox(
                 child: FloatingActionButton(
-                  backgroundColor: Theme.of(context).accentColor,
+                  backgroundColor: ColorConfig.mainColor,
                   shape: const CircleBorder(),
                   child: model.playFabState
                       ? Icon(Icons.pause, color: Colors.white)
