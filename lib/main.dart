@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -79,6 +80,8 @@ class _MyAppState extends State<MyApp> {
         useMaterial3: true,
         colorSchemeSeed: ColorConfig.mainColor,
         accentColor: ColorConfig.mainColor,
+        splashColor: Platform.isIOS ? Colors.transparent : null,
+        splashFactory: Platform.isIOS ? NoSplash.splashFactory : null,
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.transparent,

@@ -31,8 +31,7 @@ class AboutAppScreen extends StatelessWidget {
               children: [
                 Container(
                   alignment: Alignment.centerRight,
-                  height: 48,
-                  margin: const EdgeInsets.only(right: 4),
+                  height: 56,
                   child: RippleIconButton(
                     Icons.close,
                     size: 32,
