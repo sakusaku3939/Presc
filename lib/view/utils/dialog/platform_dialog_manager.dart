@@ -42,8 +42,8 @@ class PlatformDialogManager {
             child: Text(
               cancelLabel,
               style: TextStyle(
+                color: ColorConfig.iosSystemBlue,
                 fontSize: 18,
-                fontWeight: FontWeight.bold,
               ),
             ),
             onPressed: () {
@@ -116,11 +116,21 @@ class PlatformDialogManager {
           ),
           actions: [
             CupertinoDialogAction(
-              child: Text(cancelLabel),
+              child: Text(
+                cancelLabel,
+                style: TextStyle(
+                  color: ColorConfig.iosSystemBlue,
+                ),
+              ),
               onPressed: () => Navigator.pop(context),
             ),
             CupertinoDialogAction(
-              child: Text(okLabel),
+              child: Text(
+                okLabel,
+                style: TextStyle(
+                  color: ColorConfig.iosSystemBlue,
+                ),
+              ),
               onPressed: () {
                 onOkPressed(controller.text);
                 Navigator.pop(context);
