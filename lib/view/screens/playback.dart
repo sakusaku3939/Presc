@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:presc/view/screens/setting.dart';
 import 'package:presc/view/utils/dialog/scroll_mode_dialog_manager.dart';
-import 'package:presc/view/utils/playback_text_view.dart';
-import 'package:presc/view/utils/playback_visualizer.dart';
+import 'package:presc/view/utils/playback/playback_text_view.dart';
+import 'package:presc/view/utils/playback/playback_visualizer.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';

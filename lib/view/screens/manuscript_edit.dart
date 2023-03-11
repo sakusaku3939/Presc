@@ -9,8 +9,8 @@ import 'package:presc/view/screens/playback.dart';
 import 'package:presc/view/utils/dialog/dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
-import 'package:presc/view/utils/tag_grid.dart';
-import 'package:presc/view/utils/trash_move_manager.dart';
+import 'package:presc/view/utils/tag/tag_grid.dart';
+import 'package:presc/view/utils/trash_move_snackbar.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +40,7 @@ class ManuscriptEditScreen extends StatelessWidget {
     final currentContent = _current.content ?? content;
     if (currentTitle.isEmpty && currentContent.isEmpty) {
       await Future.delayed(Duration(milliseconds: 300));
-      TrashMoveManager.deleteEmpty(
+      TrashMoveSnackBar.deleteEmpty(
         context: context,
         provider: _script,
         index: index,
@@ -346,7 +346,7 @@ class ManuscriptEditScreen extends StatelessWidget {
           onPressed: () async {
             Navigator.pop(context);
             await Future.delayed(Duration(milliseconds: 300));
-            TrashMoveManager.move(
+            TrashMoveSnackBar.move(
               context: context,
               provider: _script,
               index: index,
@@ -443,7 +443,7 @@ class ManuscriptEditScreen extends StatelessWidget {
           onPressed: () async {
             Navigator.pop(context);
             await Future.delayed(Duration(milliseconds: 300));
-            TrashMoveManager.restore(
+            TrashMoveSnackBar.restore(
               context: context,
               provider: _script,
               index: index,
@@ -460,7 +460,7 @@ class ManuscriptEditScreen extends StatelessWidget {
           onSelected: (_) async {
             Navigator.pop(context);
             await Future.delayed(Duration(milliseconds: 300));
-            TrashMoveManager.delete(
+            TrashMoveSnackBar.delete(
               context: context,
               provider: _script,
               index: index,

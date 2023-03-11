@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:presc/config/display_size.dart';
 import 'package:presc/config/playback_text_style.dart';
 import 'package:presc/config/scroll_speed_config.dart';
-import 'package:presc/view/utils/tategaki.dart';
+import 'package:presc/view/utils/playback/tategaki.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
 import 'package:presc/viewModel/playback_visualizer_provider.dart';

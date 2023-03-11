@@ -14,7 +14,7 @@ import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
 import 'package:presc/view/utils/dialog/scroll_mode_dialog_manager.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/settings/setting_item.dart';
-import 'package:presc/view/utils/tategaki.dart';
+import 'package:presc/view/utils/playback/tategaki.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:provider/provider.dart';
 

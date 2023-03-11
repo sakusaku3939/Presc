@@ -3,7 +3,7 @@ import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../../config/color_config.dart';
+import '../../../config/color_config.dart';
 
 class TagGrid extends StatelessWidget {
   TagGrid({required this.memoId});

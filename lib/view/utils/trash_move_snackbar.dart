@@ -3,7 +3,7 @@ import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/utils/dialog/platform_dialog_manager.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 
-class TrashMoveManager {
+class TrashMoveSnackBar {
   static Future<void> move({
     required BuildContext context,
     required ManuscriptProvider provider,

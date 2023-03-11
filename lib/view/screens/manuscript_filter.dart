@@ -5,7 +5,7 @@ import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/utils/dialog/platform_dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
-import 'package:presc/view/utils/script_card.dart';
+import 'package:presc/view/utils/script/script_card.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:provider/provider.dart';
