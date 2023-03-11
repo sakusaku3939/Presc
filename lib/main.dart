@@ -77,8 +77,8 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        colorSchemeSeed: Colors.deepOrange[400],
-        accentColor: Colors.deepOrange[400],
+        colorSchemeSeed: ColorConfig.mainColor,
+        accentColor: ColorConfig.mainColor,
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.transparent,
@@ -96,7 +96,7 @@ class _MyAppState extends State<MyApp> {
         ),
         popupMenuTheme: PopupMenuThemeData(
           surfaceTintColor: Colors.transparent,
-        )
+        ),
       ),
       localizationsDelegates: [
         S.delegate,
