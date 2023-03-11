@@ -56,14 +56,15 @@ class ManuscriptEditScreen extends StatelessWidget {
         return Future.value(false);
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: Hero(
-            tag: id,
-            child: Material(
-              type: MaterialType.transparency,
-              child: Container(
-                color: Colors.white,
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(toolbarHeight: 0),
+        body: Hero(
+          tag: id,
+          child: Material(
+            type: MaterialType.transparency,
+            child: Container(
+              color: Colors.white,
+              child: SafeArea(
                 child: Column(
                   children: [
                     Container(child: _menuBar(context)),

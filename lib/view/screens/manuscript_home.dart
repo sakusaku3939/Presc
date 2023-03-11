@@ -68,32 +68,30 @@ class ManuscriptHomeScreen extends StatelessWidget {
   }
 
   Widget _appbar(BuildContext context) {
-    return SafeArea(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          RippleIconButton(
-            Icons.menu,
-            onPressed: () {
-              final tagItem = context.read<EditableTagItemProvider>();
-              tagItem.loadTag();
-              _scaffoldKey.currentState?.openDrawer();
-            },
-          ),
-          Container(
-            margin: const EdgeInsets.fromLTRB(0, 20, 8, 20),
-            child: Image.asset('assets/images/logo.png'),
-          ),
-          RippleIconButton(
-            Icons.search,
-            onPressed: () {
-              context
-                  .read<ManuscriptProvider>()
-                  .replaceState(ManuscriptState.search);
-            },
-          ),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        RippleIconButton(
+          Icons.menu,
+          onPressed: () {
+            final tagItem = context.read<EditableTagItemProvider>();
+            tagItem.loadTag();
+            _scaffoldKey.currentState?.openDrawer();
+          },
+        ),
+        Container(
+          margin: const EdgeInsets.fromLTRB(0, 20, 8, 20),
+          child: Image.asset('assets/images/logo.png'),
+        ),
+        RippleIconButton(
+          Icons.search,
+          onPressed: () {
+            context
+                .read<ManuscriptProvider>()
+                .replaceState(ManuscriptState.search);
+          },
+        ),
+      ],
     );
   }
 }
