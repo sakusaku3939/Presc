@@ -104,16 +104,10 @@ class EditableTagItem extends StatelessWidget {
                     SizedBox(
                       width: 24,
                       height: 24,
-                      child: Transform.scale(
-                        scale: 1.1,
-                        child: Checkbox(
-                          shape: CircleBorder(),
-                          value: model.checkList[index],
-                          activeColor: ColorConfig.mainColor,
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          onChanged: (_) => model.toggleChecked(index),
-                        ),
+                      child: Checkbox(
+                        value: model.checkList[index],
+                        activeColor: ColorConfig.mainColor,
+                        onChanged: (_) => model.toggleChecked(index),
                       ),
                     ),
                     SizedBox(width: 32),

@@ -15,7 +15,10 @@ class PlatformDialogManager {
     required String cancelLabel,
     required VoidCallback onDeletePressed,
   }) async {
-    final text = (String? t) => t != null ? Text(t) : null;
+    Text? text(String? t, {TextStyle? style}) {
+      return t != null ? Text(t, style: style) : null;
+    }
+
     if (Platform.isIOS) {
       showCupertinoModalPopup(
         context: context,
@@ -52,7 +55,7 @@ class PlatformDialogManager {
     } else {
       DialogManager.show(
         context,
-        title: text(title),
+        title: text(title, style: TextStyle(fontSize: 20)),
         content: text(message),
         actions: [
           DialogTextButton(

@@ -7,8 +7,7 @@ class DialogManager {
     BuildContext context, {
     Widget? title,
     Widget? content,
-    EdgeInsetsGeometry contentPadding =
-        const EdgeInsets.fromLTRB(24, 32, 24, 16),
+    EdgeInsetsGeometry? contentPadding,
     List<Widget>? actions,
   }) {
     showDialog(
@@ -17,7 +16,13 @@ class DialogManager {
         return AlertDialog(
           title: title,
           content: content,
-          contentPadding: contentPadding,
+          contentPadding: contentPadding ??
+              EdgeInsets.fromLTRB(
+                24,
+                title == null ? 32 : 16,
+                24,
+                16,
+              ),
           actions: actions,
         );
       },
