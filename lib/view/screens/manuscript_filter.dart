@@ -65,12 +65,19 @@ class ManuscriptFilterScreen extends StatelessWidget {
       title: Selector<ManuscriptProvider, Current>(
         selector: (_, model) => model.current,
         builder: (context, current, child) {
-          return Text(
-            state == ManuscriptState.tag
-                ? current.tagTable?.tagName ?? ""
-                : S.current.trash,
-            style: const TextStyle(fontSize: 20),
-          );
+          return Selector<EditableTagItemProvider, TagTable?>(
+              selector: (_, model) =>
+                  model.allTagTable.isNotEmpty && current.tagTable != null
+                      ? model.getTag(current.tagTable!.id)
+                      : null,
+              builder: (context, tagTable, child) {
+                return Text(
+                  state == ManuscriptState.tag
+                      ? tagTable?.tagName ?? current.tagTable?.tagName ?? ""
+                      : S.current.trash,
+                  style: const TextStyle(fontSize: 20),
+                );
+              });
         },
       ),
       actions: [

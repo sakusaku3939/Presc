@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
 import 'package:provider/provider.dart';
@@ -67,9 +68,7 @@ class EditableTagItem extends StatelessWidget {
                           .updateTag(tagTable.id, text);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(
-                            "タグを更新しました",
-                          ),
+                          content: Text(S.current.tagUpdated),
                           duration: const Duration(seconds: 2),
                         ),
                       );

@@ -25,6 +25,10 @@ class EditableTagItemProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  TagTable? getTag(int id) {
+    return _allTagTable.firstWhere((e) => e.id == id, orElse: null);
+  }
+
   Future<void> loadTag() async {
     _allTagTable = await _manager.getAllTag();
     notifyListeners();
