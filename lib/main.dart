@@ -8,6 +8,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:presc/view/screens/manuscript.dart';
 import 'package:presc/view/screens/onboarding.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
+import 'package:presc/viewModel/manuscript_edit_provider.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:presc/viewModel/onboarding_provider.dart';
@@ -36,6 +37,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => OnBoardingProvider()),
         ChangeNotifierProvider(create: (context) => ManuscriptProvider()),
+        ChangeNotifierProvider(create: (context) => ManuscriptEditProvider()),
         ChangeNotifierProvider(
           create: (context) => EditableTagItemProvider(),
         ),
