@@ -395,20 +395,19 @@ class ManuscriptEditScreen extends StatelessWidget {
             )
           },
         ),
-        const SizedBox(width: 4),
         Consumer<ManuscriptEditProvider>(
           builder: (context, model, child) {
             return Row(
               children: [
                 Container(
-                  width: 40,
+                  width: 44,
                   child: RippleIconButton(
                     Icons.undo,
                     onPressed: model.canUndo ? () => model.undo() : null,
                   ),
                 ),
                 Container(
-                  width: 40,
+                  width: 44,
                   child: RippleIconButton(
                     Icons.redo,
                     onPressed: model.canRedo ? () => model.redo() : null,
@@ -418,7 +417,7 @@ class ManuscriptEditScreen extends StatelessWidget {
             );
           },
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 8),
       ],
     );
   }
