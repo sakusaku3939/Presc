@@ -135,31 +135,35 @@ class ManuscriptEditScreen extends StatelessWidget {
           ),
           Container(
             margin: const EdgeInsets.only(top: 16, bottom: 32),
-            child: TextField(
-              cursorColor: Colors.black45,
-              controller: TextEditingController.fromValue(
-                TextEditingValue(
-                  text: _edit.content,
-                  selection: TextSelection.collapsed(
-                    offset: _edit.content.length,
+            child: Consumer<ManuscriptEditProvider>(
+              builder: (context, model, child) {
+                return TextField(
+                  cursorColor: Colors.black45,
+                  controller: TextEditingController.fromValue(
+                    TextEditingValue(
+                      text: _edit.content,
+                      selection: TextSelection.collapsed(
+                        offset: _edit.content.length,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              keyboardType: TextInputType.multiline,
-              textInputAction: TextInputAction.newline,
-              maxLines: null,
-              decoration: InputDecoration(
-                isDense: true,
-                hintText: S.current.placeholderContent,
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.all(0),
-              ),
-              style: TextStyle(
-                color: Colors.grey[800],
-                height: 1.7,
-                fontSize: 16,
-              ),
-              onChanged: (text) => _edit.content = text,
+                  keyboardType: TextInputType.multiline,
+                  textInputAction: TextInputAction.newline,
+                  maxLines: null,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    hintText: S.current.placeholderContent,
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.all(0),
+                  ),
+                  style: TextStyle(
+                    color: Colors.grey[800],
+                    height: 1.7,
+                    fontSize: 16,
+                  ),
+                  onChanged: (text) => _edit.content = text,
+                );
+              },
             ),
           ),
         ],
@@ -391,6 +395,30 @@ class ManuscriptEditScreen extends StatelessWidget {
             )
           },
         ),
+        const SizedBox(width: 4),
+        Consumer<ManuscriptEditProvider>(
+          builder: (context, model, child) {
+            return Row(
+              children: [
+                Container(
+                  width: 40,
+                  child: RippleIconButton(
+                    Icons.undo,
+                    onPressed: model.canUndo ? () => model.undo() : null,
+                  ),
+                ),
+                Container(
+                  width: 40,
+                  child: RippleIconButton(
+                    Icons.redo,
+                    onPressed: model.canRedo ? () => model.redo() : null,
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+        const SizedBox(width: 12),
       ],
     );
   }

@@ -9,6 +9,7 @@ import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/hiragana.dart';
 import 'package:presc/model/language.dart';
 import 'package:presc/model/speech_to_text_manager.dart';
+import 'package:presc/model/undo_redo_history.dart';
 import 'package:presc/view/utils/dialog/silent_dialog_manager.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
@@ -20,7 +21,7 @@ import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 
 class SpeechToTextProvider with ChangeNotifier {
   final _manager = SpeechToTextManager();
-  final _history = _History();
+  final _history = UndoRedoHistory(0);
   final _hiragana = Hiragana();
   RingerModeStatus? _defaultRingerStatus;
 
@@ -317,38 +318,5 @@ class SpeechToTextProvider with ChangeNotifier {
 
     Navigator.pop(context);
     _requestInAppReview();
-  }
-}
-
-class _History {
-  List<int> _undoStack = [];
-  List<int> _redoStack = [];
-
-  int get current => canUndo() ? _undoStack.last : 0;
-
-  void undo() {
-    if (!canUndo()) return;
-    _redoStack.add(_undoStack.last);
-    _undoStack.removeLast();
-  }
-
-  bool canUndo() => _undoStack.length > 0;
-
-  void redo() {
-    if (!canRedo()) return;
-    _undoStack.add(_redoStack.last);
-    _redoStack.removeLast();
-  }
-
-  bool canRedo() => _redoStack.length > 0;
-
-  void add(int position) {
-    _undoStack.add(position);
-    _redoStack.clear();
-  }
-
-  void clear() {
-    _undoStack.clear();
-    _redoStack.clear();
   }
 }
