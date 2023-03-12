@@ -107,6 +107,7 @@ class ManuscriptEditScreen extends StatelessWidget {
   }
 
   Widget _editableContent(BuildContext context) {
+    final controller = TextEditingController(text: _edit.content);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Column(
@@ -135,18 +136,18 @@ class ManuscriptEditScreen extends StatelessWidget {
           ),
           Container(
             margin: const EdgeInsets.only(top: 16, bottom: 32),
-            child: Consumer<ManuscriptEditProvider>(
-              builder: (context, model, child) {
+            child: Selector<ManuscriptEditProvider, int>(
+              selector: (_, model) => model.currentHistory.offset,
+              builder: (context, offset, child) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  controller.text = _edit.content;
+                  controller.selection = TextSelection.collapsed(
+                    offset: offset,
+                  );
+                });
                 return TextField(
                   cursorColor: Colors.black45,
-                  controller: TextEditingController.fromValue(
-                    TextEditingValue(
-                      text: _edit.content,
-                      selection: TextSelection.collapsed(
-                        offset: _edit.content.length,
-                      ),
-                    ),
-                  ),
+                  controller: controller,
                   keyboardType: TextInputType.multiline,
                   textInputAction: TextInputAction.newline,
                   maxLines: null,
@@ -161,7 +162,10 @@ class ManuscriptEditScreen extends StatelessWidget {
                     height: 1.7,
                     fontSize: 16,
                   ),
-                  onChanged: (text) => _edit.content = text,
+                  onChanged: (text) => _edit.currentHistory = EditHistory(
+                    text,
+                    controller.selection.baseOffset,
+                  ),
                 );
               },
             ),
