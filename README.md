@@ -29,7 +29,8 @@ fvm flutter run --flavor beta
 fvm flutter build appbundle --release --flavor stable
 ```
 ```
-fvm flutter build ipa open build/ios/archive/Runner.xcarchive
+fvm flutter build ipa
+open build/ios/archive/Runner.xcarchive
 ```
 
 
