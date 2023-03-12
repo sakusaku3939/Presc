@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:presc/config/color_config.dart';
 import 'package:presc/view/utils/drawer_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
-import 'package:presc/view/utils/script_card.dart';
+import 'package:presc/view/utils/script/script_card.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/manuscript_tag_provider.dart';
@@ -17,6 +17,11 @@ class ManuscriptHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
+      backgroundColor: ColorConfig.backgroundColor,
+      appBar: AppBar(
+        toolbarHeight: 0,
+        backgroundColor: ColorConfig.backgroundColor,
+      ),
       body: SafeArea(
         child: Scrollbar(
           child: CustomScrollView(
@@ -41,6 +46,8 @@ class ManuscriptHomeScreen extends StatelessWidget {
       drawer: DrawerMenu(_scaffoldKey),
       floatingActionButton: SafeArea(
         child: FloatingActionButton(
+          backgroundColor: ColorConfig.mainColor,
+          shape: const CircleBorder(),
           onPressed: () async {
             final script = context.read<ManuscriptProvider>();
             final tag = context.read<ManuscriptTagProvider>();
@@ -58,39 +65,37 @@ class ManuscriptHomeScreen extends StatelessWidget {
               ),
             );
           },
-          child: Icon(Icons.add),
+          child: Icon(Icons.add, color: Colors.white),
         ),
       ),
     );
   }
 
   Widget _appbar(BuildContext context) {
-    return SafeArea(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          RippleIconButton(
-            Icons.menu,
-            onPressed: () {
-              final tagItem = context.read<EditableTagItemProvider>();
-              tagItem.loadTag();
-              _scaffoldKey.currentState?.openDrawer();
-            },
-          ),
-          Container(
-            margin: const EdgeInsets.fromLTRB(0, 20, 8, 20),
-            child: Image.asset('assets/images/logo.png'),
-          ),
-          RippleIconButton(
-            Icons.search,
-            onPressed: () {
-              context
-                  .read<ManuscriptProvider>()
-                  .replaceState(ManuscriptState.search);
-            },
-          ),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        RippleIconButton(
+          Icons.menu,
+          onPressed: () {
+            final tagItem = context.read<EditableTagItemProvider>();
+            tagItem.loadTag();
+            _scaffoldKey.currentState?.openDrawer();
+          },
+        ),
+        Container(
+          margin: const EdgeInsets.fromLTRB(0, 20, 8, 20),
+          child: Image.asset('assets/images/logo.png'),
+        ),
+        RippleIconButton(
+          Icons.search,
+          onPressed: () {
+            context
+                .read<ManuscriptProvider>()
+                .replaceState(ManuscriptState.search);
+          },
+        ),
+      ],
     );
   }
 }

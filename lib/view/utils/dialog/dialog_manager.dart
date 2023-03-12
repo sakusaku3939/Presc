@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
 
+import '../../../config/color_config.dart';
+
 class DialogManager {
   static void show(
     BuildContext context, {
     Widget? title,
     Widget? content,
-    EdgeInsetsGeometry contentPadding =
-        const EdgeInsets.fromLTRB(24, 20, 24, 16),
+    EdgeInsetsGeometry? contentPadding,
     List<Widget>? actions,
   }) {
-    List<Widget>? _adjustActions;
-    if (actions != null) {
-      _adjustActions = actions + [SizedBox(width: 2)];
-    }
     showDialog(
       context: context,
       builder: (_) {
         return AlertDialog(
           title: title,
           content: content,
-          contentPadding: contentPadding,
-          actions: _adjustActions,
+          contentPadding: contentPadding ??
+              EdgeInsets.fromLTRB(
+                24,
+                title == null ? 32 : 16,
+                24,
+                16,
+              ),
+          actions: actions,
         );
       },
     );
@@ -36,7 +39,10 @@ class DialogTextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      child: Text(text, style: TextStyle(color: Theme.of(context).accentColor)),
+      child: Text(
+        text,
+        style: TextStyle(color: ColorConfig.mainColor),
+      ),
       style: ButtonStyle(
         padding: MaterialStateProperty.all(
           const EdgeInsets.symmetric(

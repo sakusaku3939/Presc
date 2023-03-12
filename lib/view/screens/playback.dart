@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:presc/view/screens/setting.dart';
 import 'package:presc/view/utils/dialog/scroll_mode_dialog_manager.dart';
-import 'package:presc/view/utils/playback_text_view.dart';
-import 'package:presc/view/utils/playback_visualizer.dart';
+import 'package:presc/view/utils/playback/playback_text_view.dart';
+import 'package:presc/view/utils/playback/playback_visualizer.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
 import 'package:presc/viewModel/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
+
+import '../../config/color_config.dart';
 
 class PlaybackScreen extends StatelessWidget {
   PlaybackScreen({required this.title, required this.content});
@@ -191,7 +193,7 @@ class PlaybackScreen extends StatelessWidget {
                 height: 16,
                 child: CircularProgressIndicator(
                   strokeWidth: 3,
-                  color: Theme.of(context).accentColor,
+                  color: ColorConfig.mainColor,
                 ),
               ),
           ],
@@ -266,9 +268,11 @@ class PlaybackScreen extends StatelessWidget {
               width: 64,
               child: FittedBox(
                 child: FloatingActionButton(
+                  backgroundColor: ColorConfig.mainColor,
+                  shape: const CircleBorder(),
                   child: model.playFabState
-                      ? Icon(Icons.pause)
-                      : Icon(Icons.play_arrow),
+                      ? Icon(Icons.pause, color: Colors.white)
+                      : Icon(Icons.play_arrow, color: Colors.white),
                   onPressed: () {
                     model.playFabState = !model.playFabState;
                     if (model.playFabState) {

@@ -9,6 +9,7 @@ import 'package:presc/viewModel/onboarding_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../config/color_config.dart';
 import 'manuscript.dart';
 
 class OnBoardingScreen extends StatelessWidget {
@@ -79,7 +80,7 @@ class OnBoardingScreen extends StatelessWidget {
                               position: model.position,
                               decorator: DotsDecorator(
                                 size: const Size.square(9.0),
-                                activeColor: Theme.of(context).accentColor,
+                                activeColor: ColorConfig.mainColor,
                                 activeSize: const Size(18.0, 9.0),
                                 activeShape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(5.0),

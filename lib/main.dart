@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:presc/view/screens/manuscript.dart';
 import 'package:presc/view/screens/onboarding.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
+import 'package:presc/viewModel/manuscript_edit_provider.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:presc/viewModel/onboarding_provider.dart';
@@ -23,11 +26,18 @@ import 'generated/l10n.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
+  SystemChrome.setSystemUIOverlayStyle(
+    SystemUiOverlayStyle(
+      statusBarBrightness: Brightness.light, // for iOS
+      statusBarIconBrightness: Brightness.dark, // for Android
+    ),
+  );
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => OnBoardingProvider()),
         ChangeNotifierProvider(create: (context) => ManuscriptProvider()),
+        ChangeNotifierProvider(create: (context) => ManuscriptEditProvider()),
         ChangeNotifierProvider(
           create: (context) => EditableTagItemProvider(),
         ),
@@ -74,13 +84,30 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Presc',
-      // debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        accentColor: Colors.deepOrange[400],
+        useMaterial3: true,
+        colorSchemeSeed: ColorConfig.mainColor,
+        accentColor: ColorConfig.mainColor,
+        splashColor: Platform.isIOS ? Colors.transparent : null,
+        splashFactory: Platform.isIOS ? NoSplash.splashFactory : null,
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.white,
+          surfaceTintColor: Colors.transparent,
           iconTheme: IconThemeData(color: ColorConfig.iconColor),
           titleTextStyle: TextStyle(color: Colors.black, fontSize: 20),
+        ),
+        bottomSheetTheme: BottomSheetThemeData(
+          surfaceTintColor: Colors.transparent,
+        ),
+        dialogTheme: DialogTheme(
+          surfaceTintColor: Colors.transparent,
+        ),
+        drawerTheme: DrawerThemeData(
+          surfaceTintColor: Colors.transparent,
+        ),
+        popupMenuTheme: PopupMenuThemeData(
+          surfaceTintColor: Colors.transparent,
         ),
       ),
       localizationsDelegates: [

@@ -9,12 +9,14 @@ import 'package:presc/view/screens/playback.dart';
 import 'package:presc/view/utils/dialog/dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
-import 'package:presc/view/utils/tag_grid.dart';
-import 'package:presc/view/utils/trash_move_manager.dart';
+import 'package:presc/view/utils/tag/tag_grid.dart';
+import 'package:presc/view/utils/trash_move_snackbar.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
+
+import '../../viewModel/manuscript_edit_provider.dart';
 
 class ManuscriptEditScreen extends StatelessWidget {
   ManuscriptEditScreen(this.context, this.index, {this.autofocus = false});
@@ -22,54 +24,33 @@ class ManuscriptEditScreen extends StatelessWidget {
   final BuildContext context;
   final int index;
   final bool autofocus;
-  final _current = _CurrentScript();
 
-  ManuscriptProvider get _script => context.read<ManuscriptProvider>();
-
-  int get id => _script.scriptTable[index].id;
-
-  String get title => _script.scriptTable[index].title ?? "";
-
-  String get content => _script.scriptTable[index].content ?? "";
-
-  DateTime get date => _script.scriptTable[index].date;
-
-  Future<void> _back() async {
-    await _script.notifyBack(context);
-    final currentTitle = _current.title ?? title;
-    final currentContent = _current.content ?? content;
-    if (currentTitle.isEmpty && currentContent.isEmpty) {
-      await Future.delayed(Duration(milliseconds: 300));
-      TrashMoveManager.deleteEmpty(
-        context: context,
-        provider: _script,
-        index: index,
-      );
-    }
-  }
+  ManuscriptEditProvider get _edit => context.read<ManuscriptEditProvider>();
 
   @override
   Widget build(BuildContext context) {
+    _edit.init(context, index);
     return WillPopScope(
       onWillPop: () async {
-        await _back();
+        await _edit.back(context);
         return Future.value(false);
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: Hero(
-            tag: id,
-            child: Material(
-              type: MaterialType.transparency,
-              child: Container(
-                color: Colors.white,
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(toolbarHeight: 0),
+        body: Hero(
+          tag: _edit.id,
+          child: Material(
+            type: MaterialType.transparency,
+            child: Container(
+              color: Colors.white,
+              child: SafeArea(
                 child: Column(
                   children: [
                     Container(child: _menuBar(context)),
                     Expanded(
                       child: SingleChildScrollView(
-                        child: _script.current.state != ManuscriptState.trash
+                        child: _edit.isEditable
                             ? _editableContent(context)
                             : _uneditableContent(context),
                       ),
@@ -83,20 +64,22 @@ class ManuscriptEditScreen extends StatelessWidget {
         ),
         floatingActionButton: SafeArea(
           child: FloatingActionButton(
+            backgroundColor: ColorConfig.mainColor,
+            shape: const CircleBorder(),
             onPressed: () async {
-              if (_script.current.state != ManuscriptState.trash) {
+              if (_edit.isEditable) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => PlaybackScreen(
-                      title: _current.title ?? title,
-                      content: _current.content ?? content,
+                      title: _edit.title,
+                      content: _edit.content,
                     ),
                   ),
                 );
               }
             },
-            child: Icon(Icons.play_arrow),
+            child: Icon(Icons.play_arrow, color: Colors.white),
           ),
         ),
       ),
@@ -115,11 +98,9 @@ class ManuscriptEditScreen extends StatelessWidget {
           RippleIconButton(
             Icons.navigate_before,
             size: 32,
-            onPressed: () async => await _back(),
+            onPressed: () async => await _edit.back(context),
           ),
-          _script.current.state != ManuscriptState.trash
-              ? _editStateMenu()
-              : _trashStateMenu()
+          _edit.isEditable ? _editStateMenu() : _trashStateMenu()
         ],
       ),
     );
@@ -135,8 +116,8 @@ class ManuscriptEditScreen extends StatelessWidget {
             cursorColor: Colors.black45,
             controller: TextEditingController.fromValue(
               TextEditingValue(
-                text: title,
-                selection: TextSelection.collapsed(offset: title.length),
+                text: _edit.title,
+                selection: TextSelection.collapsed(offset: _edit.title.length),
               ),
             ),
             keyboardType: TextInputType.text,
@@ -150,38 +131,38 @@ class ManuscriptEditScreen extends StatelessWidget {
               contentPadding: const EdgeInsets.all(0),
             ),
             style: const TextStyle(fontSize: 24),
-            onChanged: (text) {
-              _current.title = text;
-              _script.saveScript(id: id, title: text);
-            },
+            onChanged: (text) => _edit.title = text,
           ),
           Container(
             margin: const EdgeInsets.only(top: 16, bottom: 32),
-            child: TextField(
-              cursorColor: Colors.black45,
-              controller: TextEditingController.fromValue(
-                TextEditingValue(
-                  text: content,
-                  selection: TextSelection.collapsed(offset: content.length),
-                ),
-              ),
-              keyboardType: TextInputType.multiline,
-              textInputAction: TextInputAction.newline,
-              maxLines: null,
-              decoration: InputDecoration(
-                isDense: true,
-                hintText: S.current.placeholderContent,
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.all(0),
-              ),
-              style: TextStyle(
-                color: Colors.grey[800],
-                height: 1.7,
-                fontSize: 16,
-              ),
-              onChanged: (text) {
-                _current.content = text;
-                _script.saveScript(id: id, content: text);
+            child: Consumer<ManuscriptEditProvider>(
+              builder: (context, model, child) {
+                return TextField(
+                  cursorColor: Colors.black45,
+                  controller: TextEditingController.fromValue(
+                    TextEditingValue(
+                      text: _edit.content,
+                      selection: TextSelection.collapsed(
+                        offset: _edit.content.length,
+                      ),
+                    ),
+                  ),
+                  keyboardType: TextInputType.multiline,
+                  textInputAction: TextInputAction.newline,
+                  maxLines: null,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    hintText: S.current.placeholderContent,
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.all(0),
+                  ),
+                  style: TextStyle(
+                    color: Colors.grey[800],
+                    height: 1.7,
+                    fontSize: 16,
+                  ),
+                  onChanged: (text) => _edit.content = text,
+                );
               },
             ),
           ),
@@ -199,17 +180,20 @@ class ManuscriptEditScreen extends StatelessWidget {
         children: [
           SizedBox(height: 4),
           Text(
-            title.isNotEmpty ? title : S.current.noTitle,
+            _edit.title.isNotEmpty ? _edit.title : S.current.noTitle,
             style: TextStyle(
-              color: title.isNotEmpty ? null : Theme.of(context).hintColor,
+              color:
+                  _edit.title.isNotEmpty ? null : Theme.of(context).hintColor,
               fontSize: 24,
             ),
           ),
           SizedBox(height: 16),
           Text(
-            content.isNotEmpty ? content : S.current.noAdditionalText,
+            _edit.content.isNotEmpty
+                ? _edit.content
+                : S.current.noAdditionalText,
             style: TextStyle(
-              color: content.isNotEmpty
+              color: _edit.content.isNotEmpty
                   ? Colors.grey[800]
                   : Theme.of(context).hintColor,
               height: 1.7,
@@ -230,13 +214,14 @@ class ManuscriptEditScreen extends StatelessWidget {
           RippleIconButton(
             Icons.playlist_add,
             onPressed: () {
-              if (_script.current.state != ManuscriptState.trash) {
+              if (_edit.isEditable) {
                 final tag = context.read<ManuscriptTagProvider>();
                 final controller = TextEditingController();
-                tag.loadTag(memoId: id);
+                tag.loadTag(memoId: _edit.id);
 
                 DialogManager.show(
                   context,
+                  contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
                   content: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -246,17 +231,17 @@ class ManuscriptEditScreen extends StatelessWidget {
                           hintText: S.current.addNewTag,
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
-                              color: Theme.of(context).accentColor,
+                              color: ColorConfig.mainColor,
                             ),
                           ),
                         ),
                         controller: controller,
-                        cursorColor: Theme.of(context).accentColor,
+                        cursorColor: ColorConfig.mainColor,
                         onSubmitted: (text) {
                           if (text.trim().isNotEmpty) {
                             context
                                 .read<ManuscriptTagProvider>()
-                                .addTag(memoId: id, name: text);
+                                .addTag(memoId: _edit.id, name: text);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(S.current.newTagAdded),
@@ -268,7 +253,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                         },
                       ),
                       SizedBox(height: 12),
-                      TagGrid(memoId: id),
+                      TagGrid(memoId: _edit.id),
                     ],
                   ),
                 );
@@ -288,9 +273,13 @@ class ManuscriptEditScreen extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(left: 8),
                             child: Chip(
+                              side: BorderSide(
+                                color: Colors.grey[300]!,
+                                width: 1,
+                              ),
+                              labelPadding: EdgeInsets.symmetric(vertical: 1),
+                              padding: EdgeInsets.only(left: 12),
                               shape: RoundedRectangleBorder(
-                                side: BorderSide(
-                                    color: Colors.grey[300]!, width: 1),
                                 borderRadius: BorderRadius.circular(24),
                               ),
                               deleteIcon: Icon(
@@ -301,10 +290,9 @@ class ManuscriptEditScreen extends StatelessWidget {
                               label: Text(linkTagTable.tagName),
                               backgroundColor: Colors.transparent,
                               onDeleted: () {
-                                final state = _script.current.state;
-                                if (state != ManuscriptState.trash) {
+                                if (_edit.isEditable) {
                                   model.changeChecked(
-                                    memoId: id,
+                                    memoId: _edit.id,
                                     tagId: linkTagTable.id,
                                     newValue: false,
                                   );
@@ -330,18 +318,16 @@ class ManuscriptEditScreen extends StatelessWidget {
       children: [
         RippleIconButton(
           Icons.share,
-          onPressed: () => Share.share(
-            (_current.title ?? title) + "\n\n" + (_current.content ?? content),
-          ),
+          onPressed: () => Share.share(_edit.title + "\n\n" + _edit.content),
         ),
         RippleIconButton(
           Icons.delete_outline,
           onPressed: () async {
             Navigator.pop(context);
             await Future.delayed(Duration(milliseconds: 300));
-            TrashMoveManager.move(
+            TrashMoveSnackBar.move(
               context: context,
-              provider: _script,
+              provider: context.read<ManuscriptProvider>(),
               index: index,
             );
           },
@@ -351,14 +337,14 @@ class ManuscriptEditScreen extends StatelessWidget {
           onPressed: () => {
             DialogManager.show(
               context,
-              contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+              contentPadding: const EdgeInsets.fromLTRB(24, 28, 24, 0),
               content: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     S.current.characterCount(
-                      Language.unit(_current.content ?? content),
+                      Language.unit(_edit.content),
                     ),
                     style: TextStyle(
                       fontSize: 12,
@@ -366,12 +352,13 @@ class ManuscriptEditScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    CharCounter.count(_current.content ?? content).toString(),
+                    CharCounter.count(_edit.content).toString(),
+                    style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 16),
                   Text(
                     S.current.presentationTime(
-                      Language.perMinute(_current.content ?? content),
+                      Language.perMinute(_edit.content),
                     ),
                     style: TextStyle(
                       fontSize: 12,
@@ -379,7 +366,8 @@ class ManuscriptEditScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    _calcReadTime(_current.content ?? content),
+                    _calcReadTime(_edit.content),
+                    style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 16),
                   Text(
@@ -393,9 +381,8 @@ class ManuscriptEditScreen extends StatelessWidget {
                     DateFormat(
                       'yyyy/MM/dd(E) HH:mm',
                       Intl.getCurrentLocale(),
-                    ).format(
-                      _script.scriptTable[index].date,
-                    ),
+                    ).format(_edit.date),
+                    style: TextStyle(fontSize: 16),
                   ),
                 ],
               ),
@@ -408,6 +395,29 @@ class ManuscriptEditScreen extends StatelessWidget {
             )
           },
         ),
+        Consumer<ManuscriptEditProvider>(
+          builder: (context, model, child) {
+            return Row(
+              children: [
+                Container(
+                  width: 44,
+                  child: RippleIconButton(
+                    Icons.undo,
+                    onPressed: model.canUndo ? () => model.undo() : null,
+                  ),
+                ),
+                Container(
+                  width: 44,
+                  child: RippleIconButton(
+                    Icons.redo,
+                    onPressed: model.canRedo ? () => model.redo() : null,
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+        const SizedBox(width: 8),
       ],
     );
   }
@@ -433,9 +443,9 @@ class ManuscriptEditScreen extends StatelessWidget {
           onPressed: () async {
             Navigator.pop(context);
             await Future.delayed(Duration(milliseconds: 300));
-            TrashMoveManager.restore(
+            TrashMoveSnackBar.restore(
               context: context,
-              provider: _script,
+              provider: context.read<ManuscriptProvider>(),
               index: index,
             );
           },
@@ -450,9 +460,9 @@ class ManuscriptEditScreen extends StatelessWidget {
           onSelected: (_) async {
             Navigator.pop(context);
             await Future.delayed(Duration(milliseconds: 300));
-            TrashMoveManager.delete(
+            TrashMoveSnackBar.delete(
               context: context,
-              provider: _script,
+              provider: context.read<ManuscriptProvider>(),
               index: index,
             );
           },
@@ -460,9 +470,4 @@ class ManuscriptEditScreen extends StatelessWidget {
       ],
     );
   }
-}
-
-class _CurrentScript {
-  String? title;
-  String? content;
 }

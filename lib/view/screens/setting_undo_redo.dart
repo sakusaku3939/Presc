@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
 import 'package:presc/view/utils/ripple_button.dart';
-import 'package:presc/view/utils/setting_item.dart';
+import 'package:presc/view/utils/settings/platform_switch.dart';
+import 'package:presc/view/utils/settings/setting_item.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +19,7 @@ class SettingUndoRedoScreen extends StatelessWidget {
             builder: (context, model, child) {
               return Column(
                 children: [
-                  SizedBox(height: 4),
+                  SizedBox(height: 8),
                   SettingItem(
                     title: S.current.undoRedoButton,
                     subtitle:
@@ -43,11 +44,13 @@ class SettingUndoRedoScreen extends StatelessWidget {
                   ),
                   Ink(
                     color: Colors.white,
-                    child: SwitchListTile(
+                    child: ListTile(
                       title: Text(S.current.undoDoubleTap),
-                      contentPadding: const EdgeInsets.fromLTRB(32, 2, 0, 2),
-                      value: model.undoDoubleTap,
-                      onChanged: (value) => model.undoDoubleTap = value,
+                      contentPadding: const EdgeInsets.fromLTRB(32, 2, 12, 2),
+                      trailing: PlatformSwitch(
+                        value: model.undoDoubleTap,
+                        onChanged: (value) => model.undoDoubleTap = value,
+                      ),
                     ),
                   ),
                   SizedBox(height: 32),

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:presc/config/color_config.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/utils/database_table.dart';
+import 'package:presc/view/utils/dialog/input_dialog_manager.dart';
 import 'package:presc/view/utils/dialog/platform_dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
-import 'package:presc/view/utils/script_card.dart';
+import 'package:presc/view/utils/script/script_card.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:provider/provider.dart';
@@ -65,12 +66,19 @@ class ManuscriptFilterScreen extends StatelessWidget {
       title: Selector<ManuscriptProvider, Current>(
         selector: (_, model) => model.current,
         builder: (context, current, child) {
-          return Text(
-            state == ManuscriptState.tag
-                ? current.tagTable?.tagName ?? ""
-                : S.current.trash,
-            style: const TextStyle(fontSize: 20),
-          );
+          return Selector<EditableTagItemProvider, TagTable?>(
+              selector: (_, model) =>
+                  model.allTagTable.isNotEmpty && current.tagTable != null
+                      ? model.getTag(current.tagTable!.id)
+                      : null,
+              builder: (context, tagTable, child) {
+                return Text(
+                  state == ManuscriptState.tag
+                      ? tagTable?.tagName ?? current.tagTable?.tagName ?? ""
+                      : S.current.trash,
+                  style: const TextStyle(fontSize: 20),
+                );
+              });
         },
       ),
       actions: [
@@ -102,7 +110,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
 
             switch (value) {
               case "change":
-                PlatformDialogManager.showInputDialog(
+                InputDialogManager.show(
                   context,
                   title: S.current.tag,
                   content: model.current.tagTable!.tagName,

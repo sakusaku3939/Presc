@@ -3,7 +3,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/screens/setting.dart';
 import 'package:presc/view/screens/tag_edit.dart';
-import 'package:presc/view/utils/add_new_tag.dart';
+import 'package:presc/view/utils/tag/add_new_tag.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:provider/provider.dart';
@@ -22,21 +22,18 @@ class DrawerMenu extends StatelessWidget {
             children: <Widget>[
               Container(
                 height: 80,
-                child: DrawerHeader(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      bottom: Divider.createBorderSide(
-                        context,
-                        color: Colors.grey[300],
-                      ),
+                padding: const EdgeInsets.fromLTRB(16, 28, 16, 28),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: Divider.createBorderSide(
+                      context,
+                      color: Colors.grey[300],
                     ),
                   ),
-                  margin: const EdgeInsets.only(bottom: 0),
-                  padding: const EdgeInsets.fromLTRB(16, 28, 16, 30),
-                  child: Image.asset(
-                    'assets/images/logo.png',
-                    alignment: Alignment.centerLeft,
-                  ),
+                ),
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  alignment: Alignment.centerLeft,
                 ),
               ),
               _tagList(context),

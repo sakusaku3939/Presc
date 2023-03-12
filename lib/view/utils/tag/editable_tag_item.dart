@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:presc/config/color_config.dart';
+import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
 import 'package:provider/provider.dart';
@@ -67,9 +69,7 @@ class EditableTagItem extends StatelessWidget {
                           .updateTag(tagTable.id, text);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(
-                            "タグを更新しました",
-                          ),
+                          content: Text(S.current.tagUpdated),
                           duration: const Duration(seconds: 2),
                         ),
                       );
@@ -91,7 +91,7 @@ class EditableTagItem extends StatelessWidget {
       builder: (context, model, child) {
         return Container(
           color: model.checkList[index]
-              ? Theme.of(context).accentColor.withOpacity(.1)
+              ? ColorConfig.mainColor.withOpacity(.1)
               : Colors.white,
           child: Material(
             color: Colors.transparent,
@@ -104,16 +104,10 @@ class EditableTagItem extends StatelessWidget {
                     SizedBox(
                       width: 24,
                       height: 24,
-                      child: Transform.scale(
-                        scale: 1.1,
-                        child: Checkbox(
-                          shape: CircleBorder(),
-                          value: model.checkList[index],
-                          activeColor: Theme.of(context).accentColor,
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          onChanged: (_) => model.toggleChecked(index),
-                        ),
+                      child: Checkbox(
+                        value: model.checkList[index],
+                        activeColor: ColorConfig.mainColor,
+                        onChanged: (_) => model.toggleChecked(index),
                       ),
                     ),
                     SizedBox(width: 32),

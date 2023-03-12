@@ -44,7 +44,7 @@
   "editTag": "タグの編集",
   "removeTag": "タグを削除",
   "removeSelectTags": "{count}件のタグを削除",
-  "alertRemoveTag": "タグ {name}を削除しますか？この操作は元に戻せません。",
+  "alertRemoveTag": "タグ「{name}」を削除しますか？この操作は元に戻せません。",
   "alertRemoveSelectTags": "選択したタグを全て削除しますか？この操作は元に戻せません。",
   "tagRemoved": "タグを削除しました",
   "selectTagsRemoved": "{count}件のタグを削除しました",

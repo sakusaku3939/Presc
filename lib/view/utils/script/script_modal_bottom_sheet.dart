@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/screens/playback.dart';
-import 'package:presc/view/utils/trash_move_manager.dart';
+import 'package:presc/view/utils/trash_move_snackbar.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -84,7 +84,7 @@ class ScriptModalBottomSheet {
           ),
           title: Text(S.current.moveTrash),
           onTap: () {
-            TrashMoveManager.move(
+            TrashMoveSnackBar.move(
               context: context,
               provider: model,
               index: index,
@@ -111,7 +111,7 @@ class ScriptModalBottomSheet {
           ),
           title: Text(S.current.restore),
           onTap: () {
-            TrashMoveManager.restore(
+            TrashMoveSnackBar.restore(
               context: context,
               provider: model,
               index: index,
@@ -127,7 +127,7 @@ class ScriptModalBottomSheet {
           title: Text(S.current.deletePermanently),
           onTap: () {
             Navigator.pop(context);
-            TrashMoveManager.delete(
+            TrashMoveSnackBar.delete(
               context: context,
               provider: model,
               index: index,

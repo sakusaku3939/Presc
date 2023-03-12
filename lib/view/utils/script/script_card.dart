@@ -6,7 +6,7 @@ import 'package:presc/config/display_size.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/screens/manuscript_edit.dart';
-import 'package:presc/view/utils/script_modal_bottom_sheet.dart';
+import 'package:presc/view/utils/script/script_modal_bottom_sheet.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
@@ -24,8 +24,6 @@ class ScriptCard extends StatelessWidget {
       builder: (context, scriptTable, child) {
         if (scriptTable.length <= 0)
           return _placeholder();
-        else if (scriptTable.isEmpty)
-          return _emptyView();
         else
           return _scriptView(scriptTable.length);
       },
