@@ -14,6 +14,7 @@ class ManuscriptEditProvider with ChangeNotifier {
   String? _title;
   String? _content;
   DateTime? _date;
+  EditHistory? _currentHistory;
 
   int get id => _id ?? -1;
 
@@ -29,13 +30,15 @@ class ManuscriptEditProvider with ChangeNotifier {
 
   String get content => _content ?? "";
 
-  set content(String value) {
-    _content = value;
-    _history.add(value);
+  DateTime get date => _date ?? DateTime(0);
+
+  EditHistory get currentHistory => _currentHistory ?? EditHistory("", 0);
+
+  set currentHistory(EditHistory history) {
+    _content = history.content;
+    _history.add(history);
     _updateContent();
   }
-
-  DateTime get date => _date ?? DateTime(0);
 
   void init(BuildContext context, int index) {
     _script = context.read<ManuscriptProvider>();
@@ -46,7 +49,7 @@ class ManuscriptEditProvider with ChangeNotifier {
     _title = scriptTable.title ?? "";
     _content = scriptTable.content ?? "";
     _date = scriptTable.date;
-    _history = UndoRedoHistory(_content);
+    _history = UndoRedoHistory(EditHistory(content, 0));
   }
 
   Future<void> back(BuildContext context) async {
@@ -70,7 +73,10 @@ class ManuscriptEditProvider with ChangeNotifier {
   void undo() {
     if (!_history.canUndo()) return;
     _history.undo();
-    _content = _history.current ?? "";
+    _currentHistory = _history.current;
+    if (_currentHistory != null) {
+      _content = _currentHistory!.content;
+    }
     _updateContent();
   }
 
@@ -79,7 +85,10 @@ class ManuscriptEditProvider with ChangeNotifier {
   void redo() {
     if (!_history.canRedo()) return;
     _history.redo();
-    _content = _history.current;
+    _currentHistory = _history.current;
+    if (_currentHistory != null) {
+      _content = _currentHistory!.content;
+    }
     _updateContent();
   }
 
@@ -88,4 +97,11 @@ class ManuscriptEditProvider with ChangeNotifier {
     await _script.updateScriptTable();
     notifyListeners();
   }
+}
+
+class EditHistory {
+  EditHistory(this.content, this.offset);
+
+  final String content;
+  final int offset;
 }
