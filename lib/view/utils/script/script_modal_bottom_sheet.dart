@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
+import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/screens/playback.dart';
-import 'package:presc/view/utils/trash_move_snackbar.dart';
+import 'package:presc/view/utils/trash_move_manager.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:provider/provider.dart';
 
 class ScriptModalBottomSheet {
-  static void show(BuildContext context, int index) {
+  static void show(BuildContext context, MemoTable scriptTable) {
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -17,12 +18,12 @@ class ScriptModalBottomSheet {
       ),
       backgroundColor: Colors.white,
       builder: (ctx) {
-        return _sheet(context, index);
+        return _sheet(context, scriptTable);
       },
     );
   }
 
-  static Widget _sheet(BuildContext context, int index) {
+  static Widget _sheet(BuildContext context, MemoTable scriptTable) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       child: Column(
@@ -41,8 +42,8 @@ class ScriptModalBottomSheet {
           Consumer<ManuscriptProvider>(
             builder: (_, model, child) {
               return model.current.state != ManuscriptState.trash
-                  ? _defaultSheet(context, model, index)
-                  : _trashSheet(context, model, index);
+                  ? _defaultSheet(context, model, scriptTable)
+                  : _trashSheet(context, model, scriptTable);
             },
           ),
         ],
@@ -53,7 +54,7 @@ class ScriptModalBottomSheet {
   static Widget _defaultSheet(
     BuildContext context,
     ManuscriptProvider model,
-    int index,
+    MemoTable scriptTable,
   ) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -70,8 +71,8 @@ class ScriptModalBottomSheet {
               context,
               MaterialPageRoute(
                 builder: (context) => PlaybackScreen(
-                  title: model.scriptTable[index].title ?? "",
-                  content: model.scriptTable[index].content ?? "",
+                  title: scriptTable.title ?? "",
+                  content: scriptTable.content ?? "",
                 ),
               ),
             );
@@ -84,11 +85,7 @@ class ScriptModalBottomSheet {
           ),
           title: Text(S.current.moveTrash),
           onTap: () {
-            TrashMoveSnackBar.move(
-              context: context,
-              provider: model,
-              index: index,
-            );
+            TrashMoveManager.moveToTrash(context: context, id: scriptTable.id);
             Navigator.pop(context);
           },
         ),
@@ -99,7 +96,7 @@ class ScriptModalBottomSheet {
   static Widget _trashSheet(
     BuildContext context,
     ManuscriptProvider model,
-    int index,
+    MemoTable scriptTable,
   ) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -111,11 +108,7 @@ class ScriptModalBottomSheet {
           ),
           title: Text(S.current.restore),
           onTap: () {
-            TrashMoveSnackBar.restore(
-              context: context,
-              provider: model,
-              index: index,
-            );
+            TrashMoveManager.restore(context: context, id: scriptTable.id);
             Navigator.pop(context);
           },
         ),
@@ -127,10 +120,10 @@ class ScriptModalBottomSheet {
           title: Text(S.current.deletePermanently),
           onTap: () {
             Navigator.pop(context);
-            TrashMoveSnackBar.delete(
+            TrashMoveManager.delete(
               context: context,
-              provider: model,
-              index: index,
+              id: scriptTable.id,
+              title: scriptTable.title ?? "",
             );
           },
         ),
