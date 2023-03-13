@@ -106,11 +106,6 @@ class ManuscriptProvider with ChangeNotifier {
   Future<void> deleteTrash({required int trashId}) async =>
       await _manager.deleteTrash(trashId: trashId);
 
-  Future<void> notifyBack(BuildContext context) async {
-    Navigator.pop(context);
-    await updateScriptTable();
-  }
-
   Future<void> _saveCurrentState(int tagId) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setInt("currentTagId", tagId);

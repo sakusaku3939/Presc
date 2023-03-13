@@ -53,8 +53,10 @@ class ManuscriptEditProvider with ChangeNotifier {
   Future<void> back(BuildContext context) async {
     _script = context.read<ManuscriptProvider>();
     _history.clear();
-    await _script.notifyBack(context);
-    if (_title == "" && _content == "") {
+    Navigator.pop(context);
+    if (_script.current.state != ManuscriptState.trash &&
+        _title == "" &&
+        _content == "") {
       await Future.delayed(Duration(milliseconds: 300));
       TrashMoveManager.deleteEmpty(context: context, id: id);
     }
