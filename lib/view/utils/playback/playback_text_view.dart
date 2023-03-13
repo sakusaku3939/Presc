@@ -286,13 +286,14 @@ class _RecognizedTextView extends StatelessWidget {
     String recognizedText, {
     required double textWidth,
   }) {
+    final style = PlaybackTextStyle.of(playbackProvider);
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
         style: DefaultTextStyle.of(context).style,
         children: [
           TextSpan(
             text: recognizedText,
-            style: PlaybackTextStyle.of(playbackProvider).unrecognized,
+            style: style.unrecognized.copyWith(height: style.strutStyle.height),
           )
         ],
       ),
