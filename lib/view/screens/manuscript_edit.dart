@@ -32,7 +32,7 @@ class ManuscriptEditScreen extends StatelessWidget {
     _edit.init(context, index);
     return WillPopScope(
       onWillPop: () async {
-        await _edit.back(context);
+        await _edit.back(this.context);
         return Future.value(false);
       },
       child: Scaffold(
@@ -98,7 +98,7 @@ class ManuscriptEditScreen extends StatelessWidget {
           RippleIconButton(
             Icons.navigate_before,
             size: 32,
-            onPressed: () async => await _edit.back(context),
+            onPressed: () async => await _edit.back(this.context),
           ),
           _edit.isEditable ? _editStateMenu() : _trashStateMenu()
         ],

@@ -54,6 +54,7 @@ class ManuscriptEditProvider with ChangeNotifier {
 
   Future<void> back(BuildContext context) async {
     _script = context.read<ManuscriptProvider>();
+    _history.clear();
     await _script.notifyBack(context);
     if (_index != -1 && _title == "" && _content == "") {
       await Future.delayed(Duration(milliseconds: 300));
@@ -63,7 +64,6 @@ class ManuscriptEditProvider with ChangeNotifier {
         index: _index,
       );
     }
-    _history.clear();
   }
 
   bool get isEditable => _script.current.state != ManuscriptState.trash;
