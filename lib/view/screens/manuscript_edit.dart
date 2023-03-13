@@ -10,8 +10,6 @@ import 'package:presc/view/utils/dialog/dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/tag/tag_grid.dart';
-import 'package:presc/view/utils/trash_move_snackbar.dart';
-import 'package:presc/viewModel/manuscript_provider.dart';
 import 'package:presc/viewModel/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -326,15 +324,7 @@ class ManuscriptEditScreen extends StatelessWidget {
         ),
         RippleIconButton(
           Icons.delete_outline,
-          onPressed: () async {
-            Navigator.pop(context);
-            await Future.delayed(Duration(milliseconds: 300));
-            TrashMoveSnackBar.move(
-              context: context,
-              provider: context.read<ManuscriptProvider>(),
-              index: index,
-            );
-          },
+          onPressed: () => _edit.moveToTrash(context),
         ),
         RippleIconButton(
           Icons.info_outline,
@@ -444,15 +434,7 @@ class ManuscriptEditScreen extends StatelessWidget {
       children: [
         RippleIconButton(
           Icons.restore_outlined,
-          onPressed: () async {
-            Navigator.pop(context);
-            await Future.delayed(Duration(milliseconds: 300));
-            TrashMoveSnackBar.restore(
-              context: context,
-              provider: context.read<ManuscriptProvider>(),
-              index: index,
-            );
-          },
+          onPressed: () => _edit.restore(context),
         ),
         PopupMenu(
           [
@@ -461,15 +443,7 @@ class ManuscriptEditScreen extends StatelessWidget {
               value: "delete",
             )
           ],
-          onSelected: (_) async {
-            Navigator.pop(context);
-            await Future.delayed(Duration(milliseconds: 300));
-            TrashMoveSnackBar.delete(
-              context: context,
-              provider: context.read<ManuscriptProvider>(),
-              index: index,
-            );
-          },
+          onSelected: (_) => _edit.delete(context),
         ),
       ],
     );

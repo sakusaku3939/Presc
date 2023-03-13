@@ -202,7 +202,7 @@ class _Card extends StatelessWidget {
         );
       },
       onLongPress: () {
-        ScriptModalBottomSheet.show(this.context, index);
+        ScriptModalBottomSheet.show(this.context, scriptTable[index]);
       },
       child: Container(
         constraints: const BoxConstraints.expand(),

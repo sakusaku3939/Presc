@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/utils/dialog/platform_dialog_manager.dart';
 import 'package:presc/viewModel/manuscript_provider.dart';
+import 'package:provider/provider.dart';
 
-class TrashMoveSnackBar {
-  static Future<void> move({
+class TrashMoveManager {
+  static Future<void> moveToTrash({
     required BuildContext context,
-    required ManuscriptProvider provider,
-    required int index,
+    required int id,
   }) async {
-    final newId = await provider.moveToTrash(
-      memoId: provider.scriptTable[index].id,
-    );
+    final script = context.read<ManuscriptProvider>();
+    final newId = await script.moveToTrash(memoId: id);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(S.current.trashMoved),
@@ -19,40 +18,36 @@ class TrashMoveSnackBar {
         action: SnackBarAction(
           label: S.current.undo,
           onPressed: () async {
-            await provider.restoreFromTrash(trashId: newId);
-            await provider.updateScriptTable();
+            await script.restoreFromTrash(trashId: newId);
+            await script.updateScriptTable();
           },
         ),
       ),
     );
-    await provider.updateScriptTable();
+    await script.updateScriptTable();
   }
 
   static Future<void> deleteEmpty({
     required BuildContext context,
-    required ManuscriptProvider provider,
-    required int index,
+    required int id,
   }) async {
-    await provider.moveToTrash(
-      memoId: provider.scriptTable[index].id,
-    );
+    final script = context.read<ManuscriptProvider>();
+    await script.moveToTrash(memoId: id);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(S.current.emptyScriptDeleted),
         duration: const Duration(seconds: 3),
       ),
     );
-    await provider.updateScriptTable();
+    await script.updateScriptTable();
   }
 
   static Future<void> restore({
     required BuildContext context,
-    required ManuscriptProvider provider,
-    required int index,
+    required int id,
   }) async {
-    final newId = await provider.restoreFromTrash(
-      trashId: provider.scriptTable[index].id,
-    );
+    final script = context.read<ManuscriptProvider>();
+    final newId = await script.restoreFromTrash(trashId: id);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(S.current.trashRestored),
@@ -60,37 +55,37 @@ class TrashMoveSnackBar {
         action: SnackBarAction(
           label: S.current.undo,
           onPressed: () async {
-            await provider.moveToTrash(memoId: newId);
-            await provider.updateScriptTable();
+            await script.moveToTrash(memoId: newId);
+            await script.updateScriptTable();
           },
         ),
       ),
     );
-    await provider.updateScriptTable();
+    await script.updateScriptTable();
   }
 
   static Future<void> delete({
     required BuildContext context,
-    required ManuscriptProvider provider,
-    required int index,
+    required int id,
+    required String title,
   }) async {
-    final title = provider.scriptTable[index].title;
     await PlatformDialogManager.showDeleteAlert(
       context,
       message: S.current.doDeletePermanently(
-        (title != null && title.isNotEmpty) ? title : "(${S.current.noTitle})",
+        (title.isNotEmpty) ? title : "(${S.current.noTitle})",
       ),
       deleteLabel: S.current.delete,
       cancelLabel: S.current.cancel,
       onDeletePressed: () async {
-        await provider.deleteTrash(trashId: provider.scriptTable[index].id);
+        final script = context.read<ManuscriptProvider>();
+        await script.deleteTrash(trashId: id);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(S.current.permanentlyDeleted),
             duration: const Duration(seconds: 2),
           ),
         );
-        await provider.updateScriptTable();
+        await script.updateScriptTable();
       },
     );
   }

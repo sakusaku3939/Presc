@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../model/undo_redo_history.dart';
-import '../view/utils/trash_move_snackbar.dart';
+import '../view/utils/trash_move_manager.dart';
 import 'manuscript_provider.dart';
 
 class ManuscriptEditProvider with ChangeNotifier {
   late ManuscriptProvider _script;
   late UndoRedoHistory _history;
-  int _index = -1;
 
   int? _id;
   String? _title;
@@ -44,7 +43,6 @@ class ManuscriptEditProvider with ChangeNotifier {
     _script = context.read<ManuscriptProvider>();
 
     final scriptTable = _script.scriptTable[index];
-    _index = index;
     _id = scriptTable.id;
     _title = scriptTable.title ?? "";
     _content = scriptTable.content ?? "";
@@ -56,13 +54,9 @@ class ManuscriptEditProvider with ChangeNotifier {
     _script = context.read<ManuscriptProvider>();
     _history.clear();
     await _script.notifyBack(context);
-    if (_index != -1 && _title == "" && _content == "") {
+    if (_title == "" && _content == "") {
       await Future.delayed(Duration(milliseconds: 300));
-      TrashMoveSnackBar.deleteEmpty(
-        context: context,
-        provider: _script,
-        index: _index,
-      );
+      TrashMoveManager.deleteEmpty(context: context, id: id);
     }
   }
 
@@ -90,6 +84,24 @@ class ManuscriptEditProvider with ChangeNotifier {
       _content = _currentHistory!.content;
     }
     _updateContent();
+  }
+
+  Future<void> moveToTrash(BuildContext context) async {
+    Navigator.pop(context);
+    await Future.delayed(Duration(milliseconds: 300));
+    TrashMoveManager.moveToTrash(context: context, id: id);
+  }
+
+  Future<void> restore(BuildContext context) async {
+    Navigator.pop(context);
+    await Future.delayed(Duration(milliseconds: 300));
+    TrashMoveManager.restore(context: context, id: id);
+  }
+
+  Future<void> delete(BuildContext context) async {
+    Navigator.pop(context);
+    await Future.delayed(Duration(milliseconds: 300));
+    TrashMoveManager.delete(context: context, id: id, title: title);
   }
 
   Future<void> _updateContent() async {
