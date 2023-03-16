@@ -23,7 +23,7 @@ jobs:
       - name: install flutter
         uses: subosito/flutter-action@v1
         with:
-          flutter-version: '3.3.6'
+          flutter-version: '3.7.7'
           channel: 'stable'
 
       - name: setup cache
@@ -64,7 +64,7 @@ jobs:
           EXPORT_OPTIONS: ${{ secrets.EXPORT_OPTIONS }}
         run: echo -n $EXPORT_OPTIONS >> ExportOptions.plist
 
-      - run: flutter build ipa --export-options-plist=ExportOptions.plist --no-codesign
+      - run: flutter build ipa --export-options-plist=ExportOptions.plist
 
       - name: distribute iOS app
         env:
