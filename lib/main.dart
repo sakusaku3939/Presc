@@ -94,6 +94,7 @@ class _MyAppState extends State<MyApp> {
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.transparent,
+          scrolledUnderElevation: 0,
           iconTheme: IconThemeData(color: ColorConfig.iconColor),
           titleTextStyle: TextStyle(color: Colors.black, fontSize: 20),
         ),
