@@ -40,23 +40,23 @@ dependencies:
 
   speech_to_text: ^6.1.0
   flutter_scale_tap: ^1.0.5
-  flutter_keyboard_visibility: ^5.0.2
-  fading_edge_scrollview: ^3.0.0
+  flutter_keyboard_visibility: ^6.0.0
+  fading_edge_scrollview: ^4.1.1
   flutter_colorpicker: ^1.0.3
-  share_plus: ^7.1.0
+  share_plus: ^10.0.0
   receive_sharing_intent:
     git:
       url: https://github.com/AyushmanG26/receive_sharing_intent.git
       ref: abedc3d6d5b80df396e9c300fd1a052cbab08827
   dots_indicator: ^3.0.0
-  package_info_plus: ^4.1.0
+  package_info_plus: ^8.0.2
   url_launcher: ^6.0.10
   flutter_staggered_animations: ^1.0.0
-  sound_mode: ^2.0.2
+  sound_mode: ^3.0.0
   in_app_review: ^2.0.4
   vibration: ^1.7.6
   vibration_web: ^1.6.5
-  http: ^0.13.4
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:
