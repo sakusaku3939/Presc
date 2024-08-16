@@ -87,7 +87,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        colorSchemeSeed: ColorConfig.mainColor,
+        colorSchemeSeed: Colors.white,
         splashColor: Platform.isIOS ? Colors.transparent : null,
         splashFactory: Platform.isIOS ? NoSplash.splashFactory : null,
         appBarTheme: AppBarTheme(
