@@ -70,7 +70,8 @@ android {
         }
     }
 
-    lintOptions {
+    namespace 'com.sakusaku3939.presc'
+    lint {
         checkReleaseBuilds false
     }
 }
