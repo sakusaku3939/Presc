@@ -65,7 +65,7 @@ class OnBoardingScreen extends StatelessWidget {
                           child: !isLastPage
                               ? TextButton(
                                   style: TextButton.styleFrom(
-                                    primary: Colors.grey[800],
+                                    foregroundColor: Colors.grey[800],
                                   ),
                                   child: Text(S.current.skip),
                                   onPressed: () => _nextPage(pages.length - 1),
@@ -94,7 +94,7 @@ class OnBoardingScreen extends StatelessWidget {
                           margin: const EdgeInsets.symmetric(horizontal: 8),
                           child: TextButton(
                             style: TextButton.styleFrom(
-                              primary: Colors.grey[800],
+                              foregroundColor: Colors.grey[800],
                             ),
                             child: Text(
                               !isLastPage

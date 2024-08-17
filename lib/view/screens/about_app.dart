@@ -82,7 +82,7 @@ class AboutAppScreen extends StatelessWidget {
                   child: TextButton(
                     child: Text(S.current.privacyPolicy),
                     style: TextButton.styleFrom(
-                      primary: Colors.grey[800],
+                      foregroundColor: Colors.grey[800],
                     ),
                     onPressed: () => launchUrl(
                       Uri.parse(
@@ -100,8 +100,8 @@ class AboutAppScreen extends StatelessWidget {
                   child: ElevatedButton(
                     child: Text(S.current.sendFeedback),
                     style: ElevatedButton.styleFrom(
-                      primary: ColorConfig.mainColor,
-                      onPrimary: Colors.white,
+                      backgroundColor: ColorConfig.mainColor,
+                      foregroundColor: Colors.white,
                     ),
                     onPressed: () => launchUrl(
                       Uri.parse(

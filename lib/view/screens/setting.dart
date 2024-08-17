@@ -218,7 +218,7 @@ class SettingScreen extends StatelessWidget {
             icon: Icon(Icons.format_size),
             label: Text(model.fontSize.toString()),
             style: TextButton.styleFrom(
-              primary: ColorConfig.iconColor,
+              foregroundColor: ColorConfig.iconColor,
             ),
             onPressed: () => {
               showCupertinoModalPopup(
@@ -251,7 +251,7 @@ class SettingScreen extends StatelessWidget {
             icon: Icon(Icons.format_line_spacing),
             label: Text(model.fontHeight.toString()),
             style: TextButton.styleFrom(
-              primary: ColorConfig.iconColor,
+              foregroundColor: ColorConfig.iconColor,
             ),
             onPressed: () => {
               showCupertinoModalPopup(
@@ -286,7 +286,7 @@ class SettingScreen extends StatelessWidget {
             icon: Icon(Icons.format_color_text),
             label: _selectColorSquare(model.textColor),
             style: TextButton.styleFrom(
-              primary: ColorConfig.iconColor,
+              foregroundColor: ColorConfig.iconColor,
             ),
             onPressed: () => ColorDialogManager.show(
               context,
@@ -299,7 +299,7 @@ class SettingScreen extends StatelessWidget {
             icon: Icon(Icons.format_color_fill),
             label: _selectColorSquare(model.backgroundColor),
             style: TextButton.styleFrom(
-              primary: ColorConfig.iconColor,
+              foregroundColor: ColorConfig.iconColor,
             ),
             onPressed: () => ColorDialogManager.show(
               context,

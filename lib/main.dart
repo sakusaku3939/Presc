@@ -65,13 +65,13 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _intentDataStreamSubscription = ReceiveSharingIntent.getTextStream().listen(
+    _intentDataStreamSubscription = ReceiveSharingIntent.instance.getMediaStream().listen(
       receiveShareText,
       onError: (err) {
         print("getLinkStream error: $err");
       },
     );
-    ReceiveSharingIntent.getInitialText().then(receiveShareText);
+    ReceiveSharingIntent.instance.getInitialMedia().then(receiveShareText);
   }
 
   @override
@@ -87,13 +87,13 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        colorSchemeSeed: ColorConfig.mainColor,
-        accentColor: ColorConfig.mainColor,
+        colorSchemeSeed: Colors.white,
         splashColor: Platform.isIOS ? Colors.transparent : null,
         splashFactory: Platform.isIOS ? NoSplash.splashFactory : null,
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.transparent,
+          scrolledUnderElevation: 0,
           iconTheme: IconThemeData(color: ColorConfig.iconColor),
           titleTextStyle: TextStyle(color: Colors.black, fontSize: 20),
         ),
@@ -137,14 +137,20 @@ class _MyAppState extends State<MyApp> {
     return prefs.getBool("isFirstLaunch") ?? true;
   }
 
-  Future<void> receiveShareText(String? text) async {
-    if (text != null && text.isNotEmpty) {
-      final script = context.read<ManuscriptProvider>();
-      final tag = context.read<ManuscriptTagProvider>();
-      final id = await script.addScript(title: "", content: text);
+  Future<void> receiveShareText(List<SharedMediaFile>? value) async {
+    if (value == null || value.isEmpty) return;
 
-      await script.updateScriptTable();
-      await tag.loadTag(memoId: id);
+    if (value.first.type == SharedMediaType.text) {
+      final text = value.first.path;
+
+      if (text.isNotEmpty) {
+        final script = context.read<ManuscriptProvider>();
+        final tag = context.read<ManuscriptTagProvider>();
+        final id = await script.addScript(title: "", content: text);
+
+        await script.updateScriptTable();
+        await tag.loadTag(memoId: id);
+      }
     }
   }
 }
