@@ -13,19 +13,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: select Xcode version 14.3
-        run: sudo xcode-select -s '/Applications/Xcode_14.3.app/Contents/Developer'
-
+      
       - name: show Xcode version
         run: xcodebuild -version
-
+        
       - name: install flutter
-        uses: subosito/flutter-action@v1
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.32.2'
           channel: 'stable'
-
+          
       - name: cache flutter dependencies
         uses: actions/cache@v3
         with:
@@ -34,18 +31,18 @@ jobs:
           key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}
           restore-keys: |
             ${{ runner.os }}-flutter-
-
+            
       - name: setup env file
         if: env.BASE64_ENV_FILE != ''
         env:
           BASE64_ENV_FILE: ${{ secrets.BASE64_ENV_FILE }}
         run: echo $BASE64_ENV_FILE | base64 --decode > .env
-
+        
       - name: flutter dependencies install
         run: flutter pub get
-
+        
       - run: flutter test
-
+      
       - name: import Provisioning Profile
         env:
           PROVISIONING_PROFILE: ${{ secrets.PROVISIONING_PROFILE }}
@@ -56,20 +53,20 @@ jobs:
           touch ~/Library/MobileDevice/Provisioning\ Profiles/decoded-share-extension.mobileprovision
           echo -n $PROVISIONING_PROFILE | base64 -d -o ~/Library/MobileDevice/Provisioning\ Profiles/decoded.mobileprovision
           echo -n $SHARE_EXTENSION_PROVISIONING_PROFILE | base64 -d -o ~/Library/MobileDevice/Provisioning\ Profiles/decoded-share-extension.mobileprovision
-
+          
       - name: import Code-Signing Certificates
         uses: Apple-Actions/import-codesign-certs@v1
         with:
           p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
           p12-password: ${{ secrets.CERTIFICATE_PASSWORD }}
-
+          
       - name: import Export Options
         env:
           EXPORT_OPTIONS: ${{ secrets.EXPORT_OPTIONS }}
         run: echo -n $EXPORT_OPTIONS >> ExportOptions.plist
-
+        
       - run: flutter build ipa --export-options-plist=ExportOptions.plist
-
+      
       - name: distribute iOS app
         env:
           DEPLOYGATE_API_KEY: ${{ secrets.DEPLOYGATE_API_KEY }}
