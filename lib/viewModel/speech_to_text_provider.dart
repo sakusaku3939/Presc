@@ -241,17 +241,17 @@ class SpeechToTextProvider with ChangeNotifier {
     HiraganaResult lastWordsResult,
     HiraganaResult rangeTextResult,
   ) {
-    // 形態素解析されたひらがな文章から、最後に一致したindexを取得
-    final hiraganaLastIndex = _findHiraganaLastIndex(
+    // 形態素解析されたひらがな文章から、最初に一致したindexを取得
+    final hiraganaFirstIndex = _findHiraganaFirstIndex(
       lastWords: lastWordsResult.hiragana,
       rangeText: rangeTextResult.hiragana,
     );
 
-    if (hiraganaLastIndex != -1) {
+    if (hiraganaFirstIndex != -1) {
       final origin = rangeTextResult.origin;
-      final rangeOrigin = origin.sublist(0, hiraganaLastIndex);
+      final rangeOrigin = origin.sublist(0, hiraganaFirstIndex);
       final textLen = rangeOrigin.join().length;
-      final matchedWordLength = origin[hiraganaLastIndex].length;
+      final matchedWordLength = origin[hiraganaFirstIndex].length;
       return TextPosition(textLen, matchedWordLength);
     } else {
       return TextPosition.notFound();
@@ -290,36 +290,47 @@ class SpeechToTextProvider with ChangeNotifier {
     dynamic text, {
     required List<String> splitWords,
   }) {
-    int lastIndex = -1;
-    splitWords.forEach((t) {
-      lastIndex = max(text.indexOf(t.toLowerCase()), lastIndex);
-    });
-    return lastIndex;
+    int foundIndex = -1;
+
+    // 文字列を逆順に検索し、最初に見つかった位置を取得する
+    for (int i = splitWords.length - 1; i >= 0; i--) {
+      final word = splitWords[i];
+      final index = text.indexOf(word.toLowerCase().trim());
+      if (index != -1) {
+        foundIndex = index;
+        break;
+      }
+    }
+
+    return foundIndex;
   }
 
-  int _findHiraganaLastIndex({
+  int _findHiraganaFirstIndex({
     required List<String> lastWords,
     required List<String> rangeText,
   }) {
-    int hiraganaLastIndex = -1;
-    int excludeIndex = 0;
+    int foundIndex = -1;
 
-    for (int i = 0; i < lastWords.length; i++) {
-      final index = rangeText.indexOf(lastWords[i]);
-      if (index == -1) continue;
+    // 文字列を逆順に検索し、最初に見つかった位置を取得する
+    for (int i = lastWords.length - 1; i >= 0; i--) {
+      final word = lastWords[i].trim();
 
-      final isHighIndex = hiraganaLastIndex < index + excludeIndex;
-      final isPunctuation = PunctuationConfig.list.contains(
-        rangeText[index],
-      );
+      for (int j = 0; j < rangeText.length; j++) {
+        if (rangeText[j].trim() == word) {
+          final isPunctuation = PunctuationConfig.list.contains(word);
+          if (!isPunctuation) {
+            foundIndex = j;
+            break;
+          }
+        }
+      }
 
-      if (isHighIndex && !isPunctuation) {
-        rangeText = rangeText.sublist(index + 1);
-        hiraganaLastIndex = index + excludeIndex;
-        excludeIndex = hiraganaLastIndex + 1;
+      if (foundIndex != -1) {
+        break;
       }
     }
-    return hiraganaLastIndex;
+
+    return foundIndex;
   }
 
   void resetNetworkMode() {
