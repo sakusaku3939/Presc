@@ -41,7 +41,7 @@ class OnBoardingScreen extends StatelessWidget {
             ),
             BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Container(color: Colors.black.withOpacity(0)),
+              child: Container(color: Colors.black.withValues(alpha: 0)),
             ),
             Column(
               children: [
@@ -77,7 +77,7 @@ class OnBoardingScreen extends StatelessWidget {
                             height: 32,
                             child: DotsIndicator(
                               dotsCount: pages.length,
-                              position: model.position.round(),
+                              position: model.position,
                               decorator: DotsDecorator(
                                 size: const Size.square(9.0),
                                 activeColor: ColorConfig.mainColor,
