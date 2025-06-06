@@ -22,12 +22,14 @@ class BackupManuscriptPage extends StatelessWidget {
             children: [
               SizedBox(height: 8),
               SettingItem(
-                title: "原稿をエクスポート",
+                leading: Icon(Icons.backup),
+                title: "原稿をバックアップ",
                 subtitle: "外部ストレージに原稿をバックアップする",
                 onTap: () => backupProvider.onBackupPressed(context),
               ),
               SettingItem(
-                title: "原稿をインポート",
+                leading: Icon(Icons.restore),
+                title: "原稿を復元",
                 subtitle: "バックアップファイルから原稿を復元する",
                 onTap: () => backupProvider.onRestorePressed(context),
               ),
@@ -46,6 +48,10 @@ class BackupManuscriptPage extends StatelessWidget {
         Icons.navigate_before,
         size: 32,
         onPressed: () => Navigator.pop(context),
+      ),
+      title: Text(
+        "バックアップ",
+        style: const TextStyle(fontSize: 20),
       ),
     );
   }
