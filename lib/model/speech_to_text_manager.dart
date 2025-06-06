@@ -11,11 +11,11 @@ class SpeechToTextManager {
   static SpeechToTextManager? _instance;
 
   String words = "";
-  String lastWords = "";
+  String recognizedText = "";
   String lastError = "";
   String lastStatus = "";
 
-  void Function(String lastWords)? resultListener;
+  void Function(String recognizedText)? resultListener;
   void Function(String error)? errorListener;
   void Function(String status)? statusListener;
   void Function(double level)? soundLevelListener;
@@ -33,7 +33,7 @@ class SpeechToTextManager {
   }
 
   Future<void> speak({
-    void Function(String lastWords)? resultListener,
+    void Function(String recognizedText)? resultListener,
     void Function(String error)? errorListener,
     void Function(String status)? statusListener,
     bool log = true,
@@ -66,7 +66,7 @@ class SpeechToTextManager {
 
   Future<void> stop() async {
     _isStopFlagValid = true;
-    lastWords = "";
+    recognizedText = "";
     await _speech.stop();
     print("stop recognition");
   }
@@ -96,10 +96,10 @@ class SpeechToTextManager {
   void _resultAndroid(SpeechRecognitionResult result) {
     if (!result.finalResult) return;
 
-    lastWords = result.recognizedWords;
-    if (lastWords.isNotEmpty) {
-      print("lastWords: $lastWords");
-      if (resultListener != null) resultListener!(lastWords);
+    recognizedText = result.recognizedWords;
+    if (recognizedText.isNotEmpty) {
+      print("recognizedText: $recognizedText");
+      if (resultListener != null) resultListener!(recognizedText);
     }
   }
 
@@ -112,7 +112,7 @@ class SpeechToTextManager {
     words = result.recognizedWords;
     if (latestWordIndex.last != -1 && latestWordIndex.last <= words.length) {
       final latestWord = words.substring(latestWordIndex.last + 1);
-      lastWords += latestWord;
+      recognizedText += latestWord;
     }
 
     if (_timer != null && _timer!.isActive) _timer!.cancel();
@@ -121,11 +121,11 @@ class SpeechToTextManager {
       () {
         final N = InitConfig.ngramNum;
         if (_speech.isNotListening || result.finalResult) return;
-        if (lastWords.length < N) lastWords.padRight(N - 1, ' ');
+        if (recognizedText.length < N) recognizedText.padRight(N - 1, ' ');
 
-        print("lastWords: $lastWords");
-        if (resultListener != null) resultListener!(lastWords);
-        lastWords = "";
+        print("recognizedText: $recognizedText");
+        if (resultListener != null) resultListener!(recognizedText);
+        recognizedText = "";
       },
     );
   }

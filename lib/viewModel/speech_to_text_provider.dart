@@ -1,14 +1,11 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:presc/config/init_config.dart';
-import 'package:presc/config/punctuation_config.dart';
 import 'package:presc/generated/l10n.dart';
-import 'package:presc/model/hiragana.dart';
 import 'package:presc/model/language.dart';
 import 'package:presc/model/speech_to_text_manager.dart';
+import 'package:presc/model/text_matching_manager.dart';
 import 'package:presc/model/undo_redo_history.dart';
 import 'package:presc/view/utils/dialog/silent_dialog_manager.dart';
 import 'package:presc/viewModel/playback_provider.dart';
@@ -20,9 +17,9 @@ import 'package:sound_mode/sound_mode.dart';
 import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 
 class SpeechToTextProvider with ChangeNotifier {
-  final _manager = SpeechToTextManager();
+  final _speechToTextManager = SpeechToTextManager();
   final _history = UndoRedoHistory(0);
-  final _hiragana = Hiragana();
+  final _textMatchingManager = TextMatchingManager();
   RingerModeStatus? _defaultRingerStatus;
 
   String _unrecognizedText = "";
@@ -60,14 +57,14 @@ class SpeechToTextProvider with ChangeNotifier {
     final timer = context.read<PlaybackTimerProvider>();
     timer.start();
 
-    _manager.speak(
+    _speechToTextManager.speak(
       resultListener: _reflect,
       errorListener: (error) {
         final playback = context.read<PlaybackProvider>();
         playback.playFabState = false;
 
         timer.stop();
-        _manager.stop();
+        _speechToTextManager.stop();
 
         switch (error) {
           case "not_available":
@@ -90,121 +87,36 @@ class SpeechToTextProvider with ChangeNotifier {
   }
 
   void stop() async {
-    await _manager.stop();
+    await _speechToTextManager.stop();
     await Future.delayed(Duration(milliseconds: 400));
     _stopSilentMode();
   }
 
-  void _reflect(String lastWords) async {
+  void _reflect(String recognizedText) async {
     isProcessing = true;
 
-    final N = InitConfig.ngramNum;
-    final isLatinAlphabet = Language.isLatinAlphabet(lastWords);
-    int textLen, odd = 0;
-
-    final range = !isLatinAlphabet ? 120 : 240;
-    final rangeUnrecognizedText = unrecognizedText.length > range
-        ? unrecognizedText.substring(0, range)
-        : unrecognizedText;
-
-    if (isLatinAlphabet) {
-      // アルファベットの場合は空白で区切る
-      final splitText = rangeUnrecognizedText.split(" ");
-      final index = _findTextIndex(
-        splitText.map((e) => e.toLowerCase()).toList(),
-        splitWords: lastWords.split(" "),
-      );
-      if (index != -1) {
-        textLen = splitText.sublist(0, index).join().length + index;
-        odd = splitText[index].length;
-      } else {
-        textLen = -1;
-      }
-    } else {
-      // 音声認識された文章と、現在の場所から120文字以内の文章をひらがなに変換
-      final res = await Future.wait([
-        _hiragana.convert(lastWords),
-        _hiragana.convert(rangeUnrecognizedText),
-      ]);
-      final lastWordsResult = res.first;
-      final rangeTextResult = res.last;
-
-      if (lastWordsResult != null && rangeTextResult != null) {
-        // 形態素解析されたひらがな文章から、最後に一致したindexを取得
-        final hiraganaLastIndex = _findHiraganaLastIndex(
-          lastWords: lastWordsResult.hiragana,
-          rangeText: rangeTextResult.hiragana,
-        );
-        if (hiraganaLastIndex != -1) {
-          final origin = rangeTextResult.origin;
-          final rangeOrigin = origin.sublist(0, hiraganaLastIndex);
-
-          textLen = rangeOrigin.join().length;
-          odd = origin[hiraganaLastIndex].length;
-        } else {
-          textLen = -1;
-        }
-      } else {
-        // ひらがなへの変換に失敗した場合はN-gramで分割
-        textLen = _findTextIndex(
-          rangeUnrecognizedText.toLowerCase(),
-          splitWords: _ngram(lastWords, N),
-        );
-        odd = N;
-      }
+    try {
+      final textPosition = await _textMatchingManager.calculateTextPosition(
+          recognizedText, _unrecognizedText);
+      _applyRecognitionResult(textPosition);
+    } finally {
+      _isProcessing = false;
+      notifyListeners();
     }
+  }
 
+  void _applyRecognitionResult(TextPosition position) {
     // 認識結果を画面に反映する
-    if (textLen != -1) {
-      final latestRecognizedText = unrecognizedText.substring(0, textLen + odd);
+    if (position.isFound) {
+      final latestRecognizedText = unrecognizedText.substring(
+        0,
+        position.textLen + position.matchedWordLength,
+      );
       _recognizedText += latestRecognizedText;
-      _unrecognizedText = unrecognizedText.substring(textLen + odd);
-
+      _unrecognizedText = unrecognizedText
+          .substring(position.textLen + position.matchedWordLength);
       _history.add(recognizedText.length);
     }
-    _isProcessing = false;
-    notifyListeners();
-  }
-
-  List<String> _ngram(String target, int n) => List.generate(
-        target.length - n + 1,
-        (i) => target.substring(i, i + n),
-      );
-
-  int _findTextIndex(
-    dynamic text, {
-    required List<String> splitWords,
-  }) {
-    int lastIndex = -1;
-    splitWords.forEach((t) {
-      lastIndex = max(text.indexOf(t.toLowerCase()), lastIndex);
-    });
-    return lastIndex;
-  }
-
-  int _findHiraganaLastIndex({
-    required List<String> lastWords,
-    required List<String> rangeText,
-  }) {
-    int hiraganaLastIndex = -1;
-    int excludeIndex = 0;
-
-    for (int i = 0; i < lastWords.length; i++) {
-      final index = rangeText.indexOf(lastWords[i]);
-      if (index == -1) continue;
-
-      final isHighIndex = hiraganaLastIndex < index + excludeIndex;
-      final isPunctuation = PunctuationConfig.list.contains(
-        rangeText[index],
-      );
-
-      if (isHighIndex && !isPunctuation) {
-        rangeText = rangeText.sublist(index + 1);
-        hiraganaLastIndex = index + excludeIndex;
-        excludeIndex = hiraganaLastIndex + 1;
-      }
-    }
-    return hiraganaLastIndex;
   }
 
   Future<void> _testReflect() async {
@@ -305,6 +217,7 @@ class SpeechToTextProvider with ChangeNotifier {
     lastOffset = 0;
     _isProcessing = false;
     _history.clear();
+    _textMatchingManager.resetNetworkMode();
   }
 
   void back(BuildContext context) {
