@@ -76,7 +76,15 @@ jobs:
         run: |
           sed -i '' 's/ProvisioningStyle = Automatic;/ProvisioningStyle = Manual;/g' ios/Runner.xcodeproj/project.pbxproj
           
-      - run: flutter build ipa --export-options-plist=ExportOptions.plist
+      - name: build iOS archive
+        run: |
+          flutter clean
+          flutter build ios --release
+          xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -sdk iphoneos -configuration Release archive -archivePath build/ios/iphoneos/Runner.xcarchive
+          
+      - name: export IPA
+        run: |
+          xcodebuild -exportArchive -archivePath build/ios/iphoneos/Runner.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath build/ios/iphoneos/
       
       - name: distribute iOS app
         env:
@@ -88,7 +96,7 @@ jobs:
           GIT_BRANCH=${GITHUB_REF##*/}
           curl \
             -H "Authorization: token $DEPLOYGATE_API_KEY" \
-            -F "file=@/Users/runner/work/Presc/Presc/build/ios/ipa/Presc.ipa" \
+            -F "file=@build/ios/iphoneos/Presc.ipa" \
             -F "message=git:$GIT_HASH" \
             -F "distribution_name=$GIT_BRANCH" \
             -F "release_note=new ios build" \
