@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
-import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
+import 'package:presc/features/setting/ui/widgets/radio_dialog.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/features/setting/ui/widgets/platform_switch.dart';
 import 'package:presc/features/setting/ui/widgets/setting_item.dart';
@@ -25,7 +25,7 @@ class SettingUndoRedoPage extends StatelessWidget {
                     subtitle:
                         model.showUndoRedo ? S.current.show : S.current.hide,
                     onTap: () => {
-                      RadioDialogManager.show(
+                      RadioDialog.show(
                         context,
                         groupValue: model.showUndoRedo,
                         itemList: [

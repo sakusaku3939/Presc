@@ -9,9 +9,9 @@ import 'package:presc/core/constants/scroll_speed_constants.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/features/setting/ui/pages/about_app_page.dart';
 import 'package:presc/features/setting/ui/pages/setting_undo_redo_page.dart';
-import 'package:presc/view/utils/dialog/color_dialog_manager.dart';
-import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
-import 'package:presc/view/utils/dialog/scroll_mode_dialog_manager.dart';
+import 'package:presc/features/setting/ui/widgets/color_dialog.dart';
+import 'package:presc/features/setting/ui/widgets/radio_dialog.dart';
+import 'package:presc/features/playback/ui/widgets/scroll_mode_dialog.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/features/setting/ui/widgets/setting_item.dart';
 import 'package:presc/features/playback/ui/widgets/tategaki.dart';
@@ -53,7 +53,7 @@ class SettingPage extends StatelessWidget {
                         ? S.current.horizontal
                         : S.current.vertical,
                     onTap: () => {
-                      RadioDialogManager.show(
+                      RadioDialog.show(
                         context,
                         groupValue: model.scrollHorizontal,
                         itemList: [
@@ -85,13 +85,13 @@ class SettingPage extends StatelessWidget {
                   SettingItem(
                     title: S.current.playMode,
                     subtitle: scrollModeText,
-                    onTap: () => ScrollModeDialogManager.show(context),
+                    onTap: () => ScrollModeDialog.show(context),
                   ),
                   SettingItem(
                     title: S.current.playSpeed,
                     subtitle: "x ${model.scrollSpeedMagnification}",
                     enabled: model.scrollMode == ScrollMode.auto,
-                    onTap: () => RadioDialogManager.show(
+                    onTap: () => RadioDialog.show(
                       context,
                       groupValue: model.scrollSpeedMagnification,
                       itemList: [
@@ -288,7 +288,7 @@ class SettingPage extends StatelessWidget {
             style: TextButton.styleFrom(
               foregroundColor: ColorConstants.iconColor,
             ),
-            onPressed: () => ColorDialogManager.show(
+            onPressed: () => ColorDialog.show(
               context,
               pickerColor: model.textColor,
               initialColor: ColorConstants.playbackTextColor,
@@ -301,7 +301,7 @@ class SettingPage extends StatelessWidget {
             style: TextButton.styleFrom(
               foregroundColor: ColorConstants.iconColor,
             ),
-            onPressed: () => ColorDialogManager.show(
+            onPressed: () => ColorDialog.show(
               context,
               pickerColor: model.backgroundColor,
               initialColor: ColorConstants.playbackBackgroundColor,

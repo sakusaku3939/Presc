@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:presc/core/constants/color_constants.dart';
 
-import 'dialog_manager.dart';
+import '../../../../shared/widgets/dialog/app_dialog.dart';
 
-class RadioDialogManager {
+class RadioDialog {
   static void show(
     BuildContext context, {
     required List<RadioDialogItem> itemList,
     required groupValue,
     required Function(dynamic value) onChanged,
   }) {
-    DialogManager.show(
+    AppDialog.show(
       context,
       contentPadding: const EdgeInsets.symmetric(
         vertical: 12,

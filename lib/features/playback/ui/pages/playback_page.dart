@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:presc/features/setting/ui/pages/setting_page.dart';
-import 'package:presc/view/utils/dialog/scroll_mode_dialog_manager.dart';
+import 'package:presc/features/playback/ui/widgets/scroll_mode_dialog.dart';
 import 'package:presc/features/playback/ui/widgets/playback_text_view.dart';
 import 'package:presc/features/playback/ui/widgets/playback_visualizer.dart';
 import 'package:presc/view/utils/ripple_button.dart';
@@ -238,7 +238,7 @@ class PlaybackPage extends StatelessWidget {
                 scrollModeIcon,
                 size: 28,
                 color: model.textColor,
-                onPressed: () => ScrollModeDialogManager.show(
+                onPressed: () => ScrollModeDialog.show(
                   context,
                   onChanged: (_) {
                     model.playFabState = false;

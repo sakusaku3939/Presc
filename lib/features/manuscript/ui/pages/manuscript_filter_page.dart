@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:presc/core/constants/color_constants.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/utils/database_table.dart';
-import 'package:presc/view/utils/dialog/input_dialog_manager.dart';
-import 'package:presc/view/utils/dialog/platform_dialog_manager.dart';
+import 'package:presc/features/manuscript/ui/widgets/input_dialog.dart';
+import 'package:presc/shared/widgets/dialog/platform_dialog.dart';
 import 'package:presc/view/utils/popup_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/features/manuscript/ui/widgets/script_card.dart';
@@ -110,7 +110,7 @@ class ManuscriptFilterPage extends StatelessWidget {
 
             switch (value) {
               case "change":
-                InputDialogManager.show(
+                InputDialog.show(
                   context,
                   title: S.current.tag,
                   content: model.current.tagTable!.tagName,
@@ -139,7 +139,7 @@ class ManuscriptFilterPage extends StatelessWidget {
                 break;
 
               case "delete":
-                PlatformDialogManager.showDeleteAlert(
+                PlatformDialog.showDeleteAlert(
                   context,
                   message: S.current.alertRemoveTag(
                     model.current.tagTable!.tagName,
@@ -169,7 +169,7 @@ class ManuscriptFilterPage extends StatelessWidget {
     return RippleIconButton(
       Icons.clear_all,
       onPressed: () {
-        PlatformDialogManager.showDeleteAlert(
+        PlatformDialog.showDeleteAlert(
           context,
           message: S.current.doEmptyTrash,
           deleteLabel: S.current.deleteAll,

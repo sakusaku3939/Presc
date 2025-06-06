@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:presc/generated/l10n.dart';
 
-import '../../../core/constants/color_constants.dart';
+import '../../../../core/constants/color_constants.dart';
 
-class ColorDialogManager {
+class ColorDialog {
   static void show(
     BuildContext context, {
     required Color pickerColor,

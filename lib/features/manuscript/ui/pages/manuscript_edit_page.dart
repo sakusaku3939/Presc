@@ -6,7 +6,7 @@ import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/char_counter.dart';
 import 'package:presc/model/language.dart';
 import 'package:presc/features/playback/ui/pages/playback_page.dart';
-import 'package:presc/view/utils/dialog/dialog_manager.dart';
+import 'package:presc/shared/widgets/dialog/app_dialog.dart';
 import 'package:presc/view/utils/popup_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/features/tag/ui/widgets/tag_grid.dart';
@@ -221,7 +221,7 @@ class ManuscriptEditPage extends StatelessWidget {
                 final controller = TextEditingController();
                 tag.loadTag(memoId: _edit.id);
 
-                DialogManager.show(
+                AppDialog.show(
                   context,
                   contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 16),
                   content: Column(
@@ -329,7 +329,7 @@ class ManuscriptEditPage extends StatelessWidget {
         RippleIconButton(
           Icons.info_outline,
           onPressed: () => {
-            DialogManager.show(
+            AppDialog.show(
               context,
               contentPadding: const EdgeInsets.fromLTRB(24, 28, 24, 0),
               content: Column(

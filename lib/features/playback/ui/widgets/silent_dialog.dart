@@ -6,9 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sound_mode/permission_handler.dart';
 
-import 'dialog_manager.dart';
+import '../../../../shared/widgets/dialog/app_dialog.dart';
 
-class SilentDialogManager {
+class SilentDialog {
   static Future<bool> show(BuildContext context) async {
     bool isClose = false;
     bool isChecked = false;

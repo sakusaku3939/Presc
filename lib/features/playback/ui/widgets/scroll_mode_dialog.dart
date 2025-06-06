@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
-import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
+import 'package:presc/features/setting/ui/widgets/radio_dialog.dart';
 import 'package:presc/features/playback/ui/providers/playback_provider.dart';
 import 'package:provider/provider.dart';
 
-class ScrollModeDialogManager {
+class ScrollModeDialog {
   static void show(
     BuildContext context, {
     Function(dynamic value)? onChanged,
   }) {
     final playback = context.read<PlaybackProvider>();
-    RadioDialogManager.show(
+    RadioDialog.show(
       context,
       groupValue: playback.scrollMode,
       itemList: [

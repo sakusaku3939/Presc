@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/constants/color_constants.dart';
 
-class DialogManager {
+class AppDialog {
   static void show(
     BuildContext context, {
     Widget? title,

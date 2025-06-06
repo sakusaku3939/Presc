@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/constants/color_constants.dart';
-import 'dialog_manager.dart';
+import '../../../../core/constants/color_constants.dart';
+import '../../../../shared/widgets/dialog/app_dialog.dart';
 
-class InputDialogManager {
+class InputDialog {
   static Future<void> show(
     BuildContext context, {
     required String title,
@@ -21,7 +21,7 @@ class InputDialogManager {
         ),
       ),
     );
-    DialogManager.show(
+    AppDialog.show(
       context,
       contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
       content: Column(

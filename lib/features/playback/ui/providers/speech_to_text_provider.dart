@@ -7,7 +7,7 @@ import 'package:presc/model/language.dart';
 import 'package:presc/model/speech_to_text_manager.dart';
 import 'package:presc/model/text_matching_manager.dart';
 import 'package:presc/model/undo_redo_history.dart';
-import 'package:presc/view/utils/dialog/silent_dialog_manager.dart';
+import 'package:presc/features/playback/ui/widgets/silent_dialog.dart';
 import 'package:presc/features/playback/ui/providers/playback_provider.dart';
 import 'package:presc/features/playback/ui/providers/playback_timer_provider.dart';
 import 'package:provider/provider.dart';
@@ -152,7 +152,7 @@ class SpeechToTextProvider with ChangeNotifier {
       await SoundMode.setSoundMode(RingerModeStatus.silent);
       return false;
     } else if (prefs.getBool("isSilentHintVisible") ?? true) {
-      return await SilentDialogManager.show(context);
+      return await SilentDialog.show(context);
     } else {
       return false;
     }

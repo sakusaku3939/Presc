@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/color_constants.dart';
-import 'dialog_manager.dart';
+import 'app_dialog.dart';
 
-class PlatformDialogManager {
+class PlatformDialog {
   static Future<void> showDeleteAlert(
     BuildContext context, {
     String? title,
@@ -53,7 +53,7 @@ class PlatformDialogManager {
         ),
       );
     } else {
-      DialogManager.show(
+      AppDialog.show(
         context,
         title: text(title, style: TextStyle(fontSize: 20)),
         content: text(message),

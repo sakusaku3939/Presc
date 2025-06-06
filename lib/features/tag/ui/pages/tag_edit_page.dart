@@ -3,7 +3,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/features/tag/ui/widgets/add_new_tag.dart';
-import 'package:presc/view/utils/dialog/platform_dialog_manager.dart';
+import 'package:presc/shared/widgets/dialog/platform_dialog.dart';
 import 'package:presc/features/tag/ui/widgets/editable_tag_item.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/features/tag/ui/providers/editable_tag_item_provider.dart';
@@ -123,7 +123,7 @@ class _TagEditScreenAppbar extends StatelessWidget
                   onPressed: () {
                     final count = model.checkList.where((e) => e).length;
                     if (count > 0) {
-                      PlatformDialogManager.showDeleteAlert(
+                      PlatformDialog.showDeleteAlert(
                         context,
                         title: S.current.removeSelectTags(count),
                         message: S.current.alertRemoveSelectTags,
