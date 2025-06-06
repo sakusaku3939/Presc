@@ -3,7 +3,7 @@ import 'package:presc/features/tag/data/tag_repository.dart';
 import 'package:presc/features/manuscript/data/models/database_table.dart';
 
 class EditableTagItemProvider with ChangeNotifier {
-  final _manager = TagRepository();
+  final _tag = TagRepository();
   List<TagTable> _allTagTable = [];
 
   List<TagTable> get allTagTable => _allTagTable;
@@ -30,22 +30,22 @@ class EditableTagItemProvider with ChangeNotifier {
   }
 
   Future<void> loadTag() async {
-    _allTagTable = await _manager.getAllTag();
+    _allTagTable = await _tag.getAll();
     notifyListeners();
   }
 
   Future<void> addTag(String name) async {
-    await _manager.addTag(name: name);
+    await _tag.add(name: name);
     loadTag();
   }
 
   Future<void> updateTag(int id, String name) async {
-    await _manager.updateTag(id: id, name: name);
+    await _tag.update(id: id, name: name);
     loadTag();
   }
 
   Future<void> deleteTag(int id) async {
-    await _manager.deleteTag(id: id);
+    await _tag.delete(id: id);
     loadTag();
   }
 

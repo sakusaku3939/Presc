@@ -17,9 +17,9 @@ import 'package:sound_mode/sound_mode.dart';
 import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 
 class SpeechToTextProvider with ChangeNotifier {
-  final _speechToTextManager = SpeechToTextService();
+  final _speechToText = SpeechToTextService();
   final _history = UndoRedoManager(0);
-  final _textMatchingManager = TextMatchingAlgorithm();
+  final _textMatching = TextMatchingAlgorithm();
   RingerModeStatus? _defaultRingerStatus;
 
   String _unrecognizedText = "";
@@ -57,14 +57,14 @@ class SpeechToTextProvider with ChangeNotifier {
     final timer = context.read<PlaybackTimerProvider>();
     timer.start();
 
-    _speechToTextManager.speak(
+    _speechToText.speak(
       resultListener: _reflect,
       errorListener: (error) {
         final playback = context.read<PlaybackProvider>();
         playback.playFabState = false;
 
         timer.stop();
-        _speechToTextManager.stop();
+        _speechToText.stop();
 
         switch (error) {
           case "not_available":
@@ -87,7 +87,7 @@ class SpeechToTextProvider with ChangeNotifier {
   }
 
   void stop() async {
-    await _speechToTextManager.stop();
+    await _speechToText.stop();
     await Future.delayed(Duration(milliseconds: 400));
     _stopSilentMode();
   }
@@ -96,7 +96,7 @@ class SpeechToTextProvider with ChangeNotifier {
     isProcessing = true;
 
     try {
-      final textPosition = await _textMatchingManager.calculateTextPosition(
+      final textPosition = await _textMatching.calculateTextPosition(
           recognizedText, _unrecognizedText);
       _applyRecognitionResult(textPosition);
     } finally {
@@ -217,7 +217,7 @@ class SpeechToTextProvider with ChangeNotifier {
     lastOffset = 0;
     _isProcessing = false;
     _history.clear();
-    _textMatchingManager.resetNetworkMode();
+    _textMatching.resetNetworkMode();
   }
 
   void back(BuildContext context) {

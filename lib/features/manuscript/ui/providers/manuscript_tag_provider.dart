@@ -3,7 +3,7 @@ import 'package:presc/features/tag/data/tag_repository.dart';
 import 'package:presc/features/manuscript/data/models/database_table.dart';
 
 class ManuscriptTagProvider with ChangeNotifier {
-  final _manager = TagRepository();
+  final _tag = TagRepository();
   List<TagTable> _allTagTable = [];
   List<TagTable> _linkTagTable = [];
   List<TagTable> _unlinkTagTable = [];
@@ -19,8 +19,8 @@ class ManuscriptTagProvider with ChangeNotifier {
 
   Future<void> loadTag({required int memoId}) async {
     final res = await Future.wait([
-      _manager.getAllTag(),
-      _manager.getLinkTagById(memoId: memoId),
+      _tag.getAll(),
+      _tag.getLinkedTagById(memoId: memoId),
     ]);
     _allTagTable = res.first;
     _linkTagTable = res.last;
@@ -40,15 +40,15 @@ class ManuscriptTagProvider with ChangeNotifier {
     required bool newValue,
   }) async {
     if (newValue) {
-      await _manager.linkTag(memoId: memoId, tagId: tagId);
+      await _tag.linkToMemo(memoId: memoId, tagId: tagId);
     } else {
-      await _manager.unlinkTag(memoId: memoId, tagId: tagId);
+      await _tag.unlinkMemo(memoId: memoId, tagId: tagId);
     }
     loadTag(memoId: memoId);
   }
 
   Future<void> addTag({required int memoId, String name = ""}) async {
-    final id = await _manager.addTag(name: name);
+    final id = await _tag.add(name: name);
     changeChecked(memoId: memoId, tagId: id, newValue: true);
     loadTag(memoId: memoId);
   }

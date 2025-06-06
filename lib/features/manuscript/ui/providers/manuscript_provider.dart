@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../tag/data/tag_repository.dart';
 
 class ManuscriptProvider with ChangeNotifier {
-  final _manager = ManuscriptRepository();
+  final _manuscript = ManuscriptRepository();
 
   Current _current = Current();
 
@@ -24,14 +24,14 @@ class ManuscriptProvider with ChangeNotifier {
   ManuscriptProvider() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future(() async {
-        _manager.deleteTrashAutomatically();
+        _manuscript.deleteTrashAutomatically();
 
         final prefs = await SharedPreferences.getInstance();
         final tagId = prefs.getInt("currentTagId") ?? -1;
         if (tagId != -1) {
-          final _tagManager = TagRepository();
+          final _tag = TagRepository();
           _current.state = ManuscriptState.tag;
-          _current.tagTable = await _tagManager.getTagById(tagId);
+          _current.tagTable = await _tag.getTagById(tagId);
         }
 
         await updateScriptTable();
@@ -50,20 +50,20 @@ class ManuscriptProvider with ChangeNotifier {
 
     switch (state) {
       case ManuscriptState.home:
-        _scriptTable = await _manager.getAllScript();
+        _scriptTable = await _manuscript.getAllScript();
         break;
       case ManuscriptState.tag:
         if (tagId == null) return;
-        _scriptTable = await _manager.getScriptByTagId(tagId: tagId);
+        _scriptTable = await _manuscript.getScriptByTagId(tagId: tagId);
         _current.tagTable = TagTable(id: tagId, tagName: tagName);
         _saveCurrentState(tagId);
         break;
       case ManuscriptState.trash:
-        _scriptTable = await _manager.getAllScript(trash: true);
+        _scriptTable = await _manuscript.getAllScript(trash: true);
         break;
       case ManuscriptState.search:
         _scriptTable = searchWord.isNotEmpty
-            ? await _manager.searchScript(keyword: searchWord)
+            ? await _manuscript.searchScript(keyword: searchWord)
             : [];
         _current.searchWord = searchWord;
         break;
@@ -76,21 +76,21 @@ class ManuscriptProvider with ChangeNotifier {
     required String title,
     required String content,
   }) async =>
-      await _manager.addScript(title: title, content: content);
+      await _manuscript.addScript(title: title, content: content);
 
   Future<void> saveScript({
     required int id,
     String? title,
     String? content,
   }) async {
-    await _manager.updateScript(id: id, title: title, content: content);
+    await _manuscript.updateScript(id: id, title: title, content: content);
   }
 
   Future<int> moveToTrash({required int memoId}) async =>
-      await _manager.moveToTrash(memoId: memoId);
+      await _manuscript.moveToTrash(memoId: memoId);
 
   Future<int> restoreFromTrash({required int trashId}) async =>
-      await _manager.restoreFromTrash(trashId: trashId);
+      await _manuscript.restoreFromTrash(trashId: trashId);
 
   Future<void> updateScriptTable() async {
     replaceState(
@@ -101,10 +101,10 @@ class ManuscriptProvider with ChangeNotifier {
     );
   }
 
-  Future<void> clearTrash() async => await _manager.clearTrash();
+  Future<void> clearTrash() async => await _manuscript.clearTrash();
 
   Future<void> deleteTrash({required int trashId}) async =>
-      await _manager.deleteTrash(trashId: trashId);
+      await _manuscript.deleteTrash(trashId: trashId);
 
   Future<void> _saveCurrentState(int tagId) async {
     final prefs = await SharedPreferences.getInstance();
