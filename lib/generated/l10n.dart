@@ -795,10 +795,10 @@ class S {
     );
   }
 
-  /// `Manuscript backup has been saved`
+  /// `Manuscript backup has been saved.`
   String get backupSaved {
     return Intl.message(
-      'Manuscript backup has been saved',
+      'Manuscript backup has been saved.',
       name: 'backupSaved',
       desc: '',
       args: [],
@@ -815,10 +815,10 @@ class S {
     );
   }
 
-  /// `Manuscript backup has been restored`
+  /// `Manuscript backup has been restored.`
   String get backupRestored {
     return Intl.message(
-      'Manuscript backup has been restored',
+      'Manuscript backup has been restored.',
       name: 'backupRestored',
       desc: '',
       args: [],
@@ -845,10 +845,10 @@ class S {
     );
   }
 
-  /// `Invalid backup file`
+  /// `Invalid backup file.`
   String get invalidBackupFile {
     return Intl.message(
-      'Invalid backup file',
+      'Invalid backup file.',
       name: 'invalidBackupFile',
       desc: '',
       args: [],

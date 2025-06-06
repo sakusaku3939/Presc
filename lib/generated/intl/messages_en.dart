@@ -67,11 +67,11 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "backupRestoreFailed": m2,
     "backupRestored": MessageLookupByLibrary.simpleMessage(
-      "Manuscript backup has been restored",
+      "Manuscript backup has been restored.",
     ),
     "backupSaveFailed": m3,
     "backupSaved": MessageLookupByLibrary.simpleMessage(
-      "Manuscript backup has been saved",
+      "Manuscript backup has been saved.",
     ),
     "cancel": MessageLookupByLibrary.simpleMessage("CANCEL"),
     "change": MessageLookupByLibrary.simpleMessage("CHANGE"),
@@ -104,7 +104,7 @@ class MessageLookup extends MessageLookupByLibrary {
     ),
     "horizontal": MessageLookupByLibrary.simpleMessage("Horizontal"),
     "invalidBackupFile": MessageLookupByLibrary.simpleMessage(
-      "Invalid backup file",
+      "Invalid backup file.",
     ),
     "lastModified": MessageLookupByLibrary.simpleMessage("Last modified"),
     "manualScroll": MessageLookupByLibrary.simpleMessage("Manual scroll"),

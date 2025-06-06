@@ -98,12 +98,12 @@
   "backupManuscriptDescription": "Backup manuscripts to external storage",
   "restoreManuscript": "Restore Manuscript",
   "restoreManuscriptDescription": "Restore manuscripts from backup file",
-  "backupSaved": "Manuscript backup has been saved",
+  "backupSaved": "Manuscript backup has been saved.",
   "backupSaveFailed": "Failed to save backup: {error}",
-  "backupRestored": "Manuscript backup has been restored",
+  "backupRestored": "Manuscript backup has been restored.",
   "backupRestoreFailed": "Failed to restore backup: {error}",
   "saveBackupFile": "Save Backup File",
-  "invalidBackupFile": "Invalid backup file",
+  "invalidBackupFile": "Invalid backup file.",
   "addManuscriptFailed": "Failed to add manuscript: {error}",
   "restoreBackupFailed": "Failed to restore backup: {error}"
 }
