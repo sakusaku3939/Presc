@@ -5,23 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:presc/view/screens/manuscript.dart';
-import 'package:presc/view/screens/onboarding.dart';
-import 'package:presc/viewModel/editable_tag_item_provider.dart';
-import 'package:presc/viewModel/manuscript_edit_provider.dart';
-import 'package:presc/viewModel/manuscript_provider.dart';
-import 'package:presc/viewModel/manuscript_tag_provider.dart';
-import 'package:presc/viewModel/onboarding_provider.dart';
-import 'package:presc/viewModel/playback_provider.dart';
-import 'package:presc/viewModel/playback_timer_provider.dart';
-import 'package:presc/viewModel/playback_visualizer_provider.dart';
-import 'package:presc/viewModel/speech_to_text_provider.dart';
+import 'package:presc/features/manuscript/ui/pages/manuscript_page.dart';
+import 'package:presc/features/onboarding/ui/pages/onboarding_page.dart';
+import 'package:presc/features/tag/ui/providers/editable_tag_item_provider.dart';
+import 'package:presc/features/manuscript/ui/providers/manuscript_edit_provider.dart';
+import 'package:presc/features/manuscript/ui/providers/manuscript_provider.dart';
+import 'package:presc/features/manuscript/ui/providers/manuscript_tag_provider.dart';
+import 'package:presc/features/onboarding/ui/providers/onboarding_provider.dart';
+import 'package:presc/features/playback/ui/providers/playback_provider.dart';
+import 'package:presc/features/playback/ui/providers/playback_timer_provider.dart';
+import 'package:presc/features/playback/ui/providers/playback_visualizer_provider.dart';
+import 'package:presc/features/playback/ui/providers/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_sharing_intent/flutter_sharing_intent.dart';
 import 'package:flutter_sharing_intent/model/sharing_file.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'config/color_config.dart';
+import 'core/constants/color_constants.dart';
 import 'generated/l10n.dart';
 
 void main() async {
@@ -95,7 +95,7 @@ class _MyAppState extends State<MyApp> {
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.transparent,
           scrolledUnderElevation: 0,
-          iconTheme: IconThemeData(color: ColorConfig.iconColor),
+          iconTheme: IconThemeData(color: ColorConstants.iconColor),
           titleTextStyle: TextStyle(color: Colors.black, fontSize: 20),
         ),
         bottomSheetTheme: BottomSheetThemeData(
@@ -122,11 +122,11 @@ class _MyAppState extends State<MyApp> {
         future: _isFirstLaunch(),
         builder: (context, snapshot) {
           if (snapshot.data == null)
-            return Container(color: ColorConfig.backgroundColor);
+            return Container(color: ColorConstants.backgroundColor);
           if (snapshot.data == true) {
-            return OnBoardingScreen();
+            return OnBoardingPage();
           } else {
-            return ManuscriptScreen();
+            return ManuscriptPage();
           }
         },
       ),
