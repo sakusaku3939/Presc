@@ -48,6 +48,11 @@ class SpeechToTextProvider with ChangeNotifier {
   double verticalRecognizedWidth = 0;
   double lastOffset = 0;
 
+  // ネットワーク速度に応じてマッチング方法を動的に切り替える
+  bool _useSlowNetworkMode = false;
+  static const int _networkTimeoutMs = 3000;
+  static const int _slowNetworkThresholdMs = 2000; // n-gramに切り替える閾値
+
   void start(BuildContext context) async {
     if (Platform.isAndroid && await _startSilentMode(context)) return;
 
@@ -95,6 +100,38 @@ class SpeechToTextProvider with ChangeNotifier {
     _stopSilentMode();
   }
 
+  Future<HiraganaResult?> _convertWithNetworkFallback(String text) async {
+    if (_useSlowNetworkMode) {
+      // ネットワーク速度が遅い場合はn-gramを使用
+      return null;
+    }
+
+    try {
+      final stopwatch = Stopwatch()..start();
+
+      final result = await Future.any([
+        _hiragana.convert(text),
+        Future.delayed(Duration(milliseconds: _networkTimeoutMs), () => null),
+      ]);
+
+      stopwatch.stop();
+      final elapsedMs = stopwatch.elapsedMilliseconds;
+
+      // ネットワーク速度が遅い、または変換結果がnullの場合はn-gramモードに切り替える
+      if (elapsedMs > _slowNetworkThresholdMs || result == null) {
+        _useSlowNetworkMode = true;
+        print('ネットワークが遅いため、n-gramモードに切り替えました (${elapsedMs}ms)');
+        return null;
+      }
+
+      return result;
+    } catch (e) {
+      print('ひらがな変換でエラーが発生: $e');
+      _useSlowNetworkMode = true;
+      return null;
+    }
+  }
+
   void _reflect(String lastWords) async {
     isProcessing = true;
 
@@ -108,7 +145,7 @@ class SpeechToTextProvider with ChangeNotifier {
         : unrecognizedText;
 
     if (isLatinAlphabet) {
-      // アルファベットの場合は空白で区切る
+      // アルファベットの場合は空白で区切ってn-gramを使用
       final splitText = rangeUnrecognizedText.split(" ");
       final index = _findTextIndex(
         splitText.map((e) => e.toLowerCase()).toList(),
@@ -122,9 +159,10 @@ class SpeechToTextProvider with ChangeNotifier {
       }
     } else {
       // 音声認識された文章と、現在の場所から120文字以内の文章をひらがなに変換
+      // ただし、ネットワーク速度に応じてn-gramにフォールバックする
       final res = await Future.wait([
-        _hiragana.convert(lastWords),
-        _hiragana.convert(rangeUnrecognizedText),
+        _convertWithNetworkFallback(lastWords),
+        _convertWithNetworkFallback(rangeUnrecognizedText),
       ]);
       final lastWordsResult = res.first;
       final rangeTextResult = res.last;
@@ -145,7 +183,8 @@ class SpeechToTextProvider with ChangeNotifier {
           textLen = -1;
         }
       } else {
-        // ひらがなへの変換に失敗した場合はN-gramで分割
+        // ひらがなへの変換に失敗した場合（タイムアウト含む）はN-gramで分割
+        print('n-gramモードで処理中...');
         textLen = _findTextIndex(
           rangeUnrecognizedText.toLowerCase(),
           splitWords: _ngram(lastWords, N),
@@ -205,6 +244,11 @@ class SpeechToTextProvider with ChangeNotifier {
       }
     }
     return hiraganaLastIndex;
+  }
+
+  // ネットワークモードをリセットする
+  void resetNetworkMode() {
+    _useSlowNetworkMode = false;
   }
 
   Future<void> _testReflect() async {
@@ -305,6 +349,7 @@ class SpeechToTextProvider with ChangeNotifier {
     lastOffset = 0;
     _isProcessing = false;
     _history.clear();
+    resetNetworkMode();
   }
 
   void back(BuildContext context) {
