@@ -77,7 +77,7 @@ class OnBoardingScreen extends StatelessWidget {
                             height: 32,
                             child: DotsIndicator(
                               dotsCount: pages.length,
-                              position: model.position.round(),
+                              position: model.position,
                               decorator: DotsDecorator(
                                 size: const Size.square(9.0),
                                 activeColor: ColorConfig.mainColor,

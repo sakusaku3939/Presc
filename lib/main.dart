@@ -17,7 +17,8 @@ import 'package:presc/viewModel/playback_timer_provider.dart';
 import 'package:presc/viewModel/playback_visualizer_provider.dart';
 import 'package:presc/viewModel/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+import 'package:flutter_sharing_intent/flutter_sharing_intent.dart';
+import 'package:flutter_sharing_intent/model/sharing_file.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config/color_config.dart';
@@ -65,13 +66,13 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _intentDataStreamSubscription = ReceiveSharingIntent.instance.getMediaStream().listen(
-      receiveShareText,
+    _intentDataStreamSubscription = FlutterSharingIntent.instance.getMediaStream().listen(
+      receiveShareData,
       onError: (err) {
-        print("getLinkStream error: $err");
+        print("getMediaStream error: $err");
       },
     );
-    ReceiveSharingIntent.instance.getInitialMedia().then(receiveShareText);
+    FlutterSharingIntent.instance.getInitialSharing().then(receiveShareData);
   }
 
   @override
@@ -137,20 +138,20 @@ class _MyAppState extends State<MyApp> {
     return prefs.getBool("isFirstLaunch") ?? true;
   }
 
-  Future<void> receiveShareText(List<SharedMediaFile>? value) async {
+  Future<void> receiveShareData(List<SharedFile>? value) async {
     if (value == null || value.isEmpty) return;
 
-    if (value.first.type == SharedMediaType.text) {
-      final text = value.first.path;
+    final sharedFile = value.first;
 
-      if (text.isNotEmpty) {
-        final script = context.read<ManuscriptProvider>();
-        final tag = context.read<ManuscriptTagProvider>();
-        final id = await script.addScript(title: "", content: text);
+    // テキストデータの場合、valueプロパティにテキストが入る
+    final text = sharedFile.value ?? '';
+    if (text.isNotEmpty) {
+      final script = context.read<ManuscriptProvider>();
+      final tag = context.read<ManuscriptTagProvider>();
+      final id = await script.addScript(title: "", content: text);
 
-        await script.updateScriptTable();
-        await tag.loadTag(memoId: id);
-      }
+      await script.updateScriptTable();
+      await tag.loadTag(memoId: id);
     }
   }
 }
