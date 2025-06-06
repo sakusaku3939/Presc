@@ -100,7 +100,7 @@ class _MyAppState extends State<MyApp> {
         bottomSheetTheme: BottomSheetThemeData(
           surfaceTintColor: Colors.transparent,
         ),
-        dialogTheme: DialogTheme(
+        dialogTheme: DialogThemeData(
           surfaceTintColor: Colors.transparent,
         ),
         drawerTheme: DrawerThemeData(
