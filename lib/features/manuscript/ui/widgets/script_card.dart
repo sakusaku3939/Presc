@@ -6,7 +6,7 @@ import 'package:presc/core/utils/display_size.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/features/manuscript/ui/pages/manuscript_edit_page.dart';
-import 'package:presc/view/utils/script/script_modal_bottom_sheet.dart';
+import 'package:presc/features/manuscript/ui/widgets/script_modal_bottom_sheet.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_provider.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
