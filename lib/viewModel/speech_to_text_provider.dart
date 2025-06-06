@@ -133,12 +133,13 @@ class SpeechToTextProvider with ChangeNotifier {
     }
   }
 
-  void _reflect(String lastWords) async {
+  void _reflect(String recognizedText) async {
     isProcessing = true;
 
     try {
-      final rangeText = _prepareRangeText(lastWords);
-      final textPosition = await _calculateTextPosition(lastWords, rangeText);
+      final rangeText = _prepareRangeText(recognizedText);
+      final textPosition =
+          await _calculateTextPosition(recognizedText, rangeText);
       _applyRecognitionResult(textPosition);
     } finally {
       _isProcessing = false;
@@ -146,8 +147,8 @@ class SpeechToTextProvider with ChangeNotifier {
     }
   }
 
-  String _prepareRangeText(String lastWords) {
-    final isLatinAlphabet = Language.isLatinAlphabet(lastWords);
+  String _prepareRangeText(String recognizedText) {
+    final isLatinAlphabet = Language.isLatinAlphabet(recognizedText);
     final range = !isLatinAlphabet ? 120 : 240;
 
     return unrecognizedText.length > range
@@ -156,20 +157,23 @@ class SpeechToTextProvider with ChangeNotifier {
   }
 
   Future<TextPosition> _calculateTextPosition(
-    String lastWords,
+    String recognizedText,
     String rangeText,
   ) async {
-    final isLatinAlphabet = Language.isLatinAlphabet(lastWords);
+    final isLatinAlphabet = Language.isLatinAlphabet(recognizedText);
 
     if (isLatinAlphabet) {
-      return _calculateLatinTextPosition(lastWords, rangeText);
+      return _calculateLatinTextPosition(recognizedText, rangeText);
     } else {
-      return await _calculateJapaneseTextPosition(lastWords, rangeText);
+      return await _calculateJapaneseTextPosition(recognizedText, rangeText);
     }
   }
 
-  TextPosition _calculateLatinTextPosition(String lastWords, String rangeText) {
-    final words = lastWords.split(" ").where((w) => w.isNotEmpty).toList();
+  TextPosition _calculateLatinTextPosition(
+    String recognizedText,
+    String rangeText,
+  ) {
+    final words = recognizedText.split(" ").where((w) => w.isNotEmpty).toList();
     final filteredText = rangeText.toLowerCase().replaceAllMapped(
           RegExp(r'[^\w\s]'), // 英数字とスペース以外の文字を除外
           (match) => " ",
@@ -218,32 +222,33 @@ class SpeechToTextProvider with ChangeNotifier {
   }
 
   Future<TextPosition> _calculateJapaneseTextPosition(
-    String lastWords,
+    String recognizedText,
     String rangeText,
   ) async {
     // 音声認識された文章と、現在の場所から120文字以内の文章をひらがなに変換
     // ただし、ネットワーク速度に応じてn-gramにフォールバックする
     final res = await Future.wait([
-      _convertWithNetworkFallback(lastWords),
+      _convertWithNetworkFallback(recognizedText),
       _convertWithNetworkFallback(rangeText),
     ]);
-    final lastWordsResult = res.first;
+    final recognizedTextResult = res.first;
     final rangeTextResult = res.last;
 
-    if (lastWordsResult != null && rangeTextResult != null) {
-      return _calculateHiraganaTextPosition(lastWordsResult, rangeTextResult);
+    if (recognizedTextResult != null && rangeTextResult != null) {
+      return _calculateHiraganaTextPosition(
+          recognizedTextResult, rangeTextResult);
     } else {
-      return _calculateNgramTextPosition(lastWords, rangeText);
+      return _calculateNgramTextPosition(recognizedText, rangeText);
     }
   }
 
   TextPosition _calculateHiraganaTextPosition(
-    HiraganaResult lastWordsResult,
+    HiraganaResult recognizedTextResult,
     HiraganaResult rangeTextResult,
   ) {
     // 形態素解析されたひらがな文章から、最初に一致したindexを取得
     final hiraganaFirstIndex = _findHiraganaFirstIndex(
-      lastWords: lastWordsResult.hiragana,
+      recognizedText: recognizedTextResult.hiragana,
       rangeText: rangeTextResult.hiragana,
     );
 
@@ -258,13 +263,16 @@ class SpeechToTextProvider with ChangeNotifier {
     }
   }
 
-  TextPosition _calculateNgramTextPosition(String lastWords, String rangeText) {
+  TextPosition _calculateNgramTextPosition(
+    String recognizedText,
+    String rangeText,
+  ) {
     // ひらがなへの変換に失敗した場合（タイムアウト含む）はN-gramで分割
     print('n-gramモードで処理中...');
     final N = InitConfig.ngramNum;
     final textLen = _findTextIndex(
       rangeText.toLowerCase(),
-      splitWords: _charNgram(lastWords, N),
+      splitWords: _charNgram(recognizedText, N),
     );
     return TextPosition(textLen, N);
   }
@@ -306,14 +314,14 @@ class SpeechToTextProvider with ChangeNotifier {
   }
 
   int _findHiraganaFirstIndex({
-    required List<String> lastWords,
+    required List<String> recognizedText,
     required List<String> rangeText,
   }) {
     int foundIndex = -1;
 
     // 文字列を逆順に検索し、最初に見つかった位置を取得する
-    for (int i = lastWords.length - 1; i >= 0; i--) {
-      final word = lastWords[i].trim();
+    for (int i = recognizedText.length - 1; i >= 0; i--) {
+      final word = recognizedText[i].trim();
 
       for (int j = 0; j < rangeText.length; j++) {
         if (rangeText[j].trim() == word) {
