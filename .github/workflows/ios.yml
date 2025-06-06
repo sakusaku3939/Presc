@@ -75,7 +75,8 @@ jobs:
       - name: disable automatic code signing and set provisioning profiles
         run: |
           sed -i '' 's/ProvisioningStyle = Automatic;/ProvisioningStyle = Manual;/g' ios/Runner.xcodeproj/project.pbxproj
-          sed -i '' 's/DEVELOPMENT_TEAM = 9ADZZX385P;/DEVELOPMENT_TEAM = 9ADZZX385P; PROVISIONING_PROFILE_SPECIFIER = decoded.mobileprovision;/g' ios/Runner.xcodeproj/project.pbxproj
+          sed -i '' 's/DEVELOPMENT_TEAM = 9ADZZX385P;/DEVELOPMENT_TEAM = 9ADZZX385P; PROVISIONING_PROFILE_SPECIFIER = decoded;/g' ios/Runner.xcodeproj/project.pbxproj
+          sed -i '' '/Share-Extension/,/DEVELOPMENT_TEAM = 9ADZZX385P;/ s/DEVELOPMENT_TEAM = 9ADZZX385P;/DEVELOPMENT_TEAM = 9ADZZX385P; PROVISIONING_PROFILE_SPECIFIER = decoded-share-extension;/' ios/Runner.xcodeproj/project.pbxproj
           
       - name: build iOS archive
         run: |
