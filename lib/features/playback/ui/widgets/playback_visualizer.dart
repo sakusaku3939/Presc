@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:presc/viewModel/playback_visualizer_provider.dart';
+import 'package:presc/features/playback/ui/providers/playback_visualizer_provider.dart';
 import 'package:provider/provider.dart';
 
 class PlaybackVisualizer extends StatelessWidget {

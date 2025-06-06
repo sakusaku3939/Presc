@@ -1,4 +1,4 @@
-import 'package:presc/viewModel/playback_provider.dart';
+import 'package:presc/features/playback/ui/providers/playback_provider.dart';
 
 class AppConstants {
   static const ngramNum = 5;

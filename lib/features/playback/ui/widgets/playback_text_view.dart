@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:presc/core/utils/display_size.dart';
 import 'package:presc/core/config/playback_text_style.dart';
 import 'package:presc/core/constants/scroll_speed_constants.dart';
-import 'package:presc/view/utils/playback/tategaki.dart';
-import 'package:presc/viewModel/playback_provider.dart';
-import 'package:presc/viewModel/playback_timer_provider.dart';
-import 'package:presc/viewModel/playback_visualizer_provider.dart';
-import 'package:presc/viewModel/speech_to_text_provider.dart';
+import 'package:presc/features/playback/ui/widgets/tategaki.dart';
+import 'package:presc/features/playback/ui/providers/playback_provider.dart';
+import 'package:presc/features/playback/ui/providers/playback_timer_provider.dart';
+import 'package:presc/features/playback/ui/providers/playback_visualizer_provider.dart';
+import 'package:presc/features/playback/ui/providers/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
 
 class PlaybackTextView extends StatelessWidget {

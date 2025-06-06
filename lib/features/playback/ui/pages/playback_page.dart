@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:presc/view/screens/setting.dart';
 import 'package:presc/view/utils/dialog/scroll_mode_dialog_manager.dart';
-import 'package:presc/view/utils/playback/playback_text_view.dart';
-import 'package:presc/view/utils/playback/playback_visualizer.dart';
+import 'package:presc/features/playback/ui/widgets/playback_text_view.dart';
+import 'package:presc/features/playback/ui/widgets/playback_visualizer.dart';
 import 'package:presc/view/utils/ripple_button.dart';
-import 'package:presc/viewModel/playback_provider.dart';
-import 'package:presc/viewModel/playback_timer_provider.dart';
-import 'package:presc/viewModel/speech_to_text_provider.dart';
+import 'package:presc/features/playback/ui/providers/playback_provider.dart';
+import 'package:presc/features/playback/ui/providers/playback_timer_provider.dart';
+import 'package:presc/features/playback/ui/providers/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:vibration/vibration.dart';
 
-import '../../core/constants/color_constants.dart';
+import '../../../../core/constants/color_constants.dart';
 
-class PlaybackScreen extends StatelessWidget {
-  PlaybackScreen({required this.title, required this.content});
+class PlaybackPage extends StatelessWidget {
+  PlaybackPage({required this.title, required this.content});
 
   final String title;
   final String content;

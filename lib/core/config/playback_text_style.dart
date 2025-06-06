@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:presc/viewModel/playback_provider.dart';
+import 'package:presc/features/playback/ui/providers/playback_provider.dart';
 
 class PlaybackTextStyle {
   static PlaybackTextStyle? _instance;

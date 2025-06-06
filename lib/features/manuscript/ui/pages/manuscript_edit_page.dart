@@ -5,7 +5,7 @@ import 'package:presc/core/constants/app_constants.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/char_counter.dart';
 import 'package:presc/model/language.dart';
-import 'package:presc/view/screens/playback.dart';
+import 'package:presc/features/playback/ui/pages/playback_page.dart';
 import 'package:presc/view/utils/dialog/dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
@@ -69,7 +69,7 @@ class ManuscriptEditPage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PlaybackScreen(
+                    builder: (context) => PlaybackPage(
                       title: _edit.title,
                       content: _edit.content,
                     ),

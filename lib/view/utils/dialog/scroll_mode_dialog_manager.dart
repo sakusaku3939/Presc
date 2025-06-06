@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
-import 'package:presc/viewModel/playback_provider.dart';
+import 'package:presc/features/playback/ui/providers/playback_provider.dart';
 import 'package:provider/provider.dart';
 
 class ScrollModeDialogManager {

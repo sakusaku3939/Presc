@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/utils/database_table.dart';
-import 'package:presc/view/screens/playback.dart';
+import 'package:presc/features/playback/ui/pages/playback_page.dart';
 import 'package:presc/view/utils/trash_move_manager.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_provider.dart';
 import 'package:provider/provider.dart';
@@ -70,7 +70,7 @@ class ScriptModalBottomSheet {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => PlaybackScreen(
+                builder: (context) => PlaybackPage(
                   title: scriptTable.title ?? "",
                   content: scriptTable.content ?? "",
                 ),

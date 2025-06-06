@@ -12,10 +12,10 @@ import 'package:presc/features/manuscript/ui/providers/manuscript_edit_provider.
 import 'package:presc/features/manuscript/ui/providers/manuscript_provider.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_tag_provider.dart';
 import 'package:presc/viewModel/onboarding_provider.dart';
-import 'package:presc/viewModel/playback_provider.dart';
-import 'package:presc/viewModel/playback_timer_provider.dart';
-import 'package:presc/viewModel/playback_visualizer_provider.dart';
-import 'package:presc/viewModel/speech_to_text_provider.dart';
+import 'package:presc/features/playback/ui/providers/playback_provider.dart';
+import 'package:presc/features/playback/ui/providers/playback_timer_provider.dart';
+import 'package:presc/features/playback/ui/providers/playback_visualizer_provider.dart';
+import 'package:presc/features/playback/ui/providers/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_sharing_intent/flutter_sharing_intent.dart';
 import 'package:flutter_sharing_intent/model/sharing_file.dart';
