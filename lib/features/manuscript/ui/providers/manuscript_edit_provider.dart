@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../model/undo_redo_history.dart';
+import '../../../../core/utils/undo_redo_manager.dart';
 import '../../data/manuscript_trash_service.dart';
 import 'manuscript_provider.dart';
 
 class ManuscriptEditProvider with ChangeNotifier {
   late ManuscriptProvider _script;
-  late UndoRedoHistory _history;
+  late UndoRedoManager _history;
 
   int? _id;
   String? _title;
@@ -47,7 +47,7 @@ class ManuscriptEditProvider with ChangeNotifier {
     _title = scriptTable.title ?? "";
     _content = scriptTable.content ?? "";
     _date = scriptTable.date;
-    _history = UndoRedoHistory(EditHistory(content, 0));
+    _history = UndoRedoManager(EditHistory(content, 0));
   }
 
   Future<void> back(BuildContext context) async {

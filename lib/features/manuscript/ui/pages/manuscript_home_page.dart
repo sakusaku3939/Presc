@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presc/core/constants/color_constants.dart';
 import 'package:presc/shared/widgets/menu/drawer_menu.dart';
-import 'package:presc/shared/widgets/ripple_button.dart';
+import 'package:presc/shared/widgets/button/ripple_button.dart';
 import 'package:presc/features/manuscript/ui/widgets/script_card.dart';
 import 'package:presc/features/tag/ui/providers/editable_tag_item_provider.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_provider.dart';

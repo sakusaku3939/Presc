@@ -4,7 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:presc/core/constants/punctuation_constants.dart';
 
-class Hiragana {
+class HiraganaService {
   /*
   *  Convert by Yahoo! JAPAN ルビ振りv2
   *  https://developer.yahoo.co.jp/webapi/jlp/furigana/v2/furigana.html

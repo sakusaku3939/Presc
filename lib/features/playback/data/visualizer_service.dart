@@ -1,11 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:presc/model/speech_to_text_manager.dart';
+import 'package:presc/features/playback/data/speech_to_text_service.dart';
 
-class Visualizer {
-  final _manager = SpeechToTextManager();
-  static Visualizer? _instance;
+class VisualizerService {
+  final _speechToText = SpeechToTextService();
+  static VisualizerService? _instance;
   double? _mediaWidth;
 
   final distributionHeight = 16;
@@ -16,12 +16,12 @@ class Visualizer {
   double volume = 0;
   List<double> barHeight = [];
 
-  Visualizer._();
+  VisualizerService._();
 
   void Function(double volume)? volumeChangeListener;
 
-  factory Visualizer() {
-    _instance ??= Visualizer._();
+  factory VisualizerService() {
+    _instance ??= VisualizerService._();
     return _instance!;
   }
 
@@ -30,7 +30,7 @@ class Visualizer {
     barCount = _mediaWidth! ~/ (barWidth + spaceWidth);
     barHeight = List.generate(barCount, (_) => 0);
 
-    _manager.soundLevelListener = (volume) {
+    _speechToText.soundLevelListener = (volume) {
       for (int i = 0; i < barCount; i++) {
         barHeight[i] = 2 * volume +
             Random().nextInt(distributionHeight).toDouble() * volume.sign;

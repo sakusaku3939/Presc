@@ -1,5 +1,5 @@
-class UndoRedoHistory {
-  UndoRedoHistory(this.initialValue);
+class UndoRedoManager {
+  UndoRedoManager(this.initialValue);
 
   final initialValue;
   List<dynamic> _undoStack = [];

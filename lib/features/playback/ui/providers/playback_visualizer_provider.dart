@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:presc/model/visualizer.dart';
+import 'package:presc/features/playback/data/visualizer_service.dart';
 
 class PlaybackVisualizerProvider with ChangeNotifier {
-  final _visualizer = Visualizer();
+  final _visualizer = VisualizerService();
   double _volume = 0;
 
   int get barSize => _visualizer.barCount;

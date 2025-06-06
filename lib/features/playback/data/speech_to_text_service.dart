@@ -7,8 +7,8 @@ import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
-class SpeechToTextManager {
-  static SpeechToTextManager? _instance;
+class SpeechToTextService {
+  static SpeechToTextService? _instance;
 
   String words = "";
   String recognizedText = "";
@@ -25,10 +25,10 @@ class SpeechToTextManager {
   bool _isCurrentEnglish = false;
   Timer? _timer;
 
-  SpeechToTextManager._();
+  SpeechToTextService._();
 
-  factory SpeechToTextManager() {
-    _instance ??= SpeechToTextManager._();
+  factory SpeechToTextService() {
+    _instance ??= SpeechToTextService._();
     return _instance!;
   }
 

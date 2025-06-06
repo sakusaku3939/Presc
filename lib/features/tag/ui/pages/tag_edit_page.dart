@@ -5,7 +5,7 @@ import 'package:presc/features/manuscript/data/models/database_table.dart';
 import 'package:presc/features/tag/ui/widgets/add_new_tag.dart';
 import 'package:presc/shared/widgets/dialog/platform_dialog.dart';
 import 'package:presc/features/tag/ui/widgets/editable_tag_item.dart';
-import 'package:presc/shared/widgets/ripple_button.dart';
+import 'package:presc/shared/widgets/button/ripple_button.dart';
 import 'package:presc/features/tag/ui/providers/editable_tag_item_provider.dart';
 import 'package:provider/provider.dart';
 

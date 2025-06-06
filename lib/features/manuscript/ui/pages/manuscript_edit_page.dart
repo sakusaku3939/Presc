@@ -8,7 +8,7 @@ import 'package:presc/core/utils/language_utils.dart';
 import 'package:presc/features/playback/ui/pages/playback_page.dart';
 import 'package:presc/shared/widgets/dialog/app_dialog.dart';
 import 'package:presc/shared/widgets/menu/popup_menu.dart';
-import 'package:presc/shared/widgets/ripple_button.dart';
+import 'package:presc/shared/widgets/button/ripple_button.dart';
 import 'package:presc/features/tag/ui/widgets/tag_grid.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';

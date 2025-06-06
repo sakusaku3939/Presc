@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/core/utils/language_utils.dart';
-import 'package:presc/model/speech_to_text_manager.dart';
-import 'package:presc/model/text_matching_manager.dart';
-import 'package:presc/model/undo_redo_history.dart';
+import 'package:presc/features/playback/data/speech_to_text_service.dart';
+import 'package:presc/features/playback/data/text_matching_algorithm.dart';
+import 'package:presc/core/utils/undo_redo_manager.dart';
 import 'package:presc/features/playback/ui/widgets/silent_dialog.dart';
 import 'package:presc/features/playback/ui/providers/playback_provider.dart';
 import 'package:presc/features/playback/ui/providers/playback_timer_provider.dart';
@@ -17,9 +17,9 @@ import 'package:sound_mode/sound_mode.dart';
 import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 
 class SpeechToTextProvider with ChangeNotifier {
-  final _speechToTextManager = SpeechToTextManager();
-  final _history = UndoRedoHistory(0);
-  final _textMatchingManager = TextMatchingManager();
+  final _speechToTextManager = SpeechToTextService();
+  final _history = UndoRedoManager(0);
+  final _textMatchingManager = TextMatchingAlgorithm();
   RingerModeStatus? _defaultRingerStatus;
 
   String _unrecognizedText = "";

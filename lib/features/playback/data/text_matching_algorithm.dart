@@ -1,10 +1,10 @@
 import 'package:presc/core/constants/app_constants.dart';
 import 'package:presc/core/constants/punctuation_constants.dart';
-import 'package:presc/model/hiragana.dart';
+import 'package:presc/features/playback/data/hiragana_service.dart';
 import 'package:presc/core/utils/language_utils.dart';
 
-class TextMatchingManager {
-  final _hiragana = Hiragana();
+class TextMatchingAlgorithm {
+  final _hiragana = HiraganaService();
 
   // ネットワーク速度に応じてマッチング方法を動的に切り替える
   bool _useSlowNetworkMode = false;

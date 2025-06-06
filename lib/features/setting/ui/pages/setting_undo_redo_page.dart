@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/features/setting/ui/widgets/radio_dialog.dart';
-import 'package:presc/shared/widgets/ripple_button.dart';
+import 'package:presc/shared/widgets/button/ripple_button.dart';
 import 'package:presc/features/setting/ui/widgets/platform_switch.dart';
 import 'package:presc/features/setting/ui/widgets/setting_item.dart';
 import 'package:presc/features/playback/ui/providers/playback_provider.dart';
