@@ -26,9 +26,6 @@ class ManuscriptPage extends StatelessWidget {
 
           case ManuscriptState.search:
             return ManuscriptSearchPage();
-
-          default:
-            return Container();
         }
       },
     );

@@ -7,6 +7,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:presc/features/manuscript/ui/pages/manuscript_page.dart';
 import 'package:presc/features/onboarding/ui/pages/onboarding_page.dart';
+import 'package:presc/features/setting/ui/providers/backup_manuscript_provider.dart';
 import 'package:presc/features/tag/ui/providers/editable_tag_item_provider.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_edit_provider.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_provider.dart';
@@ -49,6 +50,7 @@ void main() async {
           create: (context) => PlaybackVisualizerProvider(),
         ),
         ChangeNotifierProvider(create: (context) => PlaybackTimerProvider()),
+        ChangeNotifierProvider(create: (_) => BackupManuscriptProvider()),
       ],
       child: MyApp(),
     ),
