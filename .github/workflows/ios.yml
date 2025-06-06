@@ -43,15 +43,12 @@ jobs:
         
       - run: flutter test
       
-      - name: clean up keychain
-        run: |
-          security delete-keychain signing_temp.keychain || true
-          
       - name: import Code-Signing Certificates
-        uses: Apple-Actions/import-codesign-certs@v1
+        uses: Apple-Actions/import-codesign-certs@v2
         with:
           p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
           p12-password: ${{ secrets.CERTIFICATE_PASSWORD }}
+          keychain: build_keychain
 
       - name: import Provisioning Profile
         env:
@@ -75,6 +72,10 @@ jobs:
           EXPORT_OPTIONS: ${{ secrets.EXPORT_OPTIONS }}
         run: echo -n $EXPORT_OPTIONS >> ExportOptions.plist
         
+      - name: disable automatic code signing
+        run: |
+          sed -i '' 's/ProvisioningStyle = Automatic;/ProvisioningStyle = Manual;/g' ios/Runner.xcodeproj/project.pbxproj
+          
       - run: flutter build ipa --export-options-plist=ExportOptions.plist
       
       - name: distribute iOS app
