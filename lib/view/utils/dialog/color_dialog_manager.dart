@@ -21,7 +21,6 @@ class ColorDialogManager {
                 child: ColorPicker(
                   pickerColor: pickerColor,
                   onColorChanged: (color) => pickerColor = color,
-                  showLabel: true,
                   pickerAreaHeightPercent: 0.8,
                 ),
               ),
@@ -30,7 +29,7 @@ class ColorDialogManager {
                 TextButton(
                   child: Text(
                     S.current.resetInitValue,
-                    style: TextStyle(color: ColorConfig.mainColor),
+                    style: TextStyle(color: ColorConfig.buttonLabelColor),
                   ),
                   onPressed: () => setState(() {
                     pickerColor = initialColor;
@@ -39,7 +38,7 @@ class ColorDialogManager {
                 TextButton(
                   child: Text(
                     S.current.done,
-                    style: TextStyle(color: ColorConfig.mainColor),
+                    style: TextStyle(color: ColorConfig.buttonLabelColor),
                   ),
                   onPressed: () {
                     onSubmitted(pickerColor);
