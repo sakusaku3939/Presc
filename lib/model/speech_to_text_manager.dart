@@ -51,10 +51,11 @@ class SpeechToTextManager {
       _isStopFlagValid = false;
       _isCurrentEnglish = isEnglish;
       final systemLocale = await _speech.systemLocale();
+      final systemLocalId = Platform.isAndroid ? null : systemLocale?.localeId;
       await _speech.listen(
         onResult: _resultListener,
         onSoundLevelChange: _soundLevelListener,
-        localeId: isEnglish ? "en" : systemLocale?.localeId,
+        localeId: isEnglish ? "en" : systemLocalId,
       );
       if (log) print("start recognition");
     } else {
@@ -74,7 +75,7 @@ class SpeechToTextManager {
     await _speech.stop();
     Timer(
       Duration(milliseconds: 600),
-      () => {
+      () {
         if (!_isStopFlagValid)
           speak(
             resultListener: this.resultListener,
@@ -82,7 +83,7 @@ class SpeechToTextManager {
             statusListener: this.statusListener,
             log: false,
             isEnglish: _isCurrentEnglish,
-          )
+          );
       },
     );
   }

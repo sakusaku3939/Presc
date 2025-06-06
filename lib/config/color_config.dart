@@ -7,4 +7,5 @@ class ColorConfig {
   static const playbackTextColor = Colors.white;
   static const playbackBackgroundColor = Color(0xFF212121);
   static const iosSystemBlue = Color(0xFF007AFF);
+  static const buttonLabelColor = Color(0xFF212121);
 }

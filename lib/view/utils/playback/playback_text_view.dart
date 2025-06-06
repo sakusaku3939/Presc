@@ -137,6 +137,7 @@ class PlaybackTextView extends StatelessWidget {
           ],
         ),
         key: _playbackTextKey,
+        strutStyle: PlaybackTextStyle.of(model).strutStyle,
       );
     } else {
       return Tategaki(
