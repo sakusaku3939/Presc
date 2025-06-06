@@ -38,12 +38,12 @@ class TextMatchingAlgorithm {
     String recognizedText,
     String rangeText,
   ) async {
-    final isLatinAlphabet = LanguageUtils.isLatinAlphabet(recognizedText);
+    final isJapanese= LanguageUtils.isJapanese(rangeText);
 
-    if (isLatinAlphabet) {
-      return _calculateLatinTextPosition(recognizedText, rangeText);
-    } else {
+    if (isJapanese) {
       return await _calculateJapaneseTextPosition(recognizedText, rangeText);
+    } else {
+      return _calculateLatinTextPosition(recognizedText, rangeText);
     }
   }
 
