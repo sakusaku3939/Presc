@@ -43,6 +43,10 @@ jobs:
         
       - run: flutter test
       
+      - name: clean up keychain
+        run: |
+          security delete-keychain signing_temp.keychain || true
+          
       - name: import Code-Signing Certificates
         uses: Apple-Actions/import-codesign-certs@v1
         with:
