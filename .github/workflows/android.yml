@@ -15,23 +15,28 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: install java 19.x
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
-          java-version: '19.x'
+          java-version: '19'
+          distribution: 'temurin'
 
       - name: install flutter
         uses: subosito/flutter-action@v1
         with:
-          flutter-version: '3.24.0'
+          flutter-version: '3.32.2'
           channel: 'stable'
 
-      - name: setup cache
-        uses: actions/cache@v1
+      - name: cache flutter dependencies
+        uses: actions/cache@v3
         with:
-          path: /Users/runner/hostedtoolcache/flutter
-          key: ${{ runner.OS }}-flutter-install-cache
+          path: |
+            ~/.pub-cache
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
 
       - name: setup env file
+        if: env.BASE64_ENV_FILE != ''
         env:
           BASE64_ENV_FILE: ${{ secrets.BASE64_ENV_FILE }}
         run: echo $BASE64_ENV_FILE | base64 --decode > .env
@@ -42,6 +47,7 @@ jobs:
       - run: flutter test
 
       - name: decode keystore
+        if: env.ENCODED_DEBUG_KEYSTORE != ''
         env:
           ENCODED_DEBUG_KEYSTORE: ${{ secrets.ENCODED_DEBUG_KEYSTORE }}
         run: echo $ENCODED_DEBUG_KEYSTORE | base64 --decode > ~/.android/debug.keystore
@@ -59,7 +65,7 @@ jobs:
             -H "Authorization: token $DEPLOYGATE_API_KEY" \
             -F "file=@build/app/outputs/flutter-apk/app-beta-release.apk" \
             -F "message=git:`git rev-parse --short $GITHUB_SHA`" \
-            -F "distribution_name=`git rev-parse --abbrev-ref $GITHUB_SHA`" \
+            -F "distribution_name=${{ github.ref_name }}" \
             -F "release_note=new build" \
             -F "distribution_key=$ANDROID_DISTRIBUTION_HASH" \
             "https://deploygate.com/api/users/$DEPLOYGATE_USER/apps"
