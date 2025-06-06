@@ -50,8 +50,6 @@ class SpeechToTextProvider with ChangeNotifier {
 
   // ネットワーク速度に応じてマッチング方法を動的に切り替える
   bool _useSlowNetworkMode = false;
-  static const int _networkTimeoutMs = 3000;
-  static const int _slowNetworkThresholdMs = 2000; // n-gramに切り替える閾値
 
   void start(BuildContext context) async {
     if (Platform.isAndroid && await _startSilentMode(context)) return;
@@ -102,7 +100,6 @@ class SpeechToTextProvider with ChangeNotifier {
 
   Future<HiraganaResult?> _convertWithNetworkFallback(String text) async {
     if (_useSlowNetworkMode) {
-      // ネットワーク速度が遅い場合はn-gramを使用
       return null;
     }
 
@@ -111,13 +108,18 @@ class SpeechToTextProvider with ChangeNotifier {
 
       final result = await Future.any([
         _hiragana.convert(text),
-        Future.delayed(Duration(milliseconds: _networkTimeoutMs), () => null),
+        Future.delayed(
+          Duration(milliseconds: InitConfig.hiraganaNetworkTimeoutMs),
+          () => null,
+        ),
       ]);
 
       stopwatch.stop();
       final elapsedMs = stopwatch.elapsedMilliseconds;
 
-      if (elapsedMs > _slowNetworkThresholdMs || result == null) {
+      // ネットワーク速度が閾値を超えた場合はn-gramモードに切り替える
+      if (elapsedMs > InitConfig.hiraganaSlowNetworkThresholdMs ||
+          result == null) {
         _useSlowNetworkMode = true;
         print('ネットワークが遅いため、n-gramモードに切り替えました (${elapsedMs}ms)');
         return null;
@@ -167,20 +169,52 @@ class SpeechToTextProvider with ChangeNotifier {
   }
 
   TextPosition _calculateLatinTextPosition(String lastWords, String rangeText) {
-    // アルファベットの場合は空白で区切ってn-gramを使用
-    final splitText = rangeText.split(" ");
-    final index = _findTextIndex(
-      splitText.map((e) => e.toLowerCase()).toList(),
-      splitWords: lastWords.split(" "),
-    );
+    final words = lastWords.split(" ").where((w) => w.isNotEmpty).toList();
+    final filteredText = rangeText.toLowerCase().replaceAllMapped(
+          RegExp(r'[^\w\s]'), // 英数字とスペース以外の文字を除外
+          (match) => " ",
+        );
+    final splitRangeWords = filteredText.split(" ");
 
-    if (index != -1) {
-      final textLen = splitText.sublist(0, index).join().length + index;
-      final odd = splitText[index].length;
-      return TextPosition(textLen, odd);
-    } else {
-      return TextPosition.notFound();
+    // bigramを使用してマッチングする
+    if (words.length >= 2) {
+      final bigrams = List.generate(
+        words.length - 1,
+        (i) => "${words[i]} ${words[i + 1]}".toLowerCase(),
+      );
+
+      // 連続する2語の位置を逆順で検索する
+      int foundIndex = -1;
+      for (int bigramIdx = bigrams.length - 1; bigramIdx >= 0; bigramIdx--) {
+        final bigram = bigrams[bigramIdx];
+        final bigramWords = bigram.split(" ");
+
+        for (int i = 0; i < splitRangeWords.length - 1; i++) {
+          if (splitRangeWords[i] == bigramWords[0] &&
+              splitRangeWords[i + 1] == bigramWords[1]) {
+            // 最初に見つかった位置を記録
+            foundIndex = i;
+            break;
+          }
+        }
+
+        // マッチしたら終了
+        if (foundIndex != -1) {
+          break;
+        }
+      }
+
+      if (foundIndex != -1) {
+        final textLen =
+            splitRangeWords.sublist(0, foundIndex).join().length + foundIndex;
+        final matchedWordLength =
+            "${splitRangeWords[foundIndex]} ${splitRangeWords[foundIndex + 1]}"
+                .length;
+        return TextPosition(textLen, matchedWordLength);
+      }
     }
+
+    return TextPosition.notFound();
   }
 
   Future<TextPosition> _calculateJapaneseTextPosition(
@@ -217,8 +251,8 @@ class SpeechToTextProvider with ChangeNotifier {
       final origin = rangeTextResult.origin;
       final rangeOrigin = origin.sublist(0, hiraganaLastIndex);
       final textLen = rangeOrigin.join().length;
-      final odd = origin[hiraganaLastIndex].length;
-      return TextPosition(textLen, odd);
+      final matchedWordLength = origin[hiraganaLastIndex].length;
+      return TextPosition(textLen, matchedWordLength);
     } else {
       return TextPosition.notFound();
     }
@@ -230,7 +264,7 @@ class SpeechToTextProvider with ChangeNotifier {
     final N = InitConfig.ngramNum;
     final textLen = _findTextIndex(
       rangeText.toLowerCase(),
-      splitWords: _ngram(lastWords, N),
+      splitWords: _charNgram(lastWords, N),
     );
     return TextPosition(textLen, N);
   }
@@ -238,16 +272,16 @@ class SpeechToTextProvider with ChangeNotifier {
   void _applyRecognitionResult(TextPosition position) {
     // 認識結果を画面に反映する
     if (position.isFound) {
-      final latestRecognizedText =
-          unrecognizedText.substring(0, position.textLen + position.odd);
+      final latestRecognizedText = unrecognizedText.substring(
+          0, position.textLen + position.matchedWordLength);
       _recognizedText += latestRecognizedText;
-      _unrecognizedText =
-          unrecognizedText.substring(position.textLen + position.odd);
+      _unrecognizedText = unrecognizedText
+          .substring(position.textLen + position.matchedWordLength);
       _history.add(recognizedText.length);
     }
   }
 
-  List<String> _ngram(String target, int n) => List.generate(
+  List<String> _charNgram(String target, int n) => List.generate(
         target.length - n + 1,
         (i) => target.substring(i, i + n),
       );
@@ -410,13 +444,13 @@ class SpeechToTextProvider with ChangeNotifier {
 /// テキスト位置情報を表すクラス
 class TextPosition {
   final int textLen;
-  final int odd;
+  final int matchedWordLength;
 
-  const TextPosition(this.textLen, this.odd);
+  const TextPosition(this.textLen, this.matchedWordLength);
 
   const TextPosition.notFound()
       : textLen = -1,
-        odd = 0;
+        matchedWordLength = 0;
 
   bool get isFound => textLen != -1;
 }
