@@ -105,7 +105,7 @@ class AboutAppScreen extends StatelessWidget {
                     ),
                     onPressed: () => launchUrl(
                       Uri.parse(
-                        "https://docs.google.com/forms/d/e/1FAIpQLSdSCHlUDrT4x3W76huEVf0hqAsg-SvX3UJwvRtZXpQ5E2JpNA/viewform?usp=sf_link",
+                        "https://docs.google.com/forms/d/e/1FAIpQLSfVnQYPZS8FuNQKwnELu2RwmGv2-CMQ0r1ZplfRfQx7mXq3yg/viewform?usp=header",
                       ),
                       mode: LaunchMode.externalApplication,
                     ),
