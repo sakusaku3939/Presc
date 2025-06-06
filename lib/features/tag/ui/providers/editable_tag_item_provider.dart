@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:presc/model/tag_manager.dart';
-import 'package:presc/model/utils/database_table.dart';
+import 'package:presc/features/tag/data/tag_repository.dart';
+import 'package:presc/features/manuscript/data/models/database_table.dart';
 
 class EditableTagItemProvider with ChangeNotifier {
-  final _manager = TagManager();
+  final _manager = TagRepository();
   List<TagTable> _allTagTable = [];
 
   List<TagTable> get allTagTable => _allTagTable;

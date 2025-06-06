@@ -1,8 +1,8 @@
-import 'package:presc/model/utils/database_helper.dart';
-import 'package:presc/model/utils/database_table.dart';
+import 'package:presc/features/manuscript/data/manuscript_datasource.dart';
+import 'package:presc/features/manuscript/data/models/database_table.dart';
 
-class TagManager {
-  final _helper = DatabaseHelper();
+class TagRepository {
+  final _helper = ManuscriptDatasource();
 
   Future<int> addTag({String name = ""}) async {
     DatabaseTable table = TagTable(

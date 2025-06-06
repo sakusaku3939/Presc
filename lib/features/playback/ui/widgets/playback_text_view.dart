@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
-import 'package:presc/core/utils/display_size.dart';
+import 'package:presc/core/utils/screen_utils.dart';
 import 'package:presc/core/config/playback_text_style.dart';
 import 'package:presc/core/constants/scroll_speed_constants.dart';
 import 'package:presc/features/playback/ui/widgets/tategaki.dart';
@@ -103,7 +103,7 @@ class PlaybackTextView extends StatelessWidget {
               physics: const BouncingScrollPhysics(),
               controller: _scrollController,
               child: Padding(
-                padding: EdgeInsets.all(DisplaySize.isLarge ? 40 : 32),
+                padding: EdgeInsets.all(ScreenUtils.isTablet ? 40 : 32),
                 child: playbackText,
               ),
             ),

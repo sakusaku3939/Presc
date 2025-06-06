@@ -1,7 +1,7 @@
 import 'package:presc/core/constants/app_constants.dart';
 import 'package:presc/core/constants/punctuation_constants.dart';
 import 'package:presc/model/hiragana.dart';
-import 'package:presc/model/language.dart';
+import 'package:presc/core/utils/language_utils.dart';
 
 class TextMatchingManager {
   final _hiragana = Hiragana();
@@ -25,7 +25,7 @@ class TextMatchingManager {
 
   /// 範囲テキストを準備する
   String _prepareRangeText(String recognizedText, String unrecognizedText) {
-    final isLatinAlphabet = Language.isLatinAlphabet(recognizedText);
+    final isLatinAlphabet = LanguageUtils.isLatinAlphabet(recognizedText);
     final range = !isLatinAlphabet ? 120 : 240;
 
     return unrecognizedText.length > range
@@ -38,7 +38,7 @@ class TextMatchingManager {
     String recognizedText,
     String rangeText,
   ) async {
-    final isLatinAlphabet = Language.isLatinAlphabet(recognizedText);
+    final isLatinAlphabet = LanguageUtils.isLatinAlphabet(recognizedText);
 
     if (isLatinAlphabet) {
       return _calculateLatinTextPosition(recognizedText, rangeText);

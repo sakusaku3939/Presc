@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:presc/core/constants/app_constants.dart';
 
-class Language {
+class LanguageUtils {
   static bool isEnglish(String t) =>
       RegExp(r'^(?:[a-zA-Z]|\P{L})+$', unicode: true).hasMatch(t);
 

@@ -1,6 +1,6 @@
-import 'package:presc/model/language.dart';
+import 'package:presc/core/utils/language_utils.dart';
 
-class CharCounter {
+class CharCounterUtils {
   static int includeSpace(String t) => t.replaceAll('\n', '').length;
 
   static int ignoreSpace(String t) =>
@@ -14,6 +14,6 @@ class CharCounter {
   static int countLine(String t) => t.split('\n').where((e) => e == '').length;
 
   static int count(String t) {
-    return Language.isEnglish(t) ? word(t) : ignoreSpace(t);
+    return LanguageUtils.isEnglish(t) ? word(t) : ignoreSpace(t);
   }
 }

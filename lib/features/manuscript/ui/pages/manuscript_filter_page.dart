@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presc/core/constants/color_constants.dart';
 import 'package:presc/generated/l10n.dart';
-import 'package:presc/model/utils/database_table.dart';
+import 'package:presc/features/manuscript/data/models/database_table.dart';
 import 'package:presc/features/manuscript/ui/widgets/input_dialog.dart';
 import 'package:presc/shared/widgets/dialog/platform_dialog.dart';
 import 'package:presc/shared/widgets/menu/popup_menu.dart';

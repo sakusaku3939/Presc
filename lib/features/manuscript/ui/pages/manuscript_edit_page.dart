@@ -3,8 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:presc/core/constants/color_constants.dart';
 import 'package:presc/core/constants/app_constants.dart';
 import 'package:presc/generated/l10n.dart';
-import 'package:presc/model/char_counter.dart';
-import 'package:presc/model/language.dart';
+import 'package:presc/core/utils/char_counter_utils.dart';
+import 'package:presc/core/utils/language_utils.dart';
 import 'package:presc/features/playback/ui/pages/playback_page.dart';
 import 'package:presc/shared/widgets/dialog/app_dialog.dart';
 import 'package:presc/shared/widgets/menu/popup_menu.dart';
@@ -338,7 +338,7 @@ class ManuscriptEditPage extends StatelessWidget {
                 children: [
                   Text(
                     S.current.characterCount(
-                      Language.unit(_edit.content),
+                      LanguageUtils.unit(_edit.content),
                     ),
                     style: TextStyle(
                       fontSize: 12,
@@ -346,13 +346,13 @@ class ManuscriptEditPage extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    CharCounter.count(_edit.content).toString(),
+                    CharCounterUtils.count(_edit.content).toString(),
                     style: TextStyle(fontSize: 16),
                   ),
                   SizedBox(height: 16),
                   Text(
                     S.current.presentationTime(
-                      Language.perMinute(_edit.content),
+                      LanguageUtils.perMinute(_edit.content),
                     ),
                     style: TextStyle(
                       fontSize: 12,
@@ -417,10 +417,10 @@ class ManuscriptEditPage extends StatelessWidget {
   }
 
   String _calcReadTime(String text) {
-    final char = Language.isEnglish(text)
+    final char = LanguageUtils.isEnglish(text)
         ? AppConstants.wordsPerMinute
         : AppConstants.charactersPerMinute;
-    final count = CharCounter.count(text);
+    final count = CharCounterUtils.count(text);
 
     final totalSecond = count / (char / 60);
     final minutes = totalSecond ~/ 60;

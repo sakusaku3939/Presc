@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:presc/generated/l10n.dart';
-import 'package:presc/model/utils/database_table.dart';
+import 'package:presc/features/manuscript/data/models/database_table.dart';
 import 'package:presc/features/tag/ui/widgets/add_new_tag.dart';
 import 'package:presc/shared/widgets/dialog/platform_dialog.dart';
 import 'package:presc/features/tag/ui/widgets/editable_tag_item.dart';

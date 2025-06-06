@@ -1,8 +1,8 @@
-import 'package:presc/model/utils/database_helper.dart';
-import 'package:presc/model/utils/database_table.dart';
+import 'package:presc/features/manuscript/data/manuscript_datasource.dart';
+import 'package:presc/features/manuscript/data/models/database_table.dart';
 
 class ManuscriptRepository {
-  final _helper = DatabaseHelper();
+  final _helper = ManuscriptDatasource();
 
   Future<int> addScript({String title = "", String content = ""}) async {
     final maxId = await _helper.queryMaxId(

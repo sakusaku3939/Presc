@@ -1,4 +1,4 @@
-abstract class EnumHelper<T> {
+abstract class EnumUtils<T> {
   List<T> values();
 
   T valueOf(String value) {

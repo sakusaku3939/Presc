@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:presc/core/constants/color_constants.dart';
-import 'package:presc/core/utils/display_size.dart';
+import 'package:presc/core/utils/screen_utils.dart';
 import 'package:presc/core/constants/app_constants.dart';
-import 'package:presc/model/utils/enum_helper.dart';
+import 'package:presc/core/utils/enum_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PlaybackProvider with ChangeNotifier {
@@ -119,7 +119,7 @@ class PlaybackProvider with ChangeNotifier {
   */
   int? _fontSize;
   final initFontSize =
-      DisplaySize.isLarge ? AppConstants.tabletFontSize : AppConstants.fontSize;
+      ScreenUtils.isTablet ? AppConstants.tabletFontSize : AppConstants.fontSize;
 
   int get fontSize => _fontSize ?? _prefs?.getInt("fontSize") ?? initFontSize;
 
@@ -192,7 +192,7 @@ enum ScrollMode {
   recognition,
 }
 
-class _ScrollModeHelper extends EnumHelper<ScrollMode> {
+class _ScrollModeHelper extends EnumUtils<ScrollMode> {
   @override
   List<ScrollMode> values() => ScrollMode.values;
 }

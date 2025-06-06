@@ -4,7 +4,7 @@ import 'package:dots_indicator/dots_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
-import 'package:presc/model/locale_image.dart';
+import 'package:presc/core/utils/asset_utils.dart';
 import 'package:presc/features/onboarding/ui/providers/onboarding_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -210,7 +210,7 @@ class OnBoardingPage extends StatelessWidget {
       children: [
         SizedBox(height: 4),
         Expanded(
-          child: LocaleImage.asset(imagePath),
+          child: AssetUtils.localizedImage(imagePath),
         ),
         SizedBox(height: 12),
         Container(

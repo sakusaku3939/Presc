@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
-import 'package:presc/model/utils/database_table.dart';
+import 'package:presc/features/manuscript/data/models/database_table.dart';
 import 'package:presc/features/playback/ui/pages/playback_page.dart';
 import 'package:presc/features/manuscript/data/manuscript_trash_service.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_provider.dart';

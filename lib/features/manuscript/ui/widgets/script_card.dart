@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_scale_tap/flutter_scale_tap.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import "package:intl/intl.dart";
-import 'package:presc/core/utils/display_size.dart';
+import 'package:presc/core/utils/screen_utils.dart';
 import 'package:presc/generated/l10n.dart';
-import 'package:presc/model/utils/database_table.dart';
+import 'package:presc/features/manuscript/data/models/database_table.dart';
 import 'package:presc/features/manuscript/ui/pages/manuscript_edit_page.dart';
 import 'package:presc/features/manuscript/ui/widgets/script_modal_bottom_sheet.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_provider.dart';
@@ -55,7 +55,7 @@ class ScriptCard extends StatelessWidget {
         }
         return Container(
           width: MediaQuery.of(context).size.width,
-          height: DisplaySize.safeArea(context).height -
+          height: ScreenUtils.safeArea(context).height -
               (current.state == ManuscriptState.tag ? 0 : 30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

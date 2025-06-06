@@ -8,19 +8,19 @@ import 'package:path_provider/path_provider.dart';
 import 'package:presc/core/constants/sample_text_constants.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'database_table.dart';
+import 'models/database_table.dart';
 
-class DatabaseHelper {
+class ManuscriptDatasource {
   static final _databaseName = "ManuscriptDatabase.db";
   static final _databaseVersion = 1;
 
-  static DatabaseHelper? _instance;
+  static ManuscriptDatasource? _instance;
   static Database? _database;
 
-  DatabaseHelper._();
+  ManuscriptDatasource._();
 
-  factory DatabaseHelper() {
-    _instance ??= DatabaseHelper._();
+  factory ManuscriptDatasource() {
+    _instance ??= ManuscriptDatasource._();
     return _instance!;
   }
 

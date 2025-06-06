@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class DisplaySize {
+class ScreenUtils {
   static _SafeAreaSize safeArea(BuildContext context) =>
       _SafeAreaSize.of(context);
 
-  static bool get isLarge {
+  static bool get isTablet {
     final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
     return data.size.shortestSide > 600;
   }

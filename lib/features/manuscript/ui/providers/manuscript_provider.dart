@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:presc/features/manuscript/data/manuscript_repository.dart';
-import 'package:presc/model/utils/database_table.dart';
+import 'package:presc/features/manuscript/data/models/database_table.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../model/tag_manager.dart';
+import '../../../tag/data/tag_repository.dart';
 
 class ManuscriptProvider with ChangeNotifier {
   final _manager = ManuscriptRepository();
@@ -29,7 +29,7 @@ class ManuscriptProvider with ChangeNotifier {
         final prefs = await SharedPreferences.getInstance();
         final tagId = prefs.getInt("currentTagId") ?? -1;
         if (tagId != -1) {
-          final _tagManager = TagManager();
+          final _tagManager = TagRepository();
           _current.state = ManuscriptState.tag;
           _current.tagTable = await _tagManager.getTagById(tagId);
         }

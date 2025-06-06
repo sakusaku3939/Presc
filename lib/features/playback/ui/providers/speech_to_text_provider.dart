@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:presc/generated/l10n.dart';
-import 'package:presc/model/language.dart';
+import 'package:presc/core/utils/language_utils.dart';
 import 'package:presc/model/speech_to_text_manager.dart';
 import 'package:presc/model/text_matching_manager.dart';
 import 'package:presc/model/undo_redo_history.dart';
@@ -81,7 +81,7 @@ class SpeechToTextProvider with ChangeNotifier {
             break;
         }
       },
-      isEnglish: Language.isEnglish(_unrecognizedText),
+      isEnglish: LanguageUtils.isEnglish(_unrecognizedText),
     );
     notifyListeners();
   }

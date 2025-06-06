@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
-import 'package:presc/model/locale_image.dart';
+import 'package:presc/core/utils/asset_utils.dart';
 import 'package:presc/features/playback/ui/providers/playback_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -33,7 +33,7 @@ class SilentDialog {
                     style: const TextStyle(fontSize: 14),
                   ),
                   SizedBox(height: 12),
-                  LocaleImage.asset(
+                  AssetUtils.localizedImage(
                     'assets/images/screenshot/silent_mode.png',
                   ),
                   SizedBox(height: 12),
