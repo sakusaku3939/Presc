@@ -19,6 +19,7 @@ class PlaybackTextStyle {
         height: _model!.scrollHorizontal ? null : 1.2,
         fontWeight: FontWeight.normal,
         fontSize: _model!.fontSize.toDouble(),
+        fontFamily: 'monospace',
       );
 
   TextStyle get unrecognized => TextStyle(
@@ -26,6 +27,7 @@ class PlaybackTextStyle {
         height: _model!.scrollHorizontal ? null : 1.2,
         fontWeight: FontWeight.bold,
         fontSize: _model!.fontSize.toDouble(),
+        fontFamily: 'monospace',
       );
 
   StrutStyle get strutStyle => StrutStyle(
