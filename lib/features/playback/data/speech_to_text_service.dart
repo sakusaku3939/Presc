@@ -22,7 +22,7 @@ class SpeechToTextService {
 
   stt.SpeechToText _speech = stt.SpeechToText();
   bool _isStopFlagValid = false;
-  bool _isCurrentEnglish = false;
+  String? _localeId;
   Timer? _timer;
 
   SpeechToTextService._();
@@ -37,7 +37,7 @@ class SpeechToTextService {
     void Function(String error)? errorListener,
     void Function(String status)? statusListener,
     bool log = true,
-    bool isEnglish = false
+    String? localeId,
   }) async {
     this.resultListener = resultListener;
     this.errorListener = errorListener;
@@ -49,13 +49,13 @@ class SpeechToTextService {
     );
     if (available) {
       _isStopFlagValid = false;
-      _isCurrentEnglish = isEnglish;
       final systemLocale = await _speech.systemLocale();
-      final systemLocalId = Platform.isAndroid ? null : systemLocale?.localeId;
+      _localeId = localeId ?? systemLocale?.localeId.replaceAll('_', '-');
+
       await _speech.listen(
         onResult: _resultListener,
         onSoundLevelChange: _soundLevelListener,
-        localeId: isEnglish ? "en" : systemLocalId,
+        localeId: _localeId,
       );
       if (log) print("start recognition");
     } else {
@@ -82,7 +82,7 @@ class SpeechToTextService {
             errorListener: this.errorListener,
             statusListener: this.statusListener,
             log: false,
-            isEnglish: _isCurrentEnglish,
+            localeId: _localeId,
           );
       },
     );
@@ -131,7 +131,7 @@ class SpeechToTextService {
   }
 
   void _soundLevelListener(double level) {
-    double volume = Platform.isIOS ? _convertDbToVolume(level): level;
+    double volume = Platform.isIOS ? _convertDbToVolume(level) : level;
     volume = max(0, min(10, volume));
     if (soundLevelListener != null) soundLevelListener!(volume);
   }

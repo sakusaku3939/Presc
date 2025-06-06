@@ -48,6 +48,13 @@ class SpeechToTextProvider with ChangeNotifier {
   void start(BuildContext context) async {
     if (Platform.isAndroid && await _startSilentMode(context)) return;
 
+    String? localeId;
+    if (LanguageUtils.isJapanese(_unrecognizedText)) {
+      localeId = "ja-JP";
+    } else if (LanguageUtils.isEnglish(_unrecognizedText)) {
+      localeId = "en-US";
+    }
+
     final showSnackBar = (text) => ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(text),
@@ -81,7 +88,7 @@ class SpeechToTextProvider with ChangeNotifier {
             break;
         }
       },
-      isEnglish: LanguageUtils.isEnglish(_unrecognizedText),
+      localeId: localeId,
     );
     notifyListeners();
   }

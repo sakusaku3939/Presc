@@ -15,6 +15,14 @@ class LanguageUtils {
     }
   }
 
+  static bool isJapanese(String text) {
+    final japaneseChars =
+        RegExp(r'[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FAF\uFF66-\uFF9F]');
+    final matches = japaneseChars.allMatches(text).length;
+    final totalChars = text.replaceAll(RegExp(r'\s'), '').length;
+    return totalChars > 0 && (matches / totalChars) > 0.3; // 30%以上が日本語文字
+  }
+
   static String perMinute(String t) {
     if (isEnglish(t)) {
       return "${AppConstants.wordsPerMinute} words per minute";
