@@ -21,7 +21,7 @@ import 'package:flutter_sharing_intent/flutter_sharing_intent.dart';
 import 'package:flutter_sharing_intent/model/sharing_file.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'config/color_config.dart';
+import 'core/constants/color_constants.dart';
 import 'generated/l10n.dart';
 
 void main() async {
@@ -95,7 +95,7 @@ class _MyAppState extends State<MyApp> {
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.transparent,
           scrolledUnderElevation: 0,
-          iconTheme: IconThemeData(color: ColorConfig.iconColor),
+          iconTheme: IconThemeData(color: ColorConstants.iconColor),
           titleTextStyle: TextStyle(color: Colors.black, fontSize: 20),
         ),
         bottomSheetTheme: BottomSheetThemeData(
@@ -122,7 +122,7 @@ class _MyAppState extends State<MyApp> {
         future: _isFirstLaunch(),
         builder: (context, snapshot) {
           if (snapshot.data == null)
-            return Container(color: ColorConfig.backgroundColor);
+            return Container(color: ColorConstants.backgroundColor);
           if (snapshot.data == true) {
             return OnBoardingScreen();
           } else {

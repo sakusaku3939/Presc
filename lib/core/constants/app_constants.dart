@@ -1,6 +1,6 @@
 import 'package:presc/viewModel/playback_provider.dart';
 
-class InitConfig {
+class AppConstants {
   static const ngramNum = 5;
   static const ngramNumForAlphabet = 2;
   static const hiraganaNetworkTimeoutMs = 3000;

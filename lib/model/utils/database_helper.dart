@@ -5,7 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:presc/config/sample_text_config.dart';
+import 'package:presc/core/constants/sample_text_constants.dart';
 import 'package:sqflite/sqflite.dart';
 
 import 'database_table.dart';
@@ -164,8 +164,8 @@ class DatabaseHelper {
         MemoTable.name,
         MemoTable(
           id: 1,
-          title: SampleTextConfig().sampleTitle,
-          content: SampleTextConfig().sampleContent,
+          title: SampleTextConstants().sampleTitle,
+          content: SampleTextConstants().sampleContent,
           date: DateTime.now(),
         ).toMap(),
       )

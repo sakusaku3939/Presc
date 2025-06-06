@@ -1,4 +1,4 @@
-class VerticalRotated {
+class VerticalRotatedConstants {
   static const map = {
     ' ': '　',
     '↑': '→',

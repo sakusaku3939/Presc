@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:presc/config/color_config.dart';
+import 'package:presc/core/constants/color_constants.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/view/utils/dialog/input_dialog_manager.dart';
@@ -104,7 +104,7 @@ class ManuscriptFilterScreen extends StatelessWidget {
               value: "delete",
             ),
           ],
-          icon: Icon(Icons.more_vert, color: ColorConfig.iconColor),
+          icon: Icon(Icons.more_vert, color: ColorConstants.iconColor),
           onSelected: (value) async {
             if (model.current.tagTable == null) return;
 

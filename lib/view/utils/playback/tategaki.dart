@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:presc/config/playback_text_style.dart';
-import 'package:presc/config/vertical_rotated.dart';
+import 'package:presc/core/config/playback_text_style.dart';
+import 'package:presc/core/constants/vertical_rotated_constants.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/speech_to_text_provider.dart';
 import 'package:provider/provider.dart';
@@ -82,8 +82,8 @@ class Tategaki extends StatelessWidget {
   }) {
     final config = PlaybackTextStyle.of(provider);
     final style = recognized ? config.recognized : config.unrecognized;
-    if (VerticalRotated.map[char] != null) {
-      return Text(VerticalRotated.map[char]!, style: style);
+    if (VerticalRotatedConstants.map[char] != null) {
+      return Text(VerticalRotatedConstants.map[char]!, style: style);
     } else {
       return Text(char, style: style);
     }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:presc/generated/l10n.dart';
 
-import '../../../config/color_config.dart';
+import '../../../core/constants/color_constants.dart';
 
 class ColorDialogManager {
   static void show(
@@ -29,7 +29,7 @@ class ColorDialogManager {
                 TextButton(
                   child: Text(
                     S.current.resetInitValue,
-                    style: TextStyle(color: ColorConfig.buttonLabelColor),
+                    style: TextStyle(color: ColorConstants.buttonLabelColor),
                   ),
                   onPressed: () => setState(() {
                     pickerColor = initialColor;
@@ -38,7 +38,7 @@ class ColorDialogManager {
                 TextButton(
                   child: Text(
                     S.current.done,
-                    style: TextStyle(color: ColorConfig.buttonLabelColor),
+                    style: TextStyle(color: ColorConstants.buttonLabelColor),
                   ),
                   onPressed: () {
                     onSubmitted(pickerColor);

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../config/color_config.dart';
+import '../../../core/constants/color_constants.dart';
 import 'dialog_manager.dart';
 
 class InputDialogManager {
@@ -40,13 +40,13 @@ class InputDialogManager {
               hintText: placeholder,
               focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(
-                  color: ColorConfig.mainColor,
+                  color: ColorConstants.mainColor,
                 ),
               ),
             ),
             controller: controller,
             autofocus: true,
-            cursorColor: ColorConfig.mainColor,
+            cursorColor: ColorConstants.mainColor,
           ),
         ],
       ),

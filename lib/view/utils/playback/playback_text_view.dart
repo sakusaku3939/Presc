@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/material.dart';
-import 'package:presc/config/display_size.dart';
-import 'package:presc/config/playback_text_style.dart';
-import 'package:presc/config/scroll_speed_config.dart';
+import 'package:presc/core/utils/display_size.dart';
+import 'package:presc/core/config/playback_text_style.dart';
+import 'package:presc/core/constants/scroll_speed_constants.dart';
 import 'package:presc/view/utils/playback/tategaki.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
@@ -149,7 +149,7 @@ class PlaybackTextView extends StatelessWidget {
 
   void _autoScroll(PlaybackProvider model) {
     if (_scrollController.hasClients) {
-      final speed = ScrollSpeedConfig.kSpeed * model.scrollSpeedMagnification;
+      final speed = ScrollSpeedConstants.kSpeed * model.scrollSpeedMagnification;
       final offset = _scrollController.offset;
       final maxExtent = _scrollController.position.maxScrollExtent;
       final distance = model.scrollHorizontal ? maxExtent - offset : offset;

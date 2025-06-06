@@ -1,11 +1,11 @@
 import 'package:fading_edge_scrollview/fading_edge_scrollview.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:presc/config/color_config.dart';
-import 'package:presc/config/playback_style_config.dart';
-import 'package:presc/config/playback_text_style.dart';
-import 'package:presc/config/sample_text_config.dart';
-import 'package:presc/config/scroll_speed_config.dart';
+import 'package:presc/core/constants/color_constants.dart';
+import 'package:presc/core/constants/setting_constants.dart';
+import 'package:presc/core/config/playback_text_style.dart';
+import 'package:presc/core/constants/sample_text_constants.dart';
+import 'package:presc/core/constants/scroll_speed_constants.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/screens/about_app.dart';
 import 'package:presc/view/screens/setting_undo_redo.dart';
@@ -95,7 +95,7 @@ class SettingScreen extends StatelessWidget {
                       context,
                       groupValue: model.scrollSpeedMagnification,
                       itemList: [
-                        for (var speed in ScrollSpeedConfig.magnification)
+                        for (var speed in ScrollSpeedConstants.magnification)
                           RadioDialogItem(
                             title: "x $speed",
                             value: speed,
@@ -167,7 +167,7 @@ class SettingScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 32),
             child: Text(
-              SampleTextConfig().setting,
+              SampleTextConstants().setting,
               style: PlaybackTextStyle.of(model).unrecognized,
               strutStyle: PlaybackTextStyle.of(model).strutStyle,
             ),
@@ -199,7 +199,7 @@ class SettingScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 32),
             child: Tategaki(
               recognizedText: "",
-              unrecognizedText: SampleTextConfig().setting,
+              unrecognizedText: SampleTextConstants().setting,
             ),
           ),
         ),
@@ -218,7 +218,7 @@ class SettingScreen extends StatelessWidget {
             icon: Icon(Icons.format_size),
             label: Text(model.fontSize.toString()),
             style: TextButton.styleFrom(
-              foregroundColor: ColorConfig.iconColor,
+              foregroundColor: ColorConstants.iconColor,
             ),
             onPressed: () => {
               showCupertinoModalPopup(
@@ -230,16 +230,16 @@ class SettingScreen extends StatelessWidget {
                     child: CupertinoPicker(
                       itemExtent: 32,
                       scrollController: FixedExtentScrollController(
-                        initialItem: PlaybackStyleConfig.fontSizeList.indexOf(
+                        initialItem: SettingConstants.fontSizeList.indexOf(
                           model.fontSize,
                         ),
                       ),
                       children: [
-                        for (var fontSize in PlaybackStyleConfig.fontSizeList)
+                        for (var fontSize in SettingConstants.fontSizeList)
                           Text(fontSize.toString())
                       ],
                       onSelectedItemChanged: (index) => {
-                        model.fontSize = PlaybackStyleConfig.fontSizeList[index]
+                        model.fontSize = SettingConstants.fontSizeList[index]
                       },
                     ),
                   );
@@ -251,7 +251,7 @@ class SettingScreen extends StatelessWidget {
             icon: Icon(Icons.format_line_spacing),
             label: Text(model.fontHeight.toString()),
             style: TextButton.styleFrom(
-              foregroundColor: ColorConfig.iconColor,
+              foregroundColor: ColorConstants.iconColor,
             ),
             onPressed: () => {
               showCupertinoModalPopup(
@@ -263,18 +263,18 @@ class SettingScreen extends StatelessWidget {
                     child: CupertinoPicker(
                       itemExtent: 32,
                       scrollController: FixedExtentScrollController(
-                        initialItem: PlaybackStyleConfig.fontHeightList.indexOf(
+                        initialItem: SettingConstants.fontHeightList.indexOf(
                           model.fontHeight,
                         ),
                       ),
                       children: [
                         for (var fontHeight
-                            in PlaybackStyleConfig.fontHeightList)
+                            in SettingConstants.fontHeightList)
                           Text(fontHeight.toString())
                       ],
                       onSelectedItemChanged: (index) => {
                         model.fontHeight =
-                            PlaybackStyleConfig.fontHeightList[index]
+                            SettingConstants.fontHeightList[index]
                       },
                     ),
                   );
@@ -286,12 +286,12 @@ class SettingScreen extends StatelessWidget {
             icon: Icon(Icons.format_color_text),
             label: _selectColorSquare(model.textColor),
             style: TextButton.styleFrom(
-              foregroundColor: ColorConfig.iconColor,
+              foregroundColor: ColorConstants.iconColor,
             ),
             onPressed: () => ColorDialogManager.show(
               context,
               pickerColor: model.textColor,
-              initialColor: ColorConfig.playbackTextColor,
+              initialColor: ColorConstants.playbackTextColor,
               onSubmitted: (color) => model.textColor = color,
             ),
           ),
@@ -299,12 +299,12 @@ class SettingScreen extends StatelessWidget {
             icon: Icon(Icons.format_color_fill),
             label: _selectColorSquare(model.backgroundColor),
             style: TextButton.styleFrom(
-              foregroundColor: ColorConfig.iconColor,
+              foregroundColor: ColorConstants.iconColor,
             ),
             onPressed: () => ColorDialogManager.show(
               context,
               pickerColor: model.backgroundColor,
-              initialColor: ColorConfig.playbackBackgroundColor,
+              initialColor: ColorConstants.playbackBackgroundColor,
               onSubmitted: (color) => model.backgroundColor = color,
             ),
           ),

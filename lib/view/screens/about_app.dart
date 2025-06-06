@@ -6,7 +6,7 @@ import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../config/color_config.dart';
+import '../../core/constants/color_constants.dart';
 
 class AboutAppScreen extends StatelessWidget {
   @override
@@ -100,7 +100,7 @@ class AboutAppScreen extends StatelessWidget {
                   child: ElevatedButton(
                     child: Text(S.current.sendFeedback),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: ColorConfig.mainColor,
+                      backgroundColor: ColorConstants.mainColor,
                       foregroundColor: Colors.white,
                     ),
                     onPressed: () => launchUrl(

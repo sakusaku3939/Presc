@@ -1,3 +1,3 @@
-class PunctuationConfig {
+class PunctuationConstants {
   static const list = ["、", "。", "！", "？", "!", "?"];
 }

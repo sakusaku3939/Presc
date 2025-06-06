@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:presc/config/color_config.dart';
+import 'package:presc/core/constants/color_constants.dart';
 
 import 'dialog_manager.dart';
 
@@ -22,7 +22,7 @@ class RadioDialogManager {
             RadioListTile<dynamic>(
               title: item.title != null ? Text(item.title!) : null,
               subtitle: item.subtitle != null ? Text(item.subtitle!) : null,
-              activeColor: ColorConfig.mainColor,
+              activeColor: ColorConstants.mainColor,
               groupValue: groupValue,
               value: item.value,
               onChanged: (value) {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:presc/config/color_config.dart';
+import 'package:presc/core/constants/color_constants.dart';
 import 'package:presc/view/utils/drawer_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script/script_card.dart';
@@ -17,10 +17,10 @@ class ManuscriptHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: ColorConfig.backgroundColor,
+      backgroundColor: ColorConstants.backgroundColor,
       appBar: AppBar(
         toolbarHeight: 0,
-        backgroundColor: ColorConfig.backgroundColor,
+        backgroundColor: ColorConstants.backgroundColor,
       ),
       body: SafeArea(
         child: Scrollbar(
@@ -31,7 +31,7 @@ class ManuscriptHomeScreen extends StatelessWidget {
                 snap: true,
                 toolbarHeight: 64,
                 expandedHeight: 0,
-                backgroundColor: ColorConfig.backgroundColor,
+                backgroundColor: ColorConstants.backgroundColor,
                 elevation: 0,
                 leading: Container(),
                 flexibleSpace: _appbar(context),
@@ -46,7 +46,7 @@ class ManuscriptHomeScreen extends StatelessWidget {
       drawer: DrawerMenu(_scaffoldKey),
       floatingActionButton: SafeArea(
         child: FloatingActionButton(
-          backgroundColor: ColorConfig.mainColor,
+          backgroundColor: ColorConstants.mainColor,
           shape: const CircleBorder(),
           onPressed: () async {
             final script = context.read<ManuscriptProvider>();

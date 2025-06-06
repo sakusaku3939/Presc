@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:presc/config/punctuation_config.dart';
+import 'package:presc/core/constants/punctuation_constants.dart';
 
 class Hiragana {
   /*
@@ -38,7 +38,7 @@ class Hiragana {
 
         final isEmpty = result.origin.isEmpty;
         final isLong = origin.length > 1;
-        final isPunctuation = PunctuationConfig.list.contains(origin);
+        final isPunctuation = PunctuationConstants.list.contains(origin);
 
         if (isEmpty || isLong || isPunctuation) {
           result.origin.add(origin);

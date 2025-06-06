@@ -1,5 +1,5 @@
 import 'package:intl/intl.dart';
-import 'package:presc/config/init_config.dart';
+import 'package:presc/core/constants/app_constants.dart';
 
 class Language {
   static bool isEnglish(String t) =>
@@ -17,11 +17,11 @@ class Language {
 
   static String perMinute(String t) {
     if (isEnglish(t)) {
-      return "${InitConfig.wordsPerMinute} words per minute";
+      return "${AppConstants.wordsPerMinute} words per minute";
     } else if (Intl.getCurrentLocale() == "ja") {
-      return "1分${InitConfig.charactersPerMinute}文字";
+      return "1分${AppConstants.charactersPerMinute}文字";
     } else {
-      return "${InitConfig.charactersPerMinute} characters per minute";
+      return "${AppConstants.charactersPerMinute} characters per minute";
     }
   }
 }

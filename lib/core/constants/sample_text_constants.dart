@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-class SampleTextConfig {
+class SampleTextConstants {
   final _Locale _locale = Intl.getCurrentLocale() == "ja" ? _Ja() : _En();
 
   String get sampleTitle => _locale.sampleTitle;

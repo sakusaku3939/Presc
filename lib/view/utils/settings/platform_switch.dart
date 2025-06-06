@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:presc/config/color_config.dart';
+import 'package:presc/core/constants/color_constants.dart';
 
 class PlatformSwitch extends StatelessWidget {
   const PlatformSwitch({
@@ -22,8 +22,8 @@ class PlatformSwitch extends StatelessWidget {
       );
     } else {
       return Switch(
-        activeTrackColor: ColorConfig.mainColor,
-        inactiveTrackColor: ColorConfig.mainColor.withOpacity(0.1),
+        activeTrackColor: ColorConstants.mainColor,
+        inactiveTrackColor: ColorConstants.mainColor.withOpacity(0.1),
         value: value,
         onChanged: onChanged,
       );

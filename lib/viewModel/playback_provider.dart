@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:presc/config/color_config.dart';
-import 'package:presc/config/display_size.dart';
-import 'package:presc/config/init_config.dart';
+import 'package:presc/core/constants/color_constants.dart';
+import 'package:presc/core/utils/display_size.dart';
+import 'package:presc/core/constants/app_constants.dart';
 import 'package:presc/model/utils/enum_helper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,7 +39,7 @@ class PlaybackProvider with ChangeNotifier {
   ScrollMode get scrollMode =>
       _scrollMode ??
       _scrollModeFromVal(_prefs?.getString("scrollMode")) ??
-      InitConfig.scrollMode;
+      AppConstants.scrollMode;
 
   set scrollMode(ScrollMode mode) {
     _scrollMode = mode;
@@ -58,7 +58,7 @@ class PlaybackProvider with ChangeNotifier {
   bool get scrollHorizontal =>
       _scrollHorizontal ??
       _prefs?.getBool("scrollHorizontal") ??
-      InitConfig.scrollHorizontal;
+      AppConstants.scrollHorizontal;
 
   set scrollHorizontal(bool horizontal) {
     _scrollHorizontal = horizontal;
@@ -74,7 +74,7 @@ class PlaybackProvider with ChangeNotifier {
   bool get showUndoRedo =>
       _showUndoRedo ??
       _prefs?.getBool("showUndoRedo") ??
-      InitConfig.showUndoRedo;
+      AppConstants.showUndoRedo;
 
   set showUndoRedo(bool show) {
     _showUndoRedo = show;
@@ -90,7 +90,7 @@ class PlaybackProvider with ChangeNotifier {
   bool get undoDoubleTap =>
       _undoDoubleTap ??
       _prefs?.getBool("undoDoubleTap") ??
-      InitConfig.undoDoubleTap;
+      AppConstants.undoDoubleTap;
 
   set undoDoubleTap(bool tap) {
     _undoDoubleTap = tap;
@@ -106,7 +106,7 @@ class PlaybackProvider with ChangeNotifier {
   double get scrollSpeedMagnification =>
       _scrollSpeedMagnification ??
       _prefs?.getDouble("scrollSpeedMagnification") ??
-      InitConfig.scrollSpeedMagnification;
+      AppConstants.scrollSpeedMagnification;
 
   set scrollSpeedMagnification(double value) {
     _scrollSpeedMagnification = value;
@@ -119,7 +119,7 @@ class PlaybackProvider with ChangeNotifier {
   */
   int? _fontSize;
   final initFontSize =
-      DisplaySize.isLarge ? InitConfig.tabletFontSize : InitConfig.fontSize;
+      DisplaySize.isLarge ? AppConstants.tabletFontSize : AppConstants.fontSize;
 
   int get fontSize => _fontSize ?? _prefs?.getInt("fontSize") ?? initFontSize;
 
@@ -135,7 +135,7 @@ class PlaybackProvider with ChangeNotifier {
   double? _fontHeight;
 
   double get fontHeight =>
-      _fontHeight ?? _prefs?.getDouble("fontHeight") ?? InitConfig.fontHeight;
+      _fontHeight ?? _prefs?.getDouble("fontHeight") ?? AppConstants.fontHeight;
 
   set fontHeight(double height) {
     _fontHeight = height;
@@ -151,7 +151,7 @@ class PlaybackProvider with ChangeNotifier {
   Color get backgroundColor =>
       _backgroundColor ??
       _colorFromVal(_prefs?.getInt("backgroundColor")) ??
-      ColorConfig.playbackBackgroundColor;
+      ColorConstants.playbackBackgroundColor;
 
   set backgroundColor(Color color) {
     _backgroundColor = color;
@@ -167,7 +167,7 @@ class PlaybackProvider with ChangeNotifier {
   Color get textColor =>
       _textColor ??
       _colorFromVal(_prefs?.getInt("textColor")) ??
-      ColorConfig.playbackTextColor;
+      ColorConstants.playbackTextColor;
 
   set textColor(Color color) {
     _textColor = color;

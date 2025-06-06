@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:presc/config/init_config.dart';
+import 'package:presc/core/constants/app_constants.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
@@ -119,7 +119,7 @@ class SpeechToTextManager {
     _timer = Timer(
       Duration(milliseconds: 500),
       () {
-        final N = InitConfig.ngramNum;
+        final N = AppConstants.ngramNum;
         if (_speech.isNotListening || result.finalResult) return;
         if (recognizedText.length < N) recognizedText.padRight(N - 1, ' ');
 

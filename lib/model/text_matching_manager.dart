@@ -1,5 +1,5 @@
-import 'package:presc/config/init_config.dart';
-import 'package:presc/config/punctuation_config.dart';
+import 'package:presc/core/constants/app_constants.dart';
+import 'package:presc/core/constants/punctuation_constants.dart';
 import 'package:presc/model/hiragana.dart';
 import 'package:presc/model/language.dart';
 
@@ -135,7 +135,7 @@ class TextMatchingManager {
       final result = await Future.any([
         _hiragana.convert(text),
         Future.delayed(
-          Duration(milliseconds: InitConfig.hiraganaNetworkTimeoutMs),
+          Duration(milliseconds: AppConstants.hiraganaNetworkTimeoutMs),
           () => null,
         ),
       ]);
@@ -144,7 +144,7 @@ class TextMatchingManager {
       final elapsedMs = stopwatch.elapsedMilliseconds;
 
       // ネットワーク速度が閾値を超えた場合はn-gramモードに切り替える
-      if (elapsedMs > InitConfig.hiraganaSlowNetworkThresholdMs ||
+      if (elapsedMs > AppConstants.hiraganaSlowNetworkThresholdMs ||
           result == null) {
         _useSlowNetworkMode = true;
         print('ネットワークが遅いため、n-gramモードに切り替えました (${elapsedMs}ms)');
@@ -188,7 +188,7 @@ class TextMatchingManager {
   ) {
     // ひらがなへの変換に失敗した場合（タイムアウト含む）はN-gramで分割
     print('n-gramモードで処理中...');
-    final N = InitConfig.ngramNum;
+    final N = AppConstants.ngramNum;
     final textLen = _findTextIndex(
       rangeText.toLowerCase(),
       splitWords: _charNgram(recognizedText, N),
@@ -235,7 +235,7 @@ class TextMatchingManager {
 
       for (int j = 0; j < rangeText.length; j++) {
         if (rangeText[j].trim() == word) {
-          final isPunctuation = PunctuationConfig.list.contains(word);
+          final isPunctuation = PunctuationConstants.list.contains(word);
           if (!isPunctuation) {
             foundIndex = j;
             break;

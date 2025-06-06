@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../config/color_config.dart';
+import '../../../core/constants/color_constants.dart';
 
 class DialogManager {
   static void show(
@@ -41,7 +41,7 @@ class DialogTextButton extends StatelessWidget {
     return TextButton(
       child: Text(
         text,
-        style: TextStyle(color: ColorConfig.mainColor),
+        style: TextStyle(color: ColorConstants.mainColor),
       ),
       style: ButtonStyle(
         padding: MaterialStateProperty.all(

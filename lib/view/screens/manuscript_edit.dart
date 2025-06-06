@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:presc/config/color_config.dart';
-import 'package:presc/config/init_config.dart';
+import 'package:presc/core/constants/color_constants.dart';
+import 'package:presc/core/constants/app_constants.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/char_counter.dart';
 import 'package:presc/model/language.dart';
@@ -62,7 +62,7 @@ class ManuscriptEditScreen extends StatelessWidget {
         ),
         floatingActionButton: SafeArea(
           child: FloatingActionButton(
-            backgroundColor: ColorConfig.mainColor,
+            backgroundColor: ColorConstants.mainColor,
             shape: const CircleBorder(),
             onPressed: () async {
               if (_edit.isEditable) {
@@ -233,12 +233,12 @@ class ManuscriptEditScreen extends StatelessWidget {
                           hintText: S.current.addNewTag,
                           focusedBorder: UnderlineInputBorder(
                             borderSide: BorderSide(
-                              color: ColorConfig.mainColor,
+                              color: ColorConstants.mainColor,
                             ),
                           ),
                         ),
                         controller: controller,
-                        cursorColor: ColorConfig.mainColor,
+                        cursorColor: ColorConstants.mainColor,
                         onSubmitted: (text) {
                           if (text.trim().isNotEmpty) {
                             context
@@ -286,7 +286,7 @@ class ManuscriptEditScreen extends StatelessWidget {
                               ),
                               deleteIcon: Icon(
                                 Icons.cancel,
-                                color: ColorConfig.iconColor,
+                                color: ColorConstants.iconColor,
                                 size: 18,
                               ),
                               label: Text(linkTagTable.tagName),
@@ -418,8 +418,8 @@ class ManuscriptEditScreen extends StatelessWidget {
 
   String _calcReadTime(String text) {
     final char = Language.isEnglish(text)
-        ? InitConfig.wordsPerMinute
-        : InitConfig.charactersPerMinute;
+        ? AppConstants.wordsPerMinute
+        : AppConstants.charactersPerMinute;
     final count = CharCounter.count(text);
 
     final totalSecond = count / (char / 60);
