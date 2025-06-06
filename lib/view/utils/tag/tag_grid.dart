@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:presc/model/utils/database_table.dart';
-import 'package:presc/viewModel/manuscript_tag_provider.dart';
+import 'package:presc/features/manuscript/ui/providers/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constants/color_constants.dart';

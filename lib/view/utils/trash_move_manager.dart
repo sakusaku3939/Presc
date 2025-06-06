@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/utils/dialog/platform_dialog_manager.dart';
-import 'package:presc/viewModel/manuscript_provider.dart';
+import 'package:presc/features/manuscript/ui/providers/manuscript_provider.dart';
 import 'package:provider/provider.dart';
 
 class TrashMoveManager {

@@ -5,10 +5,10 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script/script_card.dart';
-import 'package:presc/viewModel/manuscript_provider.dart';
+import 'package:presc/features/manuscript/ui/providers/manuscript_provider.dart';
 import 'package:provider/provider.dart';
 
-class ManuscriptSearchScreen extends StatelessWidget {
+class ManuscriptSearchPage extends StatelessWidget {
   void _back(BuildContext context) {
     final script = context.read<ManuscriptProvider>();
     script.replaceState(ManuscriptState.home);

@@ -5,12 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:presc/view/screens/manuscript.dart';
+import 'package:presc/features/manuscript/ui/pages/manuscript_page.dart';
 import 'package:presc/view/screens/onboarding.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
-import 'package:presc/viewModel/manuscript_edit_provider.dart';
-import 'package:presc/viewModel/manuscript_provider.dart';
-import 'package:presc/viewModel/manuscript_tag_provider.dart';
+import 'package:presc/features/manuscript/ui/providers/manuscript_edit_provider.dart';
+import 'package:presc/features/manuscript/ui/providers/manuscript_provider.dart';
+import 'package:presc/features/manuscript/ui/providers/manuscript_tag_provider.dart';
 import 'package:presc/viewModel/onboarding_provider.dart';
 import 'package:presc/viewModel/playback_provider.dart';
 import 'package:presc/viewModel/playback_timer_provider.dart';
@@ -126,7 +126,7 @@ class _MyAppState extends State<MyApp> {
           if (snapshot.data == true) {
             return OnBoardingScreen();
           } else {
-            return ManuscriptScreen();
+            return ManuscriptPage();
           }
         },
       ),

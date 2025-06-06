@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/constants/color_constants.dart';
-import 'manuscript.dart';
+import '../../features/manuscript/ui/pages/manuscript_page.dart';
 
 class OnBoardingScreen extends StatelessWidget {
   final _controller = PageController();
@@ -109,7 +109,7 @@ class OnBoardingScreen extends StatelessWidget {
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ManuscriptScreen(),
+                                    builder: (context) => ManuscriptPage(),
                                   ),
                                   (_) => false,
                                 );

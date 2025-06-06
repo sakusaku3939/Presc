@@ -10,14 +10,14 @@ import 'package:presc/view/utils/dialog/dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/tag/tag_grid.dart';
-import 'package:presc/viewModel/manuscript_tag_provider.dart';
+import 'package:presc/features/manuscript/ui/providers/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../viewModel/manuscript_edit_provider.dart';
+import '../providers/manuscript_edit_provider.dart';
 
-class ManuscriptEditScreen extends StatelessWidget {
-  ManuscriptEditScreen(this.context, this.index, {this.autofocus = false});
+class ManuscriptEditPage extends StatelessWidget {
+  ManuscriptEditPage(this.context, this.index, {this.autofocus = false});
 
   final BuildContext context;
   final int index;

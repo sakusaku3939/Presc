@@ -1,7 +1,7 @@
 import 'package:presc/model/utils/database_helper.dart';
 import 'package:presc/model/utils/database_table.dart';
 
-class ManuscriptManager {
+class ManuscriptRepository {
   final _helper = DatabaseHelper();
 
   Future<int> addScript({String title = "", String content = ""}) async {

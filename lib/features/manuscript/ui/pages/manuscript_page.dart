@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:presc/view/screens/manuscript_search.dart';
-import 'package:presc/viewModel/manuscript_provider.dart';
+import 'package:presc/features/manuscript/ui/pages/manuscript_search_page.dart';
+import 'package:presc/features/manuscript/ui/providers/manuscript_provider.dart';
 import 'package:provider/provider.dart';
 
-import 'manuscript_filter.dart';
-import 'manuscript_home.dart';
+import 'manuscript_filter_page.dart';
+import 'manuscript_home_page.dart';
 
-class ManuscriptScreen extends StatelessWidget {
+class ManuscriptPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     KeyboardVisibilityController().onChange.listen((bool visible) {
@@ -18,14 +18,14 @@ class ManuscriptScreen extends StatelessWidget {
       builder: (context, current, child) {
         switch (current.state) {
           case ManuscriptState.home:
-            return ManuscriptHomeScreen();
+            return ManuscriptHomePage();
 
           case ManuscriptState.tag:
           case ManuscriptState.trash:
-            return ManuscriptFilterScreen(current.state);
+            return ManuscriptFilterPage(current.state);
 
           case ManuscriptState.search:
-            return ManuscriptSearchScreen();
+            return ManuscriptSearchPage();
 
           default:
             return Container();

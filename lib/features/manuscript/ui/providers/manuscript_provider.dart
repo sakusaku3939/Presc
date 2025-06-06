@@ -1,14 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:presc/model/manuscript_manager.dart';
+import 'package:presc/features/manuscript/data/manuscript_repository.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../model/tag_manager.dart';
+import '../../../../model/tag_manager.dart';
 
 class ManuscriptProvider with ChangeNotifier {
-  final _manager = ManuscriptManager();
+  final _manager = ManuscriptRepository();
 
   Current _current = Current();
 

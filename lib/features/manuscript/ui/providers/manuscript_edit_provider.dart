@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../model/undo_redo_history.dart';
-import '../view/utils/trash_move_manager.dart';
+import '../../../../model/undo_redo_history.dart';
+import '../../../../view/utils/trash_move_manager.dart';
 import 'manuscript_provider.dart';
 
 class ManuscriptEditProvider with ChangeNotifier {

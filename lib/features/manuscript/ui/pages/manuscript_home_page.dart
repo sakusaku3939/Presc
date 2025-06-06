@@ -4,13 +4,13 @@ import 'package:presc/view/utils/drawer_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/view/utils/script/script_card.dart';
 import 'package:presc/viewModel/editable_tag_item_provider.dart';
-import 'package:presc/viewModel/manuscript_provider.dart';
-import 'package:presc/viewModel/manuscript_tag_provider.dart';
+import 'package:presc/features/manuscript/ui/providers/manuscript_provider.dart';
+import 'package:presc/features/manuscript/ui/providers/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
 
-import 'manuscript_edit.dart';
+import 'manuscript_edit_page.dart';
 
-class ManuscriptHomeScreen extends StatelessWidget {
+class ManuscriptHomePage extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -61,7 +61,7 @@ class ManuscriptHomeScreen extends StatelessWidget {
               PageRouteBuilder(
                 transitionDuration: Duration(milliseconds: 500),
                 pageBuilder: (_, __, ___) =>
-                    ManuscriptEditScreen(context, 0, autofocus: true),
+                    ManuscriptEditPage(context, 0, autofocus: true),
               ),
             );
           },
