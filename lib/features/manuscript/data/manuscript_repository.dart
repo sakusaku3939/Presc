@@ -4,7 +4,11 @@ import 'package:presc/features/manuscript/data/models/database_table.dart';
 class ManuscriptRepository {
   final _manuscript = ManuscriptDatasource();
 
-  Future<int> addScript({String title = "", String content = ""}) async {
+  Future<int> addScript({
+    String title = "",
+    String content = "",
+    DateTime? date,
+  }) async {
     final maxId = await _manuscript.queryMaxId(
       MemoTable.name,
       compareTableName: TrashTable.name,
@@ -13,7 +17,7 @@ class ManuscriptRepository {
       id: maxId + 1,
       title: title,
       content: content,
-      date: DateTime.now(),
+      date: date ?? DateTime.now(),
     );
     final id = await _manuscript.insert(table);
     print('inserted memo_table id: $id');
@@ -42,7 +46,8 @@ class ManuscriptRepository {
 
   Future<List<MemoTable>> searchScript({required String keyword}) async {
     final res = await _manuscript.search(keyword);
-    List<MemoTable> tableList = res.map((row) => MemoTable.fromMap(row)).toList();
+    List<MemoTable> tableList =
+        res.map((row) => MemoTable.fromMap(row)).toList();
     tableList.sort((a, b) => b.date.compareTo(a.date));
     return tableList;
   }

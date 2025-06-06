@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:presc/features/setting/ui/pages/backup_manuscript_page.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/features/setting/ui/pages/setting_page.dart';
 import 'package:presc/features/tag/ui/pages/tag_edit_page.dart';
@@ -71,6 +72,23 @@ class DrawerMenu extends StatelessWidget {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => SettingPage()),
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.backup),
+                title: Text(
+                  "バックアップ",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+                dense: true,
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => BackupManuscriptPage(),
+                  ),
                 ),
               ),
             ],
