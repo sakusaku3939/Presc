@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presc/features/setting/ui/providers/backup_manuscript_provider.dart';
 import 'package:presc/features/setting/ui/widgets/setting_item.dart';
+import 'package:presc/generated/l10n.dart';
 import 'package:presc/shared/widgets/button/ripple_button.dart';
 import 'package:provider/provider.dart';
 
@@ -23,14 +24,14 @@ class BackupManuscriptPage extends StatelessWidget {
               SizedBox(height: 8),
               SettingItem(
                 leading: Icon(Icons.backup),
-                title: "原稿をバックアップ",
-                subtitle: "外部ストレージに原稿をバックアップする",
+                title: S.current.backupManuscript,
+                subtitle: S.current.backupManuscriptDescription,
                 onTap: () => backupProvider.onBackupPressed(context),
               ),
               SettingItem(
                 leading: Icon(Icons.restore),
-                title: "原稿を復元",
-                subtitle: "バックアップファイルから原稿を復元する",
+                title: S.current.restoreManuscript,
+                subtitle: S.current.restoreManuscriptDescription,
                 onTap: () => backupProvider.onRestorePressed(context),
               ),
               SizedBox(height: 32),
@@ -50,7 +51,7 @@ class BackupManuscriptPage extends StatelessWidget {
         onPressed: () => Navigator.pop(context),
       ),
       title: Text(
-        "バックアップ",
+        S.current.backup,
         style: const TextStyle(fontSize: 20),
       ),
     );

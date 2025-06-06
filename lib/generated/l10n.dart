@@ -18,17 +18,20 @@ class S {
   static S? _current;
 
   static S get current {
-    assert(_current != null,
-        'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.');
+    assert(
+      _current != null,
+      'No instance of S was loaded. Try to initialize the S delegate before accessing S.current.',
+    );
     return _current!;
   }
 
   static const AppLocalizationDelegate delegate = AppLocalizationDelegate();
 
   static Future<S> load(Locale locale) {
-    final name = (locale.countryCode?.isEmpty ?? false)
-        ? locale.languageCode
-        : locale.toString();
+    final name =
+        (locale.countryCode?.isEmpty ?? false)
+            ? locale.languageCode
+            : locale.toString();
     final localeName = Intl.canonicalizedLocale(name);
     return initializeMessages(localeName).then((_) {
       Intl.defaultLocale = localeName;
@@ -41,8 +44,10 @@ class S {
 
   static S of(BuildContext context) {
     final instance = S.maybeOf(context);
-    assert(instance != null,
-        'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?');
+    assert(
+      instance != null,
+      'No instance of S present in the widget tree. Did you add S.delegate in localizationsDelegates?',
+    );
     return instance!;
   }
 
@@ -52,92 +57,47 @@ class S {
 
   /// `Next`
   String get next {
-    return Intl.message(
-      'Next',
-      name: 'next',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Next', name: 'next', desc: '', args: []);
   }
 
   /// `Skip`
   String get skip {
-    return Intl.message(
-      'Skip',
-      name: 'skip',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Skip', name: 'skip', desc: '', args: []);
   }
 
   /// `CLOSE`
   String get close {
-    return Intl.message(
-      'CLOSE',
-      name: 'close',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('CLOSE', name: 'close', desc: '', args: []);
   }
 
   /// `CANCEL`
   String get cancel {
-    return Intl.message(
-      'CANCEL',
-      name: 'cancel',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('CANCEL', name: 'cancel', desc: '', args: []);
   }
 
   /// `REMOVE`
   String get remove {
-    return Intl.message(
-      'REMOVE',
-      name: 'remove',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('REMOVE', name: 'remove', desc: '', args: []);
   }
 
   /// `DELETE`
   String get delete {
-    return Intl.message(
-      'DELETE',
-      name: 'delete',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('DELETE', name: 'delete', desc: '', args: []);
   }
 
   /// `CHANGE`
   String get change {
-    return Intl.message(
-      'CHANGE',
-      name: 'change',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('CHANGE', name: 'change', desc: '', args: []);
   }
 
   /// `DONE`
   String get done {
-    return Intl.message(
-      'DONE',
-      name: 'done',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('DONE', name: 'done', desc: '', args: []);
   }
 
   /// `Start`
   String get onboardingStart {
-    return Intl.message(
-      'Start',
-      name: 'onboardingStart',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Start', name: 'onboardingStart', desc: '', args: []);
   }
 
   /// `Welcome to Presc`
@@ -242,12 +202,7 @@ class S {
 
   /// `No title`
   String get noTitle {
-    return Intl.message(
-      'No title',
-      name: 'noTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('No title', name: 'noTitle', desc: '', args: []);
   }
 
   /// `No additional text`
@@ -262,12 +217,7 @@ class S {
 
   /// `Title`
   String get placeholderTitle {
-    return Intl.message(
-      'Title',
-      name: 'placeholderTitle',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Title', name: 'placeholderTitle', desc: '', args: []);
   }
 
   /// `Enter here`
@@ -282,12 +232,7 @@ class S {
 
   /// `Add new tag`
   String get addNewTag {
-    return Intl.message(
-      'Add new tag',
-      name: 'addNewTag',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Add new tag', name: 'addNewTag', desc: '', args: []);
   }
 
   /// `Added a new tag.`
@@ -372,22 +317,12 @@ class S {
 
   /// `Restore`
   String get restore {
-    return Intl.message(
-      'Restore',
-      name: 'restore',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Restore', name: 'restore', desc: '', args: []);
   }
 
   /// `Move to trash`
   String get moveTrash {
-    return Intl.message(
-      'Move to trash',
-      name: 'moveTrash',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Move to trash', name: 'moveTrash', desc: '', args: []);
   }
 
   /// `Search the script`
@@ -402,22 +337,12 @@ class S {
 
   /// `Edit tag`
   String get editTag {
-    return Intl.message(
-      'Edit tag',
-      name: 'editTag',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Edit tag', name: 'editTag', desc: '', args: []);
   }
 
   /// `Remove tag`
   String get removeTag {
-    return Intl.message(
-      'Remove tag',
-      name: 'removeTag',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Remove tag', name: 'removeTag', desc: '', args: []);
   }
 
   /// `Remove {count} tags`
@@ -452,12 +377,7 @@ class S {
 
   /// `Removed tag.`
   String get tagRemoved {
-    return Intl.message(
-      'Removed tag.',
-      name: 'tagRemoved',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Removed tag.', name: 'tagRemoved', desc: '', args: []);
   }
 
   /// `{count} tags removed.`
@@ -482,22 +402,12 @@ class S {
 
   /// `Trash`
   String get trash {
-    return Intl.message(
-      'Trash',
-      name: 'trash',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Trash', name: 'trash', desc: '', args: []);
   }
 
   /// `Tag`
   String get tag {
-    return Intl.message(
-      'Tag',
-      name: 'tag',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tag', name: 'tag', desc: '', args: []);
   }
 
   /// `Change tag name`
@@ -522,12 +432,7 @@ class S {
 
   /// `Updated tag.`
   String get tagUpdated {
-    return Intl.message(
-      'Updated tag.',
-      name: 'tagUpdated',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Updated tag.', name: 'tagUpdated', desc: '', args: []);
   }
 
   /// `Do you want to empty the trash?`
@@ -542,12 +447,7 @@ class S {
 
   /// `DELETE ALL`
   String get deleteAll {
-    return Intl.message(
-      'DELETE ALL',
-      name: 'deleteAll',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('DELETE ALL', name: 'deleteAll', desc: '', args: []);
   }
 
   /// `Emptied the trash.`
@@ -562,32 +462,17 @@ class S {
 
   /// `Settings`
   String get setting {
-    return Intl.message(
-      'Settings',
-      name: 'setting',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Settings', name: 'setting', desc: '', args: []);
   }
 
   /// `Tags`
   String get tagList {
-    return Intl.message(
-      'Tags',
-      name: 'tagList',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Tags', name: 'tagList', desc: '', args: []);
   }
 
   /// `Edit`
   String get edit {
-    return Intl.message(
-      'Edit',
-      name: 'edit',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Edit', name: 'edit', desc: '', args: []);
   }
 
   /// `Format orientation`
@@ -602,22 +487,12 @@ class S {
 
   /// `Horizontal`
   String get horizontal {
-    return Intl.message(
-      'Horizontal',
-      name: 'horizontal',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Horizontal', name: 'horizontal', desc: '', args: []);
   }
 
   /// `Vertical`
   String get vertical {
-    return Intl.message(
-      'Vertical',
-      name: 'vertical',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Vertical', name: 'vertical', desc: '', args: []);
   }
 
   /// `Undo/Redo button`
@@ -642,32 +517,17 @@ class S {
 
   /// `Show`
   String get show {
-    return Intl.message(
-      'Show',
-      name: 'show',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Show', name: 'show', desc: '', args: []);
   }
 
   /// `Hide`
   String get hide {
-    return Intl.message(
-      'Hide',
-      name: 'hide',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Hide', name: 'hide', desc: '', args: []);
   }
 
   /// `Play mode`
   String get playMode {
-    return Intl.message(
-      'Play mode',
-      name: 'playMode',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Play mode', name: 'playMode', desc: '', args: []);
   }
 
   /// `Manual scroll`
@@ -682,12 +542,7 @@ class S {
 
   /// `Auto scroll`
   String get autoScroll {
-    return Intl.message(
-      'Auto scroll',
-      name: 'autoScroll',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Auto scroll', name: 'autoScroll', desc: '', args: []);
   }
 
   /// `Speech recognition`
@@ -732,22 +587,12 @@ class S {
 
   /// `Play speed`
   String get playSpeed {
-    return Intl.message(
-      'Play speed',
-      name: 'playSpeed',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('Play speed', name: 'playSpeed', desc: '', args: []);
   }
 
   /// `About this app`
   String get aboutApp {
-    return Intl.message(
-      'About this app',
-      name: 'aboutApp',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('About this app', name: 'aboutApp', desc: '', args: []);
   }
 
   /// `Open Source License`
@@ -832,22 +677,12 @@ class S {
 
   /// `RESET`
   String get resetInitValue {
-    return Intl.message(
-      'RESET',
-      name: 'resetInitValue',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('RESET', name: 'resetInitValue', desc: '', args: []);
   }
 
   /// `HINT`
   String get hint {
-    return Intl.message(
-      'HINT',
-      name: 'hint',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('HINT', name: 'hint', desc: '', args: []);
   }
 
   /// `If you don't want to play a sound during playback.`
@@ -892,12 +727,7 @@ class S {
 
   /// `UNDO`
   String get undo {
-    return Intl.message(
-      'UNDO',
-      name: 'undo',
-      desc: '',
-      args: [],
-    );
+    return Intl.message('UNDO', name: 'undo', desc: '', args: []);
   }
 
   /// `Deleted an empty script.`
@@ -917,6 +747,131 @@ class S {
       name: 'trashRestored',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Backup`
+  String get backup {
+    return Intl.message('Backup', name: 'backup', desc: '', args: []);
+  }
+
+  /// `Backup Manuscript`
+  String get backupManuscript {
+    return Intl.message(
+      'Backup Manuscript',
+      name: 'backupManuscript',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Backup manuscripts to external storage`
+  String get backupManuscriptDescription {
+    return Intl.message(
+      'Backup manuscripts to external storage',
+      name: 'backupManuscriptDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restore Manuscript`
+  String get restoreManuscript {
+    return Intl.message(
+      'Restore Manuscript',
+      name: 'restoreManuscript',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Restore manuscripts from backup file`
+  String get restoreManuscriptDescription {
+    return Intl.message(
+      'Restore manuscripts from backup file',
+      name: 'restoreManuscriptDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Manuscript backup has been saved`
+  String get backupSaved {
+    return Intl.message(
+      'Manuscript backup has been saved',
+      name: 'backupSaved',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to save backup: {error}`
+  String backupSaveFailed(Object error) {
+    return Intl.message(
+      'Failed to save backup: $error',
+      name: 'backupSaveFailed',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Manuscript backup has been restored`
+  String get backupRestored {
+    return Intl.message(
+      'Manuscript backup has been restored',
+      name: 'backupRestored',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to restore backup: {error}`
+  String backupRestoreFailed(Object error) {
+    return Intl.message(
+      'Failed to restore backup: $error',
+      name: 'backupRestoreFailed',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Save Backup File`
+  String get saveBackupFile {
+    return Intl.message(
+      'Save Backup File',
+      name: 'saveBackupFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid backup file`
+  String get invalidBackupFile {
+    return Intl.message(
+      'Invalid backup file',
+      name: 'invalidBackupFile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to add manuscript: {error}`
+  String addManuscriptFailed(Object error) {
+    return Intl.message(
+      'Failed to add manuscript: $error',
+      name: 'addManuscriptFailed',
+      desc: '',
+      args: [error],
+    );
+  }
+
+  /// `Failed to restore backup: {error}`
+  String restoreBackupFailed(Object error) {
+    return Intl.message(
+      'Failed to restore backup: $error',
+      name: 'restoreBackupFailed',
+      desc: '',
+      args: [error],
     );
   }
 }

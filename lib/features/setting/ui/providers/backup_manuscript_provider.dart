@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presc/features/manuscript/data/local_backup_service.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_provider.dart';
+import 'package:presc/generated/l10n.dart';
 import 'package:provider/provider.dart';
 
 class BackupManuscriptProvider with ChangeNotifier {
@@ -10,12 +11,12 @@ class BackupManuscriptProvider with ChangeNotifier {
 
       if (path != null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('原稿のバックアップが保存されました')),
+          SnackBar(content: Text(S.current.backupSaved)),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('バックアップの保存に失敗しました: $e')),
+        SnackBar(content: Text(S.current.backupSaveFailed(e))),
       );
       return;
     }
@@ -29,7 +30,7 @@ class BackupManuscriptProvider with ChangeNotifier {
 
     if (!importResult.hasErrors) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("原稿のバックアップが復元されました")),
+        SnackBar(content: Text(S.current.backupRestored)),
       );
 
       // バックアップ復元後に原稿一覧を再読み込み
@@ -40,7 +41,7 @@ class BackupManuscriptProvider with ChangeNotifier {
       await manuscriptProvider.updateScriptTable();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("バックアップの復元に失敗しました: ${importResult.errors}")),
+        SnackBar(content: Text(S.current.backupRestoreFailed(importResult.errors))),
       );
     }
   }

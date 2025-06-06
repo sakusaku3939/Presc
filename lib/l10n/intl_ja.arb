@@ -92,5 +92,18 @@
   "trashMoved": "ごみ箱に移動しました",
   "undo": "元に戻す",
   "emptyScriptDeleted": "空の原稿を削除しました",
-  "trashRestored": "ごみ箱から復元しました"
+  "trashRestored": "ごみ箱から復元しました",
+  "backup": "バックアップ",
+  "backupManuscript": "原稿をバックアップ",
+  "backupManuscriptDescription": "外部ストレージに原稿をバックアップする",
+  "restoreManuscript": "原稿を復元",
+  "restoreManuscriptDescription": "バックアップファイルから原稿を復元する",
+  "backupSaved": "原稿のバックアップが保存されました",
+  "backupSaveFailed": "バックアップの保存に失敗しました: {error}",
+  "backupRestored": "原稿のバックアップが復元されました",
+  "backupRestoreFailed": "バックアップの復元に失敗しました: {error}",
+  "saveBackupFile": "バックアップファイルを保存",
+  "invalidBackupFile": "無効なバックアップファイルです",
+  "addManuscriptFailed": "原稿の追加に失敗しました: {error}",
+  "restoreBackupFailed": "バックアップの復元に失敗しました: {error}"
 }

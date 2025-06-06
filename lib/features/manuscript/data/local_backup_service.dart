@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:presc/features/manuscript/data/manuscript_repository.dart';
 import 'package:presc/features/manuscript/data/models/backup_file_info.dart';
 import 'package:presc/features/manuscript/data/models/database_table.dart';
+import 'package:presc/generated/l10n.dart';
 
 class LocalBackupService {
   static final _manuscript = ManuscriptRepository();
@@ -31,7 +32,7 @@ class LocalBackupService {
       final fileName = 'presc_backup_$timestamp.json';
 
       final result = await FilePicker.platform.saveFile(
-        dialogTitle: 'バックアップファイルを保存',
+        dialogTitle: S.current.saveBackupFile,
         fileName: fileName,
         type: FileType.custom,
         allowedExtensions: ['json'],
@@ -68,7 +69,7 @@ class LocalBackupService {
           totalCount: 0,
           addedCount: 0,
           skippedCount: 0,
-          errors: ['無効なバックアップファイルです'],
+          errors: [S.current.invalidBackupFile],
         );
       }
 
@@ -108,7 +109,7 @@ class LocalBackupService {
           );
           addedCount++;
         } catch (e) {
-          errors.add('原稿の追加に失敗しました: $e');
+          errors.add(S.current.addManuscriptFailed(e));
         }
       }
 
@@ -124,7 +125,7 @@ class LocalBackupService {
         totalCount: 0,
         addedCount: 0,
         skippedCount: 0,
-        errors: ['バックアップの復元に失敗しました: $e'],
+        errors: [S.current.restoreBackupFailed(e)],
       );
     }
   }

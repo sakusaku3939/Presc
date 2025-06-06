@@ -77,7 +77,7 @@ class DrawerMenu extends StatelessWidget {
               ListTile(
                 leading: Icon(Icons.backup),
                 title: Text(
-                  "バックアップ",
+                  S.current.backup,
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.normal,
