@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/utils/database_table.dart';
-import 'package:presc/view/utils/tag/add_new_tag.dart';
+import 'package:presc/features/tag/ui/widgets/add_new_tag.dart';
 import 'package:presc/view/utils/dialog/platform_dialog_manager.dart';
-import 'package:presc/view/utils/tag/editable_tag_item.dart';
+import 'package:presc/features/tag/ui/widgets/editable_tag_item.dart';
 import 'package:presc/view/utils/ripple_button.dart';
-import 'package:presc/viewModel/editable_tag_item_provider.dart';
+import 'package:presc/features/tag/ui/providers/editable_tag_item_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../../core/constants/color_constants.dart';
+import '../../../../core/constants/color_constants.dart';
 
-class TagEditScreen extends StatelessWidget {
+class TagEditPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return KeyboardDismissOnTap(

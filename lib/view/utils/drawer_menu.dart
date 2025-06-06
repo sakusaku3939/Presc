@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/features/setting/ui/pages/setting_page.dart';
-import 'package:presc/view/screens/tag_edit.dart';
-import 'package:presc/view/utils/tag/add_new_tag.dart';
-import 'package:presc/viewModel/editable_tag_item_provider.dart';
+import 'package:presc/features/tag/ui/pages/tag_edit_page.dart';
+import 'package:presc/features/tag/ui/widgets/add_new_tag.dart';
+import 'package:presc/features/tag/ui/providers/editable_tag_item_provider.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -118,7 +118,7 @@ class DrawerMenu extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => TagEditScreen(),
+                            builder: (context) => TagEditPage(),
                           ),
                         );
                       },
@@ -150,7 +150,7 @@ class DrawerMenu extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => TagEditScreen(),
+                      builder: (context) => TagEditPage(),
                     ),
                   );
                 },

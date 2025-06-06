@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
-import 'package:presc/viewModel/editable_tag_item_provider.dart';
+import 'package:presc/features/tag/ui/providers/editable_tag_item_provider.dart';
 import 'package:provider/provider.dart';
 
 class AddNewTag extends StatelessWidget {

@@ -3,7 +3,7 @@ import 'package:presc/core/constants/color_constants.dart';
 import 'package:presc/view/utils/drawer_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:presc/features/manuscript/ui/widgets/script_card.dart';
-import 'package:presc/viewModel/editable_tag_item_provider.dart';
+import 'package:presc/features/tag/ui/providers/editable_tag_item_provider.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_provider.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';

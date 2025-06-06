@@ -6,12 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:presc/features/manuscript/ui/pages/manuscript_page.dart';
-import 'package:presc/view/screens/onboarding.dart';
-import 'package:presc/viewModel/editable_tag_item_provider.dart';
+import 'package:presc/features/onboarding/ui/pages/onboarding_page.dart';
+import 'package:presc/features/tag/ui/providers/editable_tag_item_provider.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_edit_provider.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_provider.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_tag_provider.dart';
-import 'package:presc/viewModel/onboarding_provider.dart';
+import 'package:presc/features/onboarding/ui/providers/onboarding_provider.dart';
 import 'package:presc/features/playback/ui/providers/playback_provider.dart';
 import 'package:presc/features/playback/ui/providers/playback_timer_provider.dart';
 import 'package:presc/features/playback/ui/providers/playback_visualizer_provider.dart';
@@ -124,7 +124,7 @@ class _MyAppState extends State<MyApp> {
           if (snapshot.data == null)
             return Container(color: ColorConstants.backgroundColor);
           if (snapshot.data == true) {
-            return OnBoardingScreen();
+            return OnBoardingPage();
           } else {
             return ManuscriptPage();
           }

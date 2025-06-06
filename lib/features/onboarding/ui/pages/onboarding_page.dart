@@ -5,14 +5,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/locale_image.dart';
-import 'package:presc/viewModel/onboarding_provider.dart';
+import 'package:presc/features/onboarding/ui/providers/onboarding_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../core/constants/color_constants.dart';
-import '../../features/manuscript/ui/pages/manuscript_page.dart';
+import '../../../../core/constants/color_constants.dart';
+import '../../../manuscript/ui/pages/manuscript_page.dart';
 
-class OnBoardingScreen extends StatelessWidget {
+class OnBoardingPage extends StatelessWidget {
   final _controller = PageController();
 
   @override

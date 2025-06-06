@@ -9,7 +9,7 @@ import 'package:presc/features/playback/ui/pages/playback_page.dart';
 import 'package:presc/view/utils/dialog/dialog_manager.dart';
 import 'package:presc/view/utils/popup_menu.dart';
 import 'package:presc/view/utils/ripple_button.dart';
-import 'package:presc/view/utils/tag/tag_grid.dart';
+import 'package:presc/features/tag/ui/widgets/tag_grid.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_tag_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
