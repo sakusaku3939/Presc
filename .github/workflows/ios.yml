@@ -23,16 +23,20 @@ jobs:
       - name: install flutter
         uses: subosito/flutter-action@v1
         with:
-          flutter-version: '3.24.0'
+          flutter-version: '3.32.2'
           channel: 'stable'
 
-      - name: setup cache
-        uses: actions/cache@v1
+      - name: cache flutter dependencies
+        uses: actions/cache@v3
         with:
-          path: /Users/runner/hostedtoolcache/flutter
-          key: ${{runner.OS}}-flutter-install-cache
+          path: |
+            ~/.pub-cache
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
 
       - name: setup env file
+        if: env.BASE64_ENV_FILE != ''
         env:
           BASE64_ENV_FILE: ${{ secrets.BASE64_ENV_FILE }}
         run: echo $BASE64_ENV_FILE | base64 --decode > .env
@@ -72,6 +76,8 @@ jobs:
           IOS_DISTRIBUTION_HASH: ${{ secrets.IOS_DISTRIBUTION_HASH }}
           DEPLOYGATE_USER: ${{ secrets.DEPLOYGATE_USER }}
         run: |
+          GIT_HASH=$(git rev-parse --short $GITHUB_SHA)
+          GIT_BRANCH=${GITHUB_REF##*/}
           curl \
             -H "Authorization: token $DEPLOYGATE_API_KEY" \
             -F "file=@/Users/runner/work/Presc/Presc/build/ios/ipa/Presc.ipa" \
