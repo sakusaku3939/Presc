@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:presc/view/screens/setting.dart';
+import 'package:presc/features/setting/ui/pages/setting_page.dart';
 import 'package:presc/view/utils/dialog/scroll_mode_dialog_manager.dart';
 import 'package:presc/features/playback/ui/widgets/playback_text_view.dart';
 import 'package:presc/features/playback/ui/widgets/playback_visualizer.dart';
@@ -121,7 +121,7 @@ class PlaybackPage extends StatelessWidget {
             color: model.textColor,
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => SettingScreen()),
+              MaterialPageRoute(builder: (context) => SettingPage()),
             ),
           ),
         ),

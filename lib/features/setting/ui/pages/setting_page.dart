@@ -7,18 +7,18 @@ import 'package:presc/core/config/playback_text_style.dart';
 import 'package:presc/core/constants/sample_text_constants.dart';
 import 'package:presc/core/constants/scroll_speed_constants.dart';
 import 'package:presc/generated/l10n.dart';
-import 'package:presc/view/screens/about_app.dart';
-import 'package:presc/view/screens/setting_undo_redo.dart';
+import 'package:presc/features/setting/ui/pages/about_app_page.dart';
+import 'package:presc/features/setting/ui/pages/setting_undo_redo_page.dart';
 import 'package:presc/view/utils/dialog/color_dialog_manager.dart';
 import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
 import 'package:presc/view/utils/dialog/scroll_mode_dialog_manager.dart';
 import 'package:presc/view/utils/ripple_button.dart';
-import 'package:presc/view/utils/settings/setting_item.dart';
+import 'package:presc/features/setting/ui/widgets/setting_item.dart';
 import 'package:presc/features/playback/ui/widgets/tategaki.dart';
 import 'package:presc/features/playback/ui/providers/playback_provider.dart';
 import 'package:provider/provider.dart';
 
-class SettingScreen extends StatelessWidget {
+class SettingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -78,7 +78,7 @@ class SettingScreen extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (BuildContext context) =>
-                            SettingUndoRedoScreen(),
+                            SettingUndoRedoPage(),
                       ),
                     ),
                   ),
@@ -111,7 +111,7 @@ class SettingScreen extends StatelessWidget {
                     onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (BuildContext context) => AboutAppScreen(),
+                        builder: (BuildContext context) => AboutAppPage(),
                       ),
                     ),
                   ),

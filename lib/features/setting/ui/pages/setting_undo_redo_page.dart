@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/utils/dialog/radio_dialog_manager.dart';
 import 'package:presc/view/utils/ripple_button.dart';
-import 'package:presc/view/utils/settings/platform_switch.dart';
-import 'package:presc/view/utils/settings/setting_item.dart';
+import 'package:presc/features/setting/ui/widgets/platform_switch.dart';
+import 'package:presc/features/setting/ui/widgets/setting_item.dart';
 import 'package:presc/features/playback/ui/providers/playback_provider.dart';
 import 'package:provider/provider.dart';
 
-class SettingUndoRedoScreen extends StatelessWidget {
+class SettingUndoRedoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

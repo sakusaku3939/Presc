@@ -6,9 +6,9 @@ import 'package:presc/generated/l10n.dart';
 import 'package:presc/view/utils/ripple_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../core/constants/color_constants.dart';
+import '../../../../core/constants/color_constants.dart';
 
-class AboutAppScreen extends StatelessWidget {
+class AboutAppPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
