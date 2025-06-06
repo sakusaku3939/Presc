@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:presc/generated/l10n.dart';
-import 'package:presc/view/utils/ripple_button.dart';
+import 'package:presc/shared/widgets/ripple_button.dart';
 import 'package:presc/features/manuscript/ui/widgets/script_card.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_provider.dart';
 import 'package:provider/provider.dart';

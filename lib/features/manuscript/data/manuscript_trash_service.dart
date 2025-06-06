@@ -4,7 +4,7 @@ import 'package:presc/shared/widgets/dialog/platform_dialog.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_provider.dart';
 import 'package:provider/provider.dart';
 
-class TrashMoveManager {
+class ManuscriptTrashService {
   static Future<void> moveToTrash({
     required BuildContext context,
     required int id,

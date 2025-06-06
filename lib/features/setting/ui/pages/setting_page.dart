@@ -12,7 +12,7 @@ import 'package:presc/features/setting/ui/pages/setting_undo_redo_page.dart';
 import 'package:presc/features/setting/ui/widgets/color_dialog.dart';
 import 'package:presc/features/setting/ui/widgets/radio_dialog.dart';
 import 'package:presc/features/playback/ui/widgets/scroll_mode_dialog.dart';
-import 'package:presc/view/utils/ripple_button.dart';
+import 'package:presc/shared/widgets/ripple_button.dart';
 import 'package:presc/features/setting/ui/widgets/setting_item.dart';
 import 'package:presc/features/playback/ui/widgets/tategaki.dart';
 import 'package:presc/features/playback/ui/providers/playback_provider.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/model/utils/database_table.dart';
 import 'package:presc/features/playback/ui/pages/playback_page.dart';
-import 'package:presc/view/utils/trash_move_manager.dart';
+import 'package:presc/features/manuscript/data/manuscript_trash_service.dart';
 import 'package:presc/features/manuscript/ui/providers/manuscript_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -85,7 +85,7 @@ class ScriptModalBottomSheet {
           ),
           title: Text(S.current.moveTrash),
           onTap: () {
-            TrashMoveManager.moveToTrash(context: context, id: scriptTable.id);
+            ManuscriptTrashService.moveToTrash(context: context, id: scriptTable.id);
             Navigator.pop(context);
           },
         ),
@@ -108,7 +108,7 @@ class ScriptModalBottomSheet {
           ),
           title: Text(S.current.restore),
           onTap: () {
-            TrashMoveManager.restore(context: context, id: scriptTable.id);
+            ManuscriptTrashService.restore(context: context, id: scriptTable.id);
             Navigator.pop(context);
           },
         ),
@@ -120,7 +120,7 @@ class ScriptModalBottomSheet {
           title: Text(S.current.deletePermanently),
           onTap: () {
             Navigator.pop(context);
-            TrashMoveManager.delete(
+            ManuscriptTrashService.delete(
               context: context,
               id: scriptTable.id,
               title: scriptTable.title ?? "",

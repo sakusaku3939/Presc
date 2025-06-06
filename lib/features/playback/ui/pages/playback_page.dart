@@ -3,7 +3,7 @@ import 'package:presc/features/setting/ui/pages/setting_page.dart';
 import 'package:presc/features/playback/ui/widgets/scroll_mode_dialog.dart';
 import 'package:presc/features/playback/ui/widgets/playback_text_view.dart';
 import 'package:presc/features/playback/ui/widgets/playback_visualizer.dart';
-import 'package:presc/view/utils/ripple_button.dart';
+import 'package:presc/shared/widgets/ripple_button.dart';
 import 'package:presc/features/playback/ui/providers/playback_provider.dart';
 import 'package:presc/features/playback/ui/providers/playback_timer_provider.dart';
 import 'package:presc/features/playback/ui/providers/speech_to_text_provider.dart';

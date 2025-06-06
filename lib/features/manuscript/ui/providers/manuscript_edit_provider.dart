@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../model/undo_redo_history.dart';
-import '../../../../view/utils/trash_move_manager.dart';
+import '../../data/manuscript_trash_service.dart';
 import 'manuscript_provider.dart';
 
 class ManuscriptEditProvider with ChangeNotifier {
@@ -58,7 +58,7 @@ class ManuscriptEditProvider with ChangeNotifier {
         _title == "" &&
         _content == "") {
       await Future.delayed(Duration(milliseconds: 300));
-      TrashMoveManager.deleteEmpty(context: context, id: id);
+      ManuscriptTrashService.deleteEmpty(context: context, id: id);
     }
   }
 
@@ -91,19 +91,19 @@ class ManuscriptEditProvider with ChangeNotifier {
   Future<void> moveToTrash(BuildContext context) async {
     Navigator.pop(context);
     await Future.delayed(Duration(milliseconds: 300));
-    TrashMoveManager.moveToTrash(context: context, id: id);
+    ManuscriptTrashService.moveToTrash(context: context, id: id);
   }
 
   Future<void> restore(BuildContext context) async {
     Navigator.pop(context);
     await Future.delayed(Duration(milliseconds: 300));
-    TrashMoveManager.restore(context: context, id: id);
+    ManuscriptTrashService.restore(context: context, id: id);
   }
 
   Future<void> delete(BuildContext context) async {
     Navigator.pop(context);
     await Future.delayed(Duration(milliseconds: 300));
-    TrashMoveManager.delete(context: context, id: id, title: title);
+    ManuscriptTrashService.delete(context: context, id: id, title: title);
   }
 
   Future<void> _updateContent() async {
