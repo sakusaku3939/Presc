@@ -1,14 +1,11 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
-import 'package:presc/config/init_config.dart';
-import 'package:presc/config/punctuation_config.dart';
 import 'package:presc/generated/l10n.dart';
-import 'package:presc/model/hiragana.dart';
 import 'package:presc/model/language.dart';
 import 'package:presc/model/speech_to_text_manager.dart';
+import 'package:presc/model/text_matching_manager.dart';
 import 'package:presc/model/undo_redo_history.dart';
 import 'package:presc/view/utils/dialog/silent_dialog_manager.dart';
 import 'package:presc/viewModel/playback_provider.dart';
@@ -20,9 +17,9 @@ import 'package:sound_mode/sound_mode.dart';
 import 'package:sound_mode/utils/ringer_mode_statuses.dart';
 
 class SpeechToTextProvider with ChangeNotifier {
-  final _manager = SpeechToTextManager();
+  final _speechToTextManager = SpeechToTextManager();
   final _history = UndoRedoHistory(0);
-  final _hiragana = Hiragana();
+  final _textMatchingManager = TextMatchingManager();
   RingerModeStatus? _defaultRingerStatus;
 
   String _unrecognizedText = "";
@@ -48,9 +45,6 @@ class SpeechToTextProvider with ChangeNotifier {
   double verticalRecognizedWidth = 0;
   double lastOffset = 0;
 
-  // ネットワーク速度に応じてマッチング方法を動的に切り替える
-  bool _useSlowNetworkMode = false;
-
   void start(BuildContext context) async {
     if (Platform.isAndroid && await _startSilentMode(context)) return;
 
@@ -63,14 +57,14 @@ class SpeechToTextProvider with ChangeNotifier {
     final timer = context.read<PlaybackTimerProvider>();
     timer.start();
 
-    _manager.speak(
+    _speechToTextManager.speak(
       resultListener: _reflect,
       errorListener: (error) {
         final playback = context.read<PlaybackProvider>();
         playback.playFabState = false;
 
         timer.stop();
-        _manager.stop();
+        _speechToTextManager.stop();
 
         switch (error) {
           case "not_available":
@@ -93,53 +87,17 @@ class SpeechToTextProvider with ChangeNotifier {
   }
 
   void stop() async {
-    await _manager.stop();
+    await _speechToTextManager.stop();
     await Future.delayed(Duration(milliseconds: 400));
     _stopSilentMode();
-  }
-
-  Future<HiraganaResult?> _convertWithNetworkFallback(String text) async {
-    if (_useSlowNetworkMode) {
-      return null;
-    }
-
-    try {
-      final stopwatch = Stopwatch()..start();
-
-      final result = await Future.any([
-        _hiragana.convert(text),
-        Future.delayed(
-          Duration(milliseconds: InitConfig.hiraganaNetworkTimeoutMs),
-          () => null,
-        ),
-      ]);
-
-      stopwatch.stop();
-      final elapsedMs = stopwatch.elapsedMilliseconds;
-
-      // ネットワーク速度が閾値を超えた場合はn-gramモードに切り替える
-      if (elapsedMs > InitConfig.hiraganaSlowNetworkThresholdMs ||
-          result == null) {
-        _useSlowNetworkMode = true;
-        print('ネットワークが遅いため、n-gramモードに切り替えました (${elapsedMs}ms)');
-        return null;
-      }
-
-      return result;
-    } catch (e) {
-      print('ひらがな変換でエラーが発生: $e');
-      _useSlowNetworkMode = true;
-      return null;
-    }
   }
 
   void _reflect(String recognizedText) async {
     isProcessing = true;
 
     try {
-      final rangeText = _prepareRangeText(recognizedText);
-      final textPosition =
-          await _calculateTextPosition(recognizedText, rangeText);
+      final textPosition = await _textMatchingManager.calculateTextPosition(
+          recognizedText, _unrecognizedText);
       _applyRecognitionResult(textPosition);
     } finally {
       _isProcessing = false;
@@ -147,202 +105,18 @@ class SpeechToTextProvider with ChangeNotifier {
     }
   }
 
-  String _prepareRangeText(String recognizedText) {
-    final isLatinAlphabet = Language.isLatinAlphabet(recognizedText);
-    final range = !isLatinAlphabet ? 120 : 240;
-
-    return unrecognizedText.length > range
-        ? unrecognizedText.substring(0, range)
-        : unrecognizedText;
-  }
-
-  Future<TextPosition> _calculateTextPosition(
-    String recognizedText,
-    String rangeText,
-  ) async {
-    final isLatinAlphabet = Language.isLatinAlphabet(recognizedText);
-
-    if (isLatinAlphabet) {
-      return _calculateLatinTextPosition(recognizedText, rangeText);
-    } else {
-      return await _calculateJapaneseTextPosition(recognizedText, rangeText);
-    }
-  }
-
-  TextPosition _calculateLatinTextPosition(
-    String recognizedText,
-    String rangeText,
-  ) {
-    final words = recognizedText.split(" ").where((w) => w.isNotEmpty).toList();
-    final filteredText = rangeText.toLowerCase().replaceAllMapped(
-          RegExp(r'[^\w\s]'), // 英数字とスペース以外の文字を除外
-          (match) => " ",
-        );
-    final splitRangeWords = filteredText.split(" ");
-
-    // bigramを使用してマッチングする
-    if (words.length >= 2) {
-      final bigrams = List.generate(
-        words.length - 1,
-        (i) => "${words[i]} ${words[i + 1]}".toLowerCase(),
-      );
-
-      // 連続する2語の位置を逆順で検索する
-      int foundIndex = -1;
-      for (int bigramIdx = bigrams.length - 1; bigramIdx >= 0; bigramIdx--) {
-        final bigram = bigrams[bigramIdx];
-        final bigramWords = bigram.split(" ");
-
-        for (int i = 0; i < splitRangeWords.length - 1; i++) {
-          if (splitRangeWords[i] == bigramWords[0] &&
-              splitRangeWords[i + 1] == bigramWords[1]) {
-            // 最初に見つかった位置を記録
-            foundIndex = i;
-            break;
-          }
-        }
-
-        // マッチしたら終了
-        if (foundIndex != -1) {
-          break;
-        }
-      }
-
-      if (foundIndex != -1) {
-        final textLen =
-            splitRangeWords.sublist(0, foundIndex).join().length + foundIndex;
-        final matchedWordLength =
-            "${splitRangeWords[foundIndex]} ${splitRangeWords[foundIndex + 1]}"
-                .length;
-        return TextPosition(textLen, matchedWordLength);
-      }
-    }
-
-    return TextPosition.notFound();
-  }
-
-  Future<TextPosition> _calculateJapaneseTextPosition(
-    String recognizedText,
-    String rangeText,
-  ) async {
-    // 音声認識された文章と、現在の場所から120文字以内の文章をひらがなに変換
-    // ただし、ネットワーク速度に応じてn-gramにフォールバックする
-    final res = await Future.wait([
-      _convertWithNetworkFallback(recognizedText),
-      _convertWithNetworkFallback(rangeText),
-    ]);
-    final recognizedTextResult = res.first;
-    final rangeTextResult = res.last;
-
-    if (recognizedTextResult != null && rangeTextResult != null) {
-      return _calculateHiraganaTextPosition(
-          recognizedTextResult, rangeTextResult);
-    } else {
-      return _calculateNgramTextPosition(recognizedText, rangeText);
-    }
-  }
-
-  TextPosition _calculateHiraganaTextPosition(
-    HiraganaResult recognizedTextResult,
-    HiraganaResult rangeTextResult,
-  ) {
-    // 形態素解析されたひらがな文章から、最初に一致したindexを取得
-    final hiraganaFirstIndex = _findHiraganaFirstIndex(
-      recognizedText: recognizedTextResult.hiragana,
-      rangeText: rangeTextResult.hiragana,
-    );
-
-    if (hiraganaFirstIndex != -1) {
-      final origin = rangeTextResult.origin;
-      final rangeOrigin = origin.sublist(0, hiraganaFirstIndex);
-      final textLen = rangeOrigin.join().length;
-      final matchedWordLength = origin[hiraganaFirstIndex].length;
-      return TextPosition(textLen, matchedWordLength);
-    } else {
-      return TextPosition.notFound();
-    }
-  }
-
-  TextPosition _calculateNgramTextPosition(
-    String recognizedText,
-    String rangeText,
-  ) {
-    // ひらがなへの変換に失敗した場合（タイムアウト含む）はN-gramで分割
-    print('n-gramモードで処理中...');
-    final N = InitConfig.ngramNum;
-    final textLen = _findTextIndex(
-      rangeText.toLowerCase(),
-      splitWords: _charNgram(recognizedText, N),
-    );
-    return TextPosition(textLen, N);
-  }
-
   void _applyRecognitionResult(TextPosition position) {
     // 認識結果を画面に反映する
     if (position.isFound) {
       final latestRecognizedText = unrecognizedText.substring(
-          0, position.textLen + position.matchedWordLength);
+        0,
+        position.textLen + position.matchedWordLength,
+      );
       _recognizedText += latestRecognizedText;
       _unrecognizedText = unrecognizedText
           .substring(position.textLen + position.matchedWordLength);
       _history.add(recognizedText.length);
     }
-  }
-
-  List<String> _charNgram(String target, int n) => List.generate(
-        target.length - n + 1,
-        (i) => target.substring(i, i + n),
-      );
-
-  int _findTextIndex(
-    dynamic text, {
-    required List<String> splitWords,
-  }) {
-    int foundIndex = -1;
-
-    // 文字列を逆順に検索し、最初に見つかった位置を取得する
-    for (int i = splitWords.length - 1; i >= 0; i--) {
-      final word = splitWords[i];
-      final index = text.indexOf(word.toLowerCase().trim());
-      if (index != -1) {
-        foundIndex = index;
-        break;
-      }
-    }
-
-    return foundIndex;
-  }
-
-  int _findHiraganaFirstIndex({
-    required List<String> recognizedText,
-    required List<String> rangeText,
-  }) {
-    int foundIndex = -1;
-
-    // 文字列を逆順に検索し、最初に見つかった位置を取得する
-    for (int i = recognizedText.length - 1; i >= 0; i--) {
-      final word = recognizedText[i].trim();
-
-      for (int j = 0; j < rangeText.length; j++) {
-        if (rangeText[j].trim() == word) {
-          final isPunctuation = PunctuationConfig.list.contains(word);
-          if (!isPunctuation) {
-            foundIndex = j;
-            break;
-          }
-        }
-      }
-
-      if (foundIndex != -1) {
-        break;
-      }
-    }
-
-    return foundIndex;
-  }
-
-  void resetNetworkMode() {
-    _useSlowNetworkMode = false;
   }
 
   Future<void> _testReflect() async {
@@ -443,7 +217,7 @@ class SpeechToTextProvider with ChangeNotifier {
     lastOffset = 0;
     _isProcessing = false;
     _history.clear();
-    resetNetworkMode();
+    _textMatchingManager.resetNetworkMode();
   }
 
   void back(BuildContext context) {
@@ -458,18 +232,4 @@ class SpeechToTextProvider with ChangeNotifier {
     Navigator.pop(context);
     _requestInAppReview();
   }
-}
-
-/// テキスト位置情報を表すクラス
-class TextPosition {
-  final int textLen;
-  final int matchedWordLength;
-
-  const TextPosition(this.textLen, this.matchedWordLength);
-
-  const TextPosition.notFound()
-      : textLen = -1,
-        matchedWordLength = 0;
-
-  bool get isFound => textLen != -1;
 }
