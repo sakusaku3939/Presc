@@ -52,13 +52,13 @@ jobs:
 
       - name: import Provisioning Profiles
         env:
-          PROVISIONING_PROFILE: ${{ secrets.PROVISIONING_PROFILE }}
-          SHARE_EXTENSION_PROVISIONING_PROFILE: ${{ secrets.SHARE_EXTENSION_PROVISIONING_PROFILE }}
+          BASE64_PROVISIONING_PROFILE: ${{ secrets.PROVISIONING_PROFILE }}
+          BASE64_SHARE_EXTENSION_PROVISIONING_PROFILE: ${{ secrets.SHARE_EXTENSION_PROVISIONING_PROFILE }}
         run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           
-          echo -n "$PROVISIONING_PROFILE" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/decoded.mobileprovision
-          echo -n "$SHARE_EXTENSION_PROVISIONING_PROFILE" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/decoded-share-extension.mobileprovision
+          echo -n "$BASE64_PROVISIONING_PROFILE" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/decoded.mobileprovision
+          echo -n "$BASE64_SHARE_EXTENSION_PROVISIONING_PROFILE" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/decoded-share-extension.mobileprovision
           
           MAIN_UUID=$(security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/decoded.mobileprovision | plutil -extract UUID xml1 - -o - | sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p')
           SHARE_UUID=$(security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/decoded-share-extension.mobileprovision | plutil -extract UUID xml1 - -o - | sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p')
@@ -80,6 +80,9 @@ jobs:
         run: |
           sed -i '' 's/ProvisioningStyle = Automatic;/ProvisioningStyle = Manual;/g' ios/Runner.xcodeproj/project.pbxproj
           
+          sed -i '' 's/CODE_SIGN_IDENTITY = "iPhone Developer";/CODE_SIGN_IDENTITY = "Apple Development";/g' ios/Runner.xcodeproj/project.pbxproj
+          sed -i '' 's/CODE_SIGN_IDENTITY = "iPhone Distribution";/CODE_SIGN_IDENTITY = "Apple Distribution";/g' ios/Runner.xcodeproj/project.pbxproj
+          
           sed -i '' "s/DEVELOPMENT_TEAM = 9ADZZX385P;/DEVELOPMENT_TEAM = 9ADZZX385P; PROVISIONING_PROFILE = $MAIN_PROFILE_UUID; PROVISIONING_PROFILE_SPECIFIER = decoded;/g" ios/Runner.xcodeproj/project.pbxproj
           
           sed -i '' "/Share-Extension/,/DEVELOPMENT_TEAM = 9ADZZX385P;/ s/DEVELOPMENT_TEAM = 9ADZZX385P;/DEVELOPMENT_TEAM = 9ADZZX385P; PROVISIONING_PROFILE = $SHARE_PROFILE_UUID; PROVISIONING_PROFILE_SPECIFIER = decoded-share-extension;/" ios/Runner.xcodeproj/project.pbxproj
@@ -100,8 +103,10 @@ jobs:
             -allowProvisioningUpdates \
             archive \
             CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="Apple Development" \
             DEVELOPMENT_TEAM=9ADZZX385P \
-            PROVISIONING_PROFILE=$MAIN_PROFILE_UUID
+            PROVISIONING_PROFILE=$MAIN_PROFILE_UUID \
+            PROVISIONING_PROFILE_SPECIFIER=decoded
           
       - name: export IPA
         run: |
