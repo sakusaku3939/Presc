@@ -12,19 +12,20 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
       
-      - name: show Xcode version
+      - name: Show Xcode version
         run: xcodebuild -version
         
-      - name: install flutter
+      - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.32.2'
           channel: 'stable'
           
-      - name: cache flutter dependencies
-        uses: actions/cache@v3
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v4
         with:
           path: |
             ~/.pub-cache
@@ -32,95 +33,79 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-flutter-
             
-      - name: setup env file
+      - name: Setup environment file
         if: env.BASE64_ENV_FILE != ''
         env:
           BASE64_ENV_FILE: ${{ secrets.BASE64_ENV_FILE }}
         run: echo $BASE64_ENV_FILE | base64 --decode > .env
         
-      - name: flutter dependencies install
+      - name: Install Flutter dependencies
         run: flutter pub get
         
-      - run: flutter test
+      - name: Run Flutter tests
+        run: flutter test
 
-      - name: import Code-Signing Certificates
-        uses: Apple-Actions/import-codesign-certs@v2
-        with:
-          p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
-          p12-password: ${{ secrets.CERTIFICATE_PASSWORD }}
-          keychain: build_keychain
-
-      - name: import Provisioning Profiles
+      - name: Setup iOS certificates and provisioning profiles
         env:
-          BASE64_PROVISIONING_PROFILE: ${{ secrets.PROVISIONING_PROFILE }}
-          BASE64_SHARE_EXTENSION_PROVISIONING_PROFILE: ${{ secrets.SHARE_EXTENSION_PROVISIONING_PROFILE }}
+          CERTIFICATES_P12: ${{ secrets.CERTIFICATES_P12 }}
+          CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
+          BASE64_PROVISIONING_PROFILE: ${{ secrets.BASE64_PROVISIONING_PROFILE }}
+          BASE64_SHARE_EXTENSION_PROVISIONING_PROFILE: ${{ secrets.BASE64_SHARE_EXTENSION_PROVISIONING_PROFILE }}
         run: |
+          # Create temporary keychain
+          KEYCHAIN_NAME="build.keychain"
+          KEYCHAIN_PASSWORD="temp_password"
+          
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_NAME"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
+          security list-keychains -d user -s "$KEYCHAIN_NAME" $(security list-keychains -d user | sed s/\"//g)
+          
+          # Import certificate
+          echo $CERTIFICATES_P12 | base64 --decode > certificate.p12
+          security import certificate.p12 -k "$KEYCHAIN_NAME" -P "$CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
+          
+          # Install provisioning profiles
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo $BASE64_PROVISIONING_PROFILE | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/app.mobileprovision
           
-          echo -n "$BASE64_PROVISIONING_PROFILE" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/decoded.mobileprovision
-          echo -n "$BASE64_SHARE_EXTENSION_PROVISIONING_PROFILE" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/decoded-share-extension.mobileprovision
-          
-          MAIN_UUID=$(security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/decoded.mobileprovision | plutil -extract UUID xml1 - -o - | sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p')
-          SHARE_UUID=$(security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/decoded-share-extension.mobileprovision | plutil -extract UUID xml1 - -o - | sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p')
-          
-          echo "Main Profile UUID: $MAIN_UUID"
-          echo "Share Profile UUID: $SHARE_UUID"
-          
-          mv ~/Library/MobileDevice/Provisioning\ Profiles/decoded.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$MAIN_UUID.mobileprovision
-          mv ~/Library/MobileDevice/Provisioning\ Profiles/decoded-share-extension.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$SHARE_UUID.mobileprovision
-          
-          echo "MAIN_PROFILE_UUID=$MAIN_UUID" >> $GITHUB_ENV
-          echo "SHARE_PROFILE_UUID=$SHARE_UUID" >> $GITHUB_ENV
-          
-          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/$MAIN_UUID.mobileprovision | plutil -p -
-          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/$SHARE_UUID.mobileprovision | plutil -p -
-          
-          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/
-          
-      - name: import Export Options
+          if [ ! -z "$BASE64_SHARE_EXTENSION_PROVISIONING_PROFILE" ]; then
+            echo $BASE64_SHARE_EXTENSION_PROVISIONING_PROFILE | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/share_extension.mobileprovision
+          fi
+
+      - name: Build iOS app
         env:
           EXPORT_OPTIONS: ${{ secrets.EXPORT_OPTIONS }}
-        run: echo -n "$EXPORT_OPTIONS" > ExportOptions.plist
-        
-      - name: configure code signing
         run: |
-          sed -i '' 's/ProvisioningStyle = Automatic;/ProvisioningStyle = Manual;/g' ios/Runner.xcodeproj/project.pbxproj
+          # Create export options plist
+          echo $EXPORT_OPTIONS | base64 --decode > ios/ExportOptions.plist
           
-          sed -i '' 's/CODE_SIGN_IDENTITY = "iPhone Developer";/CODE_SIGN_IDENTITY = "Apple Development";/g' ios/Runner.xcodeproj/project.pbxproj
-          sed -i '' 's/CODE_SIGN_IDENTITY = "iPhone Distribution";/CODE_SIGN_IDENTITY = "Apple Distribution";/g' ios/Runner.xcodeproj/project.pbxproj
-          
-          sed -i '' "s/DEVELOPMENT_TEAM = 9ADZZX385P;/DEVELOPMENT_TEAM = 9ADZZX385P; PROVISIONING_PROFILE = $MAIN_PROFILE_UUID;/g" ios/Runner.xcodeproj/project.pbxproj
-          
-          sed -i '' "/Share-Extension/,/DEVELOPMENT_TEAM = 9ADZZX385P;/ s/DEVELOPMENT_TEAM = 9ADZZX385P;/DEVELOPMENT_TEAM = 9ADZZX385P; PROVISIONING_PROFILE = $SHARE_PROFILE_UUID;/" ios/Runner.xcodeproj/project.pbxproj
-          
-          echo "=== Configured Manual Signing for Main and Share Extension only ==="
-          grep -A 5 -B 5 "PROVISIONING_PROFILE" ios/Runner.xcodeproj/project.pbxproj
-          
-      - name: build iOS archive
-        run: |
-          flutter clean
+          # Build iOS app
           flutter build ios --release --no-codesign
           
+          # Create archive
           xcodebuild -workspace ios/Runner.xcworkspace \
             -scheme Runner \
             -sdk iphoneos \
             -configuration Release \
-            -archivePath build/ios/iphoneos/Runner.xcarchive \
-            archive \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="Apple Development" \
-            DEVELOPMENT_TEAM=9ADZZX385P \
-            PROVISIONING_PROFILE=$MAIN_PROFILE_UUID
-          
-      - name: export IPA
-        run: |
+            -archivePath build/ios/Runner.xcarchive \
+            archive
+            
+          # Export IPA
           xcodebuild -exportArchive \
-            -archivePath build/ios/iphoneos/Runner.xcarchive \
-            -exportOptionsPlist ExportOptions.plist \
-            -exportPath build/ios/iphoneos/ \
-            -allowProvisioningUpdates
-      
-      - name: distribute iOS app
+            -archivePath build/ios/Runner.xcarchive \
+            -exportPath build/ios/ipa \
+            -exportOptionsPlist ios/ExportOptions.plist
+
+      - name: Find IPA file
+        id: find_ipa
+        run: |
+          IPA_PATH=$(find build/ios/ipa -name "*.ipa" | head -n 1)
+          echo "ipa_path=$IPA_PATH" >> $GITHUB_OUTPUT
+          echo "Found IPA at: $IPA_PATH"
+
+      - name: Upload to DeployGate
         env:
           DEPLOYGATE_API_KEY: ${{ secrets.DEPLOYGATE_API_KEY }}
           IOS_DISTRIBUTION_HASH: ${{ secrets.IOS_DISTRIBUTION_HASH }}
@@ -128,11 +113,13 @@ jobs:
         run: |
           GIT_HASH=$(git rev-parse --short $GITHUB_SHA)
           GIT_BRANCH=${GITHUB_REF##*/}
+          IPA_PATH="${{ steps.find_ipa.outputs.ipa_path }}"
+          
           curl \
             -H "Authorization: token $DEPLOYGATE_API_KEY" \
-            -F "file=@build/ios/iphoneos/Presc.ipa" \
-            -F "message=git:$GIT_HASH" \
+            -F "file=@$IPA_PATH" \
+            -F "message=git:$GIT_HASH branch:$GIT_BRANCH" \
             -F "distribution_name=$GIT_BRANCH" \
-            -F "release_note=new ios build" \
+            -F "release_note=Automated build from GitHub Actions - Commit: $GIT_HASH" \
             -F "distribution_key=$IOS_DISTRIBUTION_HASH" \
             "https://deploygate.com/api/users/$DEPLOYGATE_USER/apps"
