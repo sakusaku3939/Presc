@@ -87,7 +87,8 @@ jobs:
             -configuration Release \
             -archivePath build/Runner.xcarchive \
             archive \
-            DEVELOPMENT_TEAM=9ADZZX385P
+            DEVELOPMENT_TEAM=9ADZZX385P \
+            CODE_SIGN_KEYCHAIN="$HOME/Library/Keychains/build_keychain.keychain"
           xcodebuild -exportArchive \
             -archivePath build/Runner.xcarchive \
             -exportPath build/ios/ipa \
