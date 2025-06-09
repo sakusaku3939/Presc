@@ -65,15 +65,28 @@ jobs:
           mv ~/Library/MobileDevice/Provisioning\ Profiles/main.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$MAIN_UUID.mobileprovision
           mv ~/Library/MobileDevice/Provisioning\ Profiles/share.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$SHARE_UUID.mobileprovision
           
+          echo "Main Profile UUID: $MAIN_UUID"
+          echo "Share Profile UUID: $SHARE_UUID"
+          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/
+          
+          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/$MAIN_UUID.mobileprovision | plutil -extract Entitlements.application-identifier xml1 - -o - | sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p'
+          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/$SHARE_UUID.mobileprovision | plutil -extract Entitlements.application-identifier xml1 - -o - | sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p'
+          
       - name: import Export Options
         env:
           BASE64_EXPORT_OPTIONS: ${{ secrets.BASE64_EXPORT_OPTIONS }}
         run: echo -n "$BASE64_EXPORT_OPTIONS" | base64 --decode > ExportOptions.plist
         
 
-      - name: configure manual signing
+      - name: configure manual signing and set profiles
         run: |
           sed -i '' 's/ProvisioningStyle = Automatic;/ProvisioningStyle = Manual;/g' ios/Runner.xcodeproj/project.pbxproj
+          
+          MAIN_UUID=$(security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/main.mobileprovision | plutil -extract UUID xml1 - -o - | sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p')
+          SHARE_UUID=$(security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/share.mobileprovision | plutil -extract UUID xml1 - -o - | sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p')
+          
+          sed -i '' "s/PROVISIONING_PROFILE_SPECIFIER = \"\";/PROVISIONING_PROFILE_SPECIFIER = \"$MAIN_UUID\";/g" ios/Runner.xcodeproj/project.pbxproj
+          sed -i '' "s/PROVISIONING_PROFILE = \"\";/PROVISIONING_PROFILE = \"$MAIN_UUID\";/g" ios/Runner.xcodeproj/project.pbxproj
           
       - name: build iOS app
         run: |
