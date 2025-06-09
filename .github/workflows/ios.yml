@@ -76,10 +76,10 @@ jobs:
 
       - name: Build iOS app
         env:
-          EXPORT_OPTIONS: ${{ secrets.EXPORT_OPTIONS }}
+          BASE64_EXPORT_OPTIONS: ${{ secrets.BASE64_EXPORT_OPTIONS }}
         run: |
           # Create export options plist
-          echo $EXPORT_OPTIONS | base64 --decode > ios/ExportOptions.plist
+          echo "$BASE64_EXPORT_OPTIONS" | base64 --decode > ios/ExportOptions.plist
           
           # Build iOS app
           flutter build ios --release --no-codesign
