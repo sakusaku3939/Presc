@@ -42,7 +42,7 @@ jobs:
         run: flutter pub get
         
       - run: flutter test
-      
+
       - name: import Code-Signing Certificates
         uses: Apple-Actions/import-codesign-certs@v2
         with:
@@ -50,43 +50,66 @@ jobs:
           p12-password: ${{ secrets.CERTIFICATE_PASSWORD }}
           keychain: build_keychain
 
-      - name: import Provisioning Profile
+      - name: import Provisioning Profiles
         env:
           PROVISIONING_PROFILE: ${{ secrets.PROVISIONING_PROFILE }}
           SHARE_EXTENSION_PROVISIONING_PROFILE: ${{ secrets.SHARE_EXTENSION_PROVISIONING_PROFILE }}
         run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          touch ~/Library/MobileDevice/Provisioning\ Profiles/decoded.mobileprovision
-          touch ~/Library/MobileDevice/Provisioning\ Profiles/decoded-share-extension.mobileprovision
-          echo -n $PROVISIONING_PROFILE | base64 -d -o ~/Library/MobileDevice/Provisioning\ Profiles/decoded.mobileprovision
-          echo -n $SHARE_EXTENSION_PROVISIONING_PROFILE | base64 -d -o ~/Library/MobileDevice/Provisioning\ Profiles/decoded-share-extension.mobileprovision
           
-      - name: import Code-Signing Certificates
-        uses: Apple-Actions/import-codesign-certs@v1
-        with:
-          p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
-          p12-password: ${{ secrets.CERTIFICATE_PASSWORD }}
+          echo -n "$PROVISIONING_PROFILE" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/decoded.mobileprovision
+          echo -n "$SHARE_EXTENSION_PROVISIONING_PROFILE" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/decoded-share-extension.mobileprovision
+          
+          MAIN_UUID=$(security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/decoded.mobileprovision | plutil -extract UUID xml1 - -o - | sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p')
+          SHARE_UUID=$(security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/decoded-share-extension.mobileprovision | plutil -extract UUID xml1 - -o - | sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p')
+          
+          mv ~/Library/MobileDevice/Provisioning\ Profiles/decoded.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$MAIN_UUID.mobileprovision
+          mv ~/Library/MobileDevice/Provisioning\ Profiles/decoded-share-extension.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$SHARE_UUID.mobileprovision
+          
+          echo "MAIN_PROFILE_UUID=$MAIN_UUID" >> $GITHUB_ENV
+          echo "SHARE_PROFILE_UUID=$SHARE_UUID" >> $GITHUB_ENV
+          
+          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/
           
       - name: import Export Options
         env:
           EXPORT_OPTIONS: ${{ secrets.EXPORT_OPTIONS }}
-        run: echo -n $EXPORT_OPTIONS >> ExportOptions.plist
+        run: echo -n "$EXPORT_OPTIONS" | base64 --decode > ExportOptions.plist
         
-      - name: disable automatic code signing and set provisioning profiles
+      - name: configure code signing
         run: |
           sed -i '' 's/ProvisioningStyle = Automatic;/ProvisioningStyle = Manual;/g' ios/Runner.xcodeproj/project.pbxproj
-          sed -i '' 's/DEVELOPMENT_TEAM = 9ADZZX385P;/DEVELOPMENT_TEAM = 9ADZZX385P; PROVISIONING_PROFILE_SPECIFIER = decoded;/g' ios/Runner.xcodeproj/project.pbxproj
-          sed -i '' '/Share-Extension/,/DEVELOPMENT_TEAM = 9ADZZX385P;/ s/DEVELOPMENT_TEAM = 9ADZZX385P;/DEVELOPMENT_TEAM = 9ADZZX385P; PROVISIONING_PROFILE_SPECIFIER = decoded-share-extension;/' ios/Runner.xcodeproj/project.pbxproj
+          
+          sed -i '' "s/DEVELOPMENT_TEAM = 9ADZZX385P;/DEVELOPMENT_TEAM = 9ADZZX385P; PROVISIONING_PROFILE = $MAIN_PROFILE_UUID; PROVISIONING_PROFILE_SPECIFIER = decoded;/g" ios/Runner.xcodeproj/project.pbxproj
+          
+          sed -i '' "/Share-Extension/,/DEVELOPMENT_TEAM = 9ADZZX385P;/ s/DEVELOPMENT_TEAM = 9ADZZX385P;/DEVELOPMENT_TEAM = 9ADZZX385P; PROVISIONING_PROFILE = $SHARE_PROFILE_UUID; PROVISIONING_PROFILE_SPECIFIER = decoded-share-extension;/" ios/Runner.xcodeproj/project.pbxproj
+          
+          echo "=== Project configuration ==="
+          grep -A 5 -B 5 "PROVISIONING_PROFILE" ios/Runner.xcodeproj/project.pbxproj
           
       - name: build iOS archive
         run: |
           flutter clean
           flutter build ios --release --no-codesign
-          xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -sdk iphoneos -configuration Release archive -archivePath build/ios/iphoneos/Runner.xcarchive
+          
+          xcodebuild -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -sdk iphoneos \
+            -configuration Release \
+            -archivePath build/ios/iphoneos/Runner.xcarchive \
+            -allowProvisioningUpdates \
+            archive \
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM=9ADZZX385P \
+            PROVISIONING_PROFILE=$MAIN_PROFILE_UUID
           
       - name: export IPA
         run: |
-          xcodebuild -exportArchive -archivePath build/ios/iphoneos/Runner.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath build/ios/iphoneos/
+          xcodebuild -exportArchive \
+            -archivePath build/ios/iphoneos/Runner.xcarchive \
+            -exportOptionsPlist ExportOptions.plist \
+            -exportPath build/ios/iphoneos/ \
+            -allowProvisioningUpdates
       
       - name: distribute iOS app
         env:
