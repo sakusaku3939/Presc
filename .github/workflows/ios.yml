@@ -83,6 +83,17 @@ jobs:
           sed -i '' 's/ProvisioningStyle = Automatic;/ProvisioningStyle = Manual;/g' ios/Runner.xcodeproj/project.pbxproj
           sed -i '' 's/CODE_SIGN_IDENTITY = "iPhone Developer";/CODE_SIGN_IDENTITY = "Apple Development";/g' ios/Runner.xcodeproj/project.pbxproj
           sed -i '' 's/CODE_SIGN_IDENTITY = "iPhone Distribution";/CODE_SIGN_IDENTITY = "Apple Distribution";/g' ios/Runner.xcodeproj/project.pbxproj
+          sed -i '' 's/CODE_SIGN_IDENTITY = "iOS Development";/CODE_SIGN_IDENTITY = "Apple Development";/g' ios/Runner.xcodeproj/project.pbxproj
+          
+          sed -i '' "s/DEVELOPMENT_TEAM = 9ADZZX385P;/DEVELOPMENT_TEAM = 9ADZZX385P; PROVISIONING_PROFILE = $MAIN_PROFILE_UUID;/g" ios/Runner.xcodeproj/project.pbxproj
+          
+          perl -i -pe '
+            if (/name = "Share Extension"/../^[[:space:]]*};/) {
+              if (/DEVELOPMENT_TEAM = 9ADZZX385P;/) {
+                s/DEVELOPMENT_TEAM = 9ADZZX385P;/DEVELOPMENT_TEAM = 9ADZZX385P; PROVISIONING_PROFILE = '"$SHARE_PROFILE_UUID"';/;
+              }
+            }
+          ' ios/Runner.xcodeproj/project.pbxproj
           
       - name: build iOS archive
         run: |
