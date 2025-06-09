@@ -82,11 +82,16 @@ jobs:
         run: |
           sed -i '' 's/ProvisioningStyle = Automatic;/ProvisioningStyle = Manual;/g' ios/Runner.xcodeproj/project.pbxproj
           
-          MAIN_UUID=$(security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/main.mobileprovision | plutil -extract UUID xml1 - -o - | sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p')
-          SHARE_UUID=$(security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/share.mobileprovision | plutil -extract UUID xml1 - -o - | sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p')
+          MAIN_UUID=$(ls ~/Library/MobileDevice/Provisioning\ Profiles/ | grep -E "^[a-f0-9-]{36}\.mobileprovision$" | head -1 | sed 's/\.mobileprovision$//')
+          SHARE_UUID=$(ls ~/Library/MobileDevice/Provisioning\ Profiles/ | grep -E "^[a-f0-9-]{36}\.mobileprovision$" | tail -1 | sed 's/\.mobileprovision$//')
+          
+          echo "Using Main UUID: $MAIN_UUID"
+          echo "Using Share UUID: $SHARE_UUID"
           
           sed -i '' "s/PROVISIONING_PROFILE_SPECIFIER = \"\";/PROVISIONING_PROFILE_SPECIFIER = \"$MAIN_UUID\";/g" ios/Runner.xcodeproj/project.pbxproj
           sed -i '' "s/PROVISIONING_PROFILE = \"\";/PROVISIONING_PROFILE = \"$MAIN_UUID\";/g" ios/Runner.xcodeproj/project.pbxproj
+          
+          sed -i '' "s/DEVELOPMENT_TEAM = \"\";/DEVELOPMENT_TEAM = \"9ADZZX385P\";/g" ios/Runner.xcodeproj/project.pbxproj
           
       - name: build iOS app
         run: |
