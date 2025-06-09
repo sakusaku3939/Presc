@@ -42,83 +42,19 @@ jobs:
         
       - run: flutter test
 
-      - name: import Code-Signing Certificates
-        uses: Apple-Actions/import-codesign-certs@v2
-        with:
-          p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
-          p12-password: ${{ secrets.CERTIFICATE_PASSWORD }}
-          keychain: build_keychain
-
-      - name: import Provisioning Profiles
-        env:
-          BASE64_PROVISIONING_PROFILE: ${{ secrets.BASE64_PROVISIONING_PROFILE }}
-          BASE64_SHARE_EXTENSION_PROVISIONING_PROFILE: ${{ secrets.BASE64_SHARE_EXTENSION_PROVISIONING_PROFILE }}
-        run: |
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          
-          echo -n "$BASE64_PROVISIONING_PROFILE" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/main.mobileprovision
-          echo -n "$BASE64_SHARE_EXTENSION_PROVISIONING_PROFILE" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/share.mobileprovision
-          
-          MAIN_UUID=$(security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/main.mobileprovision | plutil -extract UUID xml1 - -o - | sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p')
-          SHARE_UUID=$(security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/share.mobileprovision | plutil -extract UUID xml1 - -o - | sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p')
-          
-          echo "Main Profile UUID: $MAIN_UUID"
-          echo "Share Profile UUID: $SHARE_UUID"
-          
-          mv ~/Library/MobileDevice/Provisioning\ Profiles/main.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$MAIN_UUID.mobileprovision
-          mv ~/Library/MobileDevice/Provisioning\ Profiles/share.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$SHARE_UUID.mobileprovision
-          
-          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/
-          
-          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/$MAIN_UUID.mobileprovision | plutil -extract Entitlements.application-identifier xml1 - -o - | sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p'
-          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/$SHARE_UUID.mobileprovision | plutil -extract Entitlements.application-identifier xml1 - -o - | sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p'
-          
-      - name: import Export Options
+      - name: setup GithubActionsExportOptions.plist
         env:
           BASE64_EXPORT_OPTIONS: ${{ secrets.BASE64_EXPORT_OPTIONS }}
-        run: echo -n "$BASE64_EXPORT_OPTIONS" | base64 --decode > ExportOptions.plist
-        
-      - name: configure Podfile for signing
-        run: |
-          cat >> ios/Podfile << 'EOF'
-          
-          post_install do |installer|
-            installer.pods_project.targets.each do |target|
-              flutter_additional_ios_build_settings(target)
-              target.build_configurations.each do |config|
-                if target.respond_to?(:product_type) and target.product_type == "com.apple.product-type.bundle"
-                  config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
-                end
-              end
-            end
-          end
-          EOF
-          
-      - name: configure manual signing
-        run: |
-          sed -i '' 's/ProvisioningStyle = Automatic;/ProvisioningStyle = Manual;/g' ios/Runner.xcodeproj/project.pbxproj
-          
-      - name: build iOS app
-        run: |
-          flutter clean
-          flutter pub get
-          cd ios && pod install
-          cd ..
-          flutter build ios --release --no-codesign
-          
-      - name: archive and export IPA
-        run: |
-          xcodebuild -workspace ios/Runner.xcworkspace \
-            -scheme Runner \
-            -sdk iphoneos \
-            -configuration Release \
-            archive \
-            -archivePath build/ios/iphoneos/Runner.xcarchive
-          
-          xcodebuild -exportArchive \
-            -archivePath build/ios/iphoneos/Runner.xcarchive \
-            -exportOptionsPlist ExportOptions.plist \
-            -exportPath build/ios/iphoneos/
+        run: echo -n "$BASE64_EXPORT_OPTIONS" | base64 --decode > ios/GithubActionsExportOptions.plist
+
+      - name: build iOS app with flutter-build-ios
+        uses: cedvdb/action-flutter-build-ios@v1
+        with:
+          build-cmd: flutter build ipa --release --export-options-plist=ios/GithubActionsExportOptions.plist
+          certificate-base64: ${{ secrets.CERTIFICATES_P12 }}
+          certificate-password: ${{ secrets.CERTIFICATE_PASSWORD }}
+          provisioning-profile-base64: ${{ secrets.BASE64_PROVISIONING_PROFILE }}
+          keychain-password: ${{ secrets.IOS_GITHUB_KEYCHAIN_PASSWORD }}
       
       - name: distribute iOS app
         env:
@@ -130,7 +66,7 @@ jobs:
           GIT_BRANCH=${GITHUB_REF##*/}
           curl \
             -H "Authorization: token $DEPLOYGATE_API_KEY" \
-            -F "file=@build/ios/iphoneos/Presc.ipa" \
+            -F "file=@build/ios/ipa/Presc.ipa" \
             -F "message=git:$GIT_HASH" \
             -F "distribution_name=$GIT_BRANCH" \
             -F "release_note=new ios build" \
