@@ -1,19 +1,16 @@
 name: iOS CI/CD
-
 on:
   workflow_dispatch:
   pull_request:
     branches:
       - master
     types: [ closed ]
-
 jobs:
   build:
     runs-on: macos-latest
-
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: show Xcode version
         run: xcodebuild -version
         
@@ -38,82 +35,58 @@ jobs:
         run: echo $BASE64_ENV_FILE | base64 --decode > .env
         
       - name: flutter dependencies install
-        run: flutter pub get
+        run: |
+          flutter pub get
+          cd ios
+          pod install --repo-update
+          cd ..
         
       - run: flutter test
-
+      
       - name: import Code-Signing Certificates
         uses: Apple-Actions/import-codesign-certs@v2
         with:
           p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
           p12-password: ${{ secrets.CERTIFICATE_PASSWORD }}
           keychain: build_keychain
-
+          
       - name: import Provisioning Profiles
         env:
           BASE64_PROVISIONING_PROFILE: ${{ secrets.BASE64_PROVISIONING_PROFILE }}
           BASE64_SHARE_EXTENSION_PROVISIONING_PROFILE: ${{ secrets.BASE64_SHARE_EXTENSION_PROVISIONING_PROFILE }}
         run: |
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          
-          echo -n "$BASE64_PROVISIONING_PROFILE" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/main.mobileprovision
-          echo -n "$BASE64_SHARE_EXTENSION_PROVISIONING_PROFILE" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/share.mobileprovision
-          
-          MAIN_UUID=$(security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/main.mobileprovision | plutil -extract UUID xml1 - -o - | sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p')
-          SHARE_UUID=$(security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/share.mobileprovision | plutil -extract UUID xml1 - -o - | sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p')
-          
-          mv ~/Library/MobileDevice/Provisioning\ Profiles/main.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$MAIN_UUID.mobileprovision
-          mv ~/Library/MobileDevice/Provisioning\ Profiles/share.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$SHARE_UUID.mobileprovision
-          
-          echo "Main Profile UUID: $MAIN_UUID"
-          echo "Share Profile UUID: $SHARE_UUID"
-          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/
-          
-          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/$MAIN_UUID.mobileprovision | plutil -extract Entitlements.application-identifier xml1 - -o - | sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p'
-          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/$SHARE_UUID.mobileprovision | plutil -extract Entitlements.application-identifier xml1 - -o - | sed -n 's/.*<string>\(.*\)<\/string>.*/\1/p'
+          mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+          PP_MAIN_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/main.mobileprovision"
+          PP_SHARE_PATH="$HOME/Library/MobileDevice/Provisioning Profiles/share.mobileprovision"
+          echo -n "$BASE64_PROVISIONING_PROFILE" | base64 --decode > "$PP_MAIN_PATH"
+          echo -n "$BASE64_SHARE_EXTENSION_PROVISIONING_PROFILE" | base64 --decode > "$PP_SHARE_PATH"
+          MAIN_UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' /dev/stdin <<< "$(security cms -D -i "$PP_MAIN_PATH")")
+          SHARE_UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' /dev/stdin <<< "$(security cms -D -i "$PP_SHARE_PATH")")
+          mv "$PP_MAIN_PATH" "$HOME/Library/MobileDevice/Provisioning Profiles/$MAIN_UUID.mobileprovision"
+          mv "$PP_SHARE_PATH" "$HOME/Library/MobileDevice/Provisioning Profiles/$SHARE_UUID.mobileprovision"
           
       - name: import Export Options
         env:
           BASE64_EXPORT_OPTIONS: ${{ secrets.BASE64_EXPORT_OPTIONS }}
         run: echo -n "$BASE64_EXPORT_OPTIONS" | base64 --decode > ExportOptions.plist
         
-
-      - name: configure manual signing and set profiles
+      - name: Unlock Keychain
         run: |
-          sed -i '' 's/ProvisioningStyle = Automatic;/ProvisioningStyle = Manual;/g' ios/Runner.xcodeproj/project.pbxproj
+          security list-keychains -s build_keychain.keychain
+          security unlock-keychain -p "${{ secrets.CERTIFICATE_PASSWORD }}" build_keychain.keychain
           
-          MAIN_UUID=$(ls ~/Library/MobileDevice/Provisioning\ Profiles/ | grep -E "^[a-f0-9-]{36}\.mobileprovision$" | head -1 | sed 's/\.mobileprovision$//')
-          SHARE_UUID=$(ls ~/Library/MobileDevice/Provisioning\ Profiles/ | grep -E "^[a-f0-9-]{36}\.mobileprovision$" | tail -1 | sed 's/\.mobileprovision$//')
-          
-          echo "Using Main UUID: $MAIN_UUID"
-          echo "Using Share UUID: $SHARE_UUID"
-          
-          sed -i '' "s/CODE_SIGN_STYLE = Automatic;/CODE_SIGN_STYLE = Manual;/g" ios/Runner.xcodeproj/project.pbxproj
-          sed -i '' "s/PROVISIONING_PROFILE_SPECIFIER = \"\";/PROVISIONING_PROFILE_SPECIFIER = \"$MAIN_UUID\";/g" ios/Runner.xcodeproj/project.pbxproj
-          sed -i '' "s/PROVISIONING_PROFILE = \"\";/PROVISIONING_PROFILE = \"$MAIN_UUID\";/g" ios/Runner.xcodeproj/project.pbxproj
-          sed -i '' "s/DEVELOPMENT_TEAM = \"\";/DEVELOPMENT_TEAM = \"9ADZZX385P\";/g" ios/Runner.xcodeproj/project.pbxproj
-          
-      - name: build iOS app
+      - name: Build and Sign IPA
         run: |
-          flutter clean
-          flutter pub get
-          cd ios && pod install
-          cd ..
           flutter build ios --release --no-codesign
-          
-      - name: archive and export IPA
-        run: |
           xcodebuild -workspace ios/Runner.xcworkspace \
             -scheme Runner \
-            -sdk iphoneos \
             -configuration Release \
-            archive \
-            -archivePath build/ios/iphoneos/Runner.xcarchive
-          
+            -archivePath build/Runner.xcarchive \
+            archive
           xcodebuild -exportArchive \
-            -archivePath build/ios/iphoneos/Runner.xcarchive \
-            -exportOptionsPlist ExportOptions.plist \
-            -exportPath build/ios/iphoneos/
+            -archivePath build/Runner.xcarchive \
+            -exportPath build/ios/ipa \
+            -exportOptionsPlist ExportOptions.plist
       
       - name: distribute iOS app
         env:
@@ -121,11 +94,16 @@ jobs:
           IOS_DISTRIBUTION_HASH: ${{ secrets.IOS_DISTRIBUTION_HASH }}
           DEPLOYGATE_USER: ${{ secrets.DEPLOYGATE_USER }}
         run: |
+          IPA_PATH=$(find build/ios/ipa -name "*.ipa" | head -n 1)
+          if [[ -z "$IPA_PATH" ]]; then
+            echo "::error::IPA file not found in build/ios/ipa directory."
+            exit 1
+          fi
           GIT_HASH=$(git rev-parse --short $GITHUB_SHA)
           GIT_BRANCH=${GITHUB_REF##*/}
           curl \
             -H "Authorization: token $DEPLOYGATE_API_KEY" \
-            -F "file=@build/ios/iphoneos/Presc.ipa" \
+            -F "file=@$IPA_PATH" \
             -F "message=git:$GIT_HASH" \
             -F "distribution_name=$GIT_BRANCH" \
             -F "release_note=new ios build" \
