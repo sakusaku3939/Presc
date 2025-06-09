@@ -74,7 +74,7 @@ jobs:
       - name: import Export Options
         env:
           EXPORT_OPTIONS: ${{ secrets.EXPORT_OPTIONS }}
-        run: echo -n "$EXPORT_OPTIONS" | base64 --decode > ExportOptions.plist
+        run: echo -n "$EXPORT_OPTIONS" > ExportOptions.plist
         
       - name: configure code signing
         run: |
