@@ -33,7 +33,6 @@ jobs:
             ${{ runner.os }}-flutter-
             
       - name: setup env file
-        if: env.BASE64_ENV_FILE != ''
         env:
           BASE64_ENV_FILE: ${{ secrets.BASE64_ENV_FILE }}
         run: echo $BASE64_ENV_FILE | base64 --decode > .env
@@ -66,52 +65,25 @@ jobs:
           mv ~/Library/MobileDevice/Provisioning\ Profiles/main.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$MAIN_UUID.mobileprovision
           mv ~/Library/MobileDevice/Provisioning\ Profiles/share.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/$SHARE_UUID.mobileprovision
           
-          echo "MAIN_PROFILE_UUID=$MAIN_UUID" >> $GITHUB_ENV
-          echo "SHARE_PROFILE_UUID=$SHARE_UUID" >> $GITHUB_ENV
-          
-          echo "Main UUID: $MAIN_UUID"
-          echo "Share UUID: $SHARE_UUID"
-          ls -la ~/Library/MobileDevice/Provisioning\ Profiles/
-          
       - name: import Export Options
         env:
           BASE64_EXPORT_OPTIONS: ${{ secrets.BASE64_EXPORT_OPTIONS }}
         run: echo -n "$BASE64_EXPORT_OPTIONS" | base64 --decode > ExportOptions.plist
         
-      - name: configure code signing
-        run: |
-          sed -i '' 's/ProvisioningStyle = Automatic;/ProvisioningStyle = Manual;/g' ios/Runner.xcodeproj/project.pbxproj
-          sed -i '' 's/CODE_SIGN_IDENTITY = "iPhone Developer";/CODE_SIGN_IDENTITY = "Apple Development";/g' ios/Runner.xcodeproj/project.pbxproj
-          sed -i '' 's/CODE_SIGN_IDENTITY = "iPhone Distribution";/CODE_SIGN_IDENTITY = "Apple Distribution";/g' ios/Runner.xcodeproj/project.pbxproj
-          sed -i '' 's/CODE_SIGN_IDENTITY = "iOS Development";/CODE_SIGN_IDENTITY = "Apple Development";/g' ios/Runner.xcodeproj/project.pbxproj
-          
-          sed -i '' "s/DEVELOPMENT_TEAM = 9ADZZX385P;/DEVELOPMENT_TEAM = 9ADZZX385P; PROVISIONING_PROFILE = $MAIN_PROFILE_UUID;/g" ios/Runner.xcodeproj/project.pbxproj
-          
-          perl -i -pe '
-            if (/name = "Share Extension"/../^[[:space:]]*};/) {
-              if (/DEVELOPMENT_TEAM = 9ADZZX385P;/) {
-                s/DEVELOPMENT_TEAM = 9ADZZX385P;/DEVELOPMENT_TEAM = 9ADZZX385P; PROVISIONING_PROFILE = '"$SHARE_PROFILE_UUID"';/;
-              }
-            }
-          ' ios/Runner.xcodeproj/project.pbxproj
-          
-      - name: build iOS archive
+      - name: build iOS app
         run: |
           flutter clean
-          flutter build ios --release --no-codesign
+          flutter build ios --release
           
+      - name: archive and export IPA
+        run: |
           xcodebuild -workspace ios/Runner.xcworkspace \
             -scheme Runner \
             -sdk iphoneos \
             -configuration Release \
-            -archivePath build/ios/iphoneos/Runner.xcarchive \
             archive \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="Apple Development" \
-            DEVELOPMENT_TEAM=9ADZZX385P
+            -archivePath build/ios/iphoneos/Runner.xcarchive
           
-      - name: export IPA
-        run: |
           xcodebuild -exportArchive \
             -archivePath build/ios/iphoneos/Runner.xcarchive \
             -exportOptionsPlist ExportOptions.plist \
