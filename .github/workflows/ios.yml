@@ -76,7 +76,7 @@ jobs:
           security unlock-keychain -p "${{ secrets.CERTIFICATE_PASSWORD }}" build_keychain.keychain
 
       - name: Use CI/CD Project Settings
-        run: cp -f DeployGate_CICD/project.ci.pbxproj ios/Runner.xcodeproj/project.pbxproj
+        run: cp -f DeployGate_CICD/project.pbxproj ios/Runner.xcodeproj/project.pbxproj
           
       - name: Build and Sign IPA
         run: |
