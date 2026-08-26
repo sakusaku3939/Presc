@@ -58,6 +58,13 @@ jobs:
       - name: build apk
         run: flutter build apk --flavor beta
 
+      - name: upload apk artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: presc-beta-apk
+          path: build/app/outputs/flutter-apk/app-beta-release.apk
+          retention-days: 7
+
       - name: distribute android apk
         env:
           DEPLOYGATE_API_KEY: ${{ secrets.DEPLOYGATE_API_KEY }}
