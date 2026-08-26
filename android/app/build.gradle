@@ -23,7 +23,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    compileSdkVersion 35
+    compileSdkVersion 36
     flavorDimensions "default"
     namespace "com.sakusaku3939.presc"
 
@@ -42,8 +42,8 @@ android {
 
     defaultConfig {
         applicationId "com.sakusaku3939.presc"
-        minSdkVersion 23
-        targetSdkVersion 35
+        minSdkVersion 24
+        targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

@@ -21,11 +21,12 @@ class PlaybackPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final playbackTextView = PlaybackTextView(content);
-    return WillPopScope(
-      onWillPop: () {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
         final speech = context.read<SpeechToTextProvider>();
         speech.back(context);
-        return Future.value(false);
       },
       child: Consumer<PlaybackProvider>(
         builder: (context, model, child) {
