@@ -28,10 +28,11 @@ class ManuscriptEditPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _edit.init(context, index);
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
         await _edit.back(this.context);
-        return Future.value(false);
       },
       child: Scaffold(
         backgroundColor: Colors.transparent,

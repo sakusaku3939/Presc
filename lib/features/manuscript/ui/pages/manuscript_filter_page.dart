@@ -24,10 +24,11 @@ class ManuscriptFilterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
         _back(context);
-        return Future.value(false);
       },
       child: Scaffold(
         appBar: _appbar(context),

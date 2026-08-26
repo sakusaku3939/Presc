@@ -12,22 +12,25 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: install java 19.x
-        uses: actions/setup-java@v3
+      - name: install java 17.x
+        uses: actions/setup-java@v4
         with:
-          java-version: '19'
+          java-version: '17'
           distribution: 'temurin'
 
       - name: install flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.32.2'
+          flutter-version: '3.47.0'
           channel: 'stable'
 
+      - name: install Android 16 SDK
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
       - name: cache flutter dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.pub-cache
@@ -36,10 +39,9 @@ jobs:
             ${{ runner.os }}-flutter-
 
       - name: setup env file
-        if: env.BASE64_ENV_FILE != ''
         env:
           BASE64_ENV_FILE: ${{ secrets.BASE64_ENV_FILE }}
-        run: echo $BASE64_ENV_FILE | base64 --decode > .env
+        run: echo "$BASE64_ENV_FILE" | base64 --decode > .env
 
       - name: flutter dependencies install
         run: flutter pub get
@@ -47,10 +49,9 @@ jobs:
       - run: flutter test
 
       - name: decode keystore
-        if: env.ENCODED_DEBUG_KEYSTORE != ''
         env:
           ENCODED_DEBUG_KEYSTORE: ${{ secrets.ENCODED_DEBUG_KEYSTORE }}
-        run: echo $ENCODED_DEBUG_KEYSTORE | base64 --decode > ~/.android/debug.keystore
+        run: echo "$ENCODED_DEBUG_KEYSTORE" | base64 --decode > ~/.android/debug.keystore
 
       - name: build apk
         run: flutter build apk --flavor beta
@@ -64,7 +65,7 @@ jobs:
           curl \
             -H "Authorization: token $DEPLOYGATE_API_KEY" \
             -F "file=@build/app/outputs/flutter-apk/app-beta-release.apk" \
-            -F "message=git:`git rev-parse --short $GITHUB_SHA`" \
+            -F "message=git:$(git rev-parse --short "$GITHUB_SHA")" \
             -F "distribution_name=${{ github.ref_name }}" \
             -F "release_note=new build" \
             -F "distribution_key=$ANDROID_DISTRIBUTION_HASH" \
