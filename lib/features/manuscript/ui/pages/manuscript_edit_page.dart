@@ -99,7 +99,7 @@ class ManuscriptEditPage extends StatelessWidget {
             size: 32,
             onPressed: () async => await _edit.back(this.context),
           ),
-          _edit.isEditable ? _editStateMenu() : _trashStateMenu()
+          _edit.isEditable ? _editStateMenu(context) : _trashStateMenu()
         ],
       ),
     );
@@ -122,7 +122,6 @@ class ManuscriptEditPage extends StatelessWidget {
             ),
             keyboardType: TextInputType.text,
             textInputAction: TextInputAction.go,
-            autofocus: autofocus,
             maxLines: null,
             decoration: InputDecoration(
               isDense: true,
@@ -147,6 +146,7 @@ class ManuscriptEditPage extends StatelessWidget {
                 return TextField(
                   cursorColor: Colors.black45,
                   controller: controller,
+                  autofocus: autofocus,
                   keyboardType: TextInputType.multiline,
                   textInputAction: TextInputAction.newline,
                   maxLines: null,
@@ -316,12 +316,14 @@ class ManuscriptEditPage extends StatelessWidget {
     );
   }
 
-  Widget _editStateMenu() {
+  Widget _editStateMenu(BuildContext context) {
     return Row(
       children: [
-        RippleIconButton(
-          Icons.share,
-          onPressed: () => Share.share(_edit.title + "\n\n" + _edit.content),
+        Builder(
+          builder: (context) => RippleIconButton(
+            Icons.share,
+            onPressed: () => _share(context),
+          ),
         ),
         RippleIconButton(
           Icons.delete_outline,
@@ -414,6 +416,16 @@ class ManuscriptEditPage extends StatelessWidget {
         ),
         const SizedBox(width: 8),
       ],
+    );
+  }
+
+  Future<void> _share(BuildContext context) async {
+    final box = context.findRenderObject() as RenderBox;
+    await SharePlus.instance.share(
+      ShareParams(
+        text: '${_edit.title}\n\n${_edit.content}',
+        sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+      ),
     );
   }
 
