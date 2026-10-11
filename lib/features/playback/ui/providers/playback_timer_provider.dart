@@ -25,14 +25,13 @@ class PlaybackTimerProvider with ChangeNotifier {
     if (_timer != null && _timer!.isActive) _timer!.cancel();
   }
 
-  void reset() {
+  Future<void> reset() async {
     stop();
-    final previousTime = _time;
+    final elapsedSeconds = _time.difference(DateTime.utc(0, 0, 0)).inSeconds;
     _time = DateTime.utc(0, 0, 0);
-    SharedPreferences.getInstance().then((prefs) {
-      final totalSecond = prefs.getInt("totalSecond") ?? 0;
-      prefs.setInt("totalSecond", totalSecond + previousTime.second);
-    });
     notifyListeners();
+    final prefs = await SharedPreferences.getInstance();
+    final totalSecond = prefs.getInt("totalSecond") ?? 0;
+    await prefs.setInt("totalSecond", totalSecond + elapsedSeconds);
   }
 }

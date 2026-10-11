@@ -190,11 +190,14 @@ class SpeechToTextProvider with ChangeNotifier {
     };
 
     if (isTimePassed() && totalSecond != null && totalSecond >= 10 * 60) {
-      prefs.setInt("lastReviewRequest", timestamp);
-      prefs.setInt("totalSecond", 0);
       final inAppReview = InAppReview.instance;
-      if (await inAppReview.isAvailable()) {
-        inAppReview.requestReview();
+      try {
+        if (!await inAppReview.isAvailable()) return;
+        await inAppReview.requestReview();
+        await prefs.setInt("lastReviewRequest", timestamp);
+        await prefs.setInt("totalSecond", 0);
+      } catch (error) {
+        debugPrint('In-app review request failed: $error');
       }
     }
   }
@@ -227,16 +230,17 @@ class SpeechToTextProvider with ChangeNotifier {
     _textMatching.resetNetworkMode();
   }
 
-  void back(BuildContext context) {
+  Future<void> back(BuildContext context) async {
     final playback = context.read<PlaybackProvider>();
     final timer = context.read<PlaybackTimerProvider>();
 
     stop();
     playback.playFabState = false;
-    timer.reset();
+    final saveElapsedTime = timer.reset();
     _history.clear();
 
     Navigator.pop(context);
-    _requestInAppReview();
+    await saveElapsedTime;
+    await _requestInAppReview();
   }
 }
