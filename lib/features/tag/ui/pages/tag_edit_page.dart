@@ -57,7 +57,7 @@ class TagEditPage extends StatelessWidget {
                           S.current.addNewTag,
                           style: TextStyle(
                             fontSize: 16,
-                            color: Colors.black.withOpacity(0.6),
+                            color: Colors.black.withValues(alpha: 0.6),
                           ),
                         )
                       : AddNewTag();

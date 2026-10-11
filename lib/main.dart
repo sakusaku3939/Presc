@@ -93,7 +93,7 @@ class _MyAppState extends State<MyApp> {
         colorSchemeSeed: Colors.white,
         splashColor: Platform.isIOS ? Colors.transparent : null,
         splashFactory: Platform.isIOS ? NoSplash.splashFactory : null,
-        appBarTheme: AppBarTheme(
+        appBarTheme: AppBarThemeData(
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.transparent,
           scrolledUnderElevation: 0,

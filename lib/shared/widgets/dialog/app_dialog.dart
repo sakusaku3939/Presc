@@ -44,13 +44,13 @@ class DialogTextButton extends StatelessWidget {
         style: TextStyle(color: ColorConstants.mainColor),
       ),
       style: ButtonStyle(
-        padding: MaterialStateProperty.all(
+        padding: WidgetStateProperty.all(
           const EdgeInsets.symmetric(
             horizontal: 8,
             vertical: 8,
           ),
         ),
-        minimumSize: MaterialStateProperty.all(Size.zero),
+        minimumSize: WidgetStateProperty.all(Size.zero),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
       onPressed: onPressed,

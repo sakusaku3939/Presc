@@ -5,7 +5,9 @@ class ScreenUtils {
       _SafeAreaSize.of(context);
 
   static bool get isTablet {
-    final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
+    final data = MediaQueryData.fromView(
+      WidgetsBinding.instance.platformDispatcher.views.first,
+    );
     return data.size.shortestSide > 600;
   }
 }
@@ -25,7 +27,8 @@ class _SafeAreaSize {
   double get height {
     final logicalPixel = MediaQuery.of(_context!).size.height;
     final appBarSize = AppBar().preferredSize.height;
-    final padding = MediaQuery.of(_context!).padding.top +
+    final padding =
+        MediaQuery.of(_context!).padding.top +
         MediaQuery.of(_context!).padding.bottom;
     return logicalPixel - appBarSize - padding;
   }

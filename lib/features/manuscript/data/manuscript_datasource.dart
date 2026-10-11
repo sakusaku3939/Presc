@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -37,8 +36,11 @@ class ManuscriptDatasource {
     // Test
     // await deleteDatabase(path);
 
-    return await openDatabase(path,
-        version: _databaseVersion, onCreate: _create);
+    return await openDatabase(
+      path,
+      version: _databaseVersion,
+      onCreate: _create,
+    );
   }
 
   Future _create(Database db, int version) async {
@@ -101,7 +103,7 @@ class ManuscriptDatasource {
       final list = [
         Sqflite.firstIntValue(res),
         Sqflite.firstIntValue(res2),
-      ].whereNotNull().toList();
+      ].nonNulls.toList();
       return list.isNotEmpty ? list.reduce(max) : 0;
     }
   }
@@ -117,8 +119,12 @@ class ManuscriptDatasource {
 
   Future<int> update(DatabaseTable table) async {
     Database db = await _instance!.database;
-    return await db.update(table.tableName, table.toMap(),
-        where: 'id = ?', whereArgs: [table.id]);
+    return await db.update(
+      table.tableName,
+      table.toMap(),
+      where: 'id = ?',
+      whereArgs: [table.id],
+    );
   }
 
   Future<int> deleteAll(String tableName) async {
@@ -168,41 +174,17 @@ class ManuscriptDatasource {
           content: SampleTextConstants().sampleContent,
           date: DateTime.now(),
         ).toMap(),
-      )
+      ),
     ];
     if (Intl.getCurrentLocale() == "ja") {
       futureList.addAll([
-        db.insert(
-          TagTable.name,
-          TagTable(
-            id: 1,
-            tagName: "夏目漱石",
-          ).toMap(),
-        ),
-        db.insert(
-          TagTable.name,
-          TagTable(
-            id: 2,
-            tagName: "練習用",
-          ).toMap(),
-        ),
-        db.insert(
-          TagMemoTable.name,
-          TagMemoTable(
-            memoId: 1,
-            tagId: 1,
-          ).toMap(),
-        ),
+        db.insert(TagTable.name, TagTable(id: 1, tagName: "夏目漱石").toMap()),
+        db.insert(TagTable.name, TagTable(id: 2, tagName: "練習用").toMap()),
+        db.insert(TagMemoTable.name, TagMemoTable(memoId: 1, tagId: 1).toMap()),
       ]);
     } else {
       futureList.addAll([
-        db.insert(
-          TagTable.name,
-          TagTable(
-            id: 1,
-            tagName: "Practice",
-          ).toMap(),
-        ),
+        db.insert(TagTable.name, TagTable(id: 1, tagName: "Practice").toMap()),
       ]);
     }
     await Future.wait(futureList);

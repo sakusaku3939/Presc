@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:presc/features/manuscript/data/manuscript_repository.dart';
 import 'package:presc/features/manuscript/data/models/backup_file_info.dart';
@@ -31,7 +31,7 @@ class LocalBackupService {
           .replaceAll('.', '-');
       final fileName = 'presc_backup_$timestamp.json';
 
-      final result = await FilePicker.platform.saveFile(
+      final result = await FilePicker.saveFile(
         dialogTitle: S.current.saveBackupFile,
         fileName: fileName,
         type: FileType.custom,
@@ -39,7 +39,7 @@ class LocalBackupService {
         bytes: utf8.encode(jsonString),
       );
 
-      return result;
+      return result?.toString();
     } catch (e) {
       throw Exception('バックアップのエクスポートに失敗しました: $e');
     }
@@ -49,18 +49,17 @@ class LocalBackupService {
   static Future<ImportResult?> importBackupData() async {
     try {
       // バックアップファイルを選択
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
+      final file = await FilePicker.pickFile(
         type: FileType.custom,
         allowedExtensions: ['json'],
       );
 
-      if (result == null) {
+      if (file == null) {
         // ユーザーがファイル選択をキャンセルした場合
         return null;
       }
 
-      final file = File(result.files.single.path!);
-      final jsonString = await file.readAsString();
+      final jsonString = utf8.decode(await file.readAsBytes());
       final backupData = json.decode(jsonString);
 
       // バックアップデータの検証

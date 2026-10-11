@@ -4,7 +4,7 @@ import 'package:presc/core/utils/asset_utils.dart';
 import 'package:presc/features/playback/ui/providers/playback_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sound_mode/permission_handler.dart';
+import 'package:sound_mode_advanced/permission_handler.dart';
 
 import '../../../../shared/widgets/dialog/app_dialog.dart';
 

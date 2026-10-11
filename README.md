@@ -17,10 +17,23 @@
 ![presc](https://user-images.githubusercontent.com/53967490/139699408-2ef6dc85-83c4-4dcf-90b6-293bd9071d30.jpg)
 
 # Usage
+
+Flutter 3.47.7 (stable) / Dart 3.13.5、Android API 24以上、iOS 15以上。
+FVMでSDKを固定しているため、Flutter/Dartコマンドは `fvm` 経由で実行してください。
+AndroidはAGP 9.1.0 / Gradle 9.3.1 / Kotlin 2.4.0 / Java 17以上を使用します。
+`flutter_sharing_intent` と `in_app_review` が旧Kotlin設定を使うため、Flutter標準の移行設定
+`android.builtInKotlin=false` と `android.newDsl=false` を保持しています。
+
+```
+fvm install
+fvm flutter pub get
+fvm flutter analyze
+fvm flutter test
+```
 ### Debug
 ```
 fvm flutter pub get
-fvm flutter pub run intl_utils:generate
+fvm dart run intl_utils:generate
 fvm flutter run --flavor beta
 ```
 

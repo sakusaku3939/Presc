@@ -121,14 +121,14 @@ class DrawerMenu extends StatelessWidget {
                     padding: const EdgeInsets.only(right: 12),
                     child: TextButton(
                       style: ButtonStyle(
-                        overlayColor: MaterialStateProperty.all(Colors.black12),
-                        padding: MaterialStateProperty.all(
+                        overlayColor: WidgetStateProperty.all(Colors.black12),
+                        padding: WidgetStateProperty.all(
                           const EdgeInsets.symmetric(
                             horizontal: 12,
                             vertical: 4,
                           ),
                         ),
-                        minimumSize: MaterialStateProperty.all(Size.zero),
+                        minimumSize: WidgetStateProperty.all(Size.zero),
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       ),
                       onPressed: () {

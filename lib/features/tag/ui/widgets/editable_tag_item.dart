@@ -91,7 +91,7 @@ class EditableTagItem extends StatelessWidget {
       builder: (context, model, child) {
         return Container(
           color: model.checkList[index]
-              ? ColorConstants.mainColor.withOpacity(.1)
+              ? ColorConstants.mainColor.withValues(alpha: .1)
               : Colors.white,
           child: Material(
             color: Colors.transparent,

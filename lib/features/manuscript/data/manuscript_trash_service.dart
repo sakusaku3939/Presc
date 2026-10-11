@@ -14,6 +14,7 @@ class ManuscriptTrashService {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(S.current.trashMoved),
+        persist: false,
         duration: const Duration(seconds: 3),
         action: SnackBarAction(
           label: S.current.undo,
@@ -51,6 +52,7 @@ class ManuscriptTrashService {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(S.current.trashRestored),
+        persist: false,
         duration: const Duration(seconds: 3),
         action: SnackBarAction(
           label: S.current.undo,

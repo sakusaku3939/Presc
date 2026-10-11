@@ -23,7 +23,7 @@ class PlatformSwitch extends StatelessWidget {
     } else {
       return Switch(
         activeTrackColor: ColorConstants.mainColor,
-        inactiveTrackColor: ColorConstants.mainColor.withOpacity(0.1),
+        inactiveTrackColor: ColorConstants.mainColor.withValues(alpha: 0.1),
         value: value,
         onChanged: onChanged,
       );

@@ -55,7 +55,7 @@ class SpeechToTextService {
       await _speech.listen(
         onResult: _resultListener,
         onSoundLevelChange: _soundLevelListener,
-        localeId: _localeId,
+        listenOptions: stt.SpeechListenOptions(localeId: _localeId),
       );
       if (log) print("start recognition");
     } else {
@@ -73,19 +73,16 @@ class SpeechToTextService {
 
   Future<void> restart() async {
     await _speech.stop();
-    Timer(
-      Duration(milliseconds: 600),
-      () {
-        if (!_isStopFlagValid)
-          speak(
-            resultListener: this.resultListener,
-            errorListener: this.errorListener,
-            statusListener: this.statusListener,
-            log: false,
-            localeId: _localeId,
-          );
-      },
-    );
+    Timer(Duration(milliseconds: 600), () {
+      if (!_isStopFlagValid)
+        speak(
+          resultListener: this.resultListener,
+          errorListener: this.errorListener,
+          statusListener: this.statusListener,
+          log: false,
+          localeId: _localeId,
+        );
+    });
   }
 
   void _resultListener(SpeechRecognitionResult result) {
@@ -116,18 +113,15 @@ class SpeechToTextService {
     }
 
     if (_timer != null && _timer!.isActive) _timer!.cancel();
-    _timer = Timer(
-      Duration(milliseconds: 500),
-      () {
-        final N = AppConstants.ngramNum;
-        if (_speech.isNotListening || result.finalResult) return;
-        if (recognizedText.length < N) recognizedText.padRight(N - 1, ' ');
+    _timer = Timer(Duration(milliseconds: 500), () {
+      final N = AppConstants.ngramNum;
+      if (_speech.isNotListening || result.finalResult) return;
+      if (recognizedText.length < N) recognizedText.padRight(N - 1, ' ');
 
-        print("recognizedText: $recognizedText");
-        if (resultListener != null) resultListener!(recognizedText);
-        recognizedText = "";
-      },
-    );
+      print("recognizedText: $recognizedText");
+      if (resultListener != null) resultListener!(recognizedText);
+      recognizedText = "";
+    });
   }
 
   void _soundLevelListener(double level) {

@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v5
 
       - name: show Xcode version
         run: xcodebuild -version
@@ -17,11 +17,11 @@ jobs:
       - name: install flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.32.2'
+          flutter-version: '3.47.7'
           channel: 'stable'
           
       - name: cache flutter dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.pub-cache
@@ -41,6 +41,8 @@ jobs:
           pod install --repo-update
           cd ..
         
+      - run: flutter analyze
+
       - run: flutter test
       
       - name: import Code-Signing Certificates

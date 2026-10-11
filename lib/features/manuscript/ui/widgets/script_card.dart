@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_scale_tap/flutter_scale_tap.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import "package:intl/intl.dart";
-import 'package:presc/core/utils/screen_utils.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/features/manuscript/data/models/database_table.dart';
 import 'package:presc/features/manuscript/ui/pages/manuscript_edit_page.dart';
@@ -32,51 +31,6 @@ class ScriptCard extends StatelessWidget {
 
   Widget _placeholder() => Container();
 
-  Widget _emptyView() {
-    return Selector<ManuscriptProvider, Current>(
-      selector: (_, model) => model.current,
-      builder: (context, current, child) {
-        IconData icon;
-        String text;
-        switch (current.state) {
-          case ManuscriptState.home:
-          case ManuscriptState.tag:
-            icon = Icons.description_outlined;
-            text = S.current.noScriptYet;
-            break;
-
-          case ManuscriptState.trash:
-            icon = Icons.delete_outline;
-            text = S.current.noAdditionalText;
-            break;
-
-          case ManuscriptState.search:
-            return _placeholder();
-        }
-        return Container(
-          width: MediaQuery.of(context).size.width,
-          height: ScreenUtils.safeArea(context).height -
-              (current.state == ManuscriptState.tag ? 0 : 30),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                color: Colors.grey[600],
-                size: 64,
-              ),
-              SizedBox(height: 8),
-              Text(
-                text,
-                style: TextStyle(color: Colors.grey[700]),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   Widget _scriptView(int length) {
     return OrientationBuilder(
       builder: (context, orientation) {
@@ -104,9 +58,7 @@ class ScriptCard extends StatelessWidget {
             child: AnimationConfiguration.staggeredList(
               position: index,
               duration: const Duration(milliseconds: 300),
-              child: FadeInAnimation(
-                child: _Card(this.context, index),
-              ),
+              child: FadeInAnimation(child: _Card(this.context, index)),
             ),
           );
         },
@@ -123,22 +75,17 @@ class ScriptCard extends StatelessWidget {
         crossAxisCount: columnCount,
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        children: List.generate(
-          length,
-          (int index) {
-            return Container(
-              margin: const EdgeInsets.all(12),
-              child: AnimationConfiguration.staggeredGrid(
-                columnCount: columnCount,
-                position: index,
-                duration: const Duration(milliseconds: 300),
-                child: FadeInAnimation(
-                  child: _Card(this.context, index),
-                ),
-              ),
-            );
-          },
-        ),
+        children: List.generate(length, (int index) {
+          return Container(
+            margin: const EdgeInsets.all(12),
+            child: AnimationConfiguration.staggeredGrid(
+              columnCount: columnCount,
+              position: index,
+              duration: const Duration(milliseconds: 300),
+              child: FadeInAnimation(child: _Card(this.context, index)),
+            ),
+          );
+        }),
       ),
     );
   }
@@ -189,9 +136,9 @@ class _Card extends StatelessWidget {
     return ScaleTap(
       scaleMinValue: 0.96,
       onPressed: () {
-        context
-            .read<ManuscriptTagProvider>()
-            .loadTag(memoId: scriptTable[index].id);
+        context.read<ManuscriptTagProvider>().loadTag(
+          memoId: scriptTable[index].id,
+        );
         Navigator.push(
           context,
           PageRouteBuilder(
@@ -216,7 +163,7 @@ class _Card extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 (title != null && title.isNotEmpty) ? title : S.current.noTitle,
-                textScaleFactor: 1,
+                textScaler: TextScaler.noScaling,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontSize: 24),
               ),
@@ -233,7 +180,7 @@ class _Card extends StatelessWidget {
                     (content != null && content.isNotEmpty)
                         ? _optimizeContent(content)
                         : S.current.noAdditionalText,
-                    textScaleFactor: 1,
+                    textScaler: TextScaler.noScaling,
                     style: TextStyle(
                       color: Colors.grey[800],
                       height: 1.8,
@@ -251,13 +198,8 @@ class _Card extends StatelessWidget {
                   DateFormat(
                     'yyyy/MM/dd(E) HH:mm',
                     Intl.getCurrentLocale(),
-                  ).format(
-                    scriptTable[index].date,
-                  ),
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
+                  ).format(scriptTable[index].date),
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
                 ),
               ),
             ),
@@ -268,8 +210,9 @@ class _Card extends StatelessWidget {
   }
 
   String _optimizeContent(String content) {
-    final rangeText =
-        content.length > 400 ? content.substring(0, 400) : content;
+    final rangeText = content.length > 400
+        ? content.substring(0, 400)
+        : content;
     String text = "";
     rangeText.split('\n').forEach((word) {
       text += word;

@@ -12,9 +12,9 @@ import 'package:presc/features/playback/ui/providers/playback_provider.dart';
 import 'package:presc/features/playback/ui/providers/playback_timer_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sound_mode/permission_handler.dart';
-import 'package:sound_mode/sound_mode.dart';
-import 'package:sound_mode/utils/ringer_mode_statuses.dart';
+import 'package:sound_mode_advanced/permission_handler.dart';
+import 'package:sound_mode_advanced/sound_mode.dart';
+import 'package:sound_mode_advanced/utils/ringer_mode_statuses.dart';
 
 class SpeechToTextProvider with ChangeNotifier {
   final _speechToText = SpeechToTextService();
@@ -56,11 +56,8 @@ class SpeechToTextProvider with ChangeNotifier {
     }
 
     final showSnackBar = (text) => ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(text),
-            duration: const Duration(seconds: 2),
-          ),
-        );
+      SnackBar(content: Text(text), duration: const Duration(seconds: 2)),
+    );
     final timer = context.read<PlaybackTimerProvider>();
     timer.start();
 
@@ -104,7 +101,9 @@ class SpeechToTextProvider with ChangeNotifier {
 
     try {
       final textPosition = await _textMatching.calculateTextPosition(
-          recognizedText, _unrecognizedText);
+        recognizedText,
+        _unrecognizedText,
+      );
       _applyRecognitionResult(textPosition);
     } finally {
       _isProcessing = false;
@@ -120,28 +119,11 @@ class SpeechToTextProvider with ChangeNotifier {
         position.textLen + position.matchedWordLength,
       );
       _recognizedText += latestRecognizedText;
-      _unrecognizedText = unrecognizedText
-          .substring(position.textLen + position.matchedWordLength);
+      _unrecognizedText = unrecognizedText.substring(
+        position.textLen + position.matchedWordLength,
+      );
       _history.add(recognizedText.length);
     }
-  }
-
-  Future<void> _testReflect() async {
-    await Future.delayed(Duration(milliseconds: 500));
-    _reflect("たかとんと");
-    await Future.delayed(Duration(milliseconds: 2000));
-    _reflect("しかもあとで");
-    await Future.delayed(Duration(milliseconds: 2000));
-    _reflect("思わなかった");
-  }
-
-  Future<void> _testReflectEn() async {
-    await Future.delayed(Duration(milliseconds: 500));
-    _reflect("they");
-    await Future.delayed(Duration(milliseconds: 2000));
-    _reflect("internet");
-    await Future.delayed(Duration(milliseconds: 2000));
-    _reflect("keyboards");
   }
 
   Future<bool> _startSilentMode(BuildContext context) async {

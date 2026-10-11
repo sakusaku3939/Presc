@@ -118,8 +118,9 @@ class PlaybackProvider with ChangeNotifier {
   *  フォントサイズ
   */
   int? _fontSize;
-  final initFontSize =
-      ScreenUtils.isTablet ? AppConstants.tabletFontSize : AppConstants.fontSize;
+  final initFontSize = ScreenUtils.isTablet
+      ? AppConstants.tabletFontSize
+      : AppConstants.fontSize;
 
   int get fontSize => _fontSize ?? _prefs?.getInt("fontSize") ?? initFontSize;
 
@@ -155,7 +156,7 @@ class PlaybackProvider with ChangeNotifier {
 
   set backgroundColor(Color color) {
     _backgroundColor = color;
-    _prefs?.setInt("backgroundColor", color.value);
+    _prefs?.setInt("backgroundColor", color.toARGB32());
     notifyListeners();
   }
 
@@ -171,7 +172,7 @@ class PlaybackProvider with ChangeNotifier {
 
   set textColor(Color color) {
     _textColor = color;
-    _prefs?.setInt("textColor", color.value);
+    _prefs?.setInt("textColor", color.toARGB32());
     notifyListeners();
   }
 
@@ -186,11 +187,7 @@ class PlaybackProvider with ChangeNotifier {
   }
 }
 
-enum ScrollMode {
-  manual,
-  auto,
-  recognition,
-}
+enum ScrollMode { manual, auto, recognition }
 
 class _ScrollModeHelper extends EnumUtils<ScrollMode> {
   @override

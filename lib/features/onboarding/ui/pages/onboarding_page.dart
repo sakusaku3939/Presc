@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:dots_indicator/dots_indicator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:presc/generated/l10n.dart';
 import 'package:presc/core/utils/asset_utils.dart';

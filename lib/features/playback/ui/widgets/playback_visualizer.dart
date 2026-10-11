@@ -32,7 +32,7 @@ class PlaybackVisualizer extends StatelessWidget {
     return Container(
       width: model.barWidth,
       height: model.barHeight[i],
-      color: Colors.red.withOpacity(_easeIn(model.volume / 10)),
+      color: Colors.red.withValues(alpha: _easeIn(model.volume / 10)),
     );
   }
 
