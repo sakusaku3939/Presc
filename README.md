@@ -46,6 +46,13 @@ fvm flutter build ipa
 open build/ios/archive/Runner.xcarchive
 ```
 
+### iOS CI
+署名なしのリリースビルド・解析・テストを確認する場合:
+```
+gh workflow run ios.yml --ref master -f distribute=false
+```
+`distribute=true`（既定値）では署名付きIPAを生成してDeployGateに配布します。
+GitHub Secretsには、有効な配布証明書とRunner・Share Extension両方のProvisioning Profileが必要です。
 
 # License
 GPL-3.0 License
