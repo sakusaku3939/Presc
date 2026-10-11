@@ -40,6 +40,12 @@ jobs:
           cd ios
           pod install --repo-update
           cd ..
+      - name: save iOS dependency lock
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-dependency-lock
+          path: ios/Podfile.lock
+          if-no-files-found: error
         
       - run: flutter analyze
 
@@ -51,6 +57,7 @@ jobs:
           p12-file-base64: ${{ secrets.BASE64_CERTIFICATES_P12 }}
           p12-password: ${{ secrets.CERTIFICATE_PASSWORD }}
           keychain: build_keychain
+          keychain-password: ${{ secrets.CERTIFICATE_PASSWORD }}
           
       - name: import Provisioning Profiles
         env:
@@ -73,9 +80,11 @@ jobs:
         run: echo -n "$BASE64_EXPORT_OPTIONS" | base64 --decode > ExportOptions.plist
         
       - name: Unlock Keychain
+        env:
+          KEYCHAIN_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
         run: |
           security list-keychains -s build_keychain.keychain
-          security unlock-keychain -p "${{ secrets.CERTIFICATE_PASSWORD }}" build_keychain.keychain
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" build_keychain.keychain
 
       - name: Use CI/CD Project Settings
         run: cp -f ios/DeployGate_CICD/project.pbxproj ios/Runner.xcodeproj/project.pbxproj
