@@ -1,6 +1,11 @@
 name: iOS CI/CD
 on:
   workflow_dispatch:
+    inputs:
+      distribute:
+        description: 'Sign and distribute the iOS app to DeployGate'
+        type: boolean
+        default: true
   pull_request:
     branches:
       - master
@@ -40,18 +45,13 @@ jobs:
           cd ios
           pod install --repo-update
           cd ..
-      - name: save iOS dependency lock
-        uses: actions/upload-artifact@v4
-        with:
-          name: ios-dependency-lock
-          path: ios/Podfile.lock
-          if-no-files-found: error
         
       - run: flutter analyze
 
       - run: flutter test
       
       - name: import Code-Signing Certificates
+        if: github.event_name != 'workflow_dispatch' || inputs.distribute
         uses: Apple-Actions/import-codesign-certs@v2
         with:
           p12-file-base64: ${{ secrets.BASE64_CERTIFICATES_P12 }}
@@ -60,6 +60,7 @@ jobs:
           keychain-password: ${{ secrets.CERTIFICATE_PASSWORD }}
           
       - name: import Provisioning Profiles
+        if: github.event_name != 'workflow_dispatch' || inputs.distribute
         env:
           BASE64_PROVISIONING_PROFILE: ${{ secrets.BASE64_PROVISIONING_PROFILE }}
           BASE64_SHARE_EXTENSION_PROVISIONING_PROFILE: ${{ secrets.BASE64_SHARE_EXTENSION_PROVISIONING_PROFILE }}
@@ -75,11 +76,13 @@ jobs:
           mv "$PP_SHARE_PATH" "$HOME/Library/MobileDevice/Provisioning Profiles/$SHARE_UUID.mobileprovision"
           
       - name: import Export Options
+        if: github.event_name != 'workflow_dispatch' || inputs.distribute
         env:
           BASE64_EXPORT_OPTIONS: ${{ secrets.BASE64_EXPORT_OPTIONS }}
         run: echo -n "$BASE64_EXPORT_OPTIONS" | base64 --decode > ExportOptions.plist
         
       - name: Unlock Keychain
+        if: github.event_name != 'workflow_dispatch' || inputs.distribute
         env:
           KEYCHAIN_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
         run: |
@@ -89,9 +92,22 @@ jobs:
       - name: Use CI/CD Project Settings
         run: cp -f ios/DeployGate_CICD/project.pbxproj ios/Runner.xcodeproj/project.pbxproj
           
-      - name: Build and Sign IPA
+      - name: Build iOS release
+        run: flutter build ios --release --no-codesign
+
+      - name: save iOS dependency lock
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-dependency-lock
+          path: |
+            ios/Podfile.lock
+            ios/Podfile
+            ios/Flutter/AppFrameworkInfo.plist
+          if-no-files-found: error
+
+      - name: Archive and Sign IPA
+        if: github.event_name != 'workflow_dispatch' || inputs.distribute
         run: |
-          flutter build ios --release --no-codesign
           xcodebuild -workspace ios/Runner.xcworkspace \
             -scheme Runner \
             -destination 'generic/platform=iOS' \
@@ -106,6 +122,7 @@ jobs:
             -exportOptionsPlist ExportOptions.plist
       
       - name: distribute iOS app
+        if: github.event_name != 'workflow_dispatch' || inputs.distribute
         env:
           DEPLOYGATE_API_KEY: ${{ secrets.DEPLOYGATE_API_KEY }}
           IOS_DISTRIBUTION_HASH: ${{ secrets.IOS_DISTRIBUTION_HASH }}
