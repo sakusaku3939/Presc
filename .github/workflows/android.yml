@@ -23,7 +23,7 @@ jobs:
       - name: install flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.47.7'
+          flutter-version: '3.47.8'
           channel: 'stable'
 
       - name: install Android 16 SDK
