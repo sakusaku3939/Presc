@@ -18,15 +18,6 @@
 
 # Usage
 
-Flutter 3.47.8 (stable) / Dart 3.13.7、Android API 24以上、iOS 15以上。
-FVMでSDKを固定しているため、Flutter/Dartコマンドは `fvm` 経由で実行してください。
-漏洩した中間CA証明書によるTLS中間者攻撃への対策として、修正版SDKを必須にしています。
-詳細は[Dart SDKのセキュリティ勧告](https://github.com/dart-lang/sdk/security/advisories/GHSA-frr6-h895-5pxp)を参照してください。
-既存の配布済みアプリにも対策を反映するには、このSDKで再ビルドして再配布する必要があります。
-AndroidはAGP 9.1.0 / Gradle 9.3.1 / Kotlin 2.4.0 / Java 17以上を使用します。
-`flutter_sharing_intent` と `in_app_review` が旧Kotlin設定を使うため、Flutter標準の移行設定
-`android.builtInKotlin=false` と `android.newDsl=false` を保持しています。
-
 ```
 fvm install
 fvm flutter pub get
@@ -48,14 +39,6 @@ fvm flutter build appbundle --release --flavor stable
 fvm flutter build ipa
 open build/ios/archive/Runner.xcarchive
 ```
-
-### iOS CI
-署名なしのリリースビルド・解析・テストを確認する場合:
-```
-gh workflow run ios.yml --ref master -f distribute=false
-```
-`distribute=true`（既定値）では署名付きIPAを生成してDeployGateに配布します。
-GitHub Secretsには、有効な配布証明書とRunner・Share Extension両方のProvisioning Profileが必要です。
 
 # License
 GPL-3.0 License
